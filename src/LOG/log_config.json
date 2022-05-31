@@ -1,0 +1,15 @@
+{
+    "active": "Separate_DB",
+    "allowed_actives": ["Local_DB", "Separate_DB", "NodeJS_Service"],
+    "Configurations": {
+        "Local_DB": {
+            "type": "default"
+        },
+        "Separate_DB": {
+            "base_dir": "campaign_portal"
+        },
+        "NodeJS_Service": {
+            "URL": "http://localhost:3800"
+        }
+    }
+}

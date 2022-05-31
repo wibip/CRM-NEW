@@ -1,0 +1,101 @@
+USER ID,MODULE NAME,TASK,REFERENCE,IP,PROPERTY ID / BUSINESS ID,DATE 
+cox_hos,properties,Browse,N/A,123.231.106.164,HOS1234,10/01/2020 08:41:55 PM
+cox_hos,properties,Properties Auto Login,125689745632,123.231.106.164,HOS1234,10/01/2020 08:41:56 PM
+cox_hos,home,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 08:41:56 PM
+cox_hos,network,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 08:42:28 PM
+cox_hos,network,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 08:43:13 PM
+cox_hos,network,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 08:43:28 PM
+cox_hos,network,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 08:43:36 PM
+cox_hos,network,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 08:54:31 PM
+cox_hos,network,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 08:54:38 PM
+cox_hos,network,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 08:55:24 PM
+cox_hos,network,Automated Passcode Update,,123.231.106.164,MVNO1224,10/01/2020 08:55:27 PM
+cox_hos,network,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 08:55:45 PM
+cox_hos,network,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 09:00:29 PM
+cox_hos,network,Automated Passcode Update,,123.231.106.164,MVNO1224,10/01/2020 09:00:33 PM
+cox_hos,network,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 09:00:46 PM
+cox_hos,properties,Browse,N/A,123.231.106.164,HOS1234,10/01/2020 10:37:09 PM
+cox_hos,properties,Properties Auto Login,125689745632,123.231.106.164,HOS1234,10/01/2020 10:37:10 PM
+cox_hos,home,Browse,N/A,123.231.106.164,MVNO1224,10/01/2020 10:37:11 PM
+cox_hos,properties,Browse,N/A,112.134.216.54,HOS1234,10/02/2020 01:04:24 PM
+cox_hos,properties,Properties Auto Login,125689745632,112.134.216.54,HOS1234,10/02/2020 01:04:25 PM
+cox_hos,home,Browse,N/A,112.134.216.54,MVNO1224,10/02/2020 01:04:25 PM
+,properties,Back to Properties,cox_hos,112.134.216.54,MVNO1224,10/02/2020 01:04:50 PM
+cox_hos,properties,Browse,N/A,112.134.216.54,HOS1234,10/02/2020 01:04:51 PM
+cox_hos,properties,Browse,N/A,112.134.216.54,HOS1234,10/02/2020 01:07:45 PM
+cox_hos,properties,Properties Auto Login,125689745632,112.134.219.194,HOS1234,10/02/2020 01:10:53 PM
+cox_hos,home,Browse,N/A,112.134.219.194,MVNO1224,10/02/2020 01:10:53 PM
+cox_hos,network,Browse,N/A,112.134.219.194,MVNO1224,10/02/2020 01:11:20 PM
+cox_hos,home,Browse,N/A,112.134.219.194,MVNO1224,10/02/2020 02:27:07 PM
+cox_hos,home,Browse,N/A,112.134.219.194,MVNO1224,10/02/2020 02:38:58 PM
+cox_hos,home,Browse,N/A,112.134.219.194,MVNO1224,10/02/2020 02:39:05 PM
+,properties,Properties Logout,cox_hos,112.134.219.194,MVNO1224,10/02/2020 02:39:12 PM
+cox_hos,logout,Logout,N/A,112.134.219.194,MVNO1224,10/02/2020 02:39:13 PM
+cox_parent,properties,Browse,N/A,175.157.43.107,COX001,10/08/2020 11:32:43 AM
+cox_parent,properties,Properties Auto Login,434234234234,175.157.43.107,COX001,10/08/2020 11:32:44 AM
+cox_parent,home,Browse,N/A,175.157.43.107,MVNO573,10/08/2020 11:32:45 AM
+cox_parent,theme,Browse,N/A,175.157.43.107,MVNO573,10/08/2020 11:32:52 AM
+cox_parent,theme,Browse,N/A,175.157.43.107,MVNO573,10/08/2020 11:33:10 AM
+cox_support,venue_support,Browse,N/A,132.251.0.10,MVNO1324,10/09/2020 09:09:51 PM
+cox_support,support,Back to Support,cox_support,132.251.0.10,MVNO1324,10/09/2020 09:10:00 PM
+cox_support,venue_support,Browse,N/A,132.251.0.10,MVNO1224,10/09/2020 09:10:45 PM
+cox_support,network,Browse,N/A,132.251.0.10,MVNO1224,10/09/2020 09:10:59 PM
+cox_support,network,Browse,N/A,132.251.0.10,MVNO1224,10/09/2020 09:11:05 PM
+cox_support,support,Back to Support,cox_support,132.251.0.10,MVNO1224,10/09/2020 09:11:18 PM
+cox_support,venue_support,Browse,N/A,111.223.170.180,MVNO1224,10/09/2020 10:27:53 PM
+cox_support,theme,Browse,N/A,111.223.170.180,MVNO1224,10/09/2020 10:27:59 PM
+cox_support,support,Support Logout,cox_support,111.223.170.180,MVNO1224,10/09/2020 10:28:21 PM
+cox_support,logout,Logout,N/A,111.223.170.180,MVNO1224,10/09/2020 10:28:21 PM
+cox_hos,properties,Browse,N/A,112.134.223.200,HOS1234,10/13/2020 08:41:53 PM
+cox_hos,properties,Properties Auto Login,125689745632,112.134.223.200,HOS1234,10/13/2020 08:41:54 PM
+cox_hos,home,Browse,N/A,112.134.223.200,MVNO1224,10/13/2020 08:41:54 PM
+cox_hos,theme,Browse,N/A,112.134.223.200,MVNO1224,10/13/2020 08:42:25 PM
+,properties,Properties Logout,cox_hos,112.134.223.200,MVNO1224,10/13/2020 08:43:20 PM
+cox_hos,logout,Logout,N/A,112.134.223.200,MVNO1224,10/13/2020 08:43:20 PM
+cox_support,venue_support,Browse,N/A,123.231.111.53,MVNO573,10/14/2020 01:27:12 PM
+cox_support,theme,Browse,N/A,123.231.111.53,MVNO573,10/14/2020 01:27:17 PM
+cox_support,venue_support,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 05:08:17 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 05:08:21 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 05:18:12 PM
+cox_support,profile,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 05:19:15 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 05:22:38 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 05:27:07 PM
+cox_support,support,Back to Support,cox_support,175.157.45.202,MVNO573,10/20/2020 05:27:33 PM
+cox_support,venue_support,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 05:27:43 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 05:27:49 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 05:38:38 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 06:03:23 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 07:00:28 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 09:03:14 PM
+cox_support,profile,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 09:03:59 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO573,10/20/2020 09:04:09 PM
+cox_support,support,Back to Support,cox_support,175.157.45.202,MVNO573,10/20/2020 09:09:18 PM
+cox_support,venue_support,Browse,N/A,175.157.45.202,MVNO1224,10/20/2020 09:09:51 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO1224,10/20/2020 09:09:58 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO1224,10/20/2020 09:10:47 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO1224,10/20/2020 09:12:33 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO1224,10/20/2020 09:14:38 PM
+cox_support,home,Browse,N/A,175.157.45.202,MVNO1224,10/20/2020 09:20:26 PM
+cox_hos,properties,Browse,N/A,123.231.108.231,HOS1234,10/23/2020 07:29:38 PM
+cox_hos,properties,Properties Auto Login,125689745632,123.231.108.231,HOS1234,10/23/2020 07:29:38 PM
+cox_hos,home,Browse,N/A,123.231.108.231,MVNO1224,10/23/2020 07:29:39 PM
+cox_hos,theme,Browse,N/A,123.231.108.231,MVNO1224,10/23/2020 07:29:54 PM
+cox_hos,network,Browse,N/A,123.231.108.231,MVNO1224,10/23/2020 07:30:07 PM
+cox_hos,theme,Browse,N/A,123.231.108.231,MVNO1224,10/23/2020 07:30:23 PM
+,properties,Properties Logout,cox_hos,123.231.108.231,MVNO1224,10/23/2020 07:37:51 PM
+cox_hos,logout,Logout,N/A,123.231.108.231,MVNO1224,10/23/2020 07:37:51 PM
+cox_support,venue_support,Browse,N/A,123.231.108.231,MVNO1224,10/23/2020 07:42:59 PM
+cox_support,theme,Browse,N/A,123.231.108.231,MVNO1224,10/23/2020 07:43:05 PM
+cox_support,network,Browse,N/A,123.231.108.231,MVNO1224,10/23/2020 07:43:30 PM
+cox_support,theme,Browse,N/A,123.231.108.231,MVNO1224,10/23/2020 07:43:41 PM
+cox_support,support,Support Logout,cox_support,123.231.108.231,MVNO1224,10/23/2020 07:51:37 PM
+cox_support,logout,Logout,N/A,123.231.108.231,MVNO1224,10/23/2020 07:51:37 PM
+cox_support,venue_support,Browse,N/A,175.157.45.108,MVNO1224,10/23/2020 07:51:53 PM
+cox_support,home,Browse,N/A,175.157.45.108,MVNO1224,10/23/2020 07:51:58 PM
+cox_parent,properties,Browse,N/A,175.157.43.253,COX001,10/26/2020 03:37:57 PM
+cox_parent,properties,Properties Auto Login,434234234234,175.157.43.253,COX001,10/26/2020 03:37:58 PM
+cox_parent,home,Browse,N/A,175.157.43.253,MVNO573,10/26/2020 03:37:58 PM
+cox_parent,network,Browse,N/A,175.157.43.253,MVNO573,10/26/2020 03:38:04 PM
+cox_parent,properties,Browse,N/A,112.134.218.140,COX001,10/26/2020 06:07:43 PM
+cox_parent,properties,Properties Auto Login,434234234234,112.134.218.140,COX001,10/26/2020 06:07:44 PM
+cox_parent,home,Browse,N/A,112.134.218.140,MVNO573,10/26/2020 06:07:45 PM

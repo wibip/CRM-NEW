@@ -1,0 +1,153 @@
+@font-face {
+    font-family:'OpenSansLight';
+    src: url('../font/opensans-light-webfont.eot');
+    src: url('../font/opensans-light-webfont.eot?#iefix') format('embedded-opentype'), url('../font/opensans-light-webfont.woff') format('woff'), url('../font/opensans-light-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.navbar-fixed-top, .logo-center{
+    display: none;
+}
+h1{
+    font-size: 36px;
+    font-family: 'OpenSansLight';
+    font-weight: 500;
+        line-height: 45px;
+        width: 300px;
+        max-width: 100%;
+}
+
+button.btn{
+    float: left;
+}
+
+.btn-primary{
+    background-color: #ff0000 !important;
+     -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        border: none;!important;
+            padding-top: 6px 12px !important;
+
+}
+
+.btn-primary:hover{
+  /*   background-color: #7a377a !important;
+  background-position: unset !important;
+   -webkit-box-shadow: none !important;
+      box-shadow: none !important; */
+}
+
+.account-container form{
+        padding-top: 40px;
+        padding-left: 20px;
+        padding-right: 20px;
+}
+body{
+        background: #ececec !important;
+}
+
+.login-fields input{
+    background-color: #ffffff !important;
+        padding: 6px 12px  !important;
+        background-image: none !important;
+}
+
+.account-container{
+    background: #ffffff url(../img/signin-bg.png) no-repeat scroll right top;
+    background-size: 43%;
+    width: 500px;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+form a{
+	color: #ff0000 ;
+    text-decoration: none !important;
+}
+
+form a:hover{
+	color: #ff0000 ;
+    text-decoration: none !important;
+}
+
+.container a{
+	color: #000000 !important;
+}
+
+form font b{
+	color: #000000 !important;
+}
+
+.login-fields label {
+    display: block;
+}
+
+@media (max-width: 768px){
+    h1{
+        font-size: 28px;
+        line-height: 1.1;
+        width: 200px;
+    }
+
+    .account-container{
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .account-container form{
+        padding-top: 5px;
+    }
+    
+    br{
+        display: none;
+    }
+
+    body {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+@media (max-width: 480px){
+
+    .content{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    h1{
+        width: 150px;
+    }
+
+    .account-container{
+        margin-top: 5px;
+    }
+
+    .btn-primary{
+        width: 100%;
+    }
+
+}
+
+/* 
+.btn-primary {
+    border: 1px solid #777777;
+    background-color: #777777 !important;
+
+}
+
+.btn-primary:hover{
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+.btn-primary:hover font{
+    color: #000000 !important;
+}
+
+.btn-primary, .btn-primary:hover, .btn-warning, .btn-warning:hover, .btn-danger, .btn-danger:hover, .btn-success, .btn-success:hover, .btn-info, .btn-info:hover, .btn-inverse, .btn-inverse:hover{
+    background-image: none !important;
+    background-position: inherit !important; 
+    text-shadow: none !important;
+} */

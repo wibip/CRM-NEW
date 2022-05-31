@@ -1,0 +1,165 @@
+@font-face {
+  font-family: 'Regular';
+  src: url('../font/NexaW01-Book.woff2') format('woff2'),
+        url('../font/NexaW01-Book.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body{
+    background: #f9f9f9 !important;
+    font-family: Regular;
+}
+
+.logo-center{
+    display: none;
+}
+
+.account-container{
+      background: #f8f8f8 url('../img/logo_desktop.png') !important;
+      background-repeat: no-repeat !important;
+          background-position: 50% 10% !important;
+    width: 365px !important;
+    background-size: 140px !important;
+      box-shadow: none !important;
+      border: 1px solid #c9c9c9 !important;
+}
+
+.navbar .brand{
+      background: url(../img/logo_desktop.png);
+      background-repeat: no-repeat;
+      width: 100px;
+      white-space: nowrap;
+      text-indent: -9999px;
+      height: 40px;
+      padding: 0px 20px 20px !important;
+      background-size: contain;
+      background-position: center;
+}
+
+.navbar-fixed-top .navbar-inner{
+      background: #ffffff !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+}
+
+.navbar-fixed-top{
+  display: none;
+}
+
+
+.login-fields input{
+      background-color: #fff !important;
+    border: 1px solid #ccc !important;
+    box-shadow: 2px 3px 2px -2px rgba(0, 0, 0, .08) inset !important;
+      padding: 7px 10px 7px 10px !important;
+      background-image: none !important;
+          width: 303px !important;
+}
+
+@media (max-width: 480px){
+.account-container {
+    width: 100% !important;
+    margin-top: 35px;
+}
+.login-fields input{
+  width: 100% !important;
+}
+}
+
+.login-fields label{
+  display: block !important;
+  font-weight: 500;
+  font-size: 14px;
+  color: #404040;
+}
+
+.btn-primary{
+  background-color: #d9272d !important;
+   -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      font-family: Regular;
+          font-size: 14.4px !important;
+          font-weight: 400;
+          padding-top: 4px !important;
+          padding-bottom: 4px !important;
+          width: 100%
+
+}
+
+.btn-primary:hover{
+  background-color: #b72025 !important;
+  background-position: unset !important;
+   -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+}
+
+.login-actions .btn{
+  float: left;
+}
+
+input, textarea, select, .uneditable-input{
+    border: 1px solid #8c8c8c !important;
+}
+
+a {
+    color: #00acd1 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    font-family: Regular;
+}
+
+a:hover{
+  color: #05667a !important;
+    text-decoration: none !important;
+}
+
+.navbar .container {
+    margin-left: 100px ;
+    margin-right: 100px ;
+    width: auto !important;
+}
+
+.content {
+    padding: 20px !important;
+    padding-top: 100px !important;
+}
+
+
+@media (max-width: 979px){
+.navbar .container {
+    padding: 10px !important;
+     margin: 0px !important;
+}
+.navbar .brand{
+  width: 119px;
+  background-size: 119px;
+      height: 10px;
+      padding: 0px 0px 20px !important;
+}
+}
+
+.password-strength-main{
+	width: 96%;
+ 	background-color: rgba(0, 0, 0, 0.1);
+  	height: 7px;
+	}
+/*
+	
+@media (max-width: 380px) {
+   .password-strength-main{
+	width: 100% !important;
+	
+	}
+}
+
+@media (max-width: 768px) {
+   .password-strength-main{
+	width: 45% ;
+	
+	}
+}
+*/
+
+
