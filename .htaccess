@@ -1,0 +1,8 @@
+RewriteEngine On
+#RewriteRule ^go/(\w+)?$ tenant/compat.php?property=$1 [QSA,NC,L]
+
+# Hide a specific file
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
