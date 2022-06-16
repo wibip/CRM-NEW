@@ -1,0 +1,287 @@
+@font-face {
+    font-family: 'NeueHaasGrotesk';
+    font-weight: normal;
+    font-style: normal;
+    font-display: fallback;
+    src: url('../font/NHaasGroteskDSStd-55Rg.eot') format('embedded-opentype'),
+        url('../font/NHaasGroteskDSStd-55Rg.ttf') format('truetype'),
+        url('../font/NHaasGroteskDSStd-55Rg.woff') format('woff'),
+        url('../font/NHaasGroteskDSStd-55Rg.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: 'NeueHaasGroteskBold';
+    font-weight: normal;
+    font-style: normal;
+    font-display: fallback;
+    src: url('../font/NHaasGroteskTXStd-55Rg.eot') format('embedded-opentype'),
+        url('../font/NHaasGroteskTXStd-55Rg.ttf') format('truetype'),
+        url('../font/NHaasGroteskTXStd-55Rg.woff') format('woff'),
+        url('../font/NHaasGroteskTXStd-55Rg.woff2') format('woff2')
+}
+
+@font-face {
+  font-family: 'NHGrotesk-reg';
+  src: url('../font/NHaasGroteskDSStd-55Rg.otf') format("opentype"),url('../font/NHaasGroteskDSStd-55Rg.eot') format("embedded-opentype"), url('../font/NHaasGroteskDSStd-55Rg.ttf') format("truetype"), url('../font/NHaasGroteskDSStd-55Rg.woff') format("woff"), url('../font/NHaasGroteskDSStd-55Rg.woff2') format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+font b {
+    color: #000 !important;
+}
+
+#password-strength-meter,
+#password-strength-text,
+i[data-bv-icon-for="password"] {
+    display: none !important;
+}
+
+.widget .widget-header {
+    background: #000000 !important;
+}
+
+.widget .widget-header h3 {
+    color: #ffffff !important;
+}
+
+h1.hideH {
+    display: none;
+}
+
+.logo-top-img {
+    position: absolute;
+    top: 30px;
+    font-weight: bold;
+    font-size: 24px;
+    font-family: 'NeueHaasGrotesk';
+    left: 35px;
+    color: #000;
+}
+
+.verification .logo-top-img::after {
+    content: "Activate account"
+}
+
+.reset_pwd .logo-top-img::after,
+.reset_pwd_admin .logo-top-img::after {
+    content: "Reset password"
+}
+
+.logo-top-img::after {
+    content: "Sign in"
+}
+
+body {
+    background: #ffffff !important;
+    font-family: NeueHaasGrotesk !important;
+}
+
+.logo-center {
+    display: none;
+}
+
+.navbar .brand {
+    background: url(../img/top_logo.png);
+    background-repeat: no-repeat;
+    width: 140px;
+    white-space: nowrap;
+    text-indent: -9999px;
+    margin-left: 10px;
+    height: 50px;
+    background-size: 100%;
+    background-position: center;
+}
+
+.account-container {
+    margin: -44px auto 0 auto !important;
+    background-color: #f7f7f7 !important;
+    width: 480px !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid #f7f7f7 !important;
+    border-radius: 0px;
+    position: relative;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    -ms-border-radius: 0px;
+    -o-border-radius: 0px;
+}
+
+
+
+.navbar-fixed-top .navbar-inner {
+    background: #ffffff !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    height: 93px;
+    padding: 10px 0 !important;
+}
+
+.navbar-fixed-top {
+    border-bottom: solid 1px #eee;
+}
+
+.login-fields input:not([type=radio]) {
+    background-color: #fff !important;
+    border: 1px solid #ccc !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    padding: 7px 10px 7px 10px !important;
+    background-image: none !important;
+    width: 100% !important;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 36px;
+    border-radius: 0;
+    border-bottom-color: #000 !important;
+}
+
+
+.login-fields label {
+    display: block !important;
+    font-weight: normal;
+    font-size: 14px;
+    color: #191919;
+}
+
+.btn-primary {
+    background-color: #000 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    padding: 10px 24px;
+    border: solid 1px #000;
+    border-radius: 24px;
+
+}
+
+.btn-primary[name="submitverify"] {
+    width: auto
+}
+
+.btn-primary:hover {
+    background-color: #000 !important;
+    background-position: unset !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+
+}
+
+.login-actions .btn {
+    float: left;
+}
+
+input,
+textarea,
+select,
+.uneditable-input {
+    border: 1px solid #8c8c8c !important;
+}
+
+a {
+    color: #000 !important;
+    text-decoration: none !important;
+    font-size: 18px;
+}
+
+a:hover {
+    color: #000 !important;
+    text-decoration: none !important;
+}
+
+a:not(.back)::after {
+    content: " ";
+    display: inline-block;
+    margin-left: 6px;
+    width: .5em;
+    height: .5em;
+    border-top: solid 2px #000;
+    border-right: solid 2px #000;
+    -webkit-transform: rotateZ(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotateZ(45deg);
+}
+
+.navbar .container {
+    margin-left: 30px;
+    margin-right: 100px;
+    width: auto !important;
+}
+
+.content {
+    padding: 35px !important;
+    padding-top: 60px !important;
+    margin-top: 20px !important;
+    background: #f7f7f7;
+}
+
+
+.password-strength-main {
+    width: 96%;
+    background-color: rgba(0, 0, 0, 0.1);
+    height: 7px;
+}
+
+@media (max-width: 979px) {
+    .navbar .container {
+        padding: 10px !important;
+        margin: 0px !important;
+    }
+
+    /* 
+.navbar-fixed-top .navbar-inner{
+      height: 60px;
+    padding: 00px 0 !important;
+} */
+}
+
+@media (max-width: 767px) {
+    body {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .navbar-fixed-top {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .account-container {
+        width: 100% !important;
+        margin-top: 35px;
+    }
+
+    .login-fields input:not([type=radio]) {
+        width: 100% !important;
+    }
+
+    .navbar-fixed-top::after {
+        display: none;
+    }
+}
+
+/*
+	
+@media (max-width: 380px) {
+   .password-strength-main{
+	width: 100% !important;
+	
+	}
+}
+
+@media (max-width: 768px) {
+   .password-strength-main{
+	width: 45% ;
+	
+	}
+}
+*/
+
+
+.alert{
+    font-family: 'NHGrotesk-reg',helvetica,arial,sans-serif !important;
+    font-size: 15px !important;
+}

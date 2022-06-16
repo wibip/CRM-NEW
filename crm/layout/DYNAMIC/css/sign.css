@@ -1,0 +1,246 @@
+
+font b{
+    color: #000 !important;
+}
+
+#password-strength-meter, #password-strength-text, i[data-bv-icon-for="password"]{
+  display: none !important;
+}
+
+.widget .widget-header{
+    background: #000000 !important;
+}
+
+.widget .widget-header h3{
+    color: #ffffff !important;
+}
+.logo-top-img{
+    /* background: url(../img/logo.png); */
+    width: 200px;
+    position: absolute;
+    text-align: center;
+    top: 30px;
+    font-weight: bold;
+    font-size: 17px;
+    background-size: 100%;
+    left: 50%;
+    color: #58595b;
+    background-repeat: no-repeat;
+    margin-left: -100px;
+}
+
+.hideH{
+    display: none;
+}
+.verification .logo-top-img::after {
+    content: "ACTIVATE ACCOUNT"
+}
+
+.reset_pwd .logo-top-img::after,
+.reset_pwd_admin .logo-top-img::after {
+    content: "RESET PASSWORD"
+}
+
+.reset_pwd .content,
+.reset_pwd_admin .content,
+.verification .content{
+    padding-top: 60px !important;
+}
+
+/* .logo-top-img::after {
+    content: "SIGN IN"
+} */
+body{
+        background: #ffffff !important;
+    font-family: Open Sans !important;
+}
+
+.logo-center{
+        display: none;
+}
+
+.navbar .brand{
+        background: url(../img/wow_top_logo.png);
+        background-repeat: no-repeat;
+        width: 185px;
+        white-space: nowrap;
+        text-indent: -9999px;
+        height: 18px;
+        padding: 0px 20px 20px !important;
+        background-size: contain;
+        background-position: center;
+}
+
+.account-container{
+      margin: 20px auto 0 auto !important;
+      background-color: #fff !important;
+      width: 365px !important;
+      box-shadow: 4px 6px 9px 0px #dadada, inset 0px -3px 0px #e6e6e6 !important;
+      border: 1px solid #c9c9c9 !important;
+      border-radius: 0px;
+      position: relative;
+      -webkit-border-radius: 0px;
+      -moz-border-radius: 0px;
+      -ms-border-radius: 0px;
+      -o-border-radius: 0px;
+}
+
+
+
+.navbar-fixed-top .navbar-inner{
+        background: #ffc40c !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+      height: 40px;
+      padding: 10px 0 !important;
+}
+
+.navbar-fixed-top::after{
+    background-image: url(../img/color-bar.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 10px;
+    content: "";
+    position: absolute;
+    width: 100%;
+}
+
+/* .navbar-fixed-top{
+  display: none;
+} */
+.login-fields input:not([type=radio]){
+        background-color: #fff !important;
+    border: 1px solid #ccc !important;
+    box-shadow: 2px 3px 2px -2px rgba(0, 0, 0, .08) inset !important;
+        padding: 7px 10px 7px 10px !important;
+        background-image: none !important;
+              width: 100% !important;
+    box-sizing: border-box;
+    height: 40px;
+}
+
+
+.login-fields label{
+    display: block !important;
+    font-weight: normal;
+    font-size: 14px;
+    color: #191919;
+}
+
+.btn-primary{
+    background-color: #c62328 !important;
+     -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        font-family: Open Sans;
+            height: 45px;
+            font-size: 15px !important;
+            font-weight: 400;
+            padding-top: 4px !important;
+            padding-bottom: 4px !important;
+          width: 100%
+
+}
+
+.btn-primary[name="submitverify"]{
+    width: auto
+}
+
+.btn-primary:hover{
+    background-color: #c62328 !important;
+    background-position: unset !important;
+     -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+
+}
+
+.login-actions .btn{
+    float: left;
+}
+
+input, textarea, select, .uneditable-input{
+    border: 1px solid #8c8c8c !important;
+}
+
+a {
+    color: #337ab7 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    font-family: Open Sans;
+}
+
+a:hover{
+    color: #23527c !important;
+    text-decoration: none !important;
+}
+
+.navbar .container {
+    margin-left: 30px ;
+    margin-right: 100px ;
+    width: auto !important;
+}
+
+.content {
+        padding: 25px !important;
+    margin-top: 20px !important;
+    background: #fff;
+}
+
+
+.password-strength-main{
+	width: 96%;
+ 	background-color: rgba(0, 0, 0, 0.1);
+  	height: 7px;
+	}
+
+@media (max-width: 979px){
+.navbar .container {
+    padding: 10px !important;
+     margin: 0px !important;
+}
+
+.navbar-fixed-top .navbar-inner{
+      height: 60px;
+    padding: 00px 0 !important;
+}
+}
+
+
+@media (max-width: 480px){
+.account-container {
+    width: 100% !important;
+    margin-top: 35px;
+}
+.login-fields input:not([type=radio]){
+  width: 100% !important;
+}
+.navbar .brand{
+    width: 70px;
+    /*background-size: 119px;*/
+        height: 20px;
+    margin-left: 6px;
+}
+.navbar-fixed-top::after{
+    display: none;
+}
+}
+
+/*
+	
+@media (max-width: 380px) {
+   .password-strength-main{
+	width: 100% !important;
+	
+	}
+}
+
+@media (max-width: 768px) {
+   .password-strength-main{
+	width: 45% ;
+	
+	}
+}
+*/
+
+
+

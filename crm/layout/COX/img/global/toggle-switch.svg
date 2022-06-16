@@ -1,0 +1,34 @@
+<svg class="toggle-switch-svg" viewBox="0 0 104 46" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <title>On Toggle</title>
+    <desc>Toggle Switch Component.</desc>
+    <defs>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.35 0" in="shadowBlurOuter1" type="matrix" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="V14" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Artboard-68" sketch:type="MSArtboardGroup" transform="translate(-20.000000, -104.000000)">
+            <g class="toggle-switch-group" sketch:type="MSLayerGroup" transform="translate(20.000000, 105.000000)">
+               
+				<rect class="toggle-on-track" stroke="#8B8F96" fill="#2757A6" sketch:type="MSShapeGroup" mask="url(#mask-2)" x="1" y="0" width="101.581395" height="42" rx="21"></rect>
+				<rect class="toggle-off-track" stroke="#8B8F96" fill="#7D7D7D" sketch:type="MSShapeGroup" mask="url(#mask-2)" x="1" y="0" width="101.581395" height="42" rx="21"></rect>
+
+                <circle class="toggle-bar" fill="#F0F0F0" filter="url(#filter-1)" sketch:type="MSShapeGroup" cx="80.5348837" cy="21" r="20"></circle>
+
+                <text class="toggle-on-text" sketch:type="MSTextLayer" font-family="Open Sans" font-size="20" font-weight="normal" fill="#FFFFFF">
+                    <tspan x="20.5116279" y="26.9196039">On</tspan>
+                </text>
+
+                <text class="toggle-off-text" sketch:type="MSTextLayer" font-family="Open Sans" font-size="20" font-weight="normal" fill="#FFFFFF">
+                    <tspan x="50.5116279" y="26.9196039">Off</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg
