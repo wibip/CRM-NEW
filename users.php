@@ -25,8 +25,6 @@ $user_model = new userMainModel();
 $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 ?>
 
-
-
 <head>
 	<meta charset="utf-8">
 	<title>Roles - Roles Management</title>
