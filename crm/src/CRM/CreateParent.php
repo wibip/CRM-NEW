@@ -13,23 +13,38 @@ if (strlen($id)<1) {
 $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
 
 $mno_id = $result['mno_id'];
-$data = array('name'	 => $result['business_name'],
-			 'contact'   => array('name' => $result['contact_name'], 
-								'email' => $result['contact_email'], 
-							    'voice' => $result['contact_number']),
-			 'locations' => array(array('id' => $result['property_id'], 
-								  'name' => $result['contact_name'],
-								  'address' => array('street' => $result['street'],
-								  					 'city' => $result['city'],
-								  					 'state' => $result['state'],
-								  					 'zip' => $result['zip'] )
-								)
-				)
-			  );
+$data = [
+	'name' => $result['business_name'],
+	'contact' => [
+		'name' => $result['contact_name'], 
+		'email' => $result['contact_email'], 
+		'voice' => $result['contact_number']
+	],
+	'locations' => [
+		[
+			'id' => $result['property_id'], 
+			'name' => $result['contact_name'],
+			'address' => [
+				'street' => $result['street'],
+				'city' => $result['city'],
+				'state' => $result['state'],
+				'zip' => $result['zip'] 
+			]
+		]
+	],
+	"operator-code"=>"FRT",
+	"sub-operator"=>"",
+	"service-type"=>"ENT-SMB-NON-AP-VYOS",
+	"env"=>"hosted"
+];
 $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Processing' WHERE id = '$id'");
+
 require_once 'functions.php';
 $jsondata = json_encode($data);
+
+$crm_profile = 'CRM_HOSTED';
 $crm = new crm($crm_profile, $system_package);
+
 $response = $crm->createParent($jsondata);
 if ($response['status'] == 'success') {
 	$ex = $db->execDB("UPDATE exp_crm SET `status` = 'Completed' WHERE id = '$id'");

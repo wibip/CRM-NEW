@@ -2,14 +2,17 @@
 header("Cache-Control: no-cache, must-revalidate");
 
 
-include_once(str_replace('//','/',dirname(__FILE__).'/') .'../../classes/dbClass.php');
-include_once(str_replace('//','/',dirname(__FILE__).'/') .'../../classes/systemPackageClass.php');
-
+include_once(__DIR__.'/../../classes/dbClass.php');
+include_once(__DIR__ .'/../../classes/systemPackageClass.php');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 class crm
 {
 
     public function __construct($crm_profile,$system_package)
     {
+
         $this->package_functions = new package_functions();
         $this->db = new db_functions();
         $this->crm_profile = $crm_profile;
@@ -19,9 +22,10 @@ class crm
 
     public function getAllConfig($crm_profile){
     if (!isset($crm_profile)) {
-        $crm_profile = 'CRM_ALTICE';
+        $crm_profile = 'CRM_HOSTED';
     }
-    $data = $this->db->select1DB("SELECT `api_url`,`api_password`,`api_user_name` FROM `exp_other_profile` WHERE distributor='ADMIN' AND type='CRM' AND `profile_name` = '$crm_profile'");
+    $q = "SELECT `api_url`,`api_password`,`api_user_name` FROM `exp_other_profile` WHERE distributor='ADMIN' AND type='CRM' AND `profile_name` = '$crm_profile'";
+    $data = $this->db->select1DB($q);
     return $data;
     }
 
@@ -45,7 +49,6 @@ class crm
             'password'   => $this->getOtherConfig('api_password')
     );
     $jsondata = json_encode($data);
-    
     $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL,$url);
@@ -74,6 +77,7 @@ class crm
     }
 
     public function createParent($jsonData){
+
         $access_token = $this->getToken();
         //API Url
         $url2 = $this->getOtherConfig('api_url').'/accounts';
@@ -84,6 +88,7 @@ class crm
         $header_parameters = array(
             'Authorization: Bearer '.$access_token.'',
             'Content-Type: application/json');
+        print_r($header_parameters);
         //curl_setopt($ch, CURLOPT_POST, 1);
         //Attach our encoded JSON string to the POST fields.
         curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);

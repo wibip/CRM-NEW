@@ -40,7 +40,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                     </div>
                     <div class="form-actions">
                         <button name="activeLocationsSearch" id="activeLocationsSearch" type="button"
-                                class="btn btn-info" style="text-decoration:none"> Search
+                                class="btn btn-info" style="text-decoration:none"> Search or Refresh
                         </button>
                     </div>
                     <script type="text/javascript">
