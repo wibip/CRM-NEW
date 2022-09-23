@@ -2,22 +2,22 @@
 
     header("Content-type: text/css; charset: UTF-8"); //important
 
-       
+
     $user_type = $_GET["user_type"];
     $distributor_code = $_GET["distributor_code"];
     $system_package = $_GET["system_package"];
 
- 
+
     //require_once('../../../db/config.php');
 
     require_once '../../../classes/dbClass.php';
     $db = new db_functions();
 
- 
+
     if($user_type == 'MNO' || $user_type == 'SUPPORT'){
 
         $system_package_new = $system_package;
- 
+
     }elseif($user_type == 'MVNO'){
         $q = "SELECT `mno_id` FROM `exp_mno_distributor` WHERE `distributor_code` = '$distributor_code';";
         $result=$db->select1DB($q);
@@ -60,7 +60,7 @@
 
         //$result = mysql_fetch_array($query_results);
 
-        $custom_data = json_decode($result['settings'],true); 
+        $custom_data = json_decode($result['settings'],true);
 
         $main_color = $custom_data['branding']['PRIMARY_COLOR']['options'];
         $secondary_color = $custom_data['branding']['SECONDARY_COLOR']['options'];
@@ -83,34 +83,34 @@
         }
 
     }else{
-      
+
         $main_color = "#23002a";//sweetbay-#23002a
         $secondary_color = "#b21c24";
         $logo_image_url = '../img/sample-logo.png';
         $font_color = '#fff';
         $font_color2 = '#fff';
-                   
+
     }
 
-        
 
 
 
 
 
-    
-   
+
+
+
     $navbarColor = "#fff";
     $navbarTopColor  = "#f2f2f2";
     $selectColor = $main_color;
     $btnPrimary_color = $main_color;
-    $btnPrimary_color_hover = $main_color;    
+    $btnPrimary_color_hover = $main_color;
     $btnInfo_color = $secondary_color;
     $btnInfo_color_hover = $secondary_color;
     $linkColor = "#333333";
     $linkColor_hover = "#333333";
 
-    
+
 
 ?>
 
@@ -232,18 +232,17 @@
 }
 
 .content.clearfix select,
-.content.clearfix input {
-    width: 100%;
+.content.clearfix input:not([type="radio"]) {
+    width: 100% !important;
     box-sizing: border-box;
     height: 37px;
 }
 
-.content.clearfix,
-.actions.clearfix {
+.content.clearfix{
     width: 80%;
     display: block;
     margin: auto;
-    margin-top: 25px;
+    margin-top: 40px;
 }
 
 @media(max-width:767px) {
@@ -380,7 +379,16 @@ padding-right: 15px; */
 }
 
 .navbar .nav>li.dropdown>a{
-        padding: 20px 10px 11px !important;
+        padding: 2px !important;
+}
+
+.navbar .nav-collapse{
+    margin-top: 10px;
+}
+
+.navbar .nav .dropdown-toggle .caret, .navbar .nav .open.dropdown .caret{
+    border-top-color: #000 !important;
+    border-bottom-color: #000 !important;
 }
 
 
@@ -480,7 +488,7 @@ div.tablesaw-columntoggle-popup input[type="checkbox"]:checked + label::before{
 input[type="radio"]:checked:not(.hide_rad) + label::before{
     /*background-position: 0 -658px;*/
     background:none;
-    content: "\f05d";    
+    content: "\f05d";
     font-family: FontAwesome;
     position: relative;
     font-size: 35px;
@@ -502,11 +510,14 @@ input[type="radio"]:not(.hide_rad) + label::before {
     display: inline-block;
     width: 32px;
     height: 32px;
-    margin: -6px 9px -14px -6px;
     background-position: -6px -538px;
     background-repeat: no-repeat;
     content: " ";
     vertical-align: top;
+}
+
+i.form-control-feedback {
+    display: none !important;
 }
 
 .theme_response{
@@ -731,7 +742,7 @@ h1, h2, h3, h4, h5, h6{
 
 
 .subnavbar .container>ul>li>a:hover{
-    
+
     text-decoration: none;
     transition: background-color .5s ease-in,color .5s ease-in;
 }
@@ -757,7 +768,7 @@ h1, h2, h3, h4, h5, h6{
 
 .new:hover {
     color: #000 !important;
-    
+
     transition: background-color .5s ease-in,color .5s ease-in;
     font-weight: 600 !important;
 }
@@ -1051,7 +1062,7 @@ button[class*="close"]:not(.fancy_close):hover{
 }
 
 .ui-dialog-buttonset button:nth-child(2){
-  
+
   color: #fff !important;
   border-radius: 5px !important;
   background: <?php echo $btnPrimary_color; ?> !important;
@@ -1123,7 +1134,7 @@ button[class*="close"]:not(.fancy_close):hover{
     font-family: inherit !important;
 }
 /* .ui-datepicker:after,.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-    
+
     background: url(../img/carousel-controls.png) no-repeat !important;
 
 } */
@@ -1189,7 +1200,7 @@ button[class*="close"]:not(.fancy_close):hover{
 
 .ui-datepicker td span,
 .ui-datepicker td a {
-    
+
     display: inline-block !important;
     height: 30px !important;
     line-height: 30px !important;
@@ -1197,7 +1208,7 @@ button[class*="close"]:not(.fancy_close):hover{
     width: 30px !important;
     font-size: 0.750em !important;
     border-radius: 18px !important;
-   
+
 }
 
 .ui-datepicker td a:not(.ui-state-highlight):not(.ui-state-active){
@@ -1253,7 +1264,7 @@ button[class*="close"]:not(.fancy_close):hover{
   	height: 7px;
 	}
 
-	
+
 
 
 .newTabs{
@@ -1274,7 +1285,7 @@ button[class*="close"]:not(.fancy_close):hover{
     margin-bottom: -3px !important;
     z-index: 2 !important;
     font-family: Open Sans, sans-serif !important;
-    font-size: 12pt !important; 
+    font-size: 12pt !important;
     font-weight: unset;
 }*/
 .newTabs.newTabs>li.active{
@@ -1294,7 +1305,7 @@ button[class*="close"]:not(.fancy_close):hover{
     background-color: #ffffff !important;
     cursor: pointer !important;
     color: #555 !important;
-    
+
 }
 .newTabs.newTabs>li>a{
     padding-top: 12px;
@@ -1307,11 +1318,12 @@ button[class*="close"]:not(.fancy_close):hover{
     border-top-color: currentcolor;
     border-top-style: none;
     border-top-width: medium;
-    border-top: 3px solid #edeeee;
+    border-top: none;
     border-radius: 0px !important;
     line-height: 18px;
     color: #000 !important;
 }
+
 .nav.nav-tabs {
     padding-left: 0px !important;
 }
@@ -1376,7 +1388,7 @@ margin-top: -17px !important
 }
 
 
-/*#guestnet_tab_intruduct, #create_camp, #live_camp, #guestnet_tab_1, #guestnet_tab_4, 
+/*#guestnet_tab_intruduct, #create_camp, #live_camp, #guestnet_tab_1, #guestnet_tab_4,
 #guestnet_tab_2, #guestnet_tab_6, #tab_2, #tab_1,#create_product,#create_roles,#edit_users,
 #payment_activity,#guestnet_tab_9,#active_theme,#preview_url, #create_users, #manage_users, #business_id_users,
 #create_location, #assign_ap, #edit_parent, #mno_account, #active_mno, #saved_mno, #tab1, #tab2, #tab3,
@@ -1499,7 +1511,7 @@ min-width: auto !important;
 /*.select2-chosen{
     background: url(../img/form-fields-biz2.png) 0 -37px no-repeat,url(../img/form-fields-biz2.png) 100% 0 no-repeat !important;
     -webkit-appearance: none !important;
-    -moz-appearance: none !important; 
+    -moz-appearance: none !important;
     margin-right: 0px !important;
 }*/
 
@@ -1538,9 +1550,6 @@ h1.head.qos-head{
 }
 .form-horizontal .form-actions{
     padding-left: 0px;
-}
-.form-horizontal {
-    margin-left: 20px;
 }
 .form-horizontal .table_response {
     margin-left: -20px;
@@ -1760,7 +1769,7 @@ height: 517px !important;
     font-family: FontAwesome;
     float: right;
     color: <?php echo $selectColor; ?>;
-}  
+}
 
 .control-group .select2-container .select2-choice .select2-arrow b{
     background: none !important;
@@ -1870,7 +1879,7 @@ body .subnavbar .container>ul>li>a>span:not(.glyph), body .subnavbar .container>
     color: #b7b7b7;
     padding: 6px 20px;
     padding-bottom: 0px;
-    font-size: 12px;                                
+    font-size: 12px;
 }
 hr.divid{
     background: #a9a9a9;
@@ -2077,16 +2086,16 @@ section.counter{
 
 .btn-warning.toggle-off{
     background-color: <?php echo $secondary_color; ?> !important;
-   
+
 }
 
 .s_toggle .btn-warning{
- 
+
     border-radius: 20px !important;
     width: 62.5px !important;
 }
 .s_toggle .btn-success{
- 
+
  border-radius: 20px !important;
  width: 62.5px !important;
 }
@@ -2139,6 +2148,23 @@ section.counter{
 
 
 @media (max-width: 979px){
+    .form-horizontal .controls{
+        width: 100% !important
+    }
+    .form-horizontal .form-actions{
+    padding-top: 0;
+    width:100% !important
+}
+.content.clearfix, .actions.clearfix{
+    width: 100% !important;
+}
+div.flex{
+    display: block !important
+}
+.create_re{
+    padding-left:0 !important
+}
+    }
     /*.main {
         margin-top: 55px;
     }
@@ -2149,7 +2175,7 @@ section.counter{
         z-index: 801 !important;
         background: #fff !important;
         height: 50px !important;
-        
+
     }*/
 
     .big_stats .tab-content{
@@ -2162,10 +2188,6 @@ section.counter{
 
     .new{
         color: #000 !important;
-    }
-
-    .dropdown .caret{
-        display: none;
     }
 
     .navbar .dropdown-menu a:hover, .navbar .nav>li>a:hover, body .dropdown-menu li:hover{
@@ -2448,14 +2470,14 @@ section.counter{
 @media (max-width: 380px) {
    .password-strength-main{
     width: 100% !important;
-    
+
     }
 }
 
 @media (max-width: 768px) {
    .password-strength-main{
     width: 48% ;
-    
+
     }
 
     #myTabContentDASH .widget-header h2{
@@ -2467,14 +2489,30 @@ section.counter{
 
 
 @media (max-width: 520px) {
+    .steps{
+        margin-left: -15px !important;
+    margin-right: -15px !important;
+    width: auto !important;
+    }
+    .form-horizontal .controls{
+        width: 100% !important;
+    }
+    button.btn, .select2-container.form-control{
+        width: 100% !important;
+    }
+    .perpage{
+        left: 0;
+        right: auto !important;
+    }
+    .newTabs.newTabs>li>a{
+    background-color: #fff !important;
+}
    .newTabs>li {
         display: flex !important;
         float: none !important;
         margin: 0px !important;
-        margin-top: -2px !important;
         border: 1px solid #dcdbdb !important;
         box-shadow: 0px 1px 0 1px #ffffff;
-        border-top: none !important;
     }
     .newTabs>li::after {
         content: "\f078";
@@ -2486,8 +2524,7 @@ section.counter{
     }
     .newTabs>li.active{
         box-shadow: 0px 1px 0 2px #ffffff;
-        border-width: 2px 2px 2px 2px !important;
-        background-color: #c6c6c6 !important;
+        background-color: #eeeeee !important;
     }
     .newTabs>li:last-child {
         margin-bottom: -3px !important;
@@ -2505,8 +2542,8 @@ section.counter{
     body .main .newTabs{
         /*position: sticky !important;
         top: 55px;*/
-        margin-top: -18px !important;
-        background: #fff !important; 
+        margin-top: -28px !important;
+        background: #fff !important;
         padding-right: 10px !important;
         padding-left: 10px !important;
     }
@@ -2522,7 +2559,7 @@ section.counter{
         background: #fff !important;
     }
 
-    
+
     #SP_LINE_dashbox_REAL_TIME_SESSION_0, #BAR_COL_VERTICAL_ARRIS_API_dashbox_ARRIS_API_G_SESSIONS_0, #BAR_COL_VERTICAL_ARRIS_API_dashbox_ARRIS_API_G_BANDWIDTH_0, #BAR_COL_PIE_ARRIS_API_dashbox_ARRIS_API_G_OS_0{
         background-color: #fff !important;
     }
@@ -2547,8 +2584,8 @@ section.counter{
 
 
     .newTabs.newTabs>li.active>a{
-        border-top: 1px solid #dcdbdb !important;
-        background-color: #c6c6c6;
+        border-top: none !important;
+        background-color: #eeeeee !important;
     }
 
 }
@@ -2602,15 +2639,19 @@ section.counter{
     }*/
 }
 
-
+@media (max-width: 380px){
+    .steps>.step, [role="tablist"]>[role="tab"]{
+        font-size: 11px !important;
+    }
+    .perpage select{
+        width: 70px !important;
+    }
+}
 
 
 @media (max-width: 349px){
     #live_camp .action-table a:not(.btn-small), #assign_ap .btn#pendingLocationsSearch{
         margin-bottom: 30px;
-    }
-    .perpage{
-        top: -60px !important;
     }
 
 }
@@ -2656,7 +2697,7 @@ input.pass_msg {
         width: 280px;
         margin: auto !important;
     }
-    
+
 }
 
 @media (max-width: 768px){

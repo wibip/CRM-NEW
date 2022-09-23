@@ -13,7 +13,7 @@
     }
 </style>
 
-<?php 
+<?php
 $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
                                                         FROM exp_products
                                                         WHERE (network_type='GUEST' || network_type='PRIVATE' || network_type='VTENANT') AND mno_id='$user_distributor' AND (default_value='1' || default_value IS NULL)";
@@ -109,7 +109,6 @@ if (!empty($arrayo)) {
         <div>
             <div class="content clearfix">
                 <fieldset id="customer_info" data-name="Customer Information ">
-                    <h3>Customer Information </h3>
                     <div class="flex">
                         <div class="create_le">
                             <div class="control-group">
@@ -149,7 +148,7 @@ if (!empty($arrayo)) {
                                       $('#crm_form')
                                                 .bootstrapValidator('enableFieldValidators', 'contact_Phone', false);
                                       var phone_1 = phone_1.slice(0,10);
-                                                
+
                                                 }
                                               $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
                                               //console.log(phone_1+'sss');
@@ -164,7 +163,7 @@ if (!empty($arrayo)) {
                                   $('#crm_form')
                                                 .bootstrapValidator('enableFieldValidators', 'contact_Phone', true)
                                   }
-                                  
+
                                 $('#crm_form').bootstrapValidator('revalidateField', 'contact_Phone');
                               });
 
@@ -276,7 +275,7 @@ if (!empty($arrayo)) {
                                     </select>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
 
                         </div>
                         <div class="create_re">
@@ -320,20 +319,24 @@ if (!empty($arrayo)) {
                                         <input type="text" name="zip" id="zip" class="span4 form-control" value="<?php echo $edit===true?$get_zip:''?>">
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </fieldset>
+                <style>
+                    .radio-controls label{
+                        margin-bottom: 0;
+                    }
+                </style>
                 <fieldset id="wifi_info" data-name="Wi-Fi Site Information ">
-                    <h3>Wi-Fi Site Information </h3>
                     <div class="flex">
                         <div class="create_le">
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Will this customer have more than one site on the WiFi Now service? </label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="radio" name="more_than_one_sites" id="more_than_one_sites-yes" class="span4 form-control">Yes
-                                        <input type="radio" name="more_than_one_sites" id="more_than_one_sites-no" class="span4 form-control">No
+                                    <div class="controls col-lg-5 form-group radio-controls" style="display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-align: center;-ms-flex-align: center;align-items: center;">
+                                       <div style="display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-align: center;-ms-flex-align: center;align-items: center;"> <input type="radio" name="more_than_one_sites" id="more_than_one_sites-yes" class="span4 form-control">&nbsp;Yes &nbsp;&nbsp;</div>
+                                        <div  style="display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-align: center;-ms-flex-align: center;align-items: center;"><input type="radio" name="more_than_one_sites" id="more_than_one_sites-no" class="span4 form-control">&nbsp;No</div>
                                     </div>
                                 </div>
                             </div>
@@ -390,7 +393,7 @@ if (!empty($arrayo)) {
                                         <input type="text" name="wifi_contact" id="wifi_contact" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_contact:''?>">
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
 
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
@@ -404,7 +407,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Reflect a Unique Property ID (Need to Build this logically or just a sequential number like WFN-000001?)</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input readonly type="text" name="opt_code" id="opt_code" class="span4 form-control" value="<?php echo $get_opt_code; ?>">
+                                        <input readonly type="text" name="opt_code" id="opt_code" class="span4 form-control" value="<?php echo $get_opt_code; ?>" style="margin-bottom: 10px">
                                         <input type="text" name="wifi_unique" id="wifi_unique" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_unique:''?>">
                                     </div>
                                 </div>
@@ -460,7 +463,7 @@ if (!empty($arrayo)) {
                                         <input class="mobile3_vali" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="14"  type="text" name="wifi_phone" id="wifi_phone" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_phone:''?>">
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
 
                             <script type="text/javascript">
                             $(document).ready(function() {
@@ -480,7 +483,7 @@ if (!empty($arrayo)) {
                                       $('#crm_form')
                                                 .bootstrapValidator('enableFieldValidators', 'wifi_phone', false);
                                       var phone_1 = phone_1.slice(0,10);
-                                                
+
                                                 }
                                               $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
                                               //console.log(phone_1+'sss');
@@ -495,7 +498,7 @@ if (!empty($arrayo)) {
                                   $('#crm_form')
                                                 .bootstrapValidator('enableFieldValidators', 'wifi_phone', true)
                                   }
-                                  
+
                                 $('#crm_form').bootstrapValidator('revalidateField', 'wifi_phone');
                               });
 
@@ -578,7 +581,7 @@ if (!empty($arrayo)) {
                                         <input type="text" name="wifi_ins_date" id="wifi_ins_date" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_ins_date:''?>">
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
 
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
@@ -594,7 +597,6 @@ if (!empty($arrayo)) {
 
                 <!-- Product Information  -->
                 <fieldset id="wifi_product_info" data-name="Product Information ">
-                    <h3>Product Information </h3>
                     <div class="flex">
                     <div class="create_le">
                         <div class="control-group">
@@ -624,7 +626,7 @@ if (!empty($arrayo)) {
                                     <select name="prod_content_filter" id="prod_content_filter" class="span4 form-control">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
-                                    </select>    
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -636,7 +638,7 @@ if (!empty($arrayo)) {
                                         <option value="DIA">DIA</option>
                                         <option value="FiOS">FiOS</option>
                                         <option value="Other">Other</option>
-                                    </select>    
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -647,15 +649,15 @@ if (!empty($arrayo)) {
                                     <select name="prod_guest" id="prod_guest" class="span4 form-control">
                                         <option value="">Select product</option>
 
-                                        <?php 
+                                        <?php
                                         foreach ($arrayfinal as $value) {
                                             $product_id = $value['product_id'];
                                             $product_code = $value['product_code'];
                                              if ($value['network_type'] == 'GUEST') {
-                                               echo '<option value="'.$product_id.'">'.$product_code.'</option>]';  
+                                               echo '<option value="'.$product_id.'">'.$product_code.'</option>]';
                                              }
                                          } ?>
-                                    </select>    
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -666,7 +668,7 @@ if (!empty($arrayo)) {
                                     <select name="prod_telco" id="prod_telco" class="span4 form-control">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
-                                    </select>    
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -677,7 +679,7 @@ if (!empty($arrayo)) {
                                     <select name="prod_cabling" id="prod_cabling" class="span4 form-control">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
-                                    </select>    
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -685,7 +687,7 @@ if (!empty($arrayo)) {
                             <div class="controls col-lg-5 form-group">
                                 <label>Please attach a Floor Plan of the property </label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="file" name="prod_flow_plan" id="prod_flow_plan" value="<?php echo $edit===true?$get_prod_flow_plan:''?>">    
+                                    <input type="file" name="prod_flow_plan" id="prod_flow_plan" value="<?php echo $edit===true?$get_prod_flow_plan:''?>">
                                 </div>
                             </div>
                         </div>
@@ -693,7 +695,7 @@ if (!empty($arrayo)) {
                             <div class="controls col-lg-5 form-group">
                                 <label>Please attach Pictures of the areas to be covered with WiFi </label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="file" name="prod_cover_area" id="prod_cover_area" value="<?php echo $edit===true?$get_prod_cover_area:''?>">    
+                                    <input type="file" name="prod_cover_area" id="prod_cover_area" value="<?php echo $edit===true?$get_prod_cover_area:''?>">
                                 </div>
                             </div>
                         </div>
@@ -703,7 +705,7 @@ if (!empty($arrayo)) {
                             <div class="controls col-lg-5 form-group">
                                 <label>Indoor Square Footage </label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="prod_square_footage" id="prod_square_footage" value="<?php echo $edit===true?$get_prod_square_footage:''?>">    
+                                    <input type="text" name="prod_square_footage" id="prod_square_footage" value="<?php echo $edit===true?$get_prod_square_footage:''?>">
                                 </div>
                             </div>
                         </div>
@@ -715,7 +717,7 @@ if (!empty($arrayo)) {
                                     <select name="prod_outdoor" id="prod_outdoor" class="span4 form-control">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
-                                    </select>    
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -723,7 +725,7 @@ if (!empty($arrayo)) {
                             <div class="controls col-lg-5 form-group">
                                 <label>Maximum Guest Capacity </label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="prod_guest_capacity" id="prod_guest_capacity" value="<?php echo $edit===true?$get_prod_guest_capacity:''?>">    
+                                    <input type="text" name="prod_guest_capacity" id="prod_guest_capacity" value="<?php echo $edit===true?$get_prod_guest_capacity:''?>">
                                 </div>
                             </div>
                         </div>
@@ -731,7 +733,7 @@ if (!empty($arrayo)) {
                             <div class="controls col-lg-5 form-group">
                                 <label>Circuit Size </label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="prod_circuit_size" id="prod_circuit_size" value="<?php echo $edit===true?$get_prod_circuit_size:''?>">    
+                                    <input type="text" name="prod_circuit_size" id="prod_circuit_size" value="<?php echo $edit===true?$get_prod_circuit_size:''?>">
                                 </div>
                             </div>
                         </div>
@@ -740,15 +742,15 @@ if (!empty($arrayo)) {
                             <div class="controls col-lg-5 form-group">
                                 <select name="prod_private" id="prod_private" class="span4 form-control">
                                     <option value="">Select product</option>
-                                    <?php 
+                                    <?php
                                         foreach ($arrayfinal as $value) {
                                             $product_id = $value['product_id'];
                                             $product_code = $value['product_code'];
                                              if ($value['network_type'] == 'PRIVATE') {
-                                               echo '<option value="'.$product_id.'">'.$product_code.'</option>]';  
+                                               echo '<option value="'.$product_id.'">'.$product_code.'</option>]';
                                              }
                                          } ?>
-                                </select>    
+                                </select>
                             </div>
                         </div>
                         <div class="control-group">
@@ -758,7 +760,7 @@ if (!empty($arrayo)) {
                                     <select name="prod_rack_space" id="prod_rack_space" class="span4 form-control">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
-                                    </select>    
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -769,7 +771,7 @@ if (!empty($arrayo)) {
                                     <select name="prod_wiring_paths" id="prod_wiring_paths" class="span4 form-control">
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
-                                    </select>    
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -778,7 +780,7 @@ if (!empty($arrayo)) {
                             <div class="controls col-lg-5 form-group">
                                 <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="file" name="prod_telco_room" id="prod_telco_room" value="<?php echo $edit===true?$get_prod_telco_room:''?>">    
+                                    <input type="file" name="prod_telco_room" id="prod_telco_room" value="<?php echo $edit===true?$get_prod_telco_room:''?>">
                                 </div>
                             </div>
                         </div>
@@ -790,14 +792,13 @@ if (!empty($arrayo)) {
 
                 <!-- Qualifying Questions   -->
                 <fieldset id="wifi_qualify_info" data-name="Qualifying Questions ">
-                    <h3>Qualifying Questions </h3>
                     <div class="flex">
                         <div class="create_le">
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Ceiling Heights </label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="qq_ceiling_hight" id="qq_ceiling_hight" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ceiling_hight:''?>">    
+                                        <input type="text" name="qq_ceiling_hight" id="qq_ceiling_hight" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ceiling_hight:''?>">
                                     </div>
                                 </div>
                             </div>
@@ -806,7 +807,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label>Interior Wall Type </label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="qq_int_wall" id="qq_int_wall" class="span4 form-control" value="<?php echo $edit===true?$get_qq_int_wall:''?>">    
+                                        <input type="text" name="qq_int_wall" id="qq_int_wall" class="span4 form-control" value="<?php echo $edit===true?$get_qq_int_wall:''?>">
                                     </div>
                                 </div>
                             </div>
@@ -814,10 +815,10 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label>Do you have other networks that need to communicate through this network? (Examples: proprietary IT systems or office network, security system, cameras with a DVR/Video Monitoring System, PMI or POP systems, inventory systems, IoT devices, etc.) </label>
                                     <div class="controls col-lg-5 form-group">
-                                        <select name="qq_communicate_other" id="qq_communicate_other" class="span4 form-control"> 
+                                        <select name="qq_communicate_other" id="qq_communicate_other" class="span4 form-control">
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
-                                        </select>   
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -826,10 +827,10 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label>Is this site a residential property?</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <select name="qq_residential" id="qq_residential" class="span4 form-control"> 
+                                        <select name="qq_residential" id="qq_residential" class="span4 form-control">
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
-                                        </select>   
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -837,10 +838,10 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label>Does this site have atmospheric conditioning to control temperature and humidity?</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <select name="qq_atmospheric" id="qq_atmospheric" class="span4 form-control"> 
+                                        <select name="qq_atmospheric" id="qq_atmospheric" class="span4 form-control">
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
-                                        </select>   
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -850,7 +851,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label>Ceiling Type </label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="qq_ceiling_type" id="qq_ceiling_type" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ceiling_type:''?>">    
+                                        <input type="text" name="qq_ceiling_type" id="qq_ceiling_type" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ceiling_type:''?>">
                                     </div>
                                 </div>
                             </div>
@@ -858,7 +859,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label>Exterior Wall Type </label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="qq_ext_wall" id="qq_ext_wall" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ext_wall:''?>">    
+                                        <input type="text" name="qq_ext_wall" id="qq_ext_wall" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ext_wall:''?>">
                                     </div>
                                 </div>
                             </div>
@@ -867,10 +868,10 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label>Do you require a fully customizable UI?</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <select name="qq_customizable_ui" id="qq_customizable_ui" class="span4 form-control"> 
+                                        <select name="qq_customizable_ui" id="qq_customizable_ui" class="span4 form-control">
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
-                                        </select>   
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -879,10 +880,10 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label>Is this site a warehouse?</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <select name="qq_warehouse" id="qq_warehouse" class="span4 form-control"> 
+                                        <select name="qq_warehouse" id="qq_warehouse" class="span4 form-control">
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
-                                        </select>   
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -890,18 +891,18 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label>Are there IoT devices that need to be controlled or monitored by the system? </label>
                                     <div class="controls col-lg-5 form-group">
-                                        <select name="qq_IoT_devices" id="qq_IoT_devices" class="span4 form-control"> 
+                                        <select name="qq_IoT_devices" id="qq_IoT_devices" class="span4 form-control">
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
-                                        </select>   
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </fieldset>
-                    
-                
+
+
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
                         <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-disabled="true"><button href="javascript:void(0)" data-type="previous" class="btn btn-primary" role="menuitem">Previous</button></li>

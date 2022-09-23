@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL & E_NOTICE & E_WARNING);
+
 session_start();
 include_once '../../classes/dbClass.php';
 include_once '../../classes/appClass.php';
@@ -48,7 +51,7 @@ function setPaginationView($count,$nextPage,$max){
 			$nxtdis = 'disabled';
 		}else{ }
 
-		for ($i=$first; $i < (int)$last; $i++) { 
+		for ($i=$first; $i < (int)$last; $i++) {
 			if($count> $i){
 				if($nextPage==$i){
 					$active = 'btn btn';
@@ -117,11 +120,11 @@ if ($type == 'crmActiveAccounts') {
 		$dataArr = array($property_id,$property_name,$status,$id);
 	    array_push($tblArr,$dataArr);
 	}
-	
+
 }else{
 
 $fullCountQuery = "SELECT id,property_details,`status` FROM exp_provisioning_properties WHERE mno_id='$user_distributor' AND `status`<>9 AND `status`<>4";
-            
+
 
 $queryResult = setQuery($db,$fullCountQuery,$nextPage,$pageLength);
 
@@ -178,4 +181,3 @@ foreach($queryResult['qData'] AS $row){
 $return_json = json_encode(array("table"=>$tblArr,"paginate"=>$queryResult['paginate']));
 
 echo cryptoJsAesEncrypt($data_secret,$return_json);
-    

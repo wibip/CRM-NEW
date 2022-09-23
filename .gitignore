@@ -1,9 +1,5 @@
 # Default ignored files
 /.idea/
 /.vscode
-/campaign_portal/db/db_config.php
-/campaign_portal/db/log_db_config.php
-/campaign_portal/backend/storage
-/Ex-Portal/config/db_config.php
-/Ex-Portal/lib/template_engine/compiles
-/tenant/db/db_config.php
+/crm/db/db_config.php
+/crm/db/log_db_config.php
