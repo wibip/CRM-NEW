@@ -1,5 +1,6 @@
 # Default ignored files
 /.idea/
 /.vscode
+/crm/db/config.php
 /crm/db/db_config.php
 /crm/db/log_db_config.php
