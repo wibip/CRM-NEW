@@ -8,7 +8,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_WARNING);*/
 include 'header_top.php';
 
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 /* No cache*/
 header("Cache-Control: no-cache, must-revalidate");
 
@@ -131,13 +133,13 @@ if( empty($log_time_zone) ||  $log_time_zone == '' ){
 	} else {
 		//initially page loading///
 		if ($user_type == 'MNO' || $user_type == 'MVNA' || $user_type == "SALES" || $user_type == "SUPPORT") {
-			$tab3 = "set";
+			$tab36 = "set";
 		} else if ($user_type == 'MVNE') {
 			$tab2 = "set";
 		} else if ($user_type == 'MVNO') {
 			$tab2 = "set";
 		} else {
-			$tab3 = "set";
+			$tab36 = "set";
 		}
 	}
 	$fearuresjson = $db->getValueAsf("SELECT features as f FROM `exp_mno` WHERE mno_id='$user_distributor'");
@@ -694,47 +696,47 @@ if( empty($log_time_zone) ||  $log_time_zone == '' ){
 
 
 
-											<?php
+											<!--< ?php
 											if ($user_type == 'MVNE' || $user_type == 'MVNO') {
 											?>
-												<li <?php if (isset($tab2)) { ?>class="active" <?php } ?>><a href="#access_logs" data-toggle="tab">Access Logs</a></li>
-											<?php } ?>
+												<li < ?php if (isset($tab2)) { ?>class="active" < ?php } ?>><a href="#access_logs" data-toggle="tab">Access Logs</a></li>
+											< ?php } ?>
 
-											<?php
+											< ?php
 											if ($user_type == 'MVNE' || $user_type == 'MVNO') {
 											?>
-												<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#error_logs" data-toggle="tab">Error Logs</a></li>
-											<?php }
+												<li < ?php if (isset($tab1)) { ?>class="active" < ?php } ?>><a href="#error_logs" data-toggle="tab">Error Logs</a></li>
+											< ?php }
 											if ($user_type == 'MNO' || $user_type == "SALES" || $user_type == "SUPPORT") {
 											?>
-												<li <?php if (isset($tab3)) { ?>class="one_tab active" <?php } else {
+												<li < ?php if (isset($tab3)) { ?>class="one_tab active" < ?php } else {
 																										echo 'class="one_tab"';
 																									} ?>><a href="#user_activity_logs" data-toggle="tab">User Activity Logs</a></li>
-												<?php if (in_array("PROPERTY_LOG", $features_array) || $package_features == "all") { ?>
-													<li <?php if (isset($tab24)) { ?>class="active" <?php } ?>><a href="#property_activity_logs" data-toggle="tab">Property Activity Logs</a></li>
-													<li <?php if (isset($tab25)) { ?>class="active" <?php } ?>><a href="#property_activity_logs_download" data-toggle="tab">Property Activity Logs Download</a></li>
+												< ?php if (in_array("PROPERTY_LOG", $features_array) || $package_features == "all") { ?>
+													<li < ?php if (isset($tab24)) { ?>class="active" < ?php } ?>><a href="#property_activity_logs" data-toggle="tab">Property Activity Logs</a></li>
+													<li < ?php if (isset($tab25)) { ?>class="active" < ?php } ?>><a href="#property_activity_logs_download" data-toggle="tab">Property Activity Logs Download</a></li>
 
-												<?php }
+												< ?php }
 												if (in_array("PREPAID_MODULE_N", $mno_feature)) {
 												?>
 
-													<li <?php if (isset($tab36)) { ?>class="active" <?php } ?>><a href="#prepaid_activity_logs" data-toggle="tab">Prepaid API Logs</a></li>
+													<li < ?php if (isset($tab36)) { ?>class="active" < ?php } ?>><a href="#prepaid_activity_logs" data-toggle="tab">Prepaid API Logs</a></li>-->
 
-												<?php }
-											} else {
+												<?php //}
+											// } else {
 
 												if ($package_features == "all" || in_array("OTHER_LOG", $features_array)) { ?>
 
-													<li <?php if (isset($tab36)) { ?>class="active" <?php } ?>><a href="#prepaid_activity_logs" data-toggle="tab">Cloudpath API Logs</a></li>
+													<li <?php if (isset($tab36)) { ?>class="active" <?php } ?>><a href="#prepaid_activity_logs" data-toggle="tab">API Logs</a></li>
 
 												<?php } ?>
 
 												<li <?php if (isset($tab3)) { ?>class="active" <?php } ?>><a href="#user_activity_logs" data-toggle="tab">User Activity Logs</a></li>
-												<?php if (in_array("AUTH_LOGS", $features_array) || $package_features == "all") { ?>
-													<li <?php if (isset($tab11)) { ?>class="active" <?php } ?>><a href="#auth_logs" data-toggle="tab">Auth Logs</a></li>
-
-											<?php }
-											} ?>
+												<!--< ?php if (in_array("AUTH_LOGS", $features_array) || $package_features == "all") { ?>
+													<li < ?php if (isset($tab11)) { ?>class="active" < ?php } ?>><a href="#auth_logs" data-toggle="tab">Auth Logs</a></li>
+												< ?php } ?>-->
+											<?php 
+											// } ?>
 										</ul>
 										<br>
 

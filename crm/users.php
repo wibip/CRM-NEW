@@ -7,6 +7,9 @@ session_start();
 
 include 'header_top.php';
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 /* No cache*/
 header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
 header("Pragma: no-cache"); // HTTP 1.0.
@@ -27,7 +30,7 @@ $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 
 <head>
 	<meta charset="utf-8">
-	<title>Roles - Roles Management</title>
+	<title>Users - User Management</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta name="apple-mobile-web-app-capable" content="yes">
@@ -1554,7 +1557,7 @@ WHERE id='$user_rm_id')";
 
 								<div class="widget-header">
 									<!-- <i class="icon-user"></i> -->
-									<h3>Roles Management</h3>
+									<h3>User Management</h3>
 								</div>
 								<!-- /widget-header -->
 
@@ -1568,19 +1571,19 @@ WHERE id='$user_rm_id')";
 									<div class="tabbable">
 										<ul class="nav nav-tabs newTabs">
 											<li <?php if (isset($tab1) || isset($tab5)) { ?>class="active" <?php } ?>><a href="#create_users" data-toggle="tab">Manage Users</a></li>
-											<li <?php if (isset($tab3)) { ?>class="active" <?php } ?>><a href="#create_roles" data-toggle="tab">Manage Roles</a></li>
+											<!--<li < ?php if (isset($tab3)) { ?>class="active" < ?php } ?>><a href="#create_roles" data-toggle="tab">Manage Roles</a></li>-->
 
-											<?php if ($user_type != 'SUPPORT') { ?>
+											<!--< ?php if ($user_type != 'SUPPORT') { ?>
 
-												<li <?php if (isset($tab6)) { ?>class="active" <?php } ?>><a href="#peer_admin" data-toggle="tab">Create Master Admin</a></li>
+												<li < ?php if (isset($tab6)) { ?>class="active" < ?php } ?>><a href="#peer_admin" data-toggle="tab">Create Master Admin</a></li>
 
-											<?php } ?>
+											< ?php } ?>
 
-											<?php if ($user_type=='ADMIN') { ?>
+											< ?php if ($user_type=='ADMIN') { ?>
 
-											<li <?php if (isset($tab7)) { ?>class="active" <?php } ?>><a href="#api_user" data-toggle="tab">API users</a></li>
+											<li < ?php if (isset($tab7)) { ?>class="active" < ?php } ?>><a href="#api_user" data-toggle="tab">API users</a></li>
 
-											<?php } ?>
+											< ?php } ?>-->
 
 										</ul>
 
@@ -1674,58 +1677,6 @@ WHERE id='$user_rm_id')";
 
 
 													<fieldset>
-														<div class="control-group">
-															<label class="control-label" for="access_role_1">Access Role<sup>
-																	<font color="#FF0000"></font>
-																</sup></label>
-
-															<div class="controls col-lg-5 form-group">
-																<select class="span4 form-control" name="access_role_1" id="access_role_1">
-																	<option value="">Select Access Role</option>
-																	<?php
-
-
-																	if ($user_type == 'MNO') {
-																		//echo '<option value="'.$user_distributor.'_support">Support</option>';
-																	}
-
-																	//$key_query = "SELECT access_role,description FROM admin_access_roles WHERE distributor = '$user_distributor' ORDER BY description";
-
-																	if ($user_type == 'SUPPORT') {
-
-																		$key_query = "SELECT a.`access_role` ,a.description
-																FROM `admin_access_roles` a , `admin_access_roles_modules` b
-																WHERE a.`distributor` ='$user_distributor' AND a.`distributor`=b.`distributor` AND b.`module_name`='support' AND a.`access_role`=b.`access_role`
-																GROUP BY a.`access_role` ORDER BY description";
-																	} else {
-																		$key_query = "SELECT `access_role` ,description
-																FROM `admin_access_roles`
-																WHERE `distributor` ='$user_distributor' ORDER BY description";
-																	}
-
-
-																	// $query_results = mysql_query($key_query);
-																	// while ($row = mysql_fetch_array($query_results)) {
-
-																		$query_results=$db->selectDB($key_query);
-	
-																		foreach($query_results['data'] AS $row){	
-
-																		$access_role = $row[access_role];
-																		$description = $row[description];
-
-																		echo '<option value="' . $access_role . '">' . $description . '</option>';
-																	}
-
-																	?>
-
-																</select>
-
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-
 														<?php
 														echo '<input type="hidden" name="user_type" id="user_type1" value="' . $user_type . '">';
 														?>
@@ -1765,7 +1716,7 @@ WHERE id='$user_rm_id')";
 
 															<div class="controls form-group col-lg-5">
 																<select class="form-control span4" name="language_1" id="language_1">
-
+																	<option>English</option>
 																	<?php
 
 

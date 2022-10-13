@@ -12,7 +12,9 @@ session_start();
 
 include 'header_top.php';
 
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 
 /* No cache*/
 
@@ -2712,22 +2714,22 @@ if(isset($_POST['active_sup_email_submit'])){//10
 
 													<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#live_camp" data-toggle="tab">General Config</a></li>
 
-												<?php  }
-
+												<?php  } } ?>
+												<!--< ?php
 												if (in_array("CONFIG_REGISTER", $features_array)) { ?>
 													<li><a href="#registration" data-toggle="tab">Registration</a></li>
-												<?php }
+												< ?php }
 												if ($user_type == 'ADMIN') {
 												?>
-													<li <?php if (isset($tab15)) { ?>class="active" <?php } ?>><a href="#live_cam3" data-toggle="tab">Login Screen</a></li>
-													<li <?php if (isset($tab13)) { ?>class="active" <?php } ?>><a href="#agreement" data-toggle="tab">Activation T&C</a></li>
-												<?php } ?>
-												<li <?php if (isset($tab21)) { ?>class="active" <?php } ?>><a href="#email" data-toggle="tab">Activation Email</a></li>
+													<li < ?php if (isset($tab15)) { ?>class="active" < ?php } ?>><a href="#live_cam3" data-toggle="tab">Login Screen</a></li>
+													<li < ?php if (isset($tab13)) { ?>class="active" < ?php } ?>><a href="#agreement" data-toggle="tab">Activation T&C</a></li>
+												< ?php } ?>
+												<li < ?php if (isset($tab21)) { ?>class="active" < ?php } ?>><a href="#email" data-toggle="tab">Activation Email</a></li>
 
-												<!-- <li <?php if (isset($tab7)) { ?>class="active" <?php } ?>><a href="#purge_logs" data-toggle="tab">Purge Log Config</a></li> -->
-												<?php if (in_array("PURGE_LOGS", $features_array) || $package_features == "all") { ?>
-													<li <?php if (isset($tab7)) { ?>class="active" <?php } ?>><a href="#purge_logs" data-toggle="tab">Purge Log Config</a></li>
-												<?php } ?> <?php
+												<!-- <li < ?php if (isset($tab7)) { ?>class="active" < ?php } ?>><a href="#purge_logs" data-toggle="tab">Purge Log Config</a></li> 
+												< ?php if (in_array("PURGE_LOGS", $features_array) || $package_features == "all") { ?>
+													<li < ?php if (isset($tab7)) { ?>class="active" < ?php } ?>><a href="#purge_logs" data-toggle="tab">Purge Log Config</a></li>
+												< ?php } ?> < ?php
 														}
 
 
@@ -2738,24 +2740,24 @@ if(isset($_POST['active_sup_email_submit'])){//10
 
 															?>
 
-												<!-- <li class="active"><a href="#live_camp3" data-toggle="tab">System Configuration</a></li>	 -->
-												<?php if (in_array("CONFIG_PROFILE", $features_array)) { ?>
-													<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#product_create" data-toggle="tab">Profile</a></li>
-												<?php }
+												<!-- <li class="active"><a href="#live_camp3" data-toggle="tab">System Configuration</a></li>
+												< ?php if (in_array("CONFIG_PROFILE", $features_array)) { ?>
+													<li < ?php if (isset($tab1)) { ?>class="active" < ?php } ?>><a href="#product_create" data-toggle="tab">Profile</a></li>
+												< ?php }
 															if (in_array("CONFIG_DURATION", $features_array)) { ?>
-													<li <?php if (isset($tab2)) { ?>class="active" <?php } ?>><a href="#duration_create" data-toggle="tab">Duration</a></li>
-												<?php }
+													<li < ?php if (isset($tab2)) { ?>class="active" < ?php } ?>><a href="#duration_create" data-toggle="tab">Duration</a></li>
+												< ?php }
 												?>
 
 
-												<!-- <li><a href="#live_camp3" data-toggle="tab">Portal</a></li> -->
-												<li <?php if (isset($tab0)) { ?>class="active" <?php } ?>><a href="#live_camp3" data-toggle="tab">Portal</a></li>
+												<!-- <li><a href="#live_camp3" data-toggle="tab">Portal</a></li> 
+												<li < ?php if (isset($tab0)) { ?>class="active" < ?php } ?>><a href="#live_camp3" data-toggle="tab">Portal</a></li>
 
-												<?php
+												< ?php
 
 															if (!in_array("CONFIG_DURATION", $features_array)) { ?>
-													<li <?php if (isset($tab18)) { ?>class="active" <?php } ?>><a href="#ale5_create_product" data-toggle="tab">Default Product</a></li>
-												<?php }
+													<li < ?php if (isset($tab18)) { ?>class="active" < ?php } ?>><a href="#ale5_create_product" data-toggle="tab">Default Product</a></li>
+												< ?php }
 															if (in_array("CONFIG_QOS", $features_array)) {
 
 																//httpPost($camp_base_url . '/ajax/get_profile.php',$post_data);
@@ -2763,78 +2765,78 @@ if(isset($_POST['active_sup_email_submit'])){//10
 																CommonFunctions::httpPost($camp_base_url . '/ajax/get_profile.php', $post_data);
 
 												?>
-													<li <?php if (isset($tab42)) { ?>class="active" <?php } ?>><a href="#qos_set" data-toggle="tab">QOS</a></li>
-												<?php }
+													<li < ?php if (isset($tab42)) { ?>class="active" < ?php } ?>><a href="#qos_set" data-toggle="tab">QOS</a></li>
+												< ?php }
 															if (in_array("PREPAID_MODULE_N", $mno_feature)) {
 
 																//httpPost($camp_base_url . '/ajax/get_profile.php',$post_data);
 
 																CommonFunctions::httpPost($camp_base_url . '/ajax/get_profile.php', $post_datanew); ?>
-													<li <?php if (isset($tab36)) { ?>class="active" <?php } ?>><a href="#sfproduct_set" data-toggle="tab">Prepaid</a></li>
-												<?php }
+													<li < ?php if (isset($tab36)) { ?>class="active" < ?php } ?>><a href="#sfproduct_set" data-toggle="tab">Prepaid</a></li>
+												< ?php }
 												?>
 
 
-												<li <?php if (isset($tab11)) { ?>class="active" <?php } ?>><a href="#toc" data-toggle="tab">Guest T&C</a></li>
+												<li < ?php if (isset($tab11)) { ?>class="active" < ?php } ?>><a href="#toc" data-toggle="tab">Guest T&C</a></li>
 
 
-												<?php if (in_array("VTENANT_TC", $features_array) && $package_functions->getSectionType('VTENANT_TYPE', $system_package) == '1') { ?>
-													<li <?php if (isset($tab32)) { ?>class="active" <?php } ?>><a href="#vt_toc" data-toggle="tab">Vtenant T&C</a></li>
-												<?php } ?>
+												< ?php if (in_array("VTENANT_TC", $features_array) && $package_functions->getSectionType('VTENANT_TYPE', $system_package) == '1') { ?>
+													<li < ?php if (isset($tab32)) { ?>class="active" < ?php } ?>><a href="#vt_toc" data-toggle="tab">Vtenant T&C</a></li>
+												< ?php } ?>
 
-												<?php if (in_array("CONFIG_GUEST_AUP", $features_array) || $system_package == 'N/A') { ?>
-													<li <?php if (isset($tab10)) { ?>class="active" <?php } ?>><a href="#aup" data-toggle="tab">Guest AUP</a></li>
-												<?php } ?>
+												< ?php if (in_array("CONFIG_GUEST_AUP", $features_array) || $system_package == 'N/A') { ?>
+													<li < ?php if (isset($tab10)) { ?>class="active" < ?php } ?>><a href="#aup" data-toggle="tab">Guest AUP</a></li>
+												< ?php } ?>
 
-												<li <?php if (isset($tab20)) { ?>class="active" <?php } ?>><a href="#agreement2" data-toggle="tab">Activation T&C</a></li>
-												<?php if (in_array("CONFIG_REGISTER", $features_array)) { ?>
-													<li <?php if (isset($tab22)) { ?>class="active" <?php } ?>><a href="#registration" data-toggle="tab">Registration</a></li>
-												<?php } ?>
-												<li <?php if (isset($tab21)) { ?>class="active" <?php } ?>><a href="#email" data-toggle="tab">Email Templates</a></li>
+												<li < ?php if (isset($tab20)) { ?>class="active" < ?php } ?>><a href="#agreement2" data-toggle="tab">Activation T&C</a></li>
+												< ?php if (in_array("CONFIG_REGISTER", $features_array)) { ?>
+													<li < ?php if (isset($tab22)) { ?>class="active" < ?php } ?>><a href="#registration" data-toggle="tab">Registration</a></li>
+												< ?php } ?>
+												<li < ?php if (isset($tab21)) { ?>class="active" < ?php } ?>><a href="#email" data-toggle="tab">Email Templates</a></li>
 
-												<?php if (in_array("CONFIG_PROPERTY_SETTINGS", $features_array)) { ?>
-													<li <?php if (isset($tab23)) { ?>class="active" <?php } ?>><a href="#property_settings" data-toggle="tab">Property Settings</a></li>
-												<?php } ?>
+												< ?php if (in_array("CONFIG_PROPERTY_SETTINGS", $features_array)) { ?>
+													<li < ?php if (isset($tab23)) { ?>class="active" < ?php } ?>><a href="#property_settings" data-toggle="tab">Property Settings</a></li>
+												< ?php } ?>
 
-												<?php if (in_array("CONFIG_POWER", $features_array)) { ?>
+												< ?php if (in_array("CONFIG_POWER", $features_array)) { ?>
 													<li><a href="#power_shedule" data-toggle="tab">Power Schedule</a></li>
-												<?php }
+												< ?php }
 															if (in_array("CONFIG_GUEST_FAQ", $features_array) || $system_package == 'N/A') { ?>
-													<li <?php if (isset($tab30)) { ?>class="active" <?php } ?>><a href="#faq" data-toggle="tab">FAQ</a></li>
-												<?php }
+													<li < ?php if (isset($tab30)) { ?>class="active" < ?php } ?>><a href="#faq" data-toggle="tab">FAQ</a></li>
+												< ?php }
 															if (in_array("CONFIG_FOOTER", $features_array) || $system_package == 'N/A') { ?>
-													<li <?php if (isset($tab31)) { ?>class="active" <?php } ?>><a href="#footer" data-toggle="tab">FAQ</a></li>
-												<?php }
+													<li < ?php if (isset($tab31)) { ?>class="active" < ?php } ?>><a href="#footer" data-toggle="tab">FAQ</a></li>
+												< ?php }
 															if (in_array("SERVER_LINK_CONFIG", $features_array) || $system_package == 'N/A') { ?>
-													<li <?php if (isset($tab39)) { ?>class="active" <?php } ?>><a href="#server_link" data-toggle="tab">Survey Link</a></li>
-												<?php }
+													<li < ?php if (isset($tab39)) { ?>class="active" < ?php } ?>><a href="#server_link" data-toggle="tab">Survey Link</a></li>
+												< ?php }
 															if (in_array("CONFIG_USER_GUIDE", $features_array) || $system_package == 'N/A') { ?>
-													<li <?php if (isset($tab31)) { ?>class="active" <?php } ?>><a href="#user_guide" data-toggle="tab">User Guide</a></li>
-												<?php }
+													<li < ?php if (isset($tab31)) { ?>class="active" < ?php } ?>><a href="#user_guide" data-toggle="tab">User Guide</a></li>
+												< ?php }
 
 															if (in_array("CONFIG_BLACKLIST", $features_array)) { ?>
-													<li <?php if (isset($tab34)) { ?>class="active" <?php } ?>><a href="#blacklist" data-toggle="tab">Blacklist</a></li>
-												<?php
+													<li < ?php if (isset($tab34)) { ?>class="active" < ?php } ?>><a href="#blacklist" data-toggle="tab">Blacklist</a></li>
+												< ?php
 															}
 															if (in_array("PREPAID_MODULE_N", $mno_feature)) { ?>
-													<li <?php if (isset($tab40)) { ?>class="active" <?php } ?>><a href="#api_config" data-toggle="tab">API Config</a></li>
-												<?php
+													<li < ?php if (isset($tab40)) { ?>class="active" < ?php } ?>><a href="#api_config" data-toggle="tab">API Config</a></li>
+												< ?php
 															}
 														}
 														if ($user_type == 'MVNO_ADMIN') {
 												?>
 
-												<li <?php if (isset($tab0)) { ?>class="active" <?php } ?>><a href="#live_camp3" data-toggle="tab">Portal</a></li>
+												<li < ?php if (isset($tab0)) { ?>class="active" < ?php } ?>><a href="#live_camp3" data-toggle="tab">Portal</a></li>
 
 
-												<?php if (in_array("CONFIG_PROFILE", $features_array)) { ?>
-													<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#product_create" data-toggle="tab">Profile</a></li>
-												<?php }
+												< ?php if (in_array("CONFIG_PROFILE", $features_array)) { ?>
+													<li < ?php if (isset($tab1)) { ?>class="active" < ?php } ?>><a href="#product_create" data-toggle="tab">Profile</a></li>
+												< ?php }
 															if (in_array("CONFIG_DURATION", $features_array)) { ?>
-													<li <?php if (isset($tab2)) { ?>class="active" <?php } ?>><a href="#duration_create" data-toggle="tab">Duration</a></li>
-												<?php } ?>
+													<li < ?php if (isset($tab2)) { ?>class="active" < ?php } ?>><a href="#duration_create" data-toggle="tab">Duration</a></li>
+												< ?php } ?>
 
-												<?php
+												< ?php
 															if (in_array("CONFIG_QOS", $features_array)) {
 
 																//httpPost($camp_base_url . '/ajax/get_profile.php',$post_data);
@@ -2842,55 +2844,55 @@ if(isset($_POST['active_sup_email_submit'])){//10
 																CommonFunctions::httpPost($camp_base_url . '/ajax/get_profile.php', $post_data);
 
 												?>
-													<li <?php if (isset($tab42)) { ?>class="active" <?php } ?>><a href="#qos_set" data-toggle="tab">QOS</a></li>
-												<?php } ?>
+													<li < ?php if (isset($tab42)) { ?>class="active" < ?php } ?>><a href="#qos_set" data-toggle="tab">QOS</a></li>
+												< ?php } ?>
 
-												<li <?php if (isset($tab11)) { ?>class="active" <?php } ?>><a href="#toc" data-toggle="tab">Guest T&C</a></li>
+												<li < ?php if (isset($tab11)) { ?>class="active" < ?php } ?>><a href="#toc" data-toggle="tab">Guest T&C</a></li>
 
 
-												<?php if (in_array("VTENANT_TC", $features_array) && $package_functions->getSectionType('VTENANT_TYPE', $system_package) == '1') { ?>
-													<li <?php if (isset($tab32)) { ?>class="active" <?php } ?>><a href="#vt_toc" data-toggle="tab">Vtenant T&C</a></li>
-												<?php } ?>
+												< ?php if (in_array("VTENANT_TC", $features_array) && $package_functions->getSectionType('VTENANT_TYPE', $system_package) == '1') { ?>
+													<li < ?php if (isset($tab32)) { ?>class="active" < ?php } ?>><a href="#vt_toc" data-toggle="tab">Vtenant T&C</a></li>
+												< ?php } ?>
 
-												<?php if (in_array("CONFIG_GUEST_AUP", $features_array) || $system_package == 'N/A') { ?>
-													<li <?php if (isset($tab10)) { ?>class="active" <?php } ?>><a href="#aup" data-toggle="tab">Guest AUP</a></li>
-												<?php } ?>
+												< ?php if (in_array("CONFIG_GUEST_AUP", $features_array) || $system_package == 'N/A') { ?>
+													<li < ?php if (isset($tab10)) { ?>class="active" < ?php } ?>><a href="#aup" data-toggle="tab">Guest AUP</a></li>
+												< ?php } ?>
 
-												<li <?php if (isset($tab20)) { ?>class="active" <?php } ?>><a href="#agreement2" data-toggle="tab">Activation T&C</a></li>
+												<li < ?php if (isset($tab20)) { ?>class="active" < ?php } ?>><a href="#agreement2" data-toggle="tab">Activation T&C</a></li>
 
-												<li <?php if (isset($tab21)) { ?>class="active" <?php } ?>><a href="#email" data-toggle="tab">Email Templates</a></li>
+												<li < ?php if (isset($tab21)) { ?>class="active" < ?php } ?>><a href="#email" data-toggle="tab">Email Templates</a></li>
 
-												<?php if (in_array("CONFIG_PROPERTY_SETTINGS", $features_array)) { ?>
-													<li <?php if (isset($tab23)) { ?>class="active" <?php } ?>><a href="#property_settings" data-toggle="tab">Property Settings</a></li>
-												<?php } ?>
+												< ?php if (in_array("CONFIG_PROPERTY_SETTINGS", $features_array)) { ?>
+													<li < ?php if (isset($tab23)) { ?>class="active" < ?php } ?>><a href="#property_settings" data-toggle="tab">Property Settings</a></li>
+												< ?php } ?>
 
-												<?php if (in_array("CONFIG_POWER", $features_array)) { ?>
+												< ?php if (in_array("CONFIG_POWER", $features_array)) { ?>
 													<li><a href="#power_shedule" data-toggle="tab">Power Schedule</a></li>
-												<?php }
+												< ?php }
 															if (in_array("CONFIG_GUEST_FAQ", $features_array) || $system_package == 'N/A') { ?>
-													<li <?php if (isset($tab30)) { ?>class="active" <?php } ?>><a href="#faq" data-toggle="tab">FAQ</a></li>
-												<?php }
+													<li < ?php if (isset($tab30)) { ?>class="active" < ?php } ?>><a href="#faq" data-toggle="tab">FAQ</a></li>
+												< ?php }
 															if (in_array("CONFIG_FOOTER", $features_array) || $system_package == 'N/A') { ?>
-													<li <?php if (isset($tab31)) { ?>class="active" <?php } ?>><a href="#footer" data-toggle="tab">FAQ</a></li>
-												<?php }
+													<li < ?php if (isset($tab31)) { ?>class="active" < ?php } ?>><a href="#footer" data-toggle="tab">FAQ</a></li>
+												< ?php }
 															if (in_array("SERVER_LINK_CONFIG", $features_array) || $system_package == 'N/A') { ?>
-													<li <?php if (isset($tab39)) { ?>class="active" <?php } ?>><a href="#server_link" data-toggle="tab">Survey Link</a></li>
-												<?php }
+													<li < ?php if (isset($tab39)) { ?>class="active" < ?php } ?>><a href="#server_link" data-toggle="tab">Survey Link</a></li>
+												< ?php }
 															if (in_array("CONFIG_USER_GUIDE", $features_array) || $system_package == 'N/A') { ?>
-													<li <?php if (isset($tab31)) { ?>class="active" <?php } ?>><a href="#user_guide" data-toggle="tab">User Guide</a></li>
-												<?php }
+													<li < ?php if (isset($tab31)) { ?>class="active" < ?php } ?>><a href="#user_guide" data-toggle="tab">User Guide</a></li>
+												< ?php }
 
 															if (in_array("CONFIG_BLACKLIST", $features_array)) { ?>
-													<li <?php if (isset($tab34)) { ?>class="active" <?php } ?>><a href="#blacklist" data-toggle="tab">Blacklist</a></li>
-												<?php }
+													<li < ?php if (isset($tab34)) { ?>class="active" < ?php } ?>><a href="#blacklist" data-toggle="tab">Blacklist</a></li>
+												< ?php }
 															if (in_array("CONFIG_REGISTER", $features_array)) { ?>
-													<li <?php if (isset($tab22)) { ?>class="active" <?php } ?>><a href="#registration" data-toggle="tab">Registration</a></li>
-											<?php }
+													<li < ?php if (isset($tab22)) { ?>class="active" < ?php } ?>><a href="#registration" data-toggle="tab">Registration</a></li>
+											< ?php }
 
 															echo '<br>';
 														}
 
-											?>
+											?>-->
 
 										</ul><br>
 
@@ -9483,13 +9485,13 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-										<h3>ADMIN - Portal Image </h3>
+										<!--<h3>ADMIN - Portal Image </h3>
 
 										<p>Recommend Size (160 x 30 px)</p>
 
 										<div>
 
-											<?php
+											< ?php
 
 
 											$url = '?type=admin_tlogo&id=ADMIN'; ?>
@@ -9540,7 +9542,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-										<br><br>
+										<br><br>-->
 
 
 
@@ -9590,7 +9592,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 												</div>
 
-												<div class="control-group" <?php
+												<!--<div class="control-group" < ?php
 
 																			if (!array_key_exists('login_title', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
@@ -9603,13 +9605,13 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-														<input class="span4 form-control" id="login_title" name="login_title" type="text" value="<?php echo $db->setVal("login_title", $user_distributor); ?>">
+														<input class="span4 form-control" id="login_title" name="login_title" type="text" value="< ?php echo $db->setVal("login_title", $user_distributor); ?>">
 
 
 
 													</div>
 
-												</div>
+												</div>-->
 
 
 
@@ -9634,7 +9636,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 												</div>
 
-												<div class="control-group" <?php
+												<!--<div class="control-group" < ?php
 																			if (!array_key_exists('noc_email', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
 																			}
@@ -9643,10 +9645,10 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 													<label class="control-label" for="radiobtns">NOC Email</label>
 
 													<div class="controls form-group">
-														<input class="span4 form-control" id="noc_email" name="noc_email" type="text" value="<?php echo $package_functions->getOptions("TECH_BCC_EMAIL", $system_package); ?>">
+														<input class="span4 form-control" id="noc_email" name="noc_email" type="text" value="< ?php echo $package_functions->getOptions("TECH_BCC_EMAIL", $system_package); ?>">
 													</div>
 
-												</div>
+												</div>-->
 
 												<?php // echo $system_package; 
 												?>
@@ -9705,21 +9707,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 												</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-												<div class="control-group" <?php
+												<!--<div class="control-group" < ?php
 																			if (!array_key_exists('captive_url', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
 																			}
@@ -9731,7 +9719,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-														<input class="span4 form-control" id="base_url" name="base_url" type="text" value="<?php echo $db->setVal("portal_base_url", $user_distributor); ?>">
+														<input class="span4 form-control" id="base_url" name="base_url" type="text" value="< ?php echo $db->setVal("portal_base_url", $user_distributor); ?>">
 
 
 
@@ -9744,39 +9732,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 													<div class="controls form-group">
 														<font size="1">Ex: http://10.1.1.1/Ex-portal</font>
 													</div>
-												</div>
-												<!--REDIRECT URL-->
-												<?php /*
-												onkeyup="setRedirectURL();"
-												<script type="text/javascript">
-													function setRedirectURL(){
-														var base_url=document.getElementById("base_url").value;
-														document.getElementById("captive_portal_url").value=base_url+"/checkpoint.php";
-													}
-												</script>
-
-
-												<div class="control-group">
-
-													<label class="control-label" for="radiobtns">Redirection URL</label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append">
-
-															<input readonly class="span4" id="captive_portal_url" name="captive_portal_url" type="text" value="<?php echo $db->setVal("captive_portal_url",$user_distributor); ?>" required="required">
-
-														</div>
-
-													</div>
-
-												</div>*/	?>
-
-
-
-
-
-
+												</div>-->
 
 												<div class="control-group" <?php
 																			if (!array_key_exists('captive_url', $tab1_field_ar) && $system_package != 'N/A') {
@@ -9784,38 +9740,24 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 																			}
 																			?> style="margin-bottom: 0px !important;">
 
-													<label class="control-label" for="radiobtns">Campaign Portal Internal URL</label>
+													<label class="control-label" for="radiobtns">CRM URL</label>
 
 													<div class="controls form-group">
-
-
-
 														<input class="span4 form-control" id="camp_url" name="camp_url" type="text" value="<?php echo $db->setVal("camp_base_url", $user_distributor); ?>">
-
-
-
-
 													</div>
 
-
-													<div class="control-group">
+													<!--<div class="control-group">
 														<div class="controls form-group">
 															<font size="1">Ex: http://10.1.1.1/campaign_portal</font>
 														</div>
-													</div>
-
+													</div>-->
 
 												</div>
 
 
 
 
-
-
-
-
-
-												<div class="control-group" <?php
+												<!--<div class="control-group" < ?php
 																			if (!array_key_exists('global_url', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
 																			}
@@ -9827,7 +9769,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-														<input class="span4 form-control" id="global_url" name="global_url" type="text" value="<?php echo $db->setVal("global_url", $user_distributor); ?>">
+														<input class="span4 form-control" id="global_url" name="global_url" type="text" value="< ?php echo $db->setVal("global_url", $user_distributor); ?>">
 
 
 
@@ -9844,7 +9786,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 												</div>
 
-												<div class="control-group" <?php
+												<div class="control-group" < ?php
 																			if (!array_key_exists('reCapture', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none"';
 																			}
@@ -9855,7 +9797,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 													<div class="controls form-group">
 
-														<input type="texy" class="span4 form-control" id="g-reCAPTCHA" name="g-reCAPTCHA" value="<?php echo $db->setVal("g-reCAPTCHA", 'ADMIN'); ?>">
+														<input type="texy" class="span4 form-control" id="g-reCAPTCHA" name="g-reCAPTCHA" value="< ?php echo $db->setVal("g-reCAPTCHA", 'ADMIN'); ?>">
 
 													</div>
 													<br>
@@ -9864,12 +9806,12 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 													<div class="controls form-group">
 
-														<input type="text" class="span4 form-control" id="g-reCAPTCHA-site-key" name="g-reCAPTCHA-site-key" value="<?php echo $db->setVal("g-reCAPTCHA-site-key", 'ADMIN'); ?>">
+														<input type="text" class="span4 form-control" id="g-reCAPTCHA-site-key" name="g-reCAPTCHA-site-key" value="< ?php echo $db->setVal("g-reCAPTCHA-site-key", 'ADMIN'); ?>">
 
 													</div>
 													<br>
 												</div>
-												<div class="control-group" <?php
+												<div class="control-group" < ?php
 																			if (!array_key_exists('dbr_key', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none"';
 																			}
@@ -9878,13 +9820,13 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 													<div class="controls form-group">
 														<select name="tech_barcode_reader_status" id="tech_barcode_reader_status">
-                                                            <?php
+                                                            < ?php
                                                             $tech_BR_status=explode(',',$db->setVal("tech_barcode_reader_status", 'ADMIN'));
                                                             $tech_BR_status_1 = $tech_BR_status[0];
                                                             $tech_BR_status_2 = $tech_BR_status[1];
                                                             ?>
-															<option value="1,<?php echo $tech_BR_status_2;?>" <?php echo $tech_BR_status_1 == '1' ? 'selected' : ''; ?>>ON</option>
-															<option value="0,<?php echo $tech_BR_status_2;?>" <?php echo $tech_BR_status_1 == '0' ? 'selected' : ''; ?>>OFF</option>
+															<option value="1,< ?php echo $tech_BR_status_2;?>" < ?php echo $tech_BR_status_1 == '1' ? 'selected' : ''; ?>>ON</option>
+															<option value="0,< ?php echo $tech_BR_status_2;?>" < ?php echo $tech_BR_status_1 == '0' ? 'selected' : ''; ?>>OFF</option>
 														</select>
 														<script>
 															$(function() {
@@ -9899,12 +9841,12 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 															});
 														</script>
 													</div>
-													<div style="display: <?php echo $tech_BR_status_1 == '1' ? 'block' : 'none'; ?>; " id="dbr_key_div">
-														<label class="control-label" for="radiobtns">Dynamsoft <?php echo $tech_BR_status_2==1?'BR Key':'Organization ID';?></label>
+													<div style="display: < ?php echo $tech_BR_status_1 == '1' ? 'block' : 'none'; ?>; " id="dbr_key_div">
+														<label class="control-label" for="radiobtns">Dynamsoft < ?php echo $tech_BR_status_2==1?'BR Key':'Organization ID';?></label>
 
 														<div class="controls form-group">
 
-															<input type="text" class="span4 form-control" id="dbr_key" name="dbr_key" value="<?php echo $db->setVal("dbr_key", 'ADMIN'); ?>">
+															<input type="text" class="span4 form-control" id="dbr_key" name="dbr_key" value="< ?php echo $db->setVal("dbr_key", 'ADMIN'); ?>">
 
 														</div>
 													</div>
@@ -9914,7 +9856,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 												</div>
 
 
-												<div class="control-group" <?php
+												<div class="control-group" < ?php
 																			if (!array_key_exists('mdu_camp_base_url', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
 																			}
@@ -9926,7 +9868,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-														<input class="span4 form-control" id="tenant_url" name="tenant_url" type="text" value="<?php echo $db->setVal("mdu_portal_base_url", $user_distributor); ?>">
+														<input class="span4 form-control" id="tenant_url" name="tenant_url" type="text" value="< ?php echo $db->setVal("mdu_portal_base_url", $user_distributor); ?>">
 
 
 
@@ -9943,7 +9885,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 												</div>
 
 
-												<div class="control-group" <?php
+												<div class="control-group" < ?php
 																			if (!array_key_exists('mdu_camp_base_url', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
 																			}
@@ -9955,7 +9897,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-														<input class="span4 form-control" id="tenant_internal_url" name="tenant_internal_url" type="text" value="<?php echo $db->setVal("mdu_camp_base_url", $user_distributor); ?>">
+														<input class="span4 form-control" id="tenant_internal_url" name="tenant_internal_url" type="text" value="< ?php echo $db->setVal("mdu_camp_base_url", $user_distributor); ?>">
 
 
 
@@ -9971,7 +9913,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 												</div>
 
-												<div class="control-group" <?php
+												<div class="control-group" < ?php
 																			if (!array_key_exists('captive_theme_up_tmp', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
 																			}
@@ -9983,7 +9925,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-														<input class="span4 form-control" id="captive_theme_up_tmp" name="captive_theme_up_tmp" type="text" value="<?php echo $db->setVal("captive_theme_up_tmp", $user_distributor); ?>">
+														<input class="span4 form-control" id="captive_theme_up_tmp" name="captive_theme_up_tmp" type="text" value="< ?php echo $db->setVal("captive_theme_up_tmp", $user_distributor); ?>">
 
 
 
@@ -10003,7 +9945,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-												<div class="control-group" <?php
+												<div class="control-group" < ?php
 																			if (!array_key_exists('menu_option', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none"';
 																			}
@@ -10017,7 +9959,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 														<select class="span4 form-control" id="menu_type" name="menu_type">
 
-															<?php $menu_type = $db->setVal("menu_type", 'ADMIN'); ?>
+															< ?php $menu_type = $db->setVal("menu_type", 'ADMIN'); ?>
 
 															<option value="SUB_MENU">Sub menu</option>
 
@@ -10039,7 +9981,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-												<div id="st_type" class="control-group" <?php
+												<div id="st_type" class="control-group" < ?php
 																						if (!array_key_exists('style_type', $tab1_field_ar) && $system_package != 'N/A') {
 																							echo ' style="display:none";';
 																						}
@@ -10057,11 +9999,11 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 														<select class="span4 form-control" id="style_type" name="style_type">
 
-															<option value="dark" <?php if ($style_type == 'dark') {
+															<option value="dark" < ?php if ($style_type == 'dark') {
 																						echo 'selected';
 																					} ?>> Dark Style </option>
 
-															<option value="light" <?php if ($style_type == 'light') {
+															<option value="light" < ?php if ($style_type == 'light') {
 																						echo 'selected';
 																					} ?>> Light Style </option>
 
@@ -10077,9 +10019,9 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-												<!-- https -->
+												<!-- https 
 
-												<div class="control-group" <?php
+												<div class="control-group" < ?php
 																			if (!array_key_exists('style_type', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
 																			}
@@ -10089,7 +10031,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 
 
-													<?php $edit_ssl_on = $db->setVal("SSL_ON", $user_distributor); ?>
+													< ?php $edit_ssl_on = $db->setVal("SSL_ON", $user_distributor); ?>
 
 													<div class="controls form-group">
 
@@ -10097,11 +10039,11 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 														<select class="span4 form-control" id="ssl_on" name="ssl_on">
 
-															<option value="1" <?php if ($edit_ssl_on == '1') {
+															<option value="1" < ?php if ($edit_ssl_on == '1') {
 																					echo 'selected';
 																				} ?>> ON </option>
 
-															<option value="0" <?php if ($edit_ssl_on == '0') {
+															<option value="0" < ?php if ($edit_ssl_on == '0') {
 																					echo 'selected';
 																				} ?>> OFF </option>
 
@@ -10116,7 +10058,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 												</div>
 
 
-												<div class="control-group" <?php
+												<div class="control-group" < ?php
 																			if (!array_key_exists('platform', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
 																			}
@@ -10125,7 +10067,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 													<label class="control-label" for="radiobtns">Admin Profile</label>
 
-													<?php if ($system_package != 'N/A') { ?>
+													< ?php if ($system_package != 'N/A') { ?>
 
 														<script type="text/javascript">
 															//N/A
@@ -10137,14 +10079,14 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 															});
 														</script>
-													<?php } ?>
+													< ?php } ?>
 
 													<div class="controls form-group">
 
 
 
 														<select class="span4 form-control" id="platform" name="platform">
-															<?php
+															< ?php
 															//echo"SELECT product_code,discription FROM admin_product WHERE user_type='ADMIN'";
 															$flatforms_q = $db->selectDB("SELECT product_code,discription FROM admin_product WHERE user_type='ADMIN' AND is_enable=1");
 
@@ -10169,7 +10111,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 												</div>
 
-												<div class="control-group" <?php
+												<div class="control-group" < ?php
 																			if (!array_key_exists('platform', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
 																			}
@@ -10178,7 +10120,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 
 													<label class="control-label" for="radiobtns">Login Profile</label>
 													<div class="controls form-group">
-														<?php
+														< ?php
 
 														$login_profiles = json_decode($db->setVal('ALLOWED_LOGIN_PROFILES', 'ADMIN'), true);
 
@@ -10251,7 +10193,7 @@ WHERE `distributor`='$user_distributor' GROUP BY id,p.`profile_name`,p.`duration
 												</script>
 
 
-												<?php
+												< ?php
 
 												$get_l = "SELECT * FROM exp_mno
 
@@ -10275,7 +10217,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 
 
 
-												<div id="theme_color_div" class="control-group" <?php
+												<div id="theme_color_div" class="control-group" < ?php
 																								if (!array_key_exists('theme_color', $tab1_field_ar) && $system_package != 'N/A') {
 																									echo ' style="display:none";';
 																								}
@@ -10287,7 +10229,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 
 
 
-														<input class="span4 form-control jscolor {hash:true}" id="header_color" name="header_color" type="color" value="<?php echo strlen($camp_theme_color) < 7 ? '#ffffff' : $camp_theme_color ?>">
+														<input class="span4 form-control jscolor {hash:true}" id="header_color" name="header_color" type="color" value="< ?php echo strlen($camp_theme_color) < 7 ? '#ffffff' : $camp_theme_color ?>">
 
 
 
@@ -10297,7 +10239,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 
 
 
-												<div id="light_color_div" class="control-group" <?php
+												<div id="light_color_div" class="control-group" < ?php
 																								if (!array_key_exists('light_color', $tab1_field_ar) && $system_package != 'N/A') {
 																									echo ' style="display:none";';
 																								}
@@ -10309,7 +10251,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 
 
 
-														<?php
+														< ?php
 														$light_color = strlen($light_color) < 7 ? '#000000' : $light_color;
 														if ($style_type == 'light') {
 
@@ -10333,7 +10275,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 
 
 
-												<div id="top_line_color_div" class="control-group" <?php
+												<div id="top_line_color_div" class="control-group" < ?php
 																									if (!array_key_exists('top_line_color', $tab1_field_ar) && $system_package != 'N/A') {
 																										echo ' style="display:none";';
 																									}
@@ -10345,7 +10287,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 
 
 
-														<?php
+														< ?php
 
 
 
@@ -10353,7 +10295,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 
 														?>
 
-															<input class="span4 form-control jscolor {hash:true}" id="top_line_color" name="top_line_color" type="color" value="<?php echo strlen($top_line_color) < 7 ? '#ffffff' : $top_line_color ?>" disabled>
+															<input class="span4 form-control jscolor {hash:true}" id="top_line_color" name="top_line_color" type="color" value="< ?php echo strlen($top_line_color) < 7 ? '#ffffff' : $top_line_color ?>" disabled>
 
 															<br>
 
@@ -10361,7 +10303,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 
 
 
-														<?php
+														< ?php
 
 														} else {
 
@@ -10369,7 +10311,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 
 														?>
 
-															<input class="span4 form-control jscolor {hash:true}" id="top_line_color" name="top_line_color" type="color" value="<?php echo strlen($top_line_color) < 7 ? '#ffffff' : $top_line_color ?>">
+															<input class="span4 form-control jscolor {hash:true}" id="top_line_color" name="top_line_color" type="color" value="< ?php echo strlen($top_line_color) < 7 ? '#ffffff' : $top_line_color ?>">
 
 															<br>
 
@@ -10377,7 +10319,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 
 
 
-														<?php
+														< ?php
 
 														}
 
@@ -10392,55 +10334,7 @@ WHERE mno_id = '$user_distributor' LIMIT 1";
 													</div>
 
 												</div>
-
-
-
-
-
-												<!--    <script>
-
-                                                    $('#style_type').on('change', function(){
-
-                                                        var st =  $('#style_type').val();
-
-                                                        if(st == 'light'){
-
-                                                            $('#light_color').prop('disabled', false);
-
-                                                            $('#style_img_div').html('<img src="img/light.png" width="290" height="190">')
-
-                                                        }else{
-
-                                                            $('#light_color').prop('disabled', true);
-
-                                                            $('#style_img_div').html('<img src="img/dark.png" width="290" height="190">')
-
-                                                        }
-
-                                                    });
-
-
-
-                                                    $('#top_che').on('change', function(){
-
-                                                        var va = $(this).is(':checked');
-
-                                                        if(va){
-
-                                                            $('#top_line_color').prop('disabled', false);
-
-                                                        }else{
-
-                                                            $('#top_line_color').prop('disabled', true);
-
-                                                            $('#top_line_color').val("");
-
-                                                        }
-
-                                                    });
-
-                                                </script> -->
-
+-->
 
 
 												<div class="form-actions ">

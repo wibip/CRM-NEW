@@ -5,7 +5,9 @@
 session_start();
 
 include 'header_top.php';
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 /* No cache*/
 header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
 header("Pragma: no-cache"); // HTTP 1.0.
@@ -1385,6 +1387,9 @@ if($ap_control_var=='SINGLE'){
                                      								<select class="span4 form-control" name="version" id="version" >
                                                                     <option value="">Select Version</option>
 																	<option value="AP">BI API v1</option>
+																	<option value="AP">BI API v2</option>
+																	<option value="AP">BI API v3</option>
+																	<option value="AP">BI API v4</option>
 																	<?php
 																// 		$key_query = "SELECT brand FROM `exp_locations_ap_controller_model` ORDER BY brand";
 																	
