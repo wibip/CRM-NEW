@@ -65,6 +65,7 @@ $country_sql="SELECT * FROM (SELECT `country_code` AS a,`country_name` AS b FROM
                             UNION ALL
                             SELECT * FROM (SELECT `country_code`,`country_name` FROM `exp_mno_country` WHERE `default_select`=0 ORDER BY `country_name` ASC) AS b";
 $country_result = $db->selectDB($country_sql);
+// var_dump($country_result);
 //load country states
 $regions_sql="SELECT `states_code`, `description` FROM `exp_country_states` ORDER BY description";
 $get_regions = $db->selectDB($regions_sql);
@@ -807,9 +808,9 @@ $dt = new DateTime('now', $utc);
                                                                 <?php
                                                                 $select="";
                                                                 foreach ($country_result['data'] as $row) {
-                                                                if($row[a]==$get_edit_mno_country || $row[a]== "US"){
-                                                                    $select="selected";
-                                                                }
+                                                                    // if($row[a]==$get_edit_mno_country || $row[a]== "US"){
+                                                                    //     $select="selected";
+                                                                    // }
                                                                     echo '<option value="'.$row[a].'" '.$select.'>'.$row[b].'</option>';
                                                                 }
                                                                 ?>
@@ -1092,8 +1093,6 @@ $dt = new DateTime('now', $utc);
                                                         </form>
                                                 <!-- /widget -->
                                             </div>
-
-                                        
                                         
                                         <!-- ***************Activate Accounts List******************* -->
                                         <div <?php if(isset($tab8)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="active_operations">
@@ -1256,9 +1255,9 @@ $dt = new DateTime('now', $utc);
                                                                     <?php
                                                                     $select="";
                                                                     foreach ($country_result['data'] AS $row) {
-                                                                        if($row[a]==$edit_country_code || $row[a]== "US"){
-                                                                            $select="selected";
-                                                                        }
+                                                                        // if($row[a]==$edit_country_code || $row[a]== "US"){
+                                                                        //     $select="selected";
+                                                                        // }
                                                                         echo '<option value="'.$row[a].'" '.$select.'>'.$row[b].'</option>';
                                                                     }
                                                                     ?>
