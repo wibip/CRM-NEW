@@ -65,7 +65,6 @@ $country_sql="SELECT * FROM (SELECT `country_code` AS a,`country_name` AS b FROM
                             UNION ALL
                             SELECT * FROM (SELECT `country_code`,`country_name` FROM `exp_mno_country` WHERE `default_select`=0 ORDER BY `country_name` ASC) AS b";
 $country_result = $db->selectDB($country_sql);
-// var_dump($country_result);
 //load country states
 $regions_sql="SELECT `states_code`, `description` FROM `exp_country_states` ORDER BY description";
 $get_regions = $db->selectDB($regions_sql);
