@@ -645,9 +645,7 @@ $dt = new DateTime('now', $utc);
 			<div class="container">
 				<div class="row">
 					<div class="span12">
-                   
 						<div class="widget ">
-
 							<div class="widget-content">
 								<div class="tabbable">
 									<ul class="nav nav-tabs">
@@ -693,15 +691,12 @@ $dt = new DateTime('now', $utc);
                                                 ?>
 
                                                 <fieldset>
-
-                                                <div id="response_mno">
-
-                                                </div>
-                                                <style type="text/css">
-                                                    .ms-container{
-                                                        display: inline-block !important;
-                                                    }
-                                                </style>
+                                                    <div id="response_mno"></div>
+                                                    <style type="text/css">
+                                                        .ms-container{
+                                                            display: inline-block !important;
+                                                        }
+                                                    </style>
                                                     <div class="control-group mno_feature" style="">
                                                         <label class="control-label" for="api_profile">API Profile<sup>
                                                                 <font color="#FF0000"></font>
@@ -843,11 +838,76 @@ $dt = new DateTime('now', $utc);
                                                             <input class="span4 form-control" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $get_edit_mno_zip?>" autocomplete="off">
                                                         </div>
                                                     </div>
-                                                        <script type="text/javascript">
+                                                    <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $("#mno_zip_code").keydown(function (e) {
+                                                            var mac = $('#mno_zip_code').val();
+                                                            var len = mac.length + 1;
+                                                            // Allow: backspace, delete, tab, escape, enter, '-' and .
+                                                            if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
+                                                                        // Allow: Ctrl+A, Command+A
+                                                                    (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: Ctrl+C, Command+C
+                                                                    (e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: Ctrl+x, Command+x
+                                                                    (e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: Ctrl+V, Command+V
+                                                                    (e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: home, end, left, right, down, up
+                                                                    (e.keyCode >= 35 && e.keyCode <= 40)) {
+                                                                // let it happen, don't do anything
+                                                                return;
+                                                            }
+                                                            // Ensure that it is a number and stop the keypress
+                                                            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                                                                e.preventDefault();
+                                                            }
+                                                        });
+                                                    });
+                                                    </script>
+
+                                                    <div class="control-group">
+                                                            <label class="control-label" for="mno_mobile">Phone Number 1<sup><font color="#FF0000"></font></sup></label>
+                                                            <div class="controls col-lg-5 form-group">
+                                                                <input class="span4 form-control" id="mno_mobile_1" name="mno_mobile_1" type="text" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_mobile?>" autocomplete="off">
+                                                            </div>
+                                                    </div>
+
+                                                    <script type="text/javascript">
                                                         $(document).ready(function() {
-                                                            $("#mno_zip_code").keydown(function (e) {
-                                                                var mac = $('#mno_zip_code').val();
+                                                            $('#mno_form #mno_mobile_1').focus(function(){
+                                                                $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
+                                                            });
+
+                                                            $('#mno_form #mno_mobile_1').keyup(function(){
+                                                                $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
+                                                            });
+
+                                                            $("#mno_form #mno_mobile_1").keydown(function (e) {
+                                                                var mac = $('#mno_form #mno_mobile_1').val();
                                                                 var len = mac.length + 1;
+                                                                if((e.keyCode == 8 && len == 8) ||(e.keyCode == 8 && len == 4)){
+                                                                    mac1 = mac.replace(/[^0-9]/g, '');
+                                                                }
+                                                                else{
+                                                                    return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3) + '-' + $(this).val().substr(7,4);
+
+                                                                    if(len == 4){
+                                                                        $('#mno_form #mno_mobile_1').val(function() {
+                                                                            return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3,3);
+                                                                            //console.log('mac1 ' + mac);
+
+                                                                        });
+                                                                    }
+                                                                    else if(len == 8 ){
+                                                                        $('#mno_form #mno_mobile_1').val(function() {
+                                                                            return $(this).val().substr(0,7) + '-' + $(this).val().substr(7,4);
+                                                                            //console.log('mac2 ' + mac);
+
+                                                                        });
+                                                                    }
+                                                                }
+
                                                                 // Allow: backspace, delete, tab, escape, enter, '-' and .
                                                                 if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
                                                                             // Allow: Ctrl+A, Command+A
@@ -870,49 +930,32 @@ $dt = new DateTime('now', $utc);
                                                             });
                                                         });
                                                         </script>
-
                                                         <div class="control-group">
-                                                                <label class="control-label" for="mno_mobile">Phone Number 1<sup><font color="#FF0000"></font></sup></label>
-                                                                <div class="controls col-lg-5 form-group">
-                                                                    <input class="span4 form-control" id="mno_mobile_1" name="mno_mobile_1" type="text" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_mobile?>" autocomplete="off">
-                                                                </div>
+                                                            <label class="control-label" for="mno_mobile">Phone Number 2<sup><font color="#FF0000"></font></sup></label>
+                                                            <div class="controls col-lg-5 form-group">
+
+                                                                <input class="span4 form-control" id="mno_mobile_2" name="mno_mobile_2" type="text" placeholder="xxx-xxx-xxxx" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_phone2?>" autocomplete="off" >
+                                                            </div>
                                                         </div>
 
                                                         <script type="text/javascript">
+
                                                             $(document).ready(function() {
-                                                                $('#mno_form #mno_mobile_1').focus(function(){
+                                                                $('#mno_mobile_2').focus(function(){
                                                                     $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
                                                                 });
-
-                                                                $('#mno_form #mno_mobile_1').keyup(function(){
+                                                                $('#mno_mobile_2').keyup(function(){
                                                                     $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
                                                                 });
-
-                                                                $("#mno_form #mno_mobile_1").keydown(function (e) {
-                                                                    var mac = $('#mno_form #mno_mobile_1').val();
+                                                                $("#mno_mobile_2").keydown(function (e) {
+                                                                    var mac = $('#mno_mobile_2').val();
                                                                     var len = mac.length + 1;
                                                                     if((e.keyCode == 8 && len == 8) ||(e.keyCode == 8 && len == 4)){
                                                                         mac1 = mac.replace(/[^0-9]/g, '');
                                                                     }
                                                                     else{
                                                                         return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3) + '-' + $(this).val().substr(7,4);
-
-                                                                        if(len == 4){
-                                                                            $('#mno_form #mno_mobile_1').val(function() {
-                                                                                return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3,3);
-                                                                                //console.log('mac1 ' + mac);
-
-                                                                            });
-                                                                        }
-                                                                        else if(len == 8 ){
-                                                                            $('#mno_form #mno_mobile_1').val(function() {
-                                                                                return $(this).val().substr(0,7) + '-' + $(this).val().substr(7,4);
-                                                                                //console.log('mac2 ' + mac);
-
-                                                                            });
-                                                                        }
                                                                     }
-
                                                                     // Allow: backspace, delete, tab, escape, enter, '-' and .
                                                                     if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
                                                                                 // Allow: Ctrl+A, Command+A
@@ -936,31 +979,29 @@ $dt = new DateTime('now', $utc);
                                                             });
                                                             </script>
                                                             <div class="control-group">
-                                                                <label class="control-label" for="mno_mobile">Phone Number 2<sup><font color="#FF0000"></font></sup></label>
+                                                                <label class="control-label" for="mno_mobile">Phone Number 3<sup><font color="#FF0000"></font></sup></label>
                                                                 <div class="controls col-lg-5 form-group">
-
-                                                                    <input class="span4 form-control" id="mno_mobile_2" name="mno_mobile_2" type="text" placeholder="xxx-xxx-xxxx" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_phone2?>" autocomplete="off" >
+                                                                    <input class="span4 form-control" id="mno_mobile_3" name="mno_mobile_3" type="text" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_phone3?>" autocomplete="off">
                                                                 </div>
                                                             </div>
 
                                                             <script type="text/javascript">
-
                                                                 $(document).ready(function() {
-                                                                    $('#mno_mobile_2').focus(function(){
+                                                                    $('#mno_mobile_3').focus(function(){
                                                                         $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
                                                                     });
-                                                                    $('#mno_mobile_2').keyup(function(){
+                                                                    $('#mno_mobile_3').keyup(function(){
                                                                         $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
                                                                     });
-                                                                    $("#mno_mobile_2").keydown(function (e) {
-                                                                        var mac = $('#mno_mobile_2').val();
+                                                                    $("#mno_mobile_3").keydown(function (e) {
+                                                                        var mac = $('#mno_mobile_3').val();
                                                                         var len = mac.length + 1;
                                                                         if((e.keyCode == 8 && len == 8) ||(e.keyCode == 8 && len == 4)){
                                                                             mac1 = mac.replace(/[^0-9]/g, '');
                                                                         }
                                                                         else{
                                                                             return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3) + '-' + $(this).val().substr(7,4);
-                                                                        }
+                                                                            }
                                                                         // Allow: backspace, delete, tab, escape, enter, '-' and .
                                                                         if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
                                                                                     // Allow: Ctrl+A, Command+A
@@ -982,116 +1023,70 @@ $dt = new DateTime('now', $utc);
                                                                         }
                                                                     });
                                                                 });
-                                                                </script>
-                                                                <div class="control-group">
-                                                                        <label class="control-label" for="mno_mobile">Phone Number 3<sup><font color="#FF0000"></font></sup></label>
-                                                                        <div class="controls col-lg-5 form-group">
-                                                                            <input class="span4 form-control" id="mno_mobile_3" name="mno_mobile_3" type="text" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_phone3?>" autocomplete="off">
-                                                                        </div>
-                                                                    </div>
+                                                            </script>
 
-                                                                    <script type="text/javascript">
-                                                                        $(document).ready(function() {
-                                                                            $('#mno_mobile_3').focus(function(){
-                                                                                $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
-                                                                            });
-                                                                            $('#mno_mobile_3').keyup(function(){
-                                                                                $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
-                                                                            });
-                                                                            $("#mno_mobile_3").keydown(function (e) {
-                                                                                var mac = $('#mno_mobile_3').val();
-                                                                                var len = mac.length + 1;
-                                                                                if((e.keyCode == 8 && len == 8) ||(e.keyCode == 8 && len == 4)){
-                                                                                    mac1 = mac.replace(/[^0-9]/g, '');
-                                                                                }
-                                                                                else{
-                                                                                    return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3) + '-' + $(this).val().substr(7,4);
-                                                                                    }
-                                                                                // Allow: backspace, delete, tab, escape, enter, '-' and .
-                                                                                if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                                                                                            // Allow: Ctrl+A, Command+A
-                                                                                        (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                            // Allow: Ctrl+C, Command+C
-                                                                                        (e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                            // Allow: Ctrl+x, Command+x
-                                                                                        (e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                            // Allow: Ctrl+V, Command+V
-                                                                                        (e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                            // Allow: home, end, left, right, down, up
-                                                                                        (e.keyCode >= 35 && e.keyCode <= 40)) {
-                                                                                    // let it happen, don't do anything
-                                                                                    return;
-                                                                                }
-                                                                                // Ensure that it is a number and stop the keypress
-                                                                                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                                                                                    e.preventDefault();
-                                                                                }
-                                                                            });
-                                                                        });
-                                                                        </script>
-
-                                                                        <div class="control-group">
-                                                                            <label class="control-label" for="mno_timezone">Time Zone<sup><font color="#FF0000"></font></sup></label>
-                                                                            <div class="controls col-lg-5 form-group">
-                                                                                <select class="span4 form-control" id="mno_time_zone" name="mno_time_zone" autocomplete="off">
-                                                                                    <option value="">Select Time Zone</option>
-                                                                                    <?php
-                                                                                    foreach ($priority_zone_array as $tz){
-                                                                                        $current_tz = new DateTimeZone($tz);
-                                                                                        $offset =  $current_tz->getOffset($dt);
-                                                                                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-                                                                                        $abbr = $transition[0]['abbr'];
-                                                                                        if($get_edit_mno_timezones==$tz){
-                                                                                            $select="selected";
-                                                                                        }else{
-                                                                                            $select="";
-                                                                                        }
-                                                                                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-                                                                                    }
-                                                                                    foreach(DateTimeZone::listIdentifiers() as $tz) {
-                                                                                        //Skip
-                                                                                        if(in_array($tz,$priority_zone_array))
-                                                                                            continue;
-
-                                                                                        $current_tz = new DateTimeZone($tz);
-                                                                                        $offset =  $current_tz->getOffset($dt);
-                                                                                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-                                                                                        $abbr = $transition[0]['abbr'];
-                                                                                        /*if($abbr=="EST" || $abbr=="CT" || $abbr=="MT" || $abbr=="PST" || $abbr=="AKST" || $abbr=="HST" || $abbr=="EDT"){
-                                                                                        echo $get_edit_mno_timezones;*/
-                                                                                        if($get_edit_mno_timezones==$tz){
-                                                                                            $select="selected";
-                                                                                        }else{
-                                                                                            $select="";
-                                                                                        }
-                                                                                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-                                                                                        // $select="";
-                                                                                        /*}*/
-                                                                                    }
-
-                                                                                    ?>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-actions">
-                                                                                <button disabled type="submit" id="submit_mno_form" name="submit_mno_form" class="btn btn-primary"><?php if($mno_edit==1){echo "Update Account";}else{echo "Create Account";}?></button>
-                                                                                <?php if($mno_edit==1){ ?> <button type="button" class="btn btn-info inline-btn"  onclick="goto();" class="btn btn-danger">Cancel</button> <?php } ?>
-                                                                        </div>
-                                                                        <script>
-                                                                            function submit_mno_formfn() {
-                                                                                //alert("fn");
-                                                                                $("#submit_mno_form").prop('disabled', false);
+                                                            <div class="control-group">
+                                                                <label class="control-label" for="mno_timezone">Time Zone<sup><font color="#FF0000"></font></sup></label>
+                                                                <div class="controls col-lg-5 form-group">
+                                                                    <select class="span4 form-control" id="mno_time_zone" name="mno_time_zone" autocomplete="off">
+                                                                        <option value="">Select Time Zone</option>
+                                                                        <?php
+                                                                        foreach ($priority_zone_array as $tz){
+                                                                            $current_tz = new DateTimeZone($tz);
+                                                                            $offset =  $current_tz->getOffset($dt);
+                                                                            $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                                            $abbr = $transition[0]['abbr'];
+                                                                            if($get_edit_mno_timezones==$tz){
+                                                                                $select="selected";
+                                                                            }else{
+                                                                                $select="";
                                                                             }
+                                                                            echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                                                        }
+                                                                        foreach(DateTimeZone::listIdentifiers() as $tz) {
+                                                                            //Skip
+                                                                            if(in_array($tz,$priority_zone_array))
+                                                                                continue;
 
-                                                                            function goto(url){
-                                                                            window.location = "?";
+                                                                            $current_tz = new DateTimeZone($tz);
+                                                                            $offset =  $current_tz->getOffset($dt);
+                                                                            $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                                            $abbr = $transition[0]['abbr'];
+                                                                            /*if($abbr=="EST" || $abbr=="CT" || $abbr=="MT" || $abbr=="PST" || $abbr=="AKST" || $abbr=="HST" || $abbr=="EDT"){
+                                                                            echo $get_edit_mno_timezones;*/
+                                                                            if($get_edit_mno_timezones==$tz){
+                                                                                $select="selected";
+                                                                            }else{
+                                                                                $select="";
                                                                             }
-                                                                        </script>
-                                                            <!-- /form-actions -->
-                                                                </fieldset>
-                                                        </form>
+                                                                            echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                                                            // $select="";
+                                                                            /*}*/
+                                                                        }
+
+                                                                        ?>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-actions">
+                                                                    <button disabled type="submit" id="submit_mno_form" name="submit_mno_form" class="btn btn-primary"><?php if($mno_edit==1){echo "Update Account";}else{echo "Create Account";}?></button>
+                                                                    <?php if($mno_edit==1){ ?> <button type="button" class="btn btn-info inline-btn"  onclick="goto();" class="btn btn-danger">Cancel</button> <?php } ?>
+                                                            </div>
+                                                            <script>
+                                                                function submit_mno_formfn() {
+                                                                    //alert("fn");
+                                                                    $("#submit_mno_form").prop('disabled', false);
+                                                                }
+
+                                                                function goto(url){
+                                                                window.location = "?";
+                                                                }
+                                                            </script>
+                                                    <!-- /form-actions -->
+                                                </fieldset>
+                                            </form>
                                                 <!-- /widget -->
-                                            </div>
+                                        </div>
                                         
                                         <!-- ***************Activate Accounts List******************* -->
                                         <div <?php if(isset($tab8)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="active_operations">
@@ -1396,8 +1391,9 @@ $dt = new DateTime('now', $utc);
                                                         </div>
                                                     </div>
                                                     <!-- /form-actions -->
-                                                </fieldset>
-                                            </form>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
                                         </div>
 
                                         <!-- ***************Operation Accounts List********************** -->
