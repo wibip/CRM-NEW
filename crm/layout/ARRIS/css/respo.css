@@ -642,6 +642,36 @@ h1, h2, h3, h4, h5, h6{
     font-weight: 500 !important;
 }
 
+html{
+    height: 100%;
+}
+
+body{
+    min-height: 100%;
+    position: relative;
+    padding-bottom: 70px;
+}
+
+.footer-main{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-inner, .extra-inner {
+    background-color: #525e6e !important;
+    color: #999;
+}
+
+.extra-inner{
+    display: none;
+}
+
+.extra{
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
 .subnavbar .container>ul>li>a{
     color: #525e6e !important;
     padding-right: 40px;
