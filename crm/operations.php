@@ -1395,6 +1395,7 @@ $dt = new DateTime('now', $utc);
                                         <!-- ***************Operation Accounts List********************** -->
                                         <div <?php if(isset($tab9)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="active_op">
                                             <div id="response_d1"></div>
+                                            <div class="widget widget-table action-table">
                                             <div class="widget-content table_response">
                                                 <div style="overflow-x:auto">
                                                     <table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
@@ -1516,6 +1517,7 @@ $dt = new DateTime('now', $utc);
                                                         </tbody>
                                                     </table>
                                                 </div>
+                                            </div>
                                             </div>
                                         </div>
 									</div>
