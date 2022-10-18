@@ -256,10 +256,10 @@ if (!empty($arrayo)) {
                                         <option value="">Select State</option>
                                         <?php
                                         $get_regions = $db->selectDB("SELECT
-                              `states_code`,
-                              `description`
-                            FROM
-                            `exp_country_states` ORDER BY description ASC");
+                                    `states_code`,
+                                    `description`
+                                    FROM
+                                    `exp_country_states` ORDER BY description ASC");
 
 
                                         foreach ($get_regions['data'] as $state) {
@@ -272,6 +272,18 @@ if (!empty($arrayo)) {
                                         }
                                         //echo '<option value="other">Other</option>';
                                         ?>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">Service Type</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <select name="service_type" id="service_type" class="span4 form-control">
+                                        <option value="ENT-SMB-NON-AP-VYOS">ENT-SMB-NON-AP-VYOS</option>
+                                        <option value="ENT-SMB-NON-AP-FORTIGATE">ENT-SMB-NON-AP-FORTIGATE</option>
+                                        <option value="ENT-SMB-NON-AP-MERAKI">ENT-SMB-NON-AP-MERAKI</option>
                                     </select>
                                     </div>
                                 </div>

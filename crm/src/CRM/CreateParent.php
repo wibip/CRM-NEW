@@ -34,7 +34,7 @@ $data = [
 	],
 	"operator-code"=>"FRT",
 	"sub-operator"=>"",
-	"service-type"=>"ENT-SMB-NON-AP-VYOS",
+	"service-type"=>$result['service_type'],
 	"env"=>"hosted"
 ];
 $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Processing' WHERE id = '$id'");
