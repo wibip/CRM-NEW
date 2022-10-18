@@ -166,17 +166,8 @@ if($ap_control_var=='SINGLE'){
 							header('Location: operator_config.php?t=2');
 							
 							}	
-			
-	
-	
 	
 	}//
-
-
-
-	
-	
-	
 	else if(isset($_GET['remove_controller'])){
 
 		if($_SESSION['FORM_SECRET']==$_GET['token2']) {//refresh validate
@@ -220,15 +211,7 @@ if($ap_control_var=='SINGLE'){
 			header('Location: operator_config.php?t=1');
 				
 		}
-			
-	
-	
-	
 	}//	
-	
-	
-	
-	
 	else if(isset($_GET['edit_controller'])){
 	
 		if($_SESSION['FORM_SECRET']==$_GET['token2']) {//refresh validate
@@ -270,14 +253,9 @@ if($ap_control_var=='SINGLE'){
 				$edit_wag_controller_description=json_decode($edit_wag_r['controller_description'],true);
 
 				$edit_wag_type=$edit_wag_r['type'];
-
-
-			
 			}
 			
 			$edit_wag=2;
-
-	
 		}//key validation
 		else{
 			$db->userErrorLog('2004', $user_name, 'script - '.$script);
@@ -288,10 +266,6 @@ if($ap_control_var=='SINGLE'){
 			header('Location: operator_config.php?t=1');
 	
 		}
-			
-	
-	
-	
 	}//
 	
 
@@ -367,9 +341,6 @@ if($ap_control_var=='SINGLE'){
 															WHERE `controller_name`='$update_wag_name'";
 	
 			$update_wag=$db->execDB($update_wag_q);
-	
-	
-			
 			$edit_ap_control_name = $update_wag_name;
 			
 			$edit_ap_brand = $update_brand;
@@ -377,14 +348,9 @@ if($ap_control_var=='SINGLE'){
 			$edit_ap_mobile = $update_model;
 			
 			$edit_ap_ip_address = $update_ip_address;
-				
-			
 			
 			$edit_wag_dis=$update_wag_dis;
 			$edit_time_zone=$update_time_zone;
-
-			
-			
 			$edit_api_profile = $edit_api_profile_name;
 			
 			$edit_wag_url=$update_wag_url;
@@ -427,19 +393,6 @@ if($ap_control_var=='SINGLE'){
 	//Form Refreshing avoid secret key/////
 	$secret=md5(uniqid(rand(), true));
 	$_SESSION['FORM_SECRET'] = $secret;
-
-/*function formatOffset($offset) {
-	$hours = $offset / 3600;
-	$remainder = $offset % 3600;
-	$sign = $hours > 0 ? '+' : '-';
-	$hour = (int) abs($hours);
-	$minutes = (int) abs($remainder / 60);
-	if ($hour == 0 AND $minutes == 0) {
-		$sign = ' ';
-	}
-	return $sign . str_pad($hour, 2, '0', STR_PAD_LEFT) .':'. str_pad($minutes,2, '0');
-
-}*/
 ?>
 
 
@@ -453,775 +406,34 @@ if($ap_control_var=='SINGLE'){
 								<i class="icon-tags"></i>
 								<h3>Manage API Profiles</h3>
 							</div>
-							
 								<?php
-
 										if(isset($_SESSION['msg17'])){
 											echo $_SESSION['msg17'];
 											unset($_SESSION['msg17']);
 
 										}
-
-
-												   if(isset($_SESSION['msg1'])){
-													   echo $_SESSION['msg1']; 
-													   unset($_SESSION['msg1']);
-													   
-													   
-													  }
-
-												   if(isset($_SESSION['msg2'])){
-													   echo $_SESSION['msg2']; 
-													   unset($_SESSION['msg2']);
-													   
-													   
-													  }
-											      ?>
-							
-							
+										if(isset($_SESSION['msg1'])){
+											echo $_SESSION['msg1']; 
+											unset($_SESSION['msg1']);
+										}
+										if(isset($_SESSION['msg2'])){
+											echo $_SESSION['msg2']; 
+											unset($_SESSION['msg2']);	
+										}
+								?>
 							<!-- /widget-header -->
 							<div class="widget-content">
-
 								<div class="tabbable">
 									<ul class="nav nav-tabs">
-									
-									<?php 
-									
-									
-									
-									
-									?>
-								<?php if($ap_control_var=='MULTIPLE'){?>
-                                            <li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Active Profiles</a></li>
-           									<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Add Profiles</a></li>
-											
-									<?php }
-									
-									else if($ap_control_var=='SINGLE'){?>		
-											
-											<li <?php if(isset($tab17)){?>class="active" <?php }?>><a href="#wifi_gateway" data-toggle="tab">AP Controller API Profile</a></li>
-
-										<?php } ?>
+										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Active Profiles</a></li>
+										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Add Profiles</a></li>	
 									</ul>
 
 									<br>
 
 									<div class="tab-content">
-									
-<!-- ////////////////////////////////////////////////////////////////////////////////////////////// -->									
-									
-									
-									<!-- ====================== wifi gateway configuration ============================ -->
-
-
-
-									<div <?php if(isset($tab17)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="wifi_gateway">
-
-
-
-
-
-									<!--	<div id="loc_thm_response"></div> -->
-
-
-
-
-
-
-
-										<form id="save_wg" class="form-horizontal" >
-
-											<fieldset>
-
-											<input type="hidden" name="t" value="17">
-
-											<?php
-
-											echo '<input type="hidden" name="save_wag_secret" id="save_wag_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
-
-											?>
-
-
-
-
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile">WAG API profile</label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append span4">
-
-															<select class="span4" name="ap_profile_name" id="ap_profile_name" required="required">
-
-																<?php
-
-																	$wag_ap_q="SELECT `description`,`wag_ap_name` FROM `exp_wag_ap_profile`";
-
-																	/*$wag_ap=mysql_query($wag_ap_q);
-
-																	while($wag_aps=mysql_fetch_assoc($wag_ap)) {*/
-																	$wag_ap=$db->selectDB($wag_ap_q);
-
-																	foreach($wag_ap['data'] AS $wag_aps){
-
-
-
-																	echo'<option value="'.$wag_aps[wag_ap_name].'">'.$wag_aps[description].'</option>';
-
-
-
-																	}
-
-																?>
-
-															</select>
-
-															&nbsp;<input type="submit" name="save_wag"  value="Active" class="btn btn-primary">
-
-														</div>
-
-													</div>
-
-												</div>
-
-											</fieldset>
-
-										</form>
-
-
-
-
-
-
-
-										<hr>
-
-
-
-										<form id="edit_wg" class="form-horizontal" >
-
-											<input type="hidden" name="t" value="17">
-
-											<?php
-
-											echo '<input type="hidden" name="edit_wag_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
-
-											?>
-
-
-
-											<fieldset>
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile">WAG API profile </label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append span4">
-
-															<select class="span4" name="edit_ap_profile_name" id="edit_ap_profile_name" required="required">
-
-																<?php
-
-																$wag_ap_q="SELECT `description`,`wag_ap_name` FROM `exp_wag_ap_profile`";
-
-																$wag_ap=$db->selectDB($wag_ap_q);
-																	
-																	foreach($wag_ap['data'] AS $wag_aps){
-
-																	if($edit_wag_name==$wag_aps[wag_ap_name]){
-
-																		$select="selected";
-
-																		}else{
-
-																		$select="";
-
-																	}
-
-																	echo'<option '.$select.' value="'.$wag_aps[wag_ap_name].'">'.$wag_aps[description].'</option>';
-
-
-
-																}
-
-																?>
-
-															</select>
-
-															&nbsp;<input type="submit" name="edit_wag"  value="Edit" class="btn btn-primary">
-
-														</div>
-
-													</div>
-
-												</div>
-
-											</fieldset>
-
-										</form>
-
-
-
-
-
-										<?php
-
-										if($edit_wag==1){
-
-										?>
-
-
-
-										<form class="form-horizontal">
-
-
-
-											<input type="hidden" name="t" value="17">
-
-											<?php
-
-											echo '<input type="hidden" name="update_wag_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
-
-											?>
-
-											<fieldset>
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile">Profile name</label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text" readonly value="<?php echo $edit_wag_name;?>" name="edit_wag_name" class="span4" required="required">
-
-														</div>
-
-
-
-													</div>
-
-												</div>
-
-
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile">Profile description<font color="#FF0000"></font></label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text"  value="<?php echo $edit_wag_dis;?>" name="edit_wag_dis" class="span4" required="required">
-
-														</div>
-
-
-
-													</div>
-
-												</div>
-
-
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile"> API URL<font color="#FF0000"></font></label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text"  value="<?php echo $edit_wag_url;?>" name="edit_wag_url" class="span4" required="required">
-
-														</div>
-
-
-
-													</div>
-
-												</div>
-
-
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile"> API Username<font color="#FF0000"></font></label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text"  value="<?php echo $edit_wag_uname;?>" name="edit_wag_uname" class="span4" required="required">
-
-														</div>
-
-
-
-													</div>
-
-												</div>
-
-
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile"> API Password<font color="#FF0000"></font></label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text"  value="<?php echo $edit_wag_pass;?>" name="edit_wag_pass" class="span4 password_f" required="required">
-
-														</div>
-
-
-
-													</div>
-
-												</div>
-
-											</fieldset>
-
-											<div class="form-actions">
-
-												<button type="submit" name="wag_update" id="admin_update"
-
-														class="btn btn-primary">Update</button>
-
-												&nbsp; <strong><font color="#FF0000"></font><small> Required Field</small></strong>
-
-
-
-											</div>
-
-										</form>
-
-
-
-
-											<hr>
-										<?php
-
-										}
-
-										?>
-
-									</div>									
-									
-									
-									
-									
-									
-									
-									
-									
-									
-									
-<!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 										<!-- create_product tab -->
-										<div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="viewap">
-
-
-											
-
-											      
-											      
-									<?php
-
-										if($edit_wag==2){
-
-										?>
-
-
-
-										<form   onkeyup="admin_updatefn();" onchange="admin_updatefn();" class="form-horizontal" method="post" action="?t=1">
-
-
-
-											<input type="hidden" name="t" value="1">
-
-											<?php
-
-											echo '<input type="hidden" name="update_wag_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
-
-											?>
-
-											<fieldset>
-											
-											
-												<div class="control-group">
-
-													<label class="control-label" for="approfile">AP Controller Name<font color="#FF0000"></font></label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text" readonly value="<?php echo $edit_ap_control_name;?>" name="edit_ap_controller_name" class="span4" required="required">
-
-														</div>
-
-
-
-													</div>
-
-												</div>											
-											
-
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile">Brand<font color="#FF0000"></font></label>
-
-                                                        <div class="controls col-lg-5">
-
-                                                        	<select class="span4" name="edit_brand" id="brand" required="required">
-                                                                    <option value="">Select Brand</option>
-																	<?php
-															
-																		$key_query = "SELECT brand FROM `exp_locations_ap_controller_model` ORDER BY brand";
-
-																$query_results=$db->selectDB($key_query);
-																	
-																foreach($query_results['data'] AS $row){
-																	$brand = $row['brand'];
-																	
-																	
-																	if($edit_ap_brand==$brand){
-																	
-																		$selbrand='selected';
-																	
-																	}else{
-																	
-																		$selbrand='';
-																	
-																	}
-																	
-																	
-									
-																	echo '<option '.$selbrand.' value="'.$brand.'">'.$brand.'</option>';
-																}
-																?>
-																</select>
-                                                        
-                                                          </div>
-
-												</div>
-
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile">Model<font color="#FF0000"></font></label>
-
-                                                        <div class="controls col-lg-5">
-
-                                                        	<select class="span4" name="edit_model" id="model" required="required">
-                                                                    <option value="">Select Model</option>
-																	<?php
-															
-																		$key_query = "SELECT model FROM `exp_locations_ap_controller_model` ORDER BY model";
-																	
-								
-																$query_results=$db->selectDB($key_query);
-																	
-																foreach($query_results['data'] AS $row){
-																	$model = $row['model'];
-																	
-																	if($edit_ap_mobile==$model){
-																		
-																		$selmodel='selected';
-																		
-																	}else{
-																		
-																		$selmodel='';
-																		
-																	}
-																	
-							
-																	echo '<option '.$selmodel.' value="'.$model.'">'.$model.'</option>';
-																}
-																?>
-																</select>
-                                                        
-                                                          </div>
-
-												</div>
-
-
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile">Description<font color="#FF0000"></font></label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text"  value="<?php echo $edit_wag_dis;?>" name="edit_wag_dis" class="span4" required="required">
-
-														</div>
-
-
-
-													</div>
-
-												</div>
-
-												<div class="control-group ed_ap_sw">
-													<label class="control-label" for="mg_product_code_1">Time Zone<font color="#FF0000"></font></label>
-													<div class="controls col-lg-5">
-														<select class="span4" id="edit_apc_time_zone" name="edit_apc_time_zone" >
-															<option value="">Select Time-zone</option>
-															<?php
-
-															$utc = new DateTimeZone('UTC');
-															$dt = new DateTime('now', $utc);
-
-															foreach(DateTimeZone::listIdentifiers() as $tz) {
-																$current_tz = new DateTimeZone($tz);
-																$offset =  $current_tz->getOffset($dt);
-																$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-																$abbr = $transition[0]['abbr'];
-																if($edit_time_zone==$tz){
-																	$select="selected";
-																}else{
-																	$select="";
-																}
-
-																echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-																// $select="";
-															}
-															// $select="";
-															?>
-														</select>
-													</div>
-												</div>
-												
-
-											<!--	<div class="control-group">
-
-													<label class="control-label" for="approfile">IP Address<font color="#FF0000">*</font></label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text"  value="<?php //echo $edit_ap_ip_address;?>" name="edit_ip_address" class="span4" required="required">
-
-														</div>
-
-
-
-													</div>
-
-												</div>	-->
-
-
-												<div class="control-group ed_ap_sw">
-
-													<label class="control-label" for="approfile">AP Controller API Profile</label>
-
-														<div class="controls col-lg-5">
-
-															<select class="span4" name="edit_api_profile_name" id="edit_api_profile_name" >
-
-																<?php
-
-																	$wag_ap_q="SELECT `description`,`wag_ap_name` FROM `exp_wag_ap_profile`";
-
-																	
-																	$wag_ap=$db->selectDB($wag_ap_q);
-																	
-																	foreach($wag_ap['data'] AS $wag_aps){
-
-																		
-																		if($edit_api_profile==$wag_aps['wag_ap_name']){
-																		
-																			$selap='selected';
-																		
-																		}else{
-																		
-																			$selap='';
-																		
-																		}																		
-																		
-																		
-
-																	echo'<option '.$selap.' value="'.$wag_aps['wag_ap_name'].'">'.$wag_aps['description'].'</option>';
-
-
-
-																	}
-
-																?>
-
-															</select>
-
-														
-
-														</div>
-
-												</div>
-
-
-
-												<div class="control-group">
-
-													<label class="control-label" for="approfile"> API URL<font color="#FF0000"></font></label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text"  value="<?php echo $edit_wag_url;?>" name="edit_wag_url" class="span4" required="required">
-
-														</div>
-
-
-
-													</div>
-
-												</div>
-
-												<div class="control-group ed_firewall">
-
-													<label class="control-label" for="approfile">  API Key</label>
-
-													<div class="controls col-lg-5 form-group">
-
-														
-
-															<textarea   rows="5" id="edit_api_key_se" name="edit_api_key_se" class="span4 form-control" >
-															<?php echo $edit_wag_controller_description['api_key'];?>
-															</textarea>
-
-													</div>
-
-												</div>
-
-
-												<div class="control-group ed_ap_sw">
-
-													<label class="control-label" for="approfile"> API Secondary URL</label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text"  value="<?php echo $edit_wag_url_se;?>" name="edit_wag_url_se" class="span4">
-
-														</div>
-
-
-
-													</div>
-
-												</div>
-
-
-												<div class="control-group ed_ap_sw ed_dpsk">
-
-													<label class="control-label" for="approfile"> API Username<font color="#FF0000"></font></label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text"  value="<?php echo $edit_wag_uname;?>" name="edit_wag_uname" class="span4">
-
-														</div>
-
-
-
-													</div>
-
-												</div>
-
-
-
-												<div class="control-group ed_ap_sw ed_dpsk">
-
-													<label class="control-label" for="approfile"> API Password<font color="#FF0000"></font></label>
-
-													<div class="controls">
-
-														<div class="input-prepend input-append ">
-
-															<input type="text"  value="<?php echo $edit_wag_pass;?>" name="edit_wag_pass" class="span4 password_f" >
-
-														</div>
-
-
-
-													</div>
-
-												</div>
-
-											</fieldset>
-
-											<div class="form-actions">
-
-												<button disabled type="submit" name="api_update" id="admin_update" class="btn btn-primary">Update</button>
-												<button type="button" class="btn btn-info inline-btn"  onclick="goto1();" class="btn btn-danger">Cancel</button> 
-
-                                                                                                <script>
-
-                                                                                                    function admin_updatefn() {
-                                                                                                        //alert("fn");
-                                                                                                        $("#admin_update").prop('disabled', false);
-                                                                                                    }
-                                                                                                    
-                                                                                                    function goto1(url){              
-                                                                                                    window.location = "?";              
-                                                                                                    }
-
-																									
-																		var value = '<?php echo $edit_wag_type; ?>';
-																		if(value=='FIREWALL CONTROLLER'){
-																			$(".ed_ap_sw").css("display", "none");
-																			$(".ed_firewall").css("display", "block");
-																		}else if(value=='DPSK'){
-																			$(".ed_ap_sw").css("display", "none");
-																			$(".ed_firewall").css("display", "block");
-																			$(".ed_dpsk").css("display", "block");
-																			
-																		}else{
-																			$(".ed_firewall").css("display", "none");
-																			$(".ed_ap_sw").css("display", "block");
-																		}
-																
-                                                                                                </script>
-												
-
-
-
-											</div>
-
-										</form>
-
-
-
-
-
-										<?php
-
-										}
-
-										?>											      
-											      
-											      
-											      
-											      
-											      
-
+										<div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="viewap">      	      			
 											<div class="widget widget-table action-table">
 												<div class="widget-header">
 													<i class="icon-th-list"></i>
@@ -1229,116 +441,92 @@ if($ap_control_var=='SINGLE'){
 												</div>
 												<!-- /widget-header -->
 												<div class="widget-content table_response ">
-												<div style="overflow-x:auto;" >
-													<table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
-														<thead>
-															<tr>
-																<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Profile</th>
-																<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">API Version</th>
-																
-																<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">API URL</th>
-
-																<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th>
-																<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Remove</th>
-
-															</tr>
-														</thead>
-														<tbody>
-								
-														<?php
-
-															//	echo	$key_query = " SELECT id,product_code,description,time_gap,create_date,default_value FROM exp_products WHERE mno_id = '$user_distributor' ORDER BY description ";
-
-                                                                 $key_query="SELECT c.controller_name,c.description,c.brand,c.model,c.brand,c.description,c.create_date,c.ip_address,c.api_url,c.api_profile,c.id,count(d.id) as assign_count FROM `exp_locations_ap_controller` c LEFT JOIN exp_mno_distributor d ON c.controller_name=d.ap_controller
-                                                                            group by c.description,c.brand,c.model,c.brand,c.description,c.create_date,c.ip_address,c.api_url,c.api_profile,c.id";
-
-																	$query_results=$db->selectDB($key_query);
+													<div style="overflow-x:auto;" >
+														<table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
+															<thead>
+																<tr>
+																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Profile</th>
+																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">API Version</th>
 																	
-																foreach($query_results['data'] AS $row){
-																		$controller_name = $row['controller_name'];
-																		$description = $row['description'];
-																		$brand = $row['brand'];
-																		$model = $row['model'];
-																		$create_date = $row['create_date'];
-																		$ip_address = $row['ip_address'];
-																		
-																		$api_url = $row['api_url'];
-																		$api_profile=$row['api_profile'];
-																		
-																		$id = $row['id'];
-																		$assign_count = $row['assign_count'];
-                                                                        echo '<tr>
-																		<td> '.$controller_name.' </td>
-																		<td> '.$api_profile.' </td>
-																		
-															    		<td> '.$api_url.' </td>';
-																		
-																		
+																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">API URL</th>
 
+																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th>
+																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Remove</th>
 
-                                                                            echo '<td><a href="javascript:void();" id="AP_'.$id.'"  class="btn btn-small btn-info">
-																				<i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
-																				$(document).ready(function() {
-																				$(\'#AP_'.$id.'\').easyconfirm({locale: {
-																						title: \'AP Controller\',
-																						text: \'Are you sure you want to edit this AP Controller?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																						button: [\'Cancel\',\' Confirm\'],
-																						closeText: \'close\'
-																					     }});
-																					$(\'#AP_'.$id.'\').click(function() {
-																						window.location = "?token2='.$secret.'&t=1&edit_controller='.$id.'"
-																					});
-																					});
-																				</script></td>';
-            		
-            		
-                                                                        /*$query_con1 = "SELECT d.id FROM exp_mno_distributor d WHERE `ap_controller` = '$controller_name'";
-                                                                        $query_results=$db->selectDB($query_con1);
-                                                                        $num_rows = $query_results['rowCount'];*/
+																</tr>
+															</thead>
+															<tbody>
+									
+																<?php
+																	$key_query="SELECT c.controller_name,c.description,c.brand,c.model,c.brand,c.description,c.create_date,c.ip_address,c.api_url,c.api_profile,c.id,count(d.id) as assign_count FROM `exp_locations_ap_controller` c LEFT JOIN exp_mno_distributor d ON c.controller_name=d.ap_controller
+																				group by c.description,c.brand,c.model,c.brand,c.description,c.create_date,c.ip_address,c.api_url,c.api_profile,c.id";
 
-                                                                        if($assign_count==0){
-                                                                        	
-	            															echo '<td><a href="javascript:void();" id="AP_R_'.$id.'"  class="btn btn-small btn-danger">
-																			<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
-	                                                                            $(document).ready(function() {
-	                                                                            $(\'#AP_R_'.$id.'\').easyconfirm({locale: {
-	                                                                                    title: \'AP Controller\',
-	                                                                                    text: \'Are you sure you want to remove this AP Controller?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-	                                                                                    button: [\'Cancel\',\' Confirm\'],
-	                                                                                    closeText: \'close\'
-	                                                                                     }});
-	                                                                                $(\'#AP_R_'.$id.'\').click(function() {
-	                                                                                    window.location = "?token2='.$secret.'&t=1&remove_controller='.$id.'"
-	                                                                                });
-	                                                                                });
-	                                                                            </script></td>';
-            															
-                                                                        }
-                                                                        else{
-                                                                        	
-                                                                        	
-                                                                        	echo '<td><a class="btn btn-small btn-warning" disabled ><i class="icon icon-lock"></i>&nbsp;Remove</a></td>';
-                                                                        	 
-                                                                        	
-                                                                        	//echo '';
-                                                                        }
-            		
-            															echo '</tr>';
+																		$query_results=$db->selectDB($key_query);
+																		
+																	foreach($query_results['data'] AS $row){
+																			$controller_name = $row['controller_name'];
+																			$description = $row['description'];
+																			$brand = $row['brand'];
+																			$model = $row['model'];
+																			$create_date = $row['create_date'];
+																			$ip_address = $row['ip_address'];
+																			
+																			$api_url = $row['api_url'];
+																			$api_profile=$row['api_profile'];
+																			
+																			$id = $row['id'];
+																			$assign_count = $row['assign_count'];
+																			echo '<tr>
+																			<td> '.$controller_name.' </td>
+																			<td> '.$api_profile.' </td>
+																			
+																			<td> '.$api_url.' </td>';
+																				echo '<td><a href="javascript:void();" id="AP_'.$id.'"  class="btn btn-small btn-info">
+																					<i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
+																					$(document).ready(function() {
+																					$(\'#AP_'.$id.'\').easyconfirm({locale: {
+																							title: \'AP Controller\',
+																							text: \'Are you sure you want to edit this AP Controller?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																							button: [\'Cancel\',\' Confirm\'],
+																							closeText: \'close\'
+																							}});
+																						$(\'#AP_'.$id.'\').click(function() {
+																							window.location = "?token2='.$secret.'&t=1&edit_controller='.$id.'"
+																						});
+																						});
+																					</script></td>';
+																			if($assign_count==0){
+																				
+																				echo '<td><a href="javascript:void();" id="AP_R_'.$id.'"  class="btn btn-small btn-danger">
+																				<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
+																					$(document).ready(function() {
+																					$(\'#AP_R_'.$id.'\').easyconfirm({locale: {
+																							title: \'AP Controller\',
+																							text: \'Are you sure you want to remove this AP Controller?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																							button: [\'Cancel\',\' Confirm\'],
+																							closeText: \'close\'
+																							}});
+																						$(\'#AP_R_'.$id.'\').click(function() {
+																							window.location = "?token2='.$secret.'&t=1&remove_controller='.$id.'"
+																						});
+																						});
+																					</script></td>';
+																			
+																			}
+																			else{
+																				echo '<td><a class="btn btn-small btn-warning" disabled ><i class="icon icon-lock"></i>&nbsp;Remove</a></td>';
 
-																	}
-
-														?>		
-														</tbody>
-														</table>
-												</div>
+																				//echo '';
+																			}
+																			echo '</tr>';
+																		}
+																	?>		
+																</tbody>
+															</table>
+													</div>
 												</div>
 												<!-- /widget-content -->
 											</div>
-											
-											
-
-											
-											
 											<!-- /widget -->
 										</div><!-- /over product tab -->
 
@@ -1356,23 +544,7 @@ if($ap_control_var=='SINGLE'){
 													<?php 
 														echo '<input type="hidden" name="create_user" id="create_user" value="'.$user_distributor.'" />';
 													?>	
-													<div class="control-group">
-<!--													
-													<div class="control-group">
-                                                        <label class="control-label" for="mg_product_code_1">Type<font color="#FF0000"></font></label>
-                                                        <div class="controls col-lg-5 form-group">
-
-                                     								<select class="span4 form-control" name="type" id="type" >
-                                                                    <option value="">Select Type</option>
-																	<option value="AP">AP Controller</option>
-																	<option value="SW">SW Controller</option>
-																	<option value="FIREWALL CONTROLLER">Firewall Controller</option>
-																	<option value="DPSK">DPSK Controller</option>
-																</select>
-                                                        
-                                                          </div>
-                                                    </div>													-->
-														
+													<div class="control-group">														
 													<div class="control-group">
                                                         <label class="control-label" for="mg_product_code_1">API Profile<font color="#FF0000"></font></label>
                                                         <div class="controls col-lg-5 form-group">
@@ -1478,17 +650,7 @@ if($ap_control_var=='SINGLE'){
 	                                                </div>	
 												</fieldset>
 											</form>
-
 										</div>
-
-                                       
-
-
-
-                   
-
-
-
                                     </div>
 								</div>
 							</div>
@@ -1505,15 +667,10 @@ if($ap_control_var=='SINGLE'){
 		<!-- /main-inner -->
 	</div>
 	<!-- /main -->
-    
-    
+
 <?php
 include 'footer.php';
 ?>
-
-
-
-
 <script type="text/javascript" src="js/formValidation.js"></script>
 <script type="text/javascript" src="js/bootstrapValidator.js"></script>
 
@@ -1574,11 +731,7 @@ include 'footer.php';
                 }
             }
         });
-</script>
 
-
-
-<script type="text/javascript">
 	$('#create_ap_controller_form').bootstrapValidator({
             framework: 'bootstrap',
             excluded: ':disabled',
@@ -1649,83 +802,6 @@ include 'footer.php';
             }
         });
 </script>
-
-<!--    <script>
-        $(document).ready(function() {
-            $('#create_product_form')
-                .formValidation({
-                    framework: 'bootstrap',
-                    icon: {
-                        valid: 'glyphicon glyphicon-ok',
-                        invalid: 'glyphicon glyphicon-remove',
-                        validating: 'glyphicon glyphicon-refresh'
-                    },
-                    fields: {
-                        num1: {
-                            validators: {
-                                notEmpty: {
-                                    message: 'Please provide the Social Security number'
-                                },
-                                regexp: {
-                                    regexp: /^(?!(000|666|9))\d{3}(?!00)\d{2}(?!0000)\d{4}$/,
-                                    message: 'The format of your num1 is invalid. It should be XXXXXXXXX with no dashes'
-                                }
-                            }
-                        },
-                        num2: {
-                            // Disable validators
-                            enabled: false,
-                            validators: {
-                                notEmpty: {
-                                    message: 'Or the Drivers License number'
-                                },
-                                stringLength: {
-                                    min: 8,
-                                    max: 20,
-                                    message: 'The Drivers License number must be more than 8 and less than 20 characters long'
-                                }
-                            }
-                        }
-                    }
-                })
-                .on('keyup', '[name="num1"], [name="num2"]', function(e) {
-                    var num2 = $('#create_product_form').find('[name="num2"]').val(),
-                        num1           = $('#create_product_form').find('[name="num1"]').val(),
-                        fv            = $('#create_product_form').data('formValidation');
-
-                    switch ($(this).attr('name')) {
-                        // User is focusing the num1 field
-                        case 'num1':
-                            fv.enableFieldValidators('num2', num1 === '').revalidateField('num2');
-
-                            if (num1 && fv.getOptions('num1', null, 'enabled') === false) {
-                                fv.enableFieldValidators('num1', true).revalidateField('num1');
-                            } else if (num1 === '' && num2 !== '') {
-                                fv.enableFieldValidators('num1', false).revalidateField('num1');
-                            }
-                            break;
-
-                        // User is focusing the drivers license field
-                        case 'num2':
-                            if (num2 === '') {
-                                fv.enableFieldValidators('num1', true).revalidateField('num1');
-                            } else if (num1 === '') {
-                                fv.enableFieldValidators('num1', false).revalidateField('num1');
-                            }
-
-                            if (num2 && num1 === '' && fv.getOptions('num2', null, 'enabled') === false) {
-                                fv.enableFieldValidators('num2', true).revalidateField('num2');
-                            }
-                            break;
-
-                        default:
-                            break;
-                    }
-                });
-        });
-    </script>
-   
--->
 <!-- Alert messages js-->
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
@@ -1749,20 +825,7 @@ include 'footer.php';
 	});
   
   });
-  </script>
 
-
-	<script type="text/javascript">
-
-
-
-
-
-
-
-  
-
-  
 function GetXmlHttpObject()
 {
 var xmlHttp=null;
@@ -1787,24 +850,17 @@ return xmlHttp;
 }
   
 </script>
+<script src="js/jquery.multi-select.js" type="text/javascript"></script>
+<script type="text/javascript">
 
-    <script src="js/jquery.multi-select.js" type="text/javascript"></script>
+	$( document ).ready(function() {
 
-    <script type="text/javascript">
+		//$('#my_select').multiSelect({ cssClass: "template",keepOrder: true  });
+		$('#my_select').multiSelect();
+		$('#my_select_assign').multiSelect();
 
-        $( document ).ready(function() {
+	});
 
-            //$('#my_select').multiSelect({ cssClass: "template",keepOrder: true  });
-            $('#my_select').multiSelect();
-            $('#my_select_assign').multiSelect();
-
-        });
-
-    </script>
-
-
-
-
+</script>
 </body>
-
 </html>
