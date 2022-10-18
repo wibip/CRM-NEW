@@ -1989,16 +1989,10 @@ else{
 		$logo_top = $row[theme_logo];
 		//}
 
-		if (strlen($logo_top)) {
-			if (file_exists("image_upload/logo/" . $logo_top)) {
-				$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="image_upload/logo/' . $logo_top . '?v=3" border="0" />&nbsp;';
-			}
-		} else {
-			$logo_top = 'top_logo.png';
+		$logo_top = 'top_logo.png';
 			if (file_exists("layout/" . $camp_layout . "/img/" . $logo_top)) {
 				$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="layout/' . $camp_layout . '/img/' . $logo_top . '?v=3" border="0" />&nbsp;';
 			}
-		}
 
 		//echo $db_class1->setVal("site_title",$dist_name);
 		$logo_title = "<a class='brand' href='javascript:void(0);' style='text-decoration:none !important'>";
