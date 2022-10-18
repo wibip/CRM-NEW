@@ -684,7 +684,6 @@ $dt = new DateTime('now', $utc);
 									<div class="tab-content">
                                         <!-- **************Create Operations Account********************** -->
                                         <div <?php if(isset($tab6)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="operation_account">
-
                                             <form onkeyup="submit_mno_formfn();" onchange="submit_mno_formfn();" id="mno_form" name="mno_form" class="form-horizontal" method="POST" action="location.php?<?php if($mno_edit==1){echo "t=8&mno_edit=1&mno_edit_id=$edit_mno_id";}else{echo "t=6";}?>" >
                                                 <?php
                                                 echo '<input type="hidden" name="form_secret6" id="form_secret6" value="'.$_SESSION['FORM_SECRET'].'" />';
@@ -1202,198 +1201,195 @@ $dt = new DateTime('now', $utc);
 
                                         <!-- ***************Operation Account Create********************** -->
                                         <div <?php if(isset($tab5)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="create_operation">
-                                            <div class="support_head_visible" style="display:none;"><div class="header_hr"></div><div class="header_f1" style="width: 100%;">Account Info</div>
-                                                <br class="hide-sm"><br class="hide-sm"><div class="header_f2" style="width: 100%;"> </div></div>
-                                                <form onkeyup="location_formfn();" onchange="location_formfn();"   autocomplete="off"   id="location_form" name="location_form" method="post" class="form-horizontal"   action="<?php if($_POST['p_update_button_action']=='add_location' || isset($_GET['location_parent_id'])){echo '?token7='.$secret.'&t=edit_parent&edit_parent_id='.$edit_parent_id;}else{echo'?t=active_properties';} ?>" >
-                                                    <?php
-                                                    echo '<input type="hidden" name="form_secret5" id="form_secret5" value="'.$_SESSION['FORM_SECRET'].'" />';
-                                                    ?>
-                                                    <fieldset>
-                                                        <div id="response_d1"></div>
-                                                        <br>
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="mno_first_name">First Name<?php if($field_array['f_name']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
-                                                            <div class="controls col-lg-5 form-group">
-                                                                <input <?php if(isset($edit_first_name)){ ?>readonly<?php } ?> class="span4 form-control" id="mno_first_name" placeholder="First Name" name="mno_first_name" type="text" maxlength="30" value="<?php echo $edit_first_name; ?>">
-                                                            </div>
+                                            <form onkeyup="location_formfn();" onchange="location_formfn();"   autocomplete="off"   id="location_form" name="location_form" method="post" class="form-horizontal"   action="<?php if($_POST['p_update_button_action']=='add_location' || isset($_GET['location_parent_id'])){echo '?token7='.$secret.'&t=edit_parent&edit_parent_id='.$edit_parent_id;}else{echo'?t=active_properties';} ?>" >
+                                                <?php
+                                                echo '<input type="hidden" name="form_secret5" id="form_secret5" value="'.$_SESSION['FORM_SECRET'].'" />';
+                                                ?>
+                                                <fieldset>
+                                                    <div id="response_d1"></div>
+                                                    <br>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="mno_first_name">First Name<?php if($field_array['f_name']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input <?php if(isset($edit_first_name)){ ?>readonly<?php } ?> class="span4 form-control" id="mno_first_name" placeholder="First Name" name="mno_first_name" type="text" maxlength="30" value="<?php echo $edit_first_name; ?>">
                                                         </div>
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="mno_last_name">Last Name<?php if($field_array['l_name']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
-                                                            <div class="controls col-lg-5 form-group">
-                                                                <input <?php if(isset($edit_last_name)){ ?>readonly<?php } ?> class="span4 form-control" id="mno_last_name" placeholder="Last Name" name="mno_last_name" maxlength="30" type="text" value="<?php echo $edit_last_name; ?>">
-                                                            </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="mno_last_name">Last Name<?php if($field_array['l_name']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input <?php if(isset($edit_last_name)){ ?>readonly<?php } ?> class="span4 form-control" id="mno_last_name" placeholder="Last Name" name="mno_last_name" maxlength="30" type="text" value="<?php echo $edit_last_name; ?>">
                                                         </div>
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="mno_email">Email<?php if($field_array['email']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
-                                                            <div class="controls col-lg-5 form-group">
-                                                                <input <?php if(isset($edit_email)){ ?>readonly<?php } ?> class="span4 form-control" id="mno_email" name="mno_email" type="text" placeholder="wifi@company.com"   value="<?php echo $edit_email; ?>">
-                                                            </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="mno_email">Email<?php if($field_array['email']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input <?php if(isset($edit_email)){ ?>readonly<?php } ?> class="span4 form-control" id="mno_email" name="mno_email" type="text" placeholder="wifi@company.com"   value="<?php echo $edit_email; ?>">
                                                         </div>
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="mno_address_1">Address<?php if($field_array['add1']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
-                                                            <div class="controls col-lg-5 form-group">
-                                                                <input <?php if($field_array['add1']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_address_1" placeholder="Address" name="mno_address_1" type="text"   value="<?php echo $edit_bussiness_address1; ?>">
-                                                            </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="mno_address_1">Address<?php if($field_array['add1']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input <?php if($field_array['add1']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_address_1" placeholder="Address" name="mno_address_1" type="text"   value="<?php echo $edit_bussiness_address1; ?>">
                                                         </div>
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="mno_address_2">City<?php if($field_array['add2']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
-                                                            <div class="controls col-lg-5 form-group">
-                                                                <input <?php if($field_array['add2']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_address_2" placeholder="City" name="mno_address_2" type="text"   value="<?php echo $edit_bussiness_address2; ?>">
-                                                            </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="mno_address_2">City<?php if($field_array['add2']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input <?php if($field_array['add2']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_address_2" placeholder="City" name="mno_address_2" type="text"   value="<?php echo $edit_bussiness_address2; ?>">
                                                         </div>
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="mno_country" >Country<?php if($field_array['country']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
-                                                            <div class="controls col-lg-5 form-group">
-                                                                <select <?php if($field_array['country']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> name="mno_country" id="country" class="span4 form-control">
-                                                                    <option value="">Select Country</option>
-                                                                    <?php
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="mno_country" >Country<?php if($field_array['country']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <select <?php if($field_array['country']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> name="mno_country" id="country" class="span4 form-control">
+                                                                <option value="">Select Country</option>
+                                                                <?php
+                                                                $select="";
+                                                                foreach ($country_result['data'] AS $row) {
+                                                                    // if($row[a]==$edit_country_code || $row[a]== "US"){
+                                                                    //     $select="selected";
+                                                                    // }
+                                                                    echo '<option value="'.$row[a].'" '.$select.'>'.$row[b].'</option>';
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <script language="javascript">
+                                                        populateCountries("country", "state");
+                                                    </script>
+                                                    <!-- /controls -->
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="mno_state">State/Region<?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="state" placeholder="State or Region" name="mno_state" >
+                                                                <option value="">Select State</option>
+                                                                <?php
+                                                                foreach ($get_regions['data'] AS $state) {
+                                                                    if($edit_state_region==$state['states_code']) {
+                                                                        echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                                    }else{
+
+                                                                        echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                                    }
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="mno_region">ZIP Code<?php if($field_array['zip_code']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input <?php if($field_array['zip_code']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control zip_vali" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $edit_zip; ?>">
+                                                        </div>
+                                                    </div>
+
+                                                    <script type="text/javascript">
+                                                        $(document).ready(function() {
+                                                            $(".zip_vali").keydown(function (e) {
+                                                                var mac = $('.zip_vali').val();
+                                                                var len = mac.length + 1;
+                                                                // Allow: backspace, delete, tab, escape, enter, '-' and .
+                                                                if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
+                                                                    // Allow: Ctrl+A, Command+A
+                                                                    (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                    // Allow: Ctrl+C, Command+C
+                                                                    (e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                    // Allow: Ctrl+x, Command+x
+                                                                    (e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                    // Allow: Ctrl+V, Command+V
+                                                                    (e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                    // Allow: home, end, left, right, down, up
+                                                                    (e.keyCode >= 35 && e.keyCode <= 40)) {
+                                                                    // let it happen, don't do anything
+                                                                    return;
+                                                                }
+                                                                // Ensure that it is a number and stop the keypress
+                                                                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                                                                    e.preventDefault();
+                                                                }
+                                                            });
+                                                        });
+                                                    </script>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="mno_timezone">Time Zone <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <select <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_time_zone" name="mno_time_zone" >
+                                                                <option value="">Select Time Zone</option>
+                                                                <?php
+                                                                foreach ($priority_zone_array as $tz){
+                                                                    $current_tz = new DateTimeZone($tz);
+                                                                    $offset =  $current_tz->getOffset($dt);
+                                                                    $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                                    $abbr = $transition[0]['abbr'];
+                                                                    if($edit_timezone==$tz){
+                                                                        $select="selected";
+                                                                    }else{
+                                                                        $select="";
+                                                                    }
+                                                                    echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                                                }
+
+                                                                foreach(DateTimeZone::listIdentifiers() as $tz) {
+                                                                    //Skip
+                                                                    if(in_array($tz,$priority_zone_array))
+                                                                        continue;
+
+                                                                    $current_tz = new DateTimeZone($tz);
+                                                                    $offset =  $current_tz->getOffset($dt);
+                                                                    $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                                    $abbr = $transition[0]['abbr'];
+                                                                    if($edit_timezone==$tz){
+                                                                        $select="selected";
+                                                                    }
+                                                                    echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
                                                                     $select="";
-                                                                    foreach ($country_result['data'] AS $row) {
-                                                                        // if($row[a]==$edit_country_code || $row[a]== "US"){
-                                                                        //     $select="selected";
-                                                                        // }
-                                                                        echo '<option value="'.$row[a].'" '.$select.'>'.$row[b].'</option>';
-                                                                    }
-                                                                    ?>
-                                                                </select>
-                                                            </div>
+                                                                }
+                                                                ?>
+                                                            </select>
                                                         </div>
-                                                        <script language="javascript">
-                                                            populateCountries("country", "state");
-                                                        </script>
-                                                        <!-- /controls -->
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="mno_state">State/Region<?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
-                                                            <div class="controls col-lg-5 form-group">
-                                                                <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="state" placeholder="State or Region" name="mno_state" >
-                                                                    <option value="">Select State</option>
-                                                                    <?php
-                                                                    foreach ($get_regions['data'] AS $state) {
-                                                                        if($edit_state_region==$state['states_code']) {
-                                                                            echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                                        }else{
+                                                    </div>
+                                                    <div class="form-actions">
+                                                        <?php if($edit_account=='1')$btn_name='Update Location & Save';else $btn_name='Add Location & Save';
+                                                        if($create_operation_btn_action=='create_operation_next' || $create_operation_btn_action=='add_location_next'  || $_POST['p_update_button_action']=='add_location' || $edit_account=='1'){
+                                                            echo '<button onmouseover="btn_action_change(\'add_location_submit\');" disabled type="submit" name="add_location_submit" id="add_location_submit" class="btn btn-primary">'.$btn_name.'</button><strong><font color="#FF0000"></font> </strong>';
+                                                            $location_count = $db->getValueAsf("SELECT count(id) as f FROM exp_mno_distributor WHERE parent_id='$edit_parent_id'");
+                                                            if($location_count<1000  && !isset($_GET['edit_loc_id']) && !isset($_POST['p_update_button_action']) ){
+                                                                echo '<button onmouseover="btn_action_change(\'add_location_next\');"  disabled type="submit" name="add_location_next" id="add_location_next" class="btn btn-info inline-btn">Add Location</button><strong><font color="#FF0000"></font> </strong>';
+                                                            }
+                                                        }else{
+                                                            echo '<button onmouseover="btn_action_change(\'create_operation_submit\');"  disabled type="submit" name="create_operation_submit" id="create_operation_submit"
+                                                                                                class="btn btn-primary">Create Account</button><strong><font color="#FF0000"></font> </strong>';
 
-                                                                            echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                                        }
-                                                                    }
-                                                                    ?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="mno_region">ZIP Code<?php if($field_array['zip_code']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
-                                                            <div class="controls col-lg-5 form-group">
-                                                                <input <?php if($field_array['zip_code']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control zip_vali" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $edit_zip; ?>">
-                                                            </div>
-                                                        </div>
+                                                        }
 
+                                                        if($edit_account=='1' || $_POST['p_update_button_action']=='add_location' || $_POST['btn_action']=='add_location_next'){?>
+                                                            <a href="?token7=<?php echo $secret;?>&t=edit_parent&edit_parent_id=<?php echo $edit_parent_id  ;?>" style="text-decoration:none;" class="btn btn-info inline-btn" >Cancel</a>
+                                                        <?php } ?>
+                                                        <input type="hidden" name="edit_account" value="<?php echo $edit_account; ?>" />
+                                                        <input type="hidden" name="edit_distributor_code" value="<?php echo $edit_distributor_code; ?>" />
+                                                        <input type="hidden" name="edit_distributor_id" value="<?php echo $edit_loc_id; ?>" />
+                                                        <input type="hidden" name="btn_action"  id = "btn_action" value="create_operation_submit" />
+                                                        <input type="hidden" name="add_new_location"  value="<?php echo  $_POST['p_update_button_action']=='add_location'?'1':'0' ?>" />
                                                         <script type="text/javascript">
+                                                            function btn_action_change(action) {
+                                                                $('#btn_action').val(action);
+                                                            }
+
                                                             $(document).ready(function() {
-                                                                $(".zip_vali").keydown(function (e) {
-                                                                    var mac = $('.zip_vali').val();
-                                                                    var len = mac.length + 1;
-                                                                    // Allow: backspace, delete, tab, escape, enter, '-' and .
-                                                                    if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                                                                        // Allow: Ctrl+A, Command+A
-                                                                        (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: Ctrl+C, Command+C
-                                                                        (e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: Ctrl+x, Command+x
-                                                                        (e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: Ctrl+V, Command+V
-                                                                        (e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: home, end, left, right, down, up
-                                                                        (e.keyCode >= 35 && e.keyCode <= 40)) {
-                                                                        // let it happen, don't do anything
-                                                                        return;
-                                                                    }
-                                                                    // Ensure that it is a number and stop the keypress
-                                                                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                                                                        e.preventDefault();
+                                                                $(window).keydown(function(event){
+                                                                    if(event.keyCode == 13) {
+                                                                        event.preventDefault();
+                                                                        return false;
                                                                     }
                                                                 });
                                                             });
                                                         </script>
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="mno_timezone">Time Zone <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
-                                                            <div class="controls col-lg-5 form-group">
-                                                                <select <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_time_zone" name="mno_time_zone" >
-                                                                    <option value="">Select Time Zone</option>
-                                                                    <?php
-                                                                    foreach ($priority_zone_array as $tz){
-                                                                        $current_tz = new DateTimeZone($tz);
-                                                                        $offset =  $current_tz->getOffset($dt);
-                                                                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-                                                                        $abbr = $transition[0]['abbr'];
-                                                                        if($edit_timezone==$tz){
-                                                                            $select="selected";
-                                                                        }else{
-                                                                            $select="";
-                                                                        }
-                                                                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-                                                                    }
-
-                                                                    foreach(DateTimeZone::listIdentifiers() as $tz) {
-                                                                        //Skip
-                                                                        if(in_array($tz,$priority_zone_array))
-                                                                            continue;
-
-                                                                        $current_tz = new DateTimeZone($tz);
-                                                                        $offset =  $current_tz->getOffset($dt);
-                                                                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-                                                                        $abbr = $transition[0]['abbr'];
-                                                                        if($edit_timezone==$tz){
-                                                                            $select="selected";
-                                                                        }
-                                                                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-                                                                        $select="";
-                                                                    }
-                                                                    ?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-actions">
-                                                            <?php if($edit_account=='1')$btn_name='Update Location & Save';else $btn_name='Add Location & Save';
-                                                            if($create_operation_btn_action=='create_operation_next' || $create_operation_btn_action=='add_location_next'  || $_POST['p_update_button_action']=='add_location' || $edit_account=='1'){
-                                                                echo '<button onmouseover="btn_action_change(\'add_location_submit\');" disabled type="submit" name="add_location_submit" id="add_location_submit" class="btn btn-primary">'.$btn_name.'</button><strong><font color="#FF0000"></font> </strong>';
-                                                                $location_count = $db->getValueAsf("SELECT count(id) as f FROM exp_mno_distributor WHERE parent_id='$edit_parent_id'");
-                                                                if($location_count<1000  && !isset($_GET['edit_loc_id']) && !isset($_POST['p_update_button_action']) ){
-                                                                    echo '<button onmouseover="btn_action_change(\'add_location_next\');"  disabled type="submit" name="add_location_next" id="add_location_next" class="btn btn-info inline-btn">Add Location</button><strong><font color="#FF0000"></font> </strong>';
-                                                                }
-                                                            }else{
-                                                                echo '<button onmouseover="btn_action_change(\'create_operation_submit\');"  disabled type="submit" name="create_operation_submit" id="create_operation_submit"
-                                                                                                    class="btn btn-primary">Create Account</button><strong><font color="#FF0000"></font> </strong>';
-
-                                                            }
-
-                                                            if($edit_account=='1' || $_POST['p_update_button_action']=='add_location' || $_POST['btn_action']=='add_location_next'){?>
-                                                                <a href="?token7=<?php echo $secret;?>&t=edit_parent&edit_parent_id=<?php echo $edit_parent_id  ;?>" style="text-decoration:none;" class="btn btn-info inline-btn" >Cancel</a>
-                                                            <?php } ?>
-                                                            <input type="hidden" name="edit_account" value="<?php echo $edit_account; ?>" />
-                                                            <input type="hidden" name="edit_distributor_code" value="<?php echo $edit_distributor_code; ?>" />
-                                                            <input type="hidden" name="edit_distributor_id" value="<?php echo $edit_loc_id; ?>" />
-                                                            <input type="hidden" name="btn_action"  id = "btn_action" value="create_operation_submit" />
-                                                            <input type="hidden" name="add_new_location"  value="<?php echo  $_POST['p_update_button_action']=='add_location'?'1':'0' ?>" />
-                                                            <script type="text/javascript">
-                                                                function btn_action_change(action) {
-                                                                    $('#btn_action').val(action);
-                                                                }
-
-                                                                $(document).ready(function() {
-                                                                    $(window).keydown(function(event){
-                                                                        if(event.keyCode == 13) {
-                                                                            event.preventDefault();
-                                                                            return false;
-                                                                        }
-                                                                    });
-                                                                });
-                                                            </script>
-                                                        </div>
                                                     </div>
-                                                    <!-- /form-actions -->
-                                                    </fieldset>
-                                                </form>
-                                            </div>
+                                                
+                                                <!-- /form-actions -->
+                                                </fieldset>
+                                            </form>
                                         </div>
 
                                         <!-- ***************Operation Accounts List********************** -->
