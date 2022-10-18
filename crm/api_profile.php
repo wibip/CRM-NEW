@@ -428,9 +428,7 @@ if($ap_control_var=='SINGLE'){
 										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Active Profiles</a></li>
 										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Add Profiles</a></li>	
 									</ul>
-
 									<br>
-
 									<div class="tab-content">
 										<!-- create_product tab -->
 										<div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="viewap">      	      			
