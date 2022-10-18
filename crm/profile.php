@@ -11,7 +11,9 @@ session_start();
 
 include 'header_top.php';
 
-//require_once('db/config.php');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 
 /* No cache*/
 header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
