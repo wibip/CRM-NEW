@@ -1367,9 +1367,7 @@ $dt = new DateTime('now', $utc);
                                                                 }
                                                             }else{
                                                                 echo '<button onmouseover="btn_action_change(\'create_operation_submit\');"  disabled type="submit" name="create_operation_submit" id="create_operation_submit"
-                                                                                                    class="btn btn-primary">Create Account & Save</button><strong><font color="#FF0000"></font> </strong>';
-
-                                                                echo '<button onmouseover="btn_action_change(\'create_operation_next\');"  disabled type="submit" name="create_operation_next" id="create_operation_next" class="btn btn-info inline-btn">Add Location</button><strong><font color="#FF0000"></font> </strong>';
+                                                                                                    class="btn btn-primary">Create Account</button><strong><font color="#FF0000"></font> </strong>';
 
                                                             }
 
