@@ -73,7 +73,7 @@ include_once 'classes/cryptojs-aes.php';
 
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;
-    $get_opt_code = $db->getValueAsf("SELECT api_prefix as f FROM exp_mno WHERE mno_id = '$user_distributor'");
+    $get_opt_code = 'FRT';//$db->getValueAsf("SELECT api_prefix as f FROM exp_mno WHERE mno_id = '$user_distributor'");
 
     if(isset($_GET['edit'])){
         $edit = true;
@@ -153,6 +153,7 @@ include_once 'classes/cryptojs-aes.php';
              $account_number = $_POST['account_number'];
              $street = $_POST['street'];
              $state = $_POST['state'];
+             $service_type = $_POST['service_type'];
              $wifi_unique_key = $_POST['wifi_unique'];
              $wifi_unique = $get_opt_code.$wifi_unique_key;
 
@@ -249,7 +250,8 @@ include_once 'classes/cryptojs-aes.php';
              $qualifying_questions = json_encode($qualifying_questions_arr);
 
              $query = "INSERT INTO `exp_crm`
-                (`business_name`,
+                (`service_type`,
+                `business_name`,
                  `contact_name`,
                  `contact_number`,
                  `contact_email`,
@@ -268,6 +270,7 @@ include_once 'classes/cryptojs-aes.php';
                  `create_user`,
                  `create_date`,
                  `last_update`) VALUES (
+                 '$service_type',
                  '$business_name',
                  '$contact_name',
                  '$contact_phone',
@@ -476,6 +479,11 @@ include_once 'classes/cryptojs-aes.php';
                         }
                     },
                     state: {
+                        validators: {
+                            <?php echo $db->validateField('notEmpty'); ?>
+                        }
+                    },
+                    service_type: {
                         validators: {
                             <?php echo $db->validateField('notEmpty'); ?>
                         }
