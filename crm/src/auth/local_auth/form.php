@@ -24,15 +24,15 @@
 	<button type="submit" name="sign_in" class="button btn btn-primary btn-large"style="background-color: <?php echo $camp_theme_color; ?>;"><font color="white">Sign In</font></button>
 
 	</div> <!-- .actions -->
-	<a href="<?php echo $veri_login; ?>">First Time User? Click here to Activate your Account</a>
-	<br>
+	<!--<a href="< ?php echo $veri_login; ?>">First Time User? Click here to Activate your Account</a>
+	<br>-->
 	<a href="<?php echo $reset_main_url; ?>" class="">
 		Forgot User ID or Password?
 	</a>
-	<br>
-	<a href="<?php echo $reset_admin_main_url; ?>" class="">
+	<!--<br>
+	<a href="< ?php echo $reset_admin_main_url; ?>" class="">
 		Forgot support or systems admin password?
-	</a>
+	</a>-->
 	<?php
 	}
 	?>
