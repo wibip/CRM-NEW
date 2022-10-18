@@ -69,10 +69,14 @@ class crm
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $header = substr($result, 0, $header_size);
         $body = substr($result, $header_size);
-
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $sus=json_decode($body,true);
-        //echo $sus[auth_token];
-        return $sus['data']['token'];
+        // print_r($sus);
+
+        $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
+        VALUES('createToken','Create CRM Token','$jsondata','$result','$httpcode','',NOW())";
+        $this->db->execDB($q);
+        return $sus['token'];
 
     }
 
@@ -88,7 +92,7 @@ class crm
         $header_parameters = array(
             'Authorization: Bearer '.$access_token.'',
             'Content-Type: application/json');
-        print_r($header_parameters);
+        // print_r($header_parameters);
         //curl_setopt($ch, CURLOPT_POST, 1);
         //Attach our encoded JSON string to the POST fields.
         curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
