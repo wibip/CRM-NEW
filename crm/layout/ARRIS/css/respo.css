@@ -674,13 +674,12 @@ body{
 
 .subnavbar .container>ul>li>a{
     color: #525e6e !important;
-    padding-right: 40px;
+    padding-right: 40px !important;
 }
 
 .subnavbar .container>ul>li.active>a{
     color: #E57200 !important;
     border-bottom: none !important;
-    padding-right: 40px;
 }
 
 
