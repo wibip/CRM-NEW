@@ -164,7 +164,7 @@ if($system_package=="N/A" || $system_package=="") {
 		
         
 		$query_results=$dbT->selectDB($user_query);
-
+var_dump($query_results);
 		$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT',$system_package);
 		$theme_text = $package_functions->getMessageOptions('THEME_TEXT',$system_package);
 
