@@ -1723,7 +1723,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                     $ex0 = $db->execDB($query01);
 
                     $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
-            VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$user_type1', '$mno_id', '$mvnx_full_name', '$mvnx_email', '$mvnx_mobile_1', '$mvnx_time_zone', '1','$login_user_name', NOW(), '$user_type1')";
+            VALUES ('$dis_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$user_type1', '$user_distributor', '$mvnx_full_name', '$mvnx_email', '$mvnx_mobile_1', '$mvnx_time_zone', '1','$login_user_name', NOW(), '$user_type1')";
                             $ex1 = $db->execDB($query0);
                             exit();
                 }
@@ -2777,12 +2777,12 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                    $key_query = "SELECT m.mno_description,m.mno_id,u.full_name, u.email , u.verification_number
+                                                                    echo $key_query = "SELECT m.mno_description,m.mno_id,u.full_name, u.email , u.verification_number
                                                                                     FROM exp_mno m, admin_users u
                                                                                     WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='admin'
                                                                                     GROUP BY m.mno_id
                                                                                     ORDER BY mno_description ";
-                                                                    $query_results = $db->selectDB($key_queryq1);
+                                                                    $query_results = $db->selectDB($key_query);
                                                                     foreach ($query_results['data'] as $row) {
                                                                         $mno_description = $row[mno_description];
                                                                         $mno_id = $row[mno_id];
