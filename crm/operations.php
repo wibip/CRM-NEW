@@ -1321,7 +1321,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                             $query0 = "INSERT INTO `exp_mno` (`system_package`,`mno_id`, `mno_description`, `mno_type`, `is_enable`,create_user, `create_date`)
         VALUES ('$mno_sys_package','$mno_id', '$mno_account_name','$mnoAccType','0','$login_user_name', NOW())";
                         }
-                        //echo $query0;
+                        echo $query0;
 
 
                         $ex0 = $db->execDB($query0);
@@ -1596,12 +1596,10 @@ if (isset($_POST['submit_mno_form'])) { //6
 
                             ///////////////////////////////////////////////
                             $db->userLog($user_name, $script, 'Create Operator', '');
-                            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'', $message_functions->showMessage('operator_create_success'), '');
 
                             $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_success') . "</strong></div>";
                         } else {
                             $db->userErrorLog('2001', $user_name, 'script - ' . $script);
-                            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2001', $message_functions->showMessage('operator_create_failed', '2001'), '');
                             $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_failed', '2001') . "</strong></div>";
                         }
                     }
@@ -1609,7 +1607,6 @@ if (isset($_POST['submit_mno_form'])) { //6
 
                 else { //1
                     $db->userErrorLog('2009', $user_name, 'script - ' . $script);
-                    $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2001', $message_functions->showMessage('operator_create_failed', '2009'), '');
                     $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_failed', '2009') . "</strong></div>";
                 } //1
             } else {
