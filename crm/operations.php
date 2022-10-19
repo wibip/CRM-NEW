@@ -2316,6 +2316,10 @@ if (isset($_POST['submit_mno_form'])) { //6
 					<div class="span12">
 						<div class="widget ">
 							<div class="widget-content">
+                                <?php if (isset($_SESSION['msg6'])) {
+                                            echo $_SESSION['msg6'];
+                                            unset($_SESSION['msg6']);
+                                        } ?>
 								<div class="tabbable">
 									<ul class="nav nav-tabs">
                                     <?php
@@ -2777,7 +2781,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                    echo $key_query = "SELECT m.mno_description,m.mno_id,u.full_name, u.email , u.verification_number
+                                                                    $key_query = "SELECT m.mno_description,m.mno_id,u.full_name, u.email , u.verification_number
                                                                                     FROM exp_mno m, admin_users u
                                                                                     WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='admin'
                                                                                     GROUP BY m.mno_id
