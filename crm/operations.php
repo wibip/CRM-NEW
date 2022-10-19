@@ -51,13 +51,7 @@ require_once 'classes/CommonFunctions.php';
 <script type="text/javascript" src="js/aes.js"></script>
 <script type="text/javascript" src="js/aes-json-format.js"></script>
 
-<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
 
-<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
-<script src="js/select2-3.5.2/select2.min.js"></script>
-<script src="js/bootstrap-colorpicker.js?v=6"></script>
-<script type="text/javascript" src="plugins/img_upload/croppic.js?v=4"></script>
 <?php
 include 'header.php';
 if($user_type == 'ADMIN'){
@@ -3376,6 +3370,9 @@ FROM `exp_mno_distributor` d LEFT JOIN `admin_users` u  ON u.`verification_numbe
 
 </style>
 <!-- /widget -->
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
+    
 <script src="js/jquery.multi-select.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function() {
