@@ -2995,7 +2995,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                             echo '<button  type="submit" name="create_operation_submit" id="create_operation_submit" class="btn btn-primary"> Update Client</button><strong><font color="#FF0000"></font> </strong>';
                                                             
                                                         }else{
-                                                            echo '<button  disabled type="submit" name="create_operation_submit" id="create_operation_submit"
+                                                            echo '<button  type="submit" name="create_operation_submit" id="create_operation_submit"
                                                                                                 class="btn btn-primary">Create Account</button><strong><font color="#FF0000"></font> </strong>';
 
                                                         }
