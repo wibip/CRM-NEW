@@ -139,7 +139,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                     $offset = $dtz->getOffset($time_in_sofia) / 3600;
                     $time_offset = ($offset < 0 ? $offset : "+" . $offset);
 
-                    $featurearr = $_POST['feature_cont'];
+                    $featurearr = $_POST['api_profile'];
                     if (in_array('VTENANT_MODULE', $featurearr)) {
                         $vtenant_module = 'Vtenant';
                     } else {
@@ -1152,19 +1152,12 @@ if (isset($_POST['submit_mno_form'])) { //6
 
                                 $dynamicAdminSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='$admin_product_id'";
                                 $dynamicAdminSettings_res = $db->select1DB($dynamicAdminSettings);
-                                //$dynamicAdminSettings_row = mysql_fetch_assoc($dynamicAdminSettings_res);
-                                //$product_admin_custom_settings = $dynamicAdminSettings_row['settings'];
 
                                 $product_admin_custom_settings = json_decode($dynamicAdminSettings_res['settings'], true);
                                 $product_admin_custom_settings['general']['LOGIN_SIGN']['access_method'] = $mno_short_name;
                                 $product_admin_custom_settings = json_encode($product_admin_custom_settings);
 
-                                /* $settings_var = array(
-                                    $prev_short_name => $mno_short_name
-                                );
-
-                                $product_admin_custom_settings = mysql_real_escape_string(strtr($product_admin_custom_settings, $settings_var));*/
-
+                                
                                 $query6 = "UPDATE `admin_product_controls_custom` SET `settings` = '$product_admin_custom_settings' WHERE `product_id` = '$admin_product_id' ";
 
                                 $query7 = "UPDATE `mdu_themes` SET `login_screen_logo` = '$image_logo_name',`favcon` = '$image_favicon_name' WHERE `distributor_code` = '$edit_mno_id' AND `property_id` IS NULL;";
