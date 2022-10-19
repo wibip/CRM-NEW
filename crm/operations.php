@@ -2815,9 +2815,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                             });
 
                                                                             </script></td>';
-                                                                            
-                                                                            $count_records_exi = count($query_results01);
-                                                                            if($count_records_exi == 0){
 
                                                                             //*********************************** Remove  *****************************************
                                                                             echo '<td><a href="javascript:void();" id="REMMNOACC_'.$mno_id.'"  class="btn btn-small btn-danger">
@@ -2839,11 +2836,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                                 });
                                                                             </script>';
 
-
-                                                                            }else{
-
-                                                                                echo '<td><a class="btn btn-small btn-warning" disabled >&nbsp;<i class="icon icon-lock"></i>Remove</a></center>';
-                                                                            }
                                                                         //****************************************************************************************
                                                                         echo ' </td>';
                                                                         echo '</tr>';
