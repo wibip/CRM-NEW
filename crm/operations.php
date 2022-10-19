@@ -1633,10 +1633,9 @@ if (isset($_POST['submit_mno_form'])) { //6
                 $provisioning_setting = json_decode($db->getValueAsf("SELECT setting as f FROM exp_provisioning_setting WHERE id='$service_type'"),true);
                 $user_type1 = 'MVNO';
 
-                $icomme_number = $_POST['location_id'];
+                $icomme_number = $_POST['icomme'];
 
                 //  exit();/// need create vtenant icomme
-                $vt_icomme_number = $_POST['vt_location_id'];
 
                 $customer_type = trim($provisioning_setting['mvno_package']);
                 $parent_package = $provisioning_setting['parent_package'];
@@ -2864,6 +2863,44 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                 <fieldset>
                                                     <div id="response_d1"></div>
                                                     <br>
+                                                    <div class="control-group guest_icomme" id="icomme_div">
+                                        <div class="controls col-lg-5 form-group">
+                                            <label for="customer_type">Customer Account Number<?php if ($field_array['icomms_number'] == "mandatory") { ?><font color="#FF0000"></font><?php } ?></label>
+                                            <input type="text" class="span4 form-control" id="icomme" name="icomme" onblur="check_icom(this,1)" value="<?php echo $edit_distributor_verification_number; ?>" <?php if ($edit_account == 1) { ?>readonly<?php } ?>>
+                                            <div style="display: none" id="img_icom"><img src="img/loading_ajax.gif"></div>
+                                        </div>
+                                        <script type="text/javascript">
+                                            $(document).ready(function() {
+
+
+
+                                                $("#icomme").keypress(function(e) {
+
+                                                    var ew = event.which;
+
+                                                    //alert(ew);
+                                                    // if(ew == 32)
+                                                    //   return true;
+
+                                                    if (ew == 45 || ew == 95) {
+                                                        /*allow - and _ characters */
+                                                        return true;
+                                                    }
+
+                                                    if (48 <= ew && ew <= 57 || 65 <= ew && ew <= 90 || 97 <= ew && ew <= 122 || ew == 0 || ew == 8 || ew == 189) {
+                                                        return true;
+                                                    } else {
+                                                        return false;
+                                                    }
+
+
+
+                                                });
+
+
+                                            });
+                                        </script>
+                                    </div>
                                                     <div class="control-group">
                                                         <label class="control-label" for="client_first_name">First Name<?php if($field_array['f_name']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
