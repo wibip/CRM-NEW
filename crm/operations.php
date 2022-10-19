@@ -2856,7 +2856,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                         </div>
                                         <!-- ***************Operation Account Create********************** -->
                                         <div <?php if(isset($tab5)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="create_operation">
-                                            <form onkeyup="location_formfn();" onchange="location_formfn();"   autocomplete="off"   id="location_form" name="location_form" method="post" class="form-horizontal"   action="<?php if($_POST['p_update_button_action']=='add_location' || isset($_GET['location_parent_id'])){echo '?token7='.$secret.'&t=edit_parent&edit_parent_id='.$edit_parent_id;}else{echo'?t=active_properties';} ?>" >
+                                            <form  autocomplete="off"   id="location_form" name="location_form" method="post" class="form-horizontal"   action="<?php if($_POST['p_update_button_action']=='add_location' || isset($_GET['location_parent_id'])){echo '?token7='.$secret.'&t=edit_parent&edit_parent_id='.$edit_parent_id;}else{echo'?t=active_properties';} ?>" >
                                                 <?php
                                                 echo '<input type="hidden" name="form_secret5" id="form_secret5" value="'.$_SESSION['FORM_SECRET'].'" />';
                                                 ?>
@@ -2870,7 +2870,140 @@ if (isset($_POST['submit_mno_form'])) { //6
                                             <div style="display: none" id="img_icom"><img src="img/loading_ajax.gif"></div>
                                         </div>
                                         <script type="text/javascript">
+                                            function check_icom(icomval, type) {
+
+
+                if ($('#icomme').is('[readonly]')) {
+
+
+                } else if ($('#icomme_pvt').is('[readonly]')) {
+
+
+                } else {
+
+                    var valic = icomval.value;
+                    var valic = valic.trim();
+                    var distributor = "";
+                    <?php
+                    if ($edit_account == 1) {
+                        echo "distributor='" . $edit_distributor_code . "';";
+                    }
+                    ?>
+
+
+                    if (valic != "") {
+                        if (type == 0) {
+                            $('#img_icom_pvt').css('display', 'inline-block');
+                        } else {
+                            $('#img_icom').css('display', 'inline-block');
+                        }
+                        var formData = {
+                            icom: valic,
+                            edit: "<?php echo $edit_account; ?>",
+                            distributor: distributor
+                        };
+                        $.ajax({
+                            url: "ajax/validateIcom.php",
+                            type: "POST",
+                            data: formData,
+                            success: function(data) {
+                                /*  if:new ok->1
+                                 * if:new exist->2 */
+
+
+                                if (data == '1') {
+                                    /*   document.getElementById("img").innerHTML = "<img src=\"img/Ok.png\">";   */
+                                    if (type == 0) {
+                                        $('#img_icom_pvt').hide();
+                                    } else {
+                                        $('#img_icom').hide();
+                                    }
+
+                                    document.getElementById("realm").value = valic;
+                                    <?php if ($field_array['network_config'] == 'display_none') { ?>
+                                        document.getElementById("zone_name").value = valic;
+                                        document.getElementById("zone_dec").value = valic;
+                                    <?php } ?>
+
+
+                                } else if (data == '2') {
+                                    //alert(data);
+                                    if (type == 0) {
+                                        $('#img_icom_pvt').hide();
+                                        document.getElementById('icomme_pvt').value = "";
+                                        document.getElementById("realm").value = "";
+                                        <?php if ($field_array['network_config'] == 'display_none') { ?>
+                                            document.getElementById("zone_name").value = "";
+                                            document.getElementById("zone_dec").value = "";
+                                        <?php } ?>
+                                        /* $('#mno_account_name').removeAttr('value'); */
+                                        document.getElementById('icomme_pvt').placeholder = "Please enter new Customer Account number";
+                                        $("#icomme_div_p small[data-bv-validator='notEmpty']").html('<p>' + valic + ' - Customer Account exists.</p>');
+
+                                        $('#location_form').data('bootstrapValidator').updateStatus('icomme_pvt', 'NOT_VALIDATED').validateField('icomme_pvt');
+
+                                    } else {
+                                        $('#img_icom').hide();
+                                        document.getElementById('icomme').value = "";
+                                        document.getElementById("realm").value = "";
+                                        <?php if ($field_array['network_config'] == 'display_none') { ?>
+                                            document.getElementById("zone_name").value = "";
+                                            document.getElementById("zone_dec").value = "";
+                                        <?php } ?>
+                                        /* $('#mno_account_name').removeAttr('value'); */
+                                        document.getElementById('icomme').placeholder = "Please enter new Customer Account number";
+
+                                        $("#icomme_div small[data-bv-validator='notEmpty']").html('<p>' + valic + ' - Customer Account exists.</p>');
+
+                                        $('#location_form').data('bootstrapValidator').updateStatus('icomme', 'NOT_VALIDATED').validateField('icomme');
+                                    }
+                                }
+
+
+
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                //alert("error");
+                                document.getElementById('icomme').value = "";
+                                document.getElementById("realm").value = "";
+                                <?php if ($field_array['network_config'] == 'display_none') { ?>
+                                    document.getElementById("zone_name").value = "";
+                                    document.getElementById("zone_dec").value = "";
+                                <?php } ?>
+                                if (type == 0) {
+                                    $("#icomme_div_p small[data-bv-validator='notEmpty']").html('<p>' + valic + ' - Customer Account exists.</p>');
+
+                                    $('#location_form').data('bootstrapValidator').updateStatus('icomme_pvt', 'NOT_VALIDATED').validateField('icomme_pvt');
+
+                                } else {
+                                    $("#icomme_div small[data-bv-validator='notEmpty']").html('<p>' + valic + ' - Customer Account exists.</p>');
+
+
+                                    $('#location_form').data('bootstrapValidator').updateStatus('icomme', 'NOT_VALIDATED').validateField('icomme');
+                                }
+
+
+
+
+                            }
+
+
+
+                        });
+                        var bootstrapValidator2 = $('#location_form').data('bootstrapValidator');
+                        bootstrapValidator2.enableFieldValidators('realm', true);
+                        <?php if ($field_array['network_config'] == 'display_none') { ?>
+                            bootstrapValidator2.enableFieldValidators('zone_name', true);
+                            bootstrapValidator2.enableFieldValidators('zone_dec', true);
+
+                        <?php } ?>
+                    }
+
+
+                }
+            }
                                             $(document).ready(function() {
+
 
 
 
