@@ -1248,11 +1248,9 @@ if (isset($_POST['submit_mno_form'])) { //6
                                 $ex6 = $db->execDB($query7_1);
                             }
 
-                            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'3002', $message_functions->showMessage('operator_update_success'), '');
                             $_SESSION['msg7'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_update_success') . "</strong></div>";
                         } else {
                             $db->userErrorLog('2001', $user_name, 'script - ' . $script);
-                            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2001', $message_functions->showMessage('operator_update_failed', '2001'), '');
                             $_SESSION['msg7'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_update_failed', '2001') . "</strong></div>";
                         }
 
@@ -1611,8 +1609,7 @@ if (isset($_POST['submit_mno_form'])) { //6
 
             $db->userErrorLog('2004', $user_name, 'script - ' . $script);
 
-            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2004', $message_functions->showMessage('transection_fail', '2004'), '');
-
+            
             $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
             header('Location: operations.php');
         }
