@@ -2390,9 +2390,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                                 echo '<option '.$select.' value='.$rowe[id].' data-vt="'.$rowe[controller_name].'" >'.$rowe[api_profile].'</option>';
                                                                             }
                                                                     ?>
-                                                                <option>DMZ Demo - Frontier</option>
-                                                                <option>DMZ Demo - AT&T</option>
-                                                                <option>DMZ Demo - Co</option>
                                                             </select>
                                                         </div>
                                                         <!-- /controls -->
