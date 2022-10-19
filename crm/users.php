@@ -391,9 +391,8 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				$query = "INSERT INTO admin_users
 						(user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`, mobile, is_enable, create_date,create_user)
 						VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$loation','$full_name','$email', '$language' ,'$timezone', '$mobile','2',now(),'$user_name')";
-				var_dump($query);		
 				$ex =$db->execDB($query);
-var_dump($ex);
+
 				if ($ex===true) {
 					if ($user_type == 'ADMIN') {
 						$dist = 'ADMIN';
@@ -1210,7 +1209,7 @@ var_dump($ex);
 															<label class="control-label" for="language_1">Language</label>
 															<div class="controls form-group col-lg-5">
 																<select class="form-control span4" name="language_1" id="language_1">
-																	<option>English</option>
+																	<option value="en">English</option>
 																	<?php
 																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
 																		$query_results=$db->selectDB($key_query);
