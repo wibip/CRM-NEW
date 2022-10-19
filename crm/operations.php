@@ -2990,14 +2990,11 @@ echo "string";
                                                     </div>
                                                     <div class="form-actions">
                                                         <?php if($edit_account=='1')$btn_name='Update Location & Save';else $btn_name='Add Location & Save';
-                                                        if($create_operation_btn_action=='create_operation_next' || $create_operation_btn_action=='add_location_next'  || $_POST['p_update_button_action']=='add_location' || $edit_account=='1'){
-                                                            echo '<button  type="submit" name="add_location_submit" id="add_location_submit" class="btn btn-primary">'.$btn_name.'</button><strong><font color="#FF0000"></font> </strong>';
-                                                            $location_count = $db->getValueAsf("SELECT count(id) as f FROM exp_mno_distributor WHERE parent_id='$edit_parent_id'");
-                                                            if($location_count<1000  && !isset($_GET['edit_loc_id']) && !isset($_POST['p_update_button_action']) ){
-                                                                echo '<button onmouseover="btn_action_change(\'add_location_next\');"  disabled type="submit" name="add_location_next" id="add_location_next" class="btn btn-info inline-btn">Add Location</button><strong><font color="#FF0000"></font> </strong>';
-                                                            }
+                                                        if($edit_account=='1'){
+                                                            echo '<button  type="submit" name="add_location_submit" id="add_location_submit" class="btn btn-primary"> Update Client</button><strong><font color="#FF0000"></font> </strong>';
+                                                            
                                                         }else{
-                                                            echo '<button onmouseover="btn_action_change(\'create_operation_submit\');"  disabled type="submit" name="create_operation_submit" id="create_operation_submit"
+                                                            echo '<button  disabled type="submit" name="add_location_submit" id="add_location_submit"
                                                                                                 class="btn btn-primary">Create Account</button><strong><font color="#FF0000"></font> </strong>';
 
                                                         }
