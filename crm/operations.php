@@ -1248,11 +1248,9 @@ if (isset($_POST['submit_mno_form'])) { //6
                                 $ex6 = $db->execDB($query7_1);
                             }
 
-                            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'3002', $message_functions->showMessage('operator_update_success'), '');
                             $_SESSION['msg7'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_update_success') . "</strong></div>";
                         } else {
                             $db->userErrorLog('2001', $user_name, 'script - ' . $script);
-                            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2001', $message_functions->showMessage('operator_update_failed', '2001'), '');
                             $_SESSION['msg7'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_update_failed', '2001') . "</strong></div>";
                         }
 
@@ -1611,17 +1609,14 @@ if (isset($_POST['submit_mno_form'])) { //6
 
             $db->userErrorLog('2004', $user_name, 'script - ' . $script);
 
-            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2004', $message_functions->showMessage('transection_fail', '2004'), '');
-
+            
             $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
             header('Location: operations.php');
         }
     }
 
-    if (isset($_POST['add_location_submit'])) {//5
+    if (isset($_POST['create_operation_submit'])) {//5
 
-echo "string";
-        echo $_POST['business_name']; exit();
 
         $create_location_btn_action = $_POST['btn_action'];
 
@@ -1638,10 +1633,9 @@ echo "string";
                 $provisioning_setting = json_decode($db->getValueAsf("SELECT setting as f FROM exp_provisioning_setting WHERE id='$service_type'"),true);
                 $user_type1 = 'MVNO';
 
-                $icomme_number = $_POST['location_id'];
+                $icomme_number = $_POST['icomme'];
 
                 //  exit();/// need create vtenant icomme
-                $vt_icomme_number = $_POST['vt_location_id'];
 
                 $customer_type = trim($provisioning_setting['mvno_package']);
                 $parent_package = $provisioning_setting['parent_package'];
@@ -1661,18 +1655,18 @@ echo "string";
                 $mno_first_name = $db->escapeDB(trim($_POST['mno_first_name']));
                 $mno_last_name = $db->escapeDB(trim($_POST['mno_last_name']));
                 $mvnx_full_name = $mno_first_name . ' ' . $mno_last_name;
-                $mvnx_email = trim($_POST['mno_email']);
-                $mvnx_address_1 = $db->escapeDB(trim($_POST['mno_address_1']));
-                $mvnx_address_2 = $db->escapeDB(trim($_POST['mno_address_2']));
-                $mvnx_address_3 = $db->escapeDB(trim($_POST['mno_address_3']));
-                $mvnx_mobile_1 = $db->escapeDB(trim($_POST['mno_mobile_1']));
-                $mvnx_mobile_2 = $db->escapeDB(trim($_POST['mno_mobile_2']));
-                $mvnx_mobile_3 = $db->escapeDB(trim($_POST['mno_mobile_3']));
-                $mvnx_country = $db->escapeDB(trim($_POST['mno_country']));
-                $mvnx_state = $db->escapeDB(trim($_POST['mno_state']));
-                $mvnx_zip_code = trim($_POST['mno_zip_code']);
-                $mvnx_time_zone = $_POST['mno_time_zone'];
-
+                $mvnx_email = trim($_POST['client_email']);
+                $mvnx_address_1 = $db->escapeDB(trim($_POST['client_address_1']));
+                $mvnx_address_2 = $db->escapeDB(trim($_POST['client_address_2']));
+                $mvnx_address_3 = $db->escapeDB(trim($_POST['client_address_3']));
+                $mvnx_mobile_1 = $db->escapeDB(trim($_POST['client_mobile_1']));
+                $mvnx_mobile_2 = $db->escapeDB(trim($_POST['client_mobile_2']));
+                $mvnx_mobile_3 = $db->escapeDB(trim($_POST['client_mobile_3']));
+                $mvnx_country = $db->escapeDB(trim($_POST['client_country']));
+                $mvnx_state = $db->escapeDB(trim($_POST['client_state']));
+                $mvnx_zip_code = trim($_POST['client_zip_code']);
+                $mvnx_time_zone = $_POST['client_time_zone'];
+                
                 $dtz = new DateTimeZone($mvnx_time_zone);
 
                 $time_in_sofia = new DateTime('now', $dtz);
@@ -1698,19 +1692,6 @@ echo "string";
 
                     $update_dis = "UPDATE exp_mno_distributor SET verification_number='$vt_icomme_number' WHERE distributor_code='$edit_distributor_code'";
                     $db->execDB($update_dis);
-                }else{
-
-                    $br = $db->select1DB("SHOW TABLE STATUS LIKE 'exp_mno_distributor'");
-                    //$rowe = mysql_fetch_array($br);
-                    $auto_inc = $br['Auto_increment'];
-
-                    $mvnx_id = $user_type1 . $auto_inc;
-                    $distributor_code_new=$mvnx_id;
-
-                    $query01 = "INSERT INTO `exp_mno_distributor` (parent_id,`gateway_type`,`private_gateway_type`,`offset_val`,`wag_profile_enable`,`wag_profile`,`property_id`,`verification_number`,`network_type`,`ap_controller`,`system_package`,`zone_id`,`tunnel_type`,`private_tunnel_type`,`unique_id`,`distributor_code`, `distributor_name`,`bussiness_type`, `distributor_type`,`category`,num_of_ssid, `mno_id`, `parent_code`,`bussiness_address1`,`bussiness_address2`,`bussiness_address3`,`country`,`state_region`,`zip`,`phone1`,`phone2`,`phone3`,theme,site_title,time_zone,`language`,`advanced_features`,`is_enable`,`create_date`,`create_user`,`sw_controller`,`groupsid`,`default_campaign_id`,`dpsk_voucher`,`automation_enable`,`firewall_controller`,`organizations_id`,`wlan_count`)
-                    VALUES ('$parent_code','$gateway_type','$pr_gateway_type','$offset_val','$wag_enable','$wag_name','$zone_name','$icomme_number','$network_type','$ap_controller','$customer_type','$zoneid','$tunnel','$pr_tunnel','$unique_id','$mvnx_id', '$location_name', '$business_type','$user_type1','$category_mvnx','$mvnx_num_ssid', '$mno_id', '$user_distributor1','$mvnx_address_1','$mvnx_address_2','$mvnx_address_3','$mvnx_country','$mvnx_state','$mvnx_zip_code','$mvnx_mobile_1','$mvnx_mobile_2','$mvnx_mobile_3','$theme','$title','$tz','en','$advanced_features','0',now(),'$live_user_name','$sw_controller', '$groupsid','0','$dpsk_voucher','$automation_enable','$firewall_conroller','$firewall_organizations','$wlan_arr')";
-                    $ex0 = $db->execDB($query01);
-
                     $query02 = "UPDATE `admin_users`
                                         SET `user_name`='$dis_user_name',
                                             `password`=CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))),
@@ -1724,8 +1705,40 @@ echo "string";
                                             `create_date`=NOW(),
                                             `create_user`='$user_name' WHERE `verification_number`='$icomme_number'";
                     $db->execDB($query02);
+                }else{
+
+                    $br = $db->select1DB("SHOW TABLE STATUS LIKE 'exp_mno_distributor'");
+                    //$rowe = mysql_fetch_array($br);
+                    $auto_inc = $br['Auto_increment'];
+
+                    $mvnx_id = $user_type1 . $auto_inc;
+                    $distributor_code_new=$mvnx_id;
+
+                    $query01 = "INSERT INTO `exp_mno_distributor` (parent_id,`gateway_type`,`private_gateway_type`,`offset_val`,`wag_profile_enable`,`wag_profile`,`property_id`,`verification_number`,`network_type`,`ap_controller`,`system_package`,`zone_id`,`tunnel_type`,`private_tunnel_type`,`unique_id`,`distributor_code`, `distributor_name`,`bussiness_type`, `distributor_type`,`category`,num_of_ssid, `mno_id`, `parent_code`,`bussiness_address1`,`bussiness_address2`,`bussiness_address3`,`country`,`state_region`,`zip`,`phone1`,`phone2`,`phone3`,theme,site_title,time_zone,`language`,`advanced_features`,`is_enable`,`create_date`,`create_user`,`sw_controller`,`groupsid`,`default_campaign_id`,`dpsk_voucher`,`automation_enable`,`firewall_controller`,`organizations_id`,`wlan_count`)
+                    VALUES ('$parent_code','$gateway_type','$pr_gateway_type','$offset_val','$wag_enable','$wag_name','$zone_name','$icomme_number','$network_type','$ap_controller','$customer_type','$zoneid','$tunnel','$pr_tunnel','$unique_id','$mvnx_id', '$location_name', '$business_type','$user_type1','$category_mvnx','$mvnx_num_ssid', '$mno_id', '$user_distributor1','$mvnx_address_1','$mvnx_address_2','$mvnx_address_3','$mvnx_country','$mvnx_state','$mvnx_zip_code','$mvnx_mobile_1','$mvnx_mobile_2','$mvnx_mobile_3','$theme','$title','$tz','en','$advanced_features','0',now(),'$live_user_name','$sw_controller', '$groupsid','0','$dpsk_voucher','$automation_enable','$firewall_conroller','$firewall_organizations','$wlan_arr')";
+                    $ex0 = $db->execDB($query01);
+
+                    $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
+            VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$user_type1', '$mno_id', '$mvnx_full_name', '$mvnx_email', '$mvnx_mobile_1', '$mvnx_time_zone', '1','$login_user_name', NOW(), '$user_type1')";
+                            $ex1 = $db->execDB($query0);
+                }
+                if ($ex1 == 1) {
+                    $db->userLog($user_name, $script, 'Update Location', $location_name_s);
+                                $success_msg = $message_functions->showNameMessage('property_creation_success', $location_name_s);
+                                $sess_msg_id = 'msg_location_update';
+                                $_SESSION[msg5] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+                }else{
+                    $success_msg = $message_functions->showNameMessage('property_creation_failed', $location_name_s, 2002); //"[2002] Account [" . $location_name_s . "] update failed";
+                                $sess_msg_id = 'msg_location_update';
+                                $_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
                 }
             
+        }else{
+            $db->userErrorLog('2004', $user_name, 'script - ' . $script);
+
+            
+            $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
+            header('Location: operations.php');
         }
     }
 ?>
@@ -2843,47 +2856,218 @@ echo "string";
                                         </div>
                                         <!-- ***************Operation Account Create********************** -->
                                         <div <?php if(isset($tab5)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="create_operation">
-                                            <form onkeyup="location_formfn();" onchange="location_formfn();"   autocomplete="off"   id="location_form" name="location_form" method="post" class="form-horizontal"   action="<?php if($_POST['p_update_button_action']=='add_location' || isset($_GET['location_parent_id'])){echo '?token7='.$secret.'&t=edit_parent&edit_parent_id='.$edit_parent_id;}else{echo'?t=active_properties';} ?>" >
+                                            <form  autocomplete="off"   id="location_form" name="location_form" method="post" class="form-horizontal"   action="<?php if($_POST['p_update_button_action']=='add_location' || isset($_GET['location_parent_id'])){echo '?token7='.$secret.'&t=edit_parent&edit_parent_id='.$edit_parent_id;}else{echo'?t=active_properties';} ?>" >
                                                 <?php
                                                 echo '<input type="hidden" name="form_secret5" id="form_secret5" value="'.$_SESSION['FORM_SECRET'].'" />';
                                                 ?>
                                                 <fieldset>
                                                     <div id="response_d1"></div>
                                                     <br>
+                                                    <div class="control-group guest_icomme" id="icomme_div">
+                                        <div class="controls col-lg-5 form-group">
+                                            <label for="customer_type">Customer Account Number<?php if ($field_array['icomms_number'] == "mandatory") { ?><font color="#FF0000"></font><?php } ?></label>
+                                            <input type="text" class="span4 form-control" id="icomme" name="icomme" onblur="check_icom(this,1)" value="<?php echo $edit_distributor_verification_number; ?>" <?php if ($edit_account == 1) { ?>readonly<?php } ?>>
+                                            <div style="display: none" id="img_icom"><img src="img/loading_ajax.gif"></div>
+                                        </div>
+                                        <script type="text/javascript">
+                                            function check_icom(icomval, type) {
+
+
+                if ($('#icomme').is('[readonly]')) {
+
+
+                } else if ($('#icomme_pvt').is('[readonly]')) {
+
+
+                } else {
+
+                    var valic = icomval.value;
+                    var valic = valic.trim();
+                    var distributor = "";
+                    <?php
+                    if ($edit_account == 1) {
+                        echo "distributor='" . $edit_distributor_code . "';";
+                    }
+                    ?>
+
+
+                    if (valic != "") {
+                        if (type == 0) {
+                            $('#img_icom_pvt').css('display', 'inline-block');
+                        } else {
+                            $('#img_icom').css('display', 'inline-block');
+                        }
+                        var formData = {
+                            icom: valic,
+                            edit: "<?php echo $edit_account; ?>",
+                            distributor: distributor
+                        };
+                        $.ajax({
+                            url: "ajax/validateIcom.php",
+                            type: "POST",
+                            data: formData,
+                            success: function(data) {
+                                /*  if:new ok->1
+                                 * if:new exist->2 */
+
+
+                                if (data == '1') {
+                                    /*   document.getElementById("img").innerHTML = "<img src=\"img/Ok.png\">";   */
+                                    if (type == 0) {
+                                        $('#img_icom_pvt').hide();
+                                    } else {
+                                        $('#img_icom').hide();
+                                    }
+
+                                    document.getElementById("realm").value = valic;
+                                    <?php if ($field_array['network_config'] == 'display_none') { ?>
+                                        document.getElementById("zone_name").value = valic;
+                                        document.getElementById("zone_dec").value = valic;
+                                    <?php } ?>
+
+
+                                } else if (data == '2') {
+                                    //alert(data);
+                                    if (type == 0) {
+                                        $('#img_icom_pvt').hide();
+                                        document.getElementById('icomme_pvt').value = "";
+                                        document.getElementById("realm").value = "";
+                                        <?php if ($field_array['network_config'] == 'display_none') { ?>
+                                            document.getElementById("zone_name").value = "";
+                                            document.getElementById("zone_dec").value = "";
+                                        <?php } ?>
+                                        /* $('#mno_account_name').removeAttr('value'); */
+                                        document.getElementById('icomme_pvt').placeholder = "Please enter new Customer Account number";
+                                        $("#icomme_div_p small[data-bv-validator='notEmpty']").html('<p>' + valic + ' - Customer Account exists.</p>');
+
+                                        $('#location_form').data('bootstrapValidator').updateStatus('icomme_pvt', 'NOT_VALIDATED').validateField('icomme_pvt');
+
+                                    } else {
+                                        $('#img_icom').hide();
+                                        document.getElementById('icomme').value = "";
+                                        document.getElementById("realm").value = "";
+                                        <?php if ($field_array['network_config'] == 'display_none') { ?>
+                                            document.getElementById("zone_name").value = "";
+                                            document.getElementById("zone_dec").value = "";
+                                        <?php } ?>
+                                        /* $('#mno_account_name').removeAttr('value'); */
+                                        document.getElementById('icomme').placeholder = "Please enter new Customer Account number";
+
+                                        $("#icomme_div small[data-bv-validator='notEmpty']").html('<p>' + valic + ' - Customer Account exists.</p>');
+
+                                        $('#location_form').data('bootstrapValidator').updateStatus('icomme', 'NOT_VALIDATED').validateField('icomme');
+                                    }
+                                }
+
+
+
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                //alert("error");
+                                document.getElementById('icomme').value = "";
+                                document.getElementById("realm").value = "";
+                                <?php if ($field_array['network_config'] == 'display_none') { ?>
+                                    document.getElementById("zone_name").value = "";
+                                    document.getElementById("zone_dec").value = "";
+                                <?php } ?>
+                                if (type == 0) {
+                                    $("#icomme_div_p small[data-bv-validator='notEmpty']").html('<p>' + valic + ' - Customer Account exists.</p>');
+
+                                    $('#location_form').data('bootstrapValidator').updateStatus('icomme_pvt', 'NOT_VALIDATED').validateField('icomme_pvt');
+
+                                } else {
+                                    $("#icomme_div small[data-bv-validator='notEmpty']").html('<p>' + valic + ' - Customer Account exists.</p>');
+
+
+                                    $('#location_form').data('bootstrapValidator').updateStatus('icomme', 'NOT_VALIDATED').validateField('icomme');
+                                }
+
+
+
+
+                            }
+
+
+
+                        });
+                        var bootstrapValidator2 = $('#location_form').data('bootstrapValidator');
+                        bootstrapValidator2.enableFieldValidators('realm', true);
+                        <?php if ($field_array['network_config'] == 'display_none') { ?>
+                            bootstrapValidator2.enableFieldValidators('zone_name', true);
+                            bootstrapValidator2.enableFieldValidators('zone_dec', true);
+
+                        <?php } ?>
+                    }
+
+
+                }
+            }
+                                            $(document).ready(function() {
+
+
+
+
+                                                $("#icomme").keypress(function(e) {
+
+                                                    var ew = event.which;
+
+                                                    //alert(ew);
+                                                    // if(ew == 32)
+                                                    //   return true;
+
+                                                    if (ew == 45 || ew == 95) {
+                                                        /*allow - and _ characters */
+                                                        return true;
+                                                    }
+
+                                                    if (48 <= ew && ew <= 57 || 65 <= ew && ew <= 90 || 97 <= ew && ew <= 122 || ew == 0 || ew == 8 || ew == 189) {
+                                                        return true;
+                                                    } else {
+                                                        return false;
+                                                    }
+
+
+
+                                                });
+
+
+                                            });
+                                        </script>
+                                    </div>
                                                     <div class="control-group">
-                                                        <label class="control-label" for="mno_first_name">First Name<?php if($field_array['f_name']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <label class="control-label" for="client_first_name">First Name<?php if($field_array['f_name']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input <?php if(isset($edit_first_name)){ ?>readonly<?php } ?> class="span4 form-control" id="mno_first_name" placeholder="First Name" name="mno_first_name" type="text" maxlength="30" value="<?php echo $edit_first_name; ?>">
+                                                            <input <?php if(isset($edit_first_name)){ ?>readonly<?php } ?> class="span4 form-control" id="client_first_name" placeholder="First Name" name="client_first_name" type="text" maxlength="30" value="<?php echo $edit_first_name; ?>">
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
-                                                        <label class="control-label" for="mno_last_name">Last Name<?php if($field_array['l_name']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <label class="control-label" for="client_last_name">Last Name<?php if($field_array['l_name']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input <?php if(isset($edit_last_name)){ ?>readonly<?php } ?> class="span4 form-control" id="mno_last_name" placeholder="Last Name" name="mno_last_name" maxlength="30" type="text" value="<?php echo $edit_last_name; ?>">
+                                                            <input <?php if(isset($edit_last_name)){ ?>readonly<?php } ?> class="span4 form-control" id="client_last_name" placeholder="Last Name" name="client_last_name" maxlength="30" type="text" value="<?php echo $edit_last_name; ?>">
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
-                                                        <label class="control-label" for="mno_email">Email<?php if($field_array['email']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <label class="control-label" for="client_email">Email<?php if($field_array['email']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input <?php if(isset($edit_email)){ ?>readonly<?php } ?> class="span4 form-control" id="mno_email" name="mno_email" type="text" placeholder="wifi@company.com"   value="<?php echo $edit_email; ?>">
+                                                            <input <?php if(isset($edit_email)){ ?>readonly<?php } ?> class="span4 form-control" id="client_email" name="client_email" type="text" placeholder="wifi@company.com"   value="<?php echo $edit_email; ?>">
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
-                                                        <label class="control-label" for="mno_address_1">Address<?php if($field_array['add1']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <label class="control-label" for="client_address_1">Address<?php if($field_array['add1']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input <?php if($field_array['add1']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_address_1" placeholder="Address" name="mno_address_1" type="text"   value="<?php echo $edit_bussiness_address1; ?>">
+                                                            <input <?php if($field_array['add1']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="client_address_1" placeholder="Address" name="client_address_1" type="text"   value="<?php echo $edit_bussiness_address1; ?>">
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
-                                                        <label class="control-label" for="mno_address_2">City<?php if($field_array['add2']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <label class="control-label" for="client_address_2">City<?php if($field_array['add2']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input <?php if($field_array['add2']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_address_2" placeholder="City" name="mno_address_2" type="text"   value="<?php echo $edit_bussiness_address2; ?>">
+                                                            <input <?php if($field_array['add2']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="client_address_2" placeholder="City" name="client_address_2" type="text"   value="<?php echo $edit_bussiness_address2; ?>">
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
-                                                        <label class="control-label" for="mno_country" >Country<?php if($field_array['country']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <label class="control-label" for="client_country" >Country<?php if($field_array['country']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <select <?php if($field_array['country']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> name="mno_country" id="country" class="span4 form-control">
+                                                            <select <?php if($field_array['country']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> name="client_country" id="country" class="span4 form-control">
                                                                 <option value="">Select Country</option>
                                                                 <?php
                                                                 $select="";
@@ -2902,9 +3086,9 @@ echo "string";
                                                     </script>
                                                     <!-- /controls -->
                                                     <div class="control-group">
-                                                        <label class="control-label" for="mno_state">State/Region<?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <label class="control-label" for="client_state">State/Region<?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="state" placeholder="State or Region" name="mno_state" >
+                                                            <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="state" placeholder="State or Region" name="client_state" >
                                                                 <option value="">Select State</option>
                                                                 <?php
                                                                 foreach ($get_regions['data'] AS $state) {
@@ -2920,9 +3104,9 @@ echo "string";
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
-                                                        <label class="control-label" for="mno_region">ZIP Code<?php if($field_array['zip_code']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <label class="control-label" for="client_region">ZIP Code<?php if($field_array['zip_code']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input <?php if($field_array['zip_code']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control zip_vali" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $edit_zip; ?>">
+                                                            <input <?php if($field_array['zip_code']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control zip_vali" id="client_zip_code" maxlength="5" placeholder="XXXXX" name="client_zip_code" type="text" value="<?php echo $edit_zip; ?>">
                                                         </div>
                                                     </div>
 
@@ -2954,9 +3138,9 @@ echo "string";
                                                         });
                                                     </script>
                                                     <div class="control-group">
-                                                        <label class="control-label" for="mno_timezone">Time Zone <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
+                                                        <label class="control-label" for="client_timezone">Time Zone <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <select <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_time_zone" name="mno_time_zone" >
+                                                            <select <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="client_time_zone" name="client_time_zone" >
                                                                 <option value="">Select Time Zone</option>
                                                                 <?php
                                                                 foreach ($priority_zone_array as $tz){
@@ -2993,14 +3177,11 @@ echo "string";
                                                     </div>
                                                     <div class="form-actions">
                                                         <?php if($edit_account=='1')$btn_name='Update Location & Save';else $btn_name='Add Location & Save';
-                                                        if($create_operation_btn_action=='create_operation_next' || $create_operation_btn_action=='add_location_next'  || $_POST['p_update_button_action']=='add_location' || $edit_account=='1'){
-                                                            echo '<button  type="submit" name="add_location_submit" id="add_location_submit" class="btn btn-primary">'.$btn_name.'</button><strong><font color="#FF0000"></font> </strong>';
-                                                            $location_count = $db->getValueAsf("SELECT count(id) as f FROM exp_mno_distributor WHERE parent_id='$edit_parent_id'");
-                                                            if($location_count<1000  && !isset($_GET['edit_loc_id']) && !isset($_POST['p_update_button_action']) ){
-                                                                echo '<button onmouseover="btn_action_change(\'add_location_next\');"  disabled type="submit" name="add_location_next" id="add_location_next" class="btn btn-info inline-btn">Add Location</button><strong><font color="#FF0000"></font> </strong>';
-                                                            }
+                                                        if($edit_account=='1'){
+                                                            echo '<button  type="submit" name="create_operation_submit" id="create_operation_submit" class="btn btn-primary"> Update Client</button><strong><font color="#FF0000"></font> </strong>';
+                                                            
                                                         }else{
-                                                            echo '<button onmouseover="btn_action_change(\'create_operation_submit\');"  disabled type="submit" name="create_operation_submit" id="create_operation_submit"
+                                                            echo '<button  type="submit" name="create_operation_submit" id="create_operation_submit"
                                                                                                 class="btn btn-primary">Create Account</button><strong><font color="#FF0000"></font> </strong>';
 
                                                         }
