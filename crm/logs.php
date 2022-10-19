@@ -87,33 +87,8 @@ $logger = Logger::getLogger();
 
 
 	<?php
-
-
-
 	include 'header.php';
 
-	//echo $user_timezone;
-	//echo $user_distributor;
-	//$mno_package=$package_functions->getDistributorMONPackage($user_name);
-	//echo $user_distributor;
-	//$mno_package = $db->select1DB("SELECT system_package FROM exp_mno WHERE mno_id='$user_distributor' LIMIT 1");
-	//echo $mno_package = $mno_package[system_package];
-	//echo $system_package=$db->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-	//echo $user_distributor;
-	/*if($user_type == 'ADMIN'){
-	$log_time_zone=$db->getValueAsf("SELECT `timezones` AS f FROM `exp_mno` WHERE `mno_id`='ADMIN'");
-}
-else if($user_type=="MNO" || $user_type=="MNO"){
-
-	$log_time_zone=$db->getValueAsf("SELECT `timezones` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
-}
-else{
-	$log_time_zone=$db->getValueAsf("SELECT `time_zone` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-}
-
-if( empty($log_time_zone) ||  $log_time_zone == '' ){
-	$log_time_zone=$db->getValueAsf("SELECT `timezones` AS f FROM `exp_mno` WHERE `mno_id`='ADMIN'");
-}*/
 	$log_time_zone = $user_timezone;
 	if (empty($log_time_zone) ||  $log_time_zone == '') {
 		$log_time_zone = $db->getValueAsf("SELECT `timezones` AS f FROM `exp_mno` WHERE `mno_id`='ADMIN'");
@@ -271,21 +246,7 @@ if( empty($log_time_zone) ||  $log_time_zone == '' ){
 	//activity_logs
 	if (isset($_POST['activity_lg'])) {
 		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
-
 			$userLog = $logger->getObjectProvider()->getObjectUser();
-			/*if($user_type == 'ADMIN'){
-
-					$key_query1 = "SELECT l.user_name,l.module, l.create_date,l.unixtimestamp,l.task,l.reference,l.ip FROM admin_user_logs l, admin_users u
-					WHERE l.user_name = u.user_name AND u.user_distributor = '$user_distributor' AND u.user_type = '$user_type'";
-
-				}
-				else{
-
-					 $key_query1 = "SELECT l.user_name,l.module, l.create_date,l.unixtimestamp,l.task,l.reference,l.ip FROM admin_user_logs l, admin_users u
-					WHERE l.user_name = u.user_name AND u.user_distributor = '$user_distributor' AND u.user_type = '$user_type' ";
-
-				}*/
-
 			$userLog->setUserDistributor($user_distributor);
 			$userLog->user_type = $user_type;
 
@@ -304,9 +265,6 @@ if( empty($log_time_zone) ||  $log_time_zone == '' ){
 				$end_date = DateTime::createFromFormat('m/d/Y', $mg_end3)->format('Y-m-d');
 				$st_date = DateTime::createFromFormat('m/d/Y', $mg_start3)->format('Y-m-d');
 
-
-
-
 				$mg_start_date3 = $st_date . ' 00:00:00';
 				$mg_end_date3 = $end_date . ' 23:59:59';
 
@@ -316,12 +274,8 @@ if( empty($log_time_zone) ||  $log_time_zone == '' ){
 				$d_end = new DateTime($mg_end_date3, new DateTimeZone($log_time_zone));
 				$mg_end_date_tz = $d_end->getTimestamp();
 
-
-				//$key_query1 .= " AND l.`unixtimestamp` BETWEEN '".$mg_start_date_tz."' AND '".$mg_end_date_tz."'";
 				$userLog->from = $mg_start_date_tz;
 				$userLog->to = $mg_end_date_tz;
-
-				//echo $key_query1;
 			}
 
 			$key_query1 .= " ORDER BY l.id DESC";
@@ -329,28 +283,11 @@ if( empty($log_time_zone) ||  $log_time_zone == '' ){
 				$limit3 = $_POST['limit3'];
 				$userLog->limit = $limit3;
 
-				//$key_query1.=" LIMIT ".$limit3;
 			} else {
 				$userLog->limit = 100;
 			}
 
-			//$query_results1_user=mysql_query($key_query1);
 			$query_results1_user = $logger->GetLog($userLog);
-			/*$query_results1 = [];
-
-				while ($row = mysql_fetch_assoc($query_results1_user)) {
-
-					//print_r($row);
-					//$log = $logger->getObjectProvider()->getObjectUser();
-
-					$query_results1[] = $row;
-				}*/
-
-
-
-
-			//$query_results1 = $logger->GetLog($log);
-
 		}
 	}
 
@@ -401,8 +338,6 @@ if( empty($log_time_zone) ||  $log_time_zone == '' ){
 	//auth_logs
 	if (isset($_POST['auth_lg'])) {
 		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
-
-
 			if ($user_type == 'ADMIN') {
 
 				$key_query1 = "SELECT l.user_name,l.module, l.create_date FROM admin_user_logs l, admin_users u
@@ -479,10 +414,6 @@ if( empty($log_time_zone) ||  $log_time_zone == '' ){
 
 									AND S.`location_id`= '$user_distributor'";
 
-			/*"SELECT E`status_id`,E`description`,L.`token`,L.`access_details`,L.`create_date`
-									FROM `exp_points` p, `exp_points_logs` l
-									WHERE E`status_id`=L.`access_id`";*/
-
 			if ($_POST['ssid2'] != NULL) {
 				$ssid2 = $_POST['ssid2'];
 				$query_2 .= " AND `ssid`='" . $ssid2 . "'";
@@ -557,10 +488,6 @@ if( empty($log_time_zone) ||  $log_time_zone == '' ){
 					$query_4 .= " WHERE `group_id`='" . $realm4 . "'";
 				}
 			}
-
-
-
-
 
 			if ($_POST['start_date4'] != NULL && $_POST['end_date4'] != NULL) {
 
