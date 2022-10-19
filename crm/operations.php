@@ -2353,6 +2353,11 @@ if (isset($_POST['submit_mno_form'])) { //6
 									</ul>
 									<br>
 									<div class="tab-content">
+
+                                        <?php if (isset($_SESSION['msg6'])) {
+                                            echo $_SESSION['msg6'];
+                                            unset($_SESSION['msg6']);
+                                        } ?>
                                         <!-- **************Create Operations Account********************** -->
                                         <div <?php if(isset($tab6)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="operation_account">
                                             <form onkeyup="submit_mno_formfn();" onchange="submit_mno_formfn();" id="mno_form" name="mno_form" class="form-horizontal" method="POST" action="operations.php?<?php if($mno_edit==1){echo "t=8&mno_edit=1&mno_edit_id=$edit_mno_id";}else{echo "t=6";}?>" >
@@ -2739,7 +2744,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                 </div>
                                                             </div>
                                                             <div class="form-actions">
-                                                                    <button disabled type="submit" id="submit_mno_form" name="submit_mno_form" class="btn btn-primary"><?php if($mno_edit==1){echo "Update Account";}else{echo "Create Account";}?></button>
+                                                                    <button type="submit" id="submit_mno_form" name="submit_mno_form" class="btn btn-primary"><?php if($mno_edit==1){echo "Update Account";}else{echo "Create Account";}?></button>
                                                                     <?php if($mno_edit==1){ ?> <button type="button" class="btn btn-info inline-btn"  onclick="goto();" class="btn btn-danger">Cancel</button> <?php } ?>
                                                             </div>
                                                             <script>
@@ -3372,7 +3377,7 @@ FROM `exp_mno_distributor` d LEFT JOIN `admin_users` u  ON u.`verification_numbe
 <!-- /widget -->
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
-    
+
 <script src="js/jquery.multi-select.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function() {
