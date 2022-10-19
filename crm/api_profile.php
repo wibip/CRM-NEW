@@ -397,7 +397,7 @@ if(isset($_POST['api_update'])){
 																	$key_query="SELECT c.controller_name,c.description,c.brand,c.model,c.brand,c.description,c.create_date,c.ip_address,c.api_url,c.api_profile,c.id,count(d.id) as assign_count FROM `exp_locations_ap_controller` c LEFT JOIN exp_mno_distributor d ON c.controller_name=d.ap_controller
 																				group by c.description,c.brand,c.model,c.brand,c.description,c.create_date,c.ip_address,c.api_url,c.api_profile,c.id";
 																	$query_results=$db->selectDB($key_query);
-																		
+																	var_dump($query_results);	
 																	foreach($query_results['data'] AS $row){
 																			$controller_name = $row['controller_name'];
 																			$description = $row['description'];
