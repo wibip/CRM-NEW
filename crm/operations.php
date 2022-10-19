@@ -1618,9 +1618,10 @@ if (isset($_POST['submit_mno_form'])) { //6
         }
     }
 
-    if (isset($_POST['create_location_submit'])) {//5
+    if (isset($_POST['add_location_submit'])) {//5
 
-        //echo $_POST['how_many_icoms']; exit();
+echo "string";
+        echo $_POST['business_name']; exit();
 
         $create_location_btn_action = $_POST['btn_action'];
 
