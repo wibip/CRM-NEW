@@ -153,7 +153,7 @@ if($system_package=="N/A" || $system_package=="") {
 			//$query_ex_log=mysql_query($log_query);
 
 		$dbT->userLog($user_name,'login','Login','N/A'); 
-
+var_dump($access_role);
 		if($access_role == 'admin'){
 			$user_query = "SELECT module_name FROM admin_access_modules WHERE user_type = '$user_type' AND `order` IS NOT NULL AND module_name <> 'venue_support' AND module_name <> 'support' ORDER BY `order`";
 		}
