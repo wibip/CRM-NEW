@@ -1209,7 +1209,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 															<label class="control-label" for="language_1">Language</label>
 															<div class="controls form-group col-lg-5">
 																<select class="form-control span4" name="language_1" id="language_1">
-																	<option>English</option>
+																	<option value="en">English</option>
 																	<?php
 																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
 																		$query_results=$db->selectDB($key_query);
