@@ -1624,7 +1624,7 @@ if (isset($_POST['submit_mno_form'])) { //6
             $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2004', $message_functions->showMessage('transection_fail', '2004'), '');
 
             $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
-            header('Location: location.php');
+            header('Location: operations.php');
         }
     }
 ?>
@@ -2234,7 +2234,7 @@ if (isset($_POST['submit_mno_form'])) { //6
 									<div class="tab-content">
                                         <!-- **************Create Operations Account********************** -->
                                         <div <?php if(isset($tab6)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="operation_account">
-                                            <form onkeyup="submit_mno_formfn();" onchange="submit_mno_formfn();" id="mno_form" name="mno_form" class="form-horizontal" method="POST" action="location.php?<?php if($mno_edit==1){echo "t=8&mno_edit=1&mno_edit_id=$edit_mno_id";}else{echo "t=6";}?>" >
+                                            <form onkeyup="submit_mno_formfn();" onchange="submit_mno_formfn();" id="mno_form" name="mno_form" class="form-horizontal" method="POST" action="operations.php?<?php if($mno_edit==1){echo "t=8&mno_edit=1&mno_edit_id=$edit_mno_id";}else{echo "t=6";}?>" >
                                                 <?php
                                                 echo '<input type="hidden" name="form_secret6" id="form_secret6" value="'.$_SESSION['FORM_SECRET'].'" />';
                                                 ?>
