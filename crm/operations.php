@@ -1198,7 +1198,6 @@ $dt = new DateTime('now', $utc);
 											</div>
 											<!-- /widget -->
                                         </div>
-
                                         <!-- ***************Operation Account Create********************** -->
                                         <div <?php if(isset($tab5)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="create_operation">
                                             <form onkeyup="location_formfn();" onchange="location_formfn();"   autocomplete="off"   id="location_form" name="location_form" method="post" class="form-horizontal"   action="<?php if($_POST['p_update_button_action']=='add_location' || isset($_GET['location_parent_id'])){echo '?token7='.$secret.'&t=edit_parent&edit_parent_id='.$edit_parent_id;}else{echo'?t=active_properties';} ?>" >
