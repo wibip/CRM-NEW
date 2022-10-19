@@ -2954,7 +2954,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                     <div class="control-group">
                                                         <label class="control-label" for="client_timezone">Time Zone <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?><sup><font color="#FF0000"></font></sup><?php } ?></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <select <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="client_time_zone" name="mno_time_zone" >
+                                                            <select <?php if($field_array['time_zone']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="client_time_zone" name="client_time_zone" >
                                                                 <option value="">Select Time Zone</option>
                                                                 <?php
                                                                 foreach ($priority_zone_array as $tz){
