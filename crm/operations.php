@@ -2381,7 +2381,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                     <?php
                                                                     $key_query="SELECT c.controller_name,c.description,c.brand,c.api_profile,c.id,count(c.id) as assign_count FROM `exp_locations_ap_controller` c ";
                                                                     $query_results=$db->selectDB($key_query);
-                                                                            foreach($mno_op['data'] AS $rowe){
+                                                                            foreach($query_results['data'] AS $rowe){
                                                                                 if($get_edit_api_profile==$rowe[id]){
                                                                                     $select="selected";
                                                                                 }else{
