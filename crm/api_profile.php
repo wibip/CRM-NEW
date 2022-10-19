@@ -66,13 +66,13 @@ if(isset($_POST['create_ap_controller'])){
 		$model = trim($_POST['model']);
 		$desc = trim($_POST['desc']);
 		$time_zone = trim($_POST['apc_time_zone']);
-		$ip_address = $_POST['ip_address'];
+		$api_version = $_POST['version'];
 		
-		$api_profile = $_POST['api_profile_name'];
-		$api_url = trim($_POST['api_url']);
-		$api_url_se = trim($_POST['api_url_se']);
-		$api_uname = $_POST['api_uname'];
-		$api_pass = $_POST['api_pass'];
+		$api_profile = $_POST['api_profile'];
+		$api_url = trim($_POST['api_server_url']);
+		$api_url_se = trim($_POST['api_server_url']);
+		$api_uname = $_POST['api_username'];
+		$api_pass = $_POST['api_password'];
 		$type = trim($_POST['type']);
 		if($type=='FIREWALL CONTROLLER'){
 			$api_profile = 'meraki1';
@@ -88,7 +88,7 @@ if(isset($_POST['create_ap_controller'])){
 		$controller_description_json= json_encode($controller_description);
 
 		$query0 = "INSERT INTO  `exp_locations_ap_controller` (`time_zone`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_name`, `brand`, `model`, `description`, `ip_address`, `create_date`, `create_user`, `type`,`controller_description`)
-		VALUES ('$time_zone','$api_profile','$api_url','$api_url_se','$api_uname','$api_pass','$ap_con_name', '$brand', '$model', '$desc', '$ip_address', NOW(), '$user_name', '$type', '$controller_description_json')";
+		VALUES ('$time_zone','$api_profile','$api_url','$api_url_se','$api_uname','$api_pass','$api_version', '$brand', '$model', '$desc', '$ip_address', NOW(), '$user_name', '$type', '$controller_description_json')";
 		$ex0 = $db->execDB($query0);
 
 		if ($ex0===true) {
@@ -143,7 +143,6 @@ if(isset($_POST['create_ap_controller'])){
 	if($_SESSION['FORM_SECRET']==$_GET['token2']) {//refresh validate
 		$edit_controller = trim($_GET['edit_controller']);
 		$get_wag_q="SELECT	* FROM `exp_locations_ap_controller` WHERE `id` = '$edit_controller'";
-		var_dump($get_wag_q);die;
 		$get_wag=$db->selectDB($get_wag_q);
 		
 		//while($edit_wag_r=mysql_fetch_assoc($get_wag)){
@@ -350,8 +349,8 @@ $_SESSION['FORM_SECRET'] = $secret;
 																					<i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
 																					$(document).ready(function() {
 																					$(\'#AP_'.$id.'\').easyconfirm({locale: {
-																							title: \'AP Controller\',
-																							text: \'Are you sure you want to edit this AP Controller?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																							title: \'API Profile\',
+																							text: \'Are you sure you want to edit this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
 																							button: [\'Cancel\',\' Confirm\'],
 																							closeText: \'close\'
 																							}});
@@ -365,8 +364,8 @@ $_SESSION['FORM_SECRET'] = $secret;
 																				<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
 																					$(document).ready(function() {
 																					$(\'#AP_R_'.$id.'\').easyconfirm({locale: {
-																							title: \'AP Controller\',
-																							text: \'Are you sure you want to remove this AP Controller?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																							title: \'API Profile\',
+																							text: \'Are you sure you want to remove this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
 																							button: [\'Cancel\',\' Confirm\'],
 																							closeText: \'close\'
 																							}});
@@ -562,8 +561,8 @@ include 'footer.php';
     $("#product_code").chained("#category");
 
     $("#create_ap_controller").easyconfirm({locale: {
-		title: 'AP Controller',
-		text: 'Are you sure you want to create this AP Controller?',
+		title: 'API Profile',
+		text: 'Are you sure you want to create this API Profile?',
 		button: ['Cancel',' Confirm'],
 		closeText: 'close'
 	     }
