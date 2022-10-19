@@ -2782,7 +2782,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                                     WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='admin'
                                                                                     GROUP BY m.mno_id
                                                                                     ORDER BY mno_description ";
-                                                                    $query_results = $db->selectDB($key_queryq1);
+                                                                    $query_results = $db->selectDB($key_query);
                                                                     foreach ($query_results['data'] as $row) {
                                                                         $mno_description = $row[mno_description];
                                                                         $mno_id = $row[mno_id];
@@ -2815,8 +2815,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                             });
 
                                                                             </script></td>';
-                                                                            $distributor_exi = "SELECT * FROM `exp_mno_distributor` WHERE mno_id = '$mno_id'";
-                                                                            $query_results01 = $db->selectDB($distributor_exi);
+                                                                            
                                                                             $count_records_exi = count($query_results01);
                                                                             if($count_records_exi == 0){
 
