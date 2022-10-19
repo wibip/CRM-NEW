@@ -1643,7 +1643,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                 $pvt_wlan_count = trim($provisioning_data['network_info']['Private']['count']);
                 $gateway_type = trim($provisioning_setting['guest_gateway_type']);
                 $pr_gateway_type = trim($provisioning_setting['private_gateway_type']);
-                $business_type = 'SMB';
+                $business_type = 'MVNO';
                 $location_name_old = trim($_POST['location_name_old']);
                 $dpsk_conroller = trim($provisioning_setting['admin_features']['controller']);
                 $dpsk_policies = trim($provisioning_setting['admin_features']['policie']);
@@ -1718,13 +1718,14 @@ if (isset($_POST['submit_mno_form'])) { //6
                         $dis_user_name = uniqid($mvnx_id);
                         $parent_user_name = str_replace(' ', '_', strtolower(substr($mvnx_full_name, 0, 5) . $auto_inc));
 
-                    echo $query01 = "INSERT INTO `exp_mno_distributor` (`offset_val`,`verification_number`,`network_type`,`ap_controller`,`system_package`,`zone_id`,`tunnel_type`,`private_tunnel_type`,`unique_id`,`distributor_code`, `distributor_name`,`bussiness_type`, `distributor_type`,`category`,num_of_ssid, `mno_id`, `parent_code`,`bussiness_address1`,`bussiness_address2`,`bussiness_address3`,`country`,`state_region`,`zip`,`phone1`,`phone2`,`phone3`,theme,site_title,time_zone,`language`,`advanced_features`,`is_enable`,`create_date`,`create_user`,`sw_controller`,`groupsid`,`default_campaign_id`,`dpsk_voucher`,`automation_enable`,`firewall_controller`,`organizations_id`,`wlan_count`)
-                    VALUES ('$offset_val','$icomme_number','$network_type','$ap_controller','$customer_type','$zoneid','$tunnel','$pr_tunnel','$unique_id','$mvnx_id', '$location_name', '$business_type','$user_type1','$category_mvnx','$mvnx_num_ssid', '$mno_id', '$user_distributor1','$mvnx_address_1','$mvnx_address_2','$mvnx_address_3','$mvnx_country','$mvnx_state','$mvnx_zip_code','$mvnx_mobile_1','$mvnx_mobile_2','$mvnx_mobile_3','$theme','$title','$tz','en','$advanced_features','0',now(),'$live_user_name','$sw_controller', '$groupsid','0','$dpsk_voucher','$automation_enable','$firewall_conroller','$firewall_organizations','$wlan_arr')"; exit();
+                    echo $query01 = "INSERT INTO `exp_mno_distributor` (`offset_val`,`verification_number`,`system_package`,`unique_id`,`distributor_code`, `distributor_name`,`bussiness_type`, `distributor_type`,`category`,num_of_ssid, `mno_id`, `parent_code`,`bussiness_address1`,`bussiness_address2`,`bussiness_address3`,`country`,`state_region`,`zip`,`phone1`,`phone2`,`phone3`,theme,site_title,time_zone,`language`,`advanced_features`,`is_enable`,`create_date`,`create_user`,`sw_controller`,`groupsid`,`default_campaign_id`,`dpsk_voucher`,`automation_enable`,`firewall_controller`,`organizations_id`,`wlan_count`)
+                    VALUES ('$offset_val','$icomme_number','$customer_type','$unique_id','$mvnx_id', '$location_name', '$business_type','$user_type1','$category_mvnx','$mvnx_num_ssid', '$mno_id', '$user_distributor1','$mvnx_address_1','$mvnx_address_2','$mvnx_address_3','$mvnx_country','$mvnx_state','$mvnx_zip_code','$mvnx_mobile_1','$mvnx_mobile_2','$mvnx_mobile_3','$theme','$title','$tz','en','$advanced_features','0',now(),'$live_user_name','$sw_controller', '$groupsid','0','$dpsk_voucher','$automation_enable','$firewall_conroller','$firewall_organizations','$wlan_arr')"; 
                     $ex0 = $db->execDB($query01);
 
                     $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
             VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$user_type1', '$mno_id', '$mvnx_full_name', '$mvnx_email', '$mvnx_mobile_1', '$mvnx_time_zone', '1','$login_user_name', NOW(), '$user_type1')";
                             $ex1 = $db->execDB($query0);
+                            exit();
                 }
                 if ($ex1 == 1) {
                     $db->userLog($user_name, $script, 'Update Location', $location_name_s);
