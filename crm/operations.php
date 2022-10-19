@@ -2378,9 +2378,8 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                             </sup></label>
                                                         <div class="controls col-lg-5 form-group" readonly>
                                                             <select onchange="add_module(this)" multiple="multiple" name="api_profile[]" id="api_profile" class="span4 form-control">
-                                                                <option value="">Select Type of Operator</option>
                                                                     <?php
-                                                                    $key_query="SELECT c.controller_name,c.description,c.brand,c.api_profile,c.id,count(d.id) as assign_count FROM `exp_locations_ap_controller` c ";
+                                                                    $key_query="SELECT c.controller_name,c.description,c.brand,c.api_profile,c.id,count(c.id) as assign_count FROM `exp_locations_ap_controller` c ";
                                                                     $query_results=$db->selectDB($key_query);
                                                                             foreach($mno_op['data'] AS $rowe){
                                                                                 if($get_edit_api_profile==$rowe[id]){
