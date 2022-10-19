@@ -34,6 +34,7 @@ require_once 'classes/CommonFunctions.php';
 <link rel="stylesheet" href="css/tablesaw.css?v1.0">
 <!-- Add jQuery library -->
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
