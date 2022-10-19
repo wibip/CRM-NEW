@@ -243,6 +243,6 @@ if($system_package=="N/A" || $system_package=="") {
 	}
 }
 
-
+var_dump($MMFailed);
 var_dump($MMFailedMassage);
 ?>
