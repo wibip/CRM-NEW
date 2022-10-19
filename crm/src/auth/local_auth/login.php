@@ -153,6 +153,7 @@ if($system_package=="N/A" || $system_package=="") {
 			//$query_ex_log=mysql_query($log_query);
 
 		$dbT->userLog($user_name,'login','Login','N/A'); 
+
 		if($access_role == 'admin'){
 			$user_query = "SELECT module_name FROM admin_access_modules WHERE user_type = '$user_type' AND `order` IS NOT NULL AND module_name <> 'venue_support' AND module_name <> 'support' ORDER BY `order`";
 		}
@@ -161,9 +162,9 @@ if($system_package=="N/A" || $system_package=="") {
 	
 		}
 		
-var_dump($user_query);
+        
 		$query_results=$dbT->selectDB($user_query);
-var_dump($query_results);
+
 		$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT',$system_package);
 		$theme_text = $package_functions->getMessageOptions('THEME_TEXT',$system_package);
 
