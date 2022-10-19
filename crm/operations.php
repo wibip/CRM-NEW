@@ -1723,7 +1723,23 @@ if (isset($_POST['submit_mno_form'])) { //6
             VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$user_type1', '$mno_id', '$mvnx_full_name', '$mvnx_email', '$mvnx_mobile_1', '$mvnx_time_zone', '1','$login_user_name', NOW(), '$user_type1')";
                             $ex1 = $db->execDB($query0);
                 }
+                if ($ex1 == 1) {
+                    $db->userLog($user_name, $script, 'Update Location', $location_name_s);
+                                $success_msg = $message_functions->showNameMessage('property_creation_success', $location_name_s);
+                                $sess_msg_id = 'msg_location_update';
+                                $_SESSION[msg5] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+                }else{
+                    $success_msg = $message_functions->showNameMessage('property_creation_failed', $location_name_s, 2002); //"[2002] Account [" . $location_name_s . "] update failed";
+                                $sess_msg_id = 'msg_location_update';
+                                $_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+                }
             
+        }else{
+            $db->userErrorLog('2004', $user_name, 'script - ' . $script);
+
+            
+            $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
+            header('Location: operations.php');
         }
     }
 ?>
