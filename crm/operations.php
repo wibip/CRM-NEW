@@ -2316,7 +2316,6 @@ if (isset($_POST['submit_mno_form'])) { //6
 					<div class="span12">
 						<div class="widget ">
 							<div class="widget-content">
-
 								<div class="tabbable">
 									<ul class="nav nav-tabs">
                                     <?php
@@ -2352,10 +2351,6 @@ if (isset($_POST['submit_mno_form'])) { //6
 									</ul>
 									<br>
 									<div class="tab-content">
-                                        <?php if (isset($_SESSION['msg6'])) {
-                                            echo $_SESSION['msg6'];
-                                            unset($_SESSION['msg6']);
-                                        } ?>
                                         <!-- **************Create Operations Account********************** -->
                                         <div <?php if(isset($tab6)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="operation_account">
                                             <form onkeyup="submit_mno_formfn();" onchange="submit_mno_formfn();" id="mno_form" name="mno_form" class="form-horizontal" method="POST" action="operations.php?<?php if($mno_edit==1){echo "t=8&mno_edit=1&mno_edit_id=$edit_mno_id";}else{echo "t=6";}?>" >
@@ -2787,7 +2782,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                                     WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='admin'
                                                                                     GROUP BY m.mno_id
                                                                                     ORDER BY mno_description ";
-                                                                    $query_results = $db->selectDB($key_query);
+                                                                    $query_results = $db->selectDB($key_queryq1);
                                                                     foreach ($query_results['data'] as $row) {
                                                                         $mno_description = $row[mno_description];
                                                                         $mno_id = $row[mno_id];
