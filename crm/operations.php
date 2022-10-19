@@ -1318,8 +1318,8 @@ if (isset($_POST['submit_mno_form'])) { //6
                             '$aaa_data_op',
                             '$camphaign_id')";
                         } else {
-                            $query0 = "INSERT INTO `exp_mno` (`system_package`,`mno_id`, `mno_description`, `mno_type`, `is_enable`,create_user, `create_date`)
-        VALUES ('$mno_sys_package','$mno_id', '$mno_account_name','$mnoAccType','0','$login_user_name', NOW())";
+                            $query0 = "INSERT INTO `exp_mno` (`system_package`,`mno_id`, `mno_description`, `zip`, `default_campaign_id`, `mno_type`, `is_enable`,create_user, `create_date`)
+        VALUES ('$mno_sys_package','$mno_id', '$mno_account_name', '$mno_zip_code', '$camphaign_id', '$mnoAccType','0','$login_user_name', NOW())";
                         }
                         echo $query0;
 
