@@ -2866,7 +2866,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                     <div class="control-group guest_icomme" id="icomme_div">
                                         <div class="controls col-lg-5 form-group">
                                             <label for="customer_type">Customer Account Number<?php if ($field_array['icomms_number'] == "mandatory") { ?><font color="#FF0000"></font><?php } ?></label>
-                                            <input type="text" class="span4 form-control" id="icomme" name="icomme" onblur="check_icom(this,1)" value="<?php echo $edit_distributor_verification_number; ?>" <?php if ($edit_account == 1) { ?>readonly<?php } ?>>
+                                            <input type="text" class="span4 form-control" id="icomme" name="icomme" value="<?php echo $edit_distributor_verification_number; ?>" <?php if ($edit_account == 1) { ?>readonly<?php } ?>>
                                             <div style="display: none" id="img_icom"><img src="img/loading_ajax.gif"></div>
                                         </div>
                                         <script type="text/javascript">
