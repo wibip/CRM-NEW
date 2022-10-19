@@ -50,6 +50,8 @@ require_once 'classes/CommonFunctions.php';
  <!--Encryption -->
 <script type="text/javascript" src="js/aes.js"></script>
 <script type="text/javascript" src="js/aes-json-format.js"></script>
+
+
 <?php
 include 'header.php';
 if($user_type == 'ADMIN'){
@@ -1643,7 +1645,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                 $pvt_wlan_count = trim($provisioning_data['network_info']['Private']['count']);
                 $gateway_type = trim($provisioning_setting['guest_gateway_type']);
                 $pr_gateway_type = trim($provisioning_setting['private_gateway_type']);
-                $business_type = trim($provisioning_setting['business_vertical']);
+                $business_type = 'MVNO';
                 $location_name_old = trim($_POST['location_name_old']);
                 $dpsk_conroller = trim($provisioning_setting['admin_features']['controller']);
                 $dpsk_policies = trim($provisioning_setting['admin_features']['policie']);
@@ -1718,13 +1720,14 @@ if (isset($_POST['submit_mno_form'])) { //6
                         $dis_user_name = uniqid($mvnx_id);
                         $parent_user_name = str_replace(' ', '_', strtolower(substr($mvnx_full_name, 0, 5) . $auto_inc));
 
-                    echo $query01 = "INSERT INTO `exp_mno_distributor` (parent_id,`gateway_type`,`private_gateway_type`,`offset_val`,`wag_profile_enable`,`wag_profile`,`property_id`,`verification_number`,`network_type`,`ap_controller`,`system_package`,`zone_id`,`tunnel_type`,`private_tunnel_type`,`unique_id`,`distributor_code`, `distributor_name`,`bussiness_type`, `distributor_type`,`category`,num_of_ssid, `mno_id`, `parent_code`,`bussiness_address1`,`bussiness_address2`,`bussiness_address3`,`country`,`state_region`,`zip`,`phone1`,`phone2`,`phone3`,theme,site_title,time_zone,`language`,`advanced_features`,`is_enable`,`create_date`,`create_user`,`sw_controller`,`groupsid`,`default_campaign_id`,`dpsk_voucher`,`automation_enable`,`firewall_controller`,`organizations_id`,`wlan_count`)
-                    VALUES ('$parent_code','$gateway_type','$pr_gateway_type','$offset_val','$wag_enable','$wag_name','$zone_name','$icomme_number','$network_type','$ap_controller','$customer_type','$zoneid','$tunnel','$pr_tunnel','$unique_id','$mvnx_id', '$location_name', '$business_type','$user_type1','$category_mvnx','$mvnx_num_ssid', '$mno_id', '$user_distributor1','$mvnx_address_1','$mvnx_address_2','$mvnx_address_3','$mvnx_country','$mvnx_state','$mvnx_zip_code','$mvnx_mobile_1','$mvnx_mobile_2','$mvnx_mobile_3','$theme','$title','$tz','en','$advanced_features','0',now(),'$live_user_name','$sw_controller', '$groupsid','0','$dpsk_voucher','$automation_enable','$firewall_conroller','$firewall_organizations','$wlan_arr')";
+                    echo $query01 = "INSERT INTO `exp_mno_distributor` (`offset_val`,`verification_number`,`system_package`,`unique_id`,`distributor_code`, `distributor_name`,`bussiness_type`, `distributor_type`,`category`,num_of_ssid, `mno_id`, `parent_code`,`bussiness_address1`,`bussiness_address2`,`bussiness_address3`,`country`,`state_region`,`zip`,`phone1`,`phone2`,`phone3`,theme,site_title,time_zone,`language`,`advanced_features`,`is_enable`,`create_date`,`create_user`,`sw_controller`,`groupsid`,`default_campaign_id`,`dpsk_voucher`,`automation_enable`,`firewall_controller`,`organizations_id`,`wlan_count`)
+                    VALUES ('$offset_val','$icomme_number','$customer_type','$unique_id','$mvnx_id', '$location_name', '$business_type','$user_type1','$category_mvnx','$mvnx_num_ssid', '$mno_id', '$user_distributor1','$mvnx_address_1','$mvnx_address_2','$mvnx_address_3','$mvnx_country','$mvnx_state','$mvnx_zip_code','$mvnx_mobile_1','$mvnx_mobile_2','$mvnx_mobile_3','$theme','$title','$tz','en','$advanced_features','0',now(),'$live_user_name','$sw_controller', '$groupsid','0','$dpsk_voucher','$automation_enable','$firewall_conroller','$firewall_organizations','$wlan_arr')"; 
                     $ex0 = $db->execDB($query01);
 
                     $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
-            VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$user_type1', '$mno_id', '$mvnx_full_name', '$mvnx_email', '$mvnx_mobile_1', '$mvnx_time_zone', '1','$login_user_name', NOW(), '$user_type1')";
+            VALUES ('$dis_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$user_type1', '$user_distributor', '$mvnx_full_name', '$mvnx_email', '$mvnx_mobile_1', '$mvnx_time_zone', '1','$login_user_name', NOW(), '$user_type1')";
                             $ex1 = $db->execDB($query0);
+                            exit();
                 }
                 if ($ex1 == 1) {
                     $db->userLog($user_name, $script, 'Update Location', $location_name_s);
@@ -2350,6 +2353,11 @@ if (isset($_POST['submit_mno_form'])) { //6
 									</ul>
 									<br>
 									<div class="tab-content">
+
+                                        <?php if (isset($_SESSION['msg6'])) {
+                                            echo $_SESSION['msg6'];
+                                            unset($_SESSION['msg6']);
+                                        } ?>
                                         <!-- **************Create Operations Account********************** -->
                                         <div <?php if(isset($tab6)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="operation_account">
                                             <form onkeyup="submit_mno_formfn();" onchange="submit_mno_formfn();" id="mno_form" name="mno_form" class="form-horizontal" method="POST" action="operations.php?<?php if($mno_edit==1){echo "t=8&mno_edit=1&mno_edit_id=$edit_mno_id";}else{echo "t=6";}?>" >
@@ -2736,7 +2744,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                 </div>
                                                             </div>
                                                             <div class="form-actions">
-                                                                    <button disabled type="submit" id="submit_mno_form" name="submit_mno_form" class="btn btn-primary"><?php if($mno_edit==1){echo "Update Account";}else{echo "Create Account";}?></button>
+                                                                    <button type="submit" id="submit_mno_form" name="submit_mno_form" class="btn btn-primary"><?php if($mno_edit==1){echo "Update Account";}else{echo "Create Account";}?></button>
                                                                     <?php if($mno_edit==1){ ?> <button type="button" class="btn btn-info inline-btn"  onclick="goto();" class="btn btn-danger">Cancel</button> <?php } ?>
                                                             </div>
                                                             <script>
@@ -2781,7 +2789,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                                     WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='admin'
                                                                                     GROUP BY m.mno_id
                                                                                     ORDER BY mno_description ";
-                                                                    $query_results = $db->selectDB($key_queryq1);
+                                                                    $query_results = $db->selectDB($key_query);
                                                                     foreach ($query_results['data'] as $row) {
                                                                         $mno_description = $row[mno_description];
                                                                         $mno_id = $row[mno_id];
@@ -3367,6 +3375,9 @@ FROM `exp_mno_distributor` d LEFT JOIN `admin_users` u  ON u.`verification_numbe
 
 </style>
 <!-- /widget -->
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
+
 <script src="js/jquery.multi-select.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function() {
