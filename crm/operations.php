@@ -117,8 +117,7 @@ if (isset($_POST['submit_mno_form'])) { //6
             $mno_system_package = $mno_sys_package;
 
 
-            if ($user_type != 'SALES') {
-                if ($mno_form_type == 'advanced_menu') { //advanced_menu
+            if ($user_type != 'SALES') { //advanced_menu
                     //$mno_customer_type = trim($_POST['mno_customer_type']);
                     $mno_first_name = $db->escapeDB(trim($_POST['mno_first_name']));
                     $mno_last_name = $db->escapeDB(trim($_POST['mno_last_name']));
@@ -159,13 +158,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                     //$mno_ale_group=$_POST['mno_operator_group'];
 
 
-                } else {
-                    $mno_full_name = $db->escapeDB(trim($_POST['mno_full_name']));
-                    $mno_email = trim($_POST['mno_email']);
-                    $mno_mobile_1 = $db->escapeDB(trim($_POST['mno_mobile_1']));
-                }
-
-
+               
                 $login_user_name = $_SESSION['user_name'];
 
                 $br = $db->select1DB("SHOW TABLE STATUS LIKE 'exp_mno'");
@@ -1321,7 +1314,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                             $query0 = "INSERT INTO `exp_mno` (`system_package`,`mno_id`, `mno_description`, `zip`, `default_campaign_id`, `mno_type`, `is_enable`,create_user, `create_date`)
         VALUES ('$mno_sys_package','$mno_id', '$mno_account_name', '$mno_zip_code', '$camphaign_id', '$mnoAccType','0','$login_user_name', NOW())";
                         }
-                        echo $query0;
+                        //echo $query0;
 
 
                         $ex0 = $db->execDB($query0);
@@ -2657,7 +2650,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                 <?php
                                                                     $key_query = "SELECT m.mno_description,m.mno_id,u.full_name, u.email , u.verification_number
                                                                                     FROM exp_mno m, admin_users u
-                                                                                    WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`is_enable`=1 AND u.`access_role`='admin'
+                                                                                    WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='admin'
                                                                                     GROUP BY m.mno_id
                                                                                     ORDER BY mno_description ";
                                                                     $query_results = $db->selectDB($key_queryq1);
