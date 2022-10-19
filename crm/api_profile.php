@@ -53,76 +53,64 @@ if (isset($_GET['t'])) {
 	$tab1 = "set";
 }
 $ap_control_var = $db->setVal('ap_controller', 'ADMIN');
-if($ap_control_var=='SINGLE'){
-	$tab17="set";
-	$tab1=NULL;
-}
+// if($ap_control_var=='SINGLE'){
+// 	$tab17="set";
+// 	$tab1=NULL;
+// }
 // Create product submit
 if(isset($_POST['create_ap_controller'])){
+	if($_SESSION['FORM_SECRET']==$_POST['form_secret']) {//refresh validate
+		$ap_con_name = trim($_POST['ap_con_name']);
+		$brand = trim($_POST['brand']);
+		$model = trim($_POST['model']);
+		$desc = trim($_POST['desc']);
+		$time_zone = trim($_POST['apc_time_zone']);
+		$ip_address = $_POST['ip_address'];
+		
+		$api_profile = $_POST['api_profile_name'];
+		$api_url = trim($_POST['api_url']);
+		$api_url_se = trim($_POST['api_url_se']);
+		$api_uname = $_POST['api_uname'];
+		$api_pass = $_POST['api_pass'];
+		$type = trim($_POST['type']);
+		if($type=='FIREWALL CONTROLLER'){
+			$api_profile = 'meraki1';
+		}
 
+		if($type=='DPSK'){
+			$api_profile = 'CloudPath';
+		}
+		
+		$api_key_se = trim($_POST['api_key_se']);
+		$controller_description=array();
+		$controller_description['api_key'] = $api_key_se;
+		$controller_description_json= json_encode($controller_description);
 
-if($_SESSION['FORM_SECRET']==$_POST['form_secret']) {//refresh validate
-	//echo "dsdsd";
+		$query0 = "INSERT INTO  `exp_locations_ap_controller` (`time_zone`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_name`, `brand`, `model`, `description`, `ip_address`, `create_date`, `create_user`, `type`,`controller_description`)
+		VALUES ('$time_zone','$api_profile','$api_url','$api_url_se','$api_uname','$api_pass','$ap_con_name', '$brand', '$model', '$desc', '$ip_address', NOW(), '$user_name', '$type', '$controller_description_json')";
+		$ex0 = $db->execDB($query0);
 
-	$ap_con_name = trim($_POST['ap_con_name']);
-	$brand = trim($_POST['brand']);
-	$model = trim($_POST['model']);
-	$desc = trim($_POST['desc']);
-	$time_zone = trim($_POST['apc_time_zone']);
-	$ip_address = $_POST['ip_address'];
-	
-	$api_profile = $_POST['api_profile_name'];
-	$api_url = trim($_POST['api_url']);
+		if ($ex0===true) {
+			$create_log->save('',$message_functions->showMessage('ap_controller_create_success'),'');
+			$_SESSION['msg2'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_create_success')."</strong></div>";
+		} else {
+			$db->userErrorLog('2001', $user_name, 'script - ' . $script);		
+			$create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
+			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_create_failed','2001')."</strong></div>";
+		}
 
-	$api_url_se = trim($_POST['api_url_se']);
-	
-	$api_uname = $_POST['api_uname'];
-	$api_pass = $_POST['api_pass'];
-	$type = trim($_POST['type']);
-	if($type=='FIREWALL CONTROLLER'){
-		$api_profile = 'meraki1';
-	}
-
-	if($type=='DPSK'){
-		$api_profile = 'CloudPath';
-	}
-	
-	$api_key_se = trim($_POST['api_key_se']);
-	$controller_description=array();
-	$controller_description['api_key'] = $api_key_se;
-	$controller_description_json= json_encode($controller_description);
-	$query0 = "INSERT INTO  `exp_locations_ap_controller` (`time_zone`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_name`, `brand`, `model`, `description`, `ip_address`, `create_date`, `create_user`, `type`,`controller_description`)
-	VALUES ('$time_zone','$api_profile','$api_url','$api_url_se','$api_uname','$api_pass','$ap_con_name', '$brand', '$model', '$desc', '$ip_address', NOW(), '$user_name', '$type', '$controller_description_json')";
-	$ex0 = $db->execDB($query0);
-
-	if ($ex0===true) {
-		$create_log->save('',$message_functions->showMessage('ap_controller_create_success'),'');
-		$_SESSION['msg2'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_create_success')."</strong></div>";
-	} else {
-		$db->userErrorLog('2001', $user_name, 'script - ' . $script);		
-		$create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
-		$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_create_failed','2001')."</strong></div>";
-	}
-
-}//key validation
+	}//key validation
 	else{
 		$db->userErrorLog('2004', $user_name, 'script - '.$script);
 		$create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
 		
 		$_SESSION['msg2']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('transection_fail','2004')."</strong></div>";
 		header('Location: operator_config.php?t=2');
-		
-		}	
-	
-}//
-else if(isset($_GET['remove_controller'])){
-
+	}	
+} else if(isset($_GET['remove_controller'])){
 	if($_SESSION['FORM_SECRET']==$_GET['token2']) {//refresh validate
-		//echo "dsdsd";
-
 		$remove_controller = trim($_GET['remove_controller']);
-		
-		
+	
 		$arc_q="INSERT INTO `exp_locations_ap_controller_archive`
 				(`controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`create_date`,`create_user`,`last_update`,`archive_by`,`status`)
 				SELECT `controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`create_date`,`create_user`,`last_update`,'$user_name','Delete'
@@ -130,23 +118,15 @@ else if(isset($_GET['remove_controller'])){
 				WHERE `id`='$remove_controller'";
 		
 		$arc_q_exe=$db->execDB($arc_q);
-	
-
 		$query0 = "DELETE FROM `exp_locations_ap_controller` WHERE `id` = '$remove_controller'";
 		$ex0 = $db->execDB($query0);
-
-		if ($ex0===true) {
-			
+		if ($ex0===true) {		
 			$create_log->save('',$message_functions->showMessage('ap_controller_remove_success'),'');
-
 			$_SESSION['msg1'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_remove_success')."</strong></div>";
 		} else {
-			$db->userErrorLog('2001', $user_name, 'script - ' . $script);
-			
+			$db->userErrorLog('2001', $user_name, 'script - ' . $script);	
 			$create_log->save('2001',$message_functions->showMessage('ap_controller_remove_failed','2001'),'');
-
 			$_SESSION['msg1'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_remove_failed','2001')."</strong></div>";
-
 		}
 
 	}//key validation
@@ -158,57 +138,34 @@ else if(isset($_GET['remove_controller'])){
 		header('Location: operator_config.php?t=1');
 			
 	}
-}//	
-else if(isset($_GET['edit_controller'])){
-
+} else if(isset($_GET['edit_controller'])){
 	if($_SESSION['FORM_SECRET']==$_GET['token2']) {//refresh validate
-		//echo "dsdsd";
-
 		$edit_controller = trim($_GET['edit_controller']);
-
-
 		$get_wag_q="SELECT	* FROM `exp_locations_ap_controller` WHERE `id` = '$edit_controller'";
-		
+		var_dump($get_wag_q);die;
 		$get_wag=$db->selectDB($get_wag_q);
 		
 		//while($edit_wag_r=mysql_fetch_assoc($get_wag)){
-		foreach($get_wag['data'] AS $edit_wag_r){
-			
-			$edit_ap_control_name = $edit_wag_r['controller_name'];
-			
+		foreach($get_wag['data'] AS $edit_wag_r){			
+			$edit_ap_control_name = $edit_wag_r['controller_name'];	
 			$edit_ap_brand = $edit_wag_r['brand'];
-			
 			$edit_ap_mobile = $edit_wag_r['model'];
-			
 			$edit_ap_ip_address = $edit_wag_r['ip_address'];
-
 			$edit_wag_dis=$edit_wag_r['description'];
 			$edit_time_zone=$edit_wag_r['time_zone'];
-
-			
-			
-			$edit_api_profile = $edit_wag_r['api_profile'];
-			
-			$edit_wag_url=$edit_wag_r['api_url'];
-			
+			$edit_api_profile = $edit_wag_r['api_profile'];		
+			$edit_wag_url=$edit_wag_r['api_url'];	
 			$edit_wag_url_se=$edit_wag_r['api_url_se'];
-		
 			$edit_wag_uname=$edit_wag_r['api_username'];
-		
 			$edit_wag_pass=$edit_wag_r['api_password'];
-
 			$edit_wag_controller_description=json_decode($edit_wag_r['controller_description'],true);
-
 			$edit_wag_type=$edit_wag_r['type'];
 		}
-		
 		$edit_wag=2;
 	}//key validation
 	else{
 		$db->userErrorLog('2004', $user_name, 'script - '.$script);
-		
 		$create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
-
 		$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('transection_fail','2004')."</strong></div>";
 		header('Location: operator_config.php?t=1');
 
@@ -217,55 +174,36 @@ else if(isset($_GET['edit_controller'])){
 	
 
 if(isset($_POST['api_update'])){
-	
 	$tab1="set";
 	$edit_wag=2;
-
 	$wag_secret=$_POST['update_wag_secret'];
 	if($wag_secret==$_SESSION['FORM_SECRET']){
-
 		$update_wag_name=$_POST['edit_ap_controller_name'];
-		
 		$update_brand=$_POST['edit_brand'];
-		
 		$update_model=$_POST['edit_model'];
-					
-		
 		$update_wag_dis=$_POST['edit_wag_dis'];
 		$update_time_zone=$_POST['edit_apc_time_zone'];
-
 		$update_ip_address=$_POST['edit_ip_address'];
-
-
 		$edit_api_profile_name=$_POST['edit_api_profile_name'];
 
 		$controll_type=$db->getValueAsf("SELECT `type` as f FROM `exp_locations_ap_controller` WHERE `controller_name`='$update_wag_name' LIMIT 1");
 		if($controll_type=='FIREWALL CONTROLLER'){
-		$edit_api_profile_name = 'meraki1';
+			$edit_api_profile_name = 'meraki1';
 		}
 
 		if($controll_type=='DPSK'){
 			$edit_api_profile_name = 'CloudPath';
-			}
+		}
 
 		$update_wag_url=trim($_POST['edit_wag_url']);
-		
 		$update_wag_url_se=$_POST['edit_wag_url_se'];
-
 		$update_wag_uname=$_POST['edit_wag_uname'];
-
 		$update_wag_pass=$_POST['edit_wag_pass'];
-
 		$api_key_se = trim($_POST['edit_api_key_se']);
-
 		$controller_description=array();
-
 		$controller_description['api_key'] = $api_key_se;
-
 		$controller_description_json= json_encode($controller_description);
-		
-		
-		
+
 		$archive_q="INSERT INTO `exp_locations_ap_controller_archive`
 					(`controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,`archive_by`,`status`)
 					SELECT `controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,'$user_name','Update'
@@ -275,39 +213,30 @@ if(isset($_POST['api_update'])){
 
 		
 		$update_wag_q="UPDATE `exp_locations_ap_controller` SET
-														`time_zone`='$update_time_zone',
-														`api_profile`='$edit_api_profile_name',
-														`brand`='$update_brand',`model`='$update_model',
-														`ip_address`='$update_ip_address',
-														`description`='$update_wag_dis',
-														`api_url`='$update_wag_url',
-														`api_url_se`='$update_wag_url_se',
-														`api_username`='$update_wag_uname',
-														`api_password`='$update_wag_pass',
-														`controller_description`='$controller_description_json'
-														WHERE `controller_name`='$update_wag_name'";
+						`time_zone`='$update_time_zone',
+						`api_profile`='$edit_api_profile_name',
+						`brand`='$update_brand',`model`='$update_model',
+						`ip_address`='$update_ip_address',
+						`description`='$update_wag_dis',
+						`api_url`='$update_wag_url',
+						`api_url_se`='$update_wag_url_se',
+						`api_username`='$update_wag_uname',
+						`api_password`='$update_wag_pass',
+						`controller_description`='$controller_description_json'
+						WHERE `controller_name`='$update_wag_name'";
 
 		$update_wag=$db->execDB($update_wag_q);
 		$edit_ap_control_name = $update_wag_name;
-		
-		$edit_ap_brand = $update_brand;
-		
-		$edit_ap_mobile = $update_model;
-		
-		$edit_ap_ip_address = $update_ip_address;
-		
+		$edit_ap_brand = $update_brand;		
+		$edit_ap_mobile = $update_model;		
+		$edit_ap_ip_address = $update_ip_address;		
 		$edit_wag_dis=$update_wag_dis;
 		$edit_time_zone=$update_time_zone;
-		$edit_api_profile = $edit_api_profile_name;
-		
-		$edit_wag_url=$update_wag_url;
-		
-		$edit_wag_url_se=$update_wag_url_se;
-			
-		$edit_wag_uname=$update_wag_uname;
-			
+		$edit_api_profile = $edit_api_profile_name;	
+		$edit_wag_url=$update_wag_url;		
+		$edit_wag_url_se=$update_wag_url_se;			
+		$edit_wag_uname=$update_wag_uname;		
 		$edit_wag_pass=$update_wag_pass;
-
 		$edit_wag_controller_description=json_decode($controller_description_json,true);
 
 		$edit_wag_type=$db->getValueAsf("SELECT `type` as f
@@ -332,10 +261,11 @@ if(isset($_POST['api_update'])){
 		$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('transection_fail','2004')."</strong></div>";
 		header('Location: operator_config.php?t=1');
 	}
-}						
-	//Form Refreshing avoid secret key/////
-	$secret=md5(uniqid(rand(), true));
-	$_SESSION['FORM_SECRET'] = $secret;
+}	
+					
+//Form Refreshing avoid secret key/////
+$secret=md5(uniqid(rand(), true));
+$_SESSION['FORM_SECRET'] = $secret;
 ?>
 
 <div class="main">
