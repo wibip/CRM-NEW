@@ -58,6 +58,8 @@ $tab8 = "set";
 if($user_type == 'MNO' || $user_type == 'MVNA' || $user_type == 'MVNE'){
     $tab5 = "set";
 }
+
+
 require_once './classes/systemPackageClass.php';
 $package_functions = new package_functions();
 //load countries
@@ -77,6 +79,1561 @@ foreach ($get_regions['data'] as $state) {
 
 $utc = new DateTimeZone('UTC');
 $dt = new DateTime('now', $utc);
+
+if (isset($_POST['submit_mno_form'])) { //6
+        if (isset($_GET['mno_edit'])) {
+            $edit_mno_id = $_GET['mno_edit_id'];
+
+            $get_edit_get = 1;
+
+            $get_mno_unque_q = "SELECT `unique_id`,`features` FROM `exp_mno` WHERE `mno_id`='$edit_mno_id'";
+            $get_mno_unque = $db->selectDB($get_mno_unque_q);
+
+            foreach ($get_mno_unque['data'] as $get_mno_unque_arr) {
+
+                $mno_unque = $get_mno_unque_arr['unique_id'];
+                $featurearrold = $get_mno_unque_arr['features'];
+            }
+        }
+
+        $isDynamic_q = "SELECT `access_method` FROM `admin_product_controls` WHERE `product_code`='DYNAMIC_MNO_001' AND `feature_code`='IS_DYNAMIC'";
+        $isDynamic_res = $db->select1DB($isDynamic_q);
+        //$isDynamic_row = mysql_fetch_assoc($isDynamic_res);
+        $isDynamic = $isDynamic_res['access_method'];
+
+        if ($_SESSION['FORM_SECRET'] == $_POST['form_secret6']) { //refresh validate
+
+            $mno_account_name = $db->escapeDB(trim($_POST['mno_account_name']));
+
+            $mno_user_type = trim($_POST['mno_user_type']);
+
+            $mno_sys_package = trim($_POST['mno_sys_package']);
+
+            
+            $mnoAccType=$mno_user_type;
+            $mno_user_type = 'MNO';
+           
+
+            $mno_system_package = $mno_sys_package;
+
+
+            if ($user_type != 'SALES') {
+                if ($mno_form_type == 'advanced_menu') { //advanced_menu
+                    //$mno_customer_type = trim($_POST['mno_customer_type']);
+                    $mno_first_name = $db->escapeDB(trim($_POST['mno_first_name']));
+                    $mno_last_name = $db->escapeDB(trim($_POST['mno_last_name']));
+                    $mno_full_name = $mno_first_name . ' ' . $mno_last_name;
+                    $mno_email = trim($_POST['mno_email']);
+                    $mno_address_1 = $db->escapeDB(trim($_POST['mno_address_1']));
+                    $mno_address_2 = $db->escapeDB(trim($_POST['mno_address_2']));
+                    $mno_address_3 = $db->escapeDB(trim($_POST['mno_address_3']));
+                    $mno_mobile_1 = $db->escapeDB(trim($_POST['mno_mobile_1']));
+                    $mno_mobile_2 = $db->escapeDB(trim($_POST['mno_mobile_2']));
+                    $mno_mobile_3 = $db->escapeDB(trim($_POST['mno_mobile_3']));
+                    $mno_country = trim($_POST['mno_country']);
+                    $mno_state = $db->escapeDB(trim($_POST['mno_state']));
+                    $mno_zip_code = trim($_POST['mno_zip_code']);
+                    $mno_time_zone = $_POST['mno_time_zone'];
+                    $dtz = new DateTimeZone($mno_time_zone);
+                    $time_in_sofia = new DateTime('now', $dtz);
+                    $offset = $dtz->getOffset($time_in_sofia) / 3600;
+                    $time_offset = ($offset < 0 ? $offset : "+" . $offset);
+
+                    $featurearr = $_POST['feature_cont'];
+                    if (in_array('VTENANT_MODULE', $featurearr)) {
+                        $vtenant_module = 'Vtenant';
+                    } else {
+                        $vtenant_module = '';
+                    }
+
+                    $feature_json = $db->escapeDB(json_encode($featurearr));
+
+
+                    if (strlen($_POST['mno_api_prifix']) > 0) {
+                        $mno_api_prefix = "'" . $_POST['mno_api_prifix'] . "'";
+                    } else {
+                        $mno_api_prefix = "NULL";
+                    }
+
+                    //$mno_ale_zone=$_POST['mno_operator_zone'];
+                    //$mno_ale_group=$_POST['mno_operator_group'];
+
+
+                } else {
+                    $mno_full_name = $db->escapeDB(trim($_POST['mno_full_name']));
+                    $mno_email = trim($_POST['mno_email']);
+                    $mno_mobile_1 = $db->escapeDB(trim($_POST['mno_mobile_1']));
+                }
+
+
+                $login_user_name = $_SESSION['user_name'];
+
+                $br = $db->select1DB("SHOW TABLE STATUS LIKE 'exp_mno'");
+                //$rowe = mysql_fetch_array($br);
+                $auto_inc = $br['Auto_increment'];
+                $mno_id = "MNO" . $auto_inc;
+                $u_id = str_pad($auto_inc, 8, "0", STR_PAD_LEFT);
+                $unique_id = '1' . $u_id;
+
+                $new_user_name = str_replace(' ', '_', strtolower(substr($mno_full_name, 0, 5) . 'm' . $auto_inc));
+                $password = CommonFunctions::randomPassword();
+
+                $dynamic_id = substr(md5(uniqid(rand(), true)), 0, 20);
+                $dynamic_product_id = implode('-', str_split($dynamic_id, 5));
+                $dynamic_product_id = 'dy-' . $dynamic_product_id;
+
+                $dynamic_id2 = substr(md5(uniqid(rand(), true)), 0, 20);
+                $dynamic_mvno_id = implode('-', str_split($dynamic_id2, 5));
+                $dynamic_mvno_id = 'dy-' . $dynamic_mvno_id;
+
+                $dynamic_id3 = substr(md5(uniqid(rand(), true)), 0, 20);
+                $dynamic_admin_id = implode('-', str_split($dynamic_id3, 5));
+                $dynamic_admin_id = 'dy-' . $dynamic_admin_id;
+
+                $automation_on = $package_functions->getSectionType('NETWORK_AUTOMATION', $mno_sys_package);
+                if ($automation_on == 'Yes') {/*
+
+                    $network_name = $package_functions->getOptions('NETWORK_PROFILE', $mno_sys_package);
+
+                    $network_name_new = $package_functions->getOptions('NETWORK_PROFILE_NEW', $mno_sys_package);
+                    if (strlen($network_name_new) > 0) {
+                        $network_name = $network_name_new;
+                    }
+                    if (strlen($network_name) == 0) {
+                        $network_name = $db->setVal('network_name', 'ADMIN');
+                    }
+                    $row1 = $db->select1DB("SELECT * FROM `exp_network_profile` WHERE network_profile = '$network_name'");
+                    $aaa_data = json_decode($row1['aaa_data'], true);
+                    $operator_group_id = $row1['api_master_acc_type'] . '_' . $_POST['mno_api_prifix'];
+                    $operator_group_name = $_POST['mno_api_prifix'];
+                    $network_profile = $row1['api_network_auth_method'];
+
+
+                    require_once(str_replace('//', '/', dirname(__FILE__) . '/') . '/src/AAA/' . $network_profile . '/index.php');
+                    $data_arr = array();
+                    if ($mno_sys_package == 'DYNAMIC_MNO_001' && $isDynamic == 'yes') {
+                    $data_arr['api_login'] = $db->escapeDB(trim($_POST['aaa_api_username']));
+                    $data_arr['api_password'] = $db->escapeDB(trim($_POST['aaa_api_password']));
+                    $data_arr['api_acc_profile'] = $db->escapeDB(trim($_POST['aaa_tenant']));
+                    $data_arr['api_master_acc_type'] = $db->escapeDB(trim($_POST['aaa_product_owner']));
+                    $data_arr['aaa_api_url'] = $db->escapeDB(trim($_POST['aaa_api_url']));
+                    $data_arr['aaa_api_url2'] = $db->escapeDB(trim($_POST['vm_aaa_api_url']));
+                    $data_arr['vm_api_username'] = $db->escapeDB(trim($_POST['vm_aaa_api_username']));
+                    $data_arr['vm_api_password'] = $db->escapeDB(trim($_POST['vm_aaa_api_password']));
+                    $data_arr['api_acc_org'] = $db->escapeDB(trim($_POST['api_acc_org']));
+                    $operator_group_id = trim($_POST['aaa_product_owner']) . '_' . $_POST['mno_api_prifix'];
+                    $aaa_data['aaa_root_zone'] = trim($_POST['api_root_zone_name']);
+                    }
+
+                    $aaa = new aaa($network_name, $mno_system_package,$data_arr);
+                    $all_groups = json_decode($aaa->getAllGroupsNew(), true);
+                    $op_group_exists = false;
+                    if ($all_groups['status'] == 'success') {
+                        $error_st = false;
+                        foreach ($all_groups['Description'] as $value) {
+                            if ($value['Id'] == $operator_group_id) {
+                                $op_group_exists = true;
+                                $operator_group_name = $value['Name'];
+                            }
+                        }
+
+                        if (!$op_group_exists) {
+                            $create_group = json_decode($aaa->createGroup(array('Id' => $operator_group_id, 'Name' => $operator_group_name)), true);
+                            if ($create_group['status'] != 'success') {
+                                $error_st = true;
+                            }
+                        }
+
+                        if (!$error_st) {
+                            $all_zones = json_decode($aaa->getAllZones(), true);
+                            $op_zone_exists = false;
+                            if ($all_zones['status'] == 'success') {
+                                $default_zone_ext = false;
+                                foreach ($all_zones['Description'] as $value) {
+                                    if ($mno_sys_package == 'DYNAMIC_MNO_001' && $isDynamic == 'yes') {
+                                        if($value['Name']==$aaa_data['aaa_root_zone']){
+                                            $aaa_data['aaa_root_zone_id'] = $value['Id'];
+                                        }
+                                    }
+                                    if ($value['Id'] == $aaa_data['aaa_root_zone_id']) {
+                                        foreach ($value['Sub-Zones'] as $value1) {
+                                            if ($value1['Name'] == $_POST['mno_api_prifix']) {
+                                                $op_zone_exists = true;
+                                                $op_zone_id = $value1['Id'];
+                                            }
+                                        }
+                                        $default_zone_ext = true;
+                                        $aaa_data_op = json_encode(array('operator_zone_name' => $_POST['mno_api_prifix'], 'operator_zone_id' => $op_zone_id, 'operator_group_id' => $operator_group_id));
+                                    }
+                                }
+
+                                if ($default_zone_ext) {
+                                    if (!$op_zone_exists) {
+                                        $create_zone = json_decode($aaa->createZone(array('Name' => $_POST['mno_api_prifix'], 'Description' => 'This contains match table entry for ' . $_POST['mno_api_prifix'] . ' customer', 'Parent-Zone' => $aaa_data['aaa_root_zone_id'], 'Location-Group' => $operator_group_id)), true);
+                                        if ($create_zone['status'] == 'success') {
+                                            $op_zone_id = $create_zone['Description']['Id'];
+                                            $aaa_data_op = json_encode(array('operator_zone_name' => $_POST['mno_api_prifix'], 'operator_zone_id' => $op_zone_id, 'operator_group_id' => $operator_group_id));
+                                        } else {
+                                            $error = true;
+                                        }
+                                    }
+                                } else {
+                                    $error = true;
+                                }
+                            } else {
+                                $error = true;
+                            }
+                        }
+                    } else {
+                        $error = true;
+                    }
+                */}
+
+                $camphaign_id = 0;
+                if (isset($mno_sys_package)) {
+                    if ($mno_sys_package == 'DYNAMIC_MNO_001' && $isDynamic == 'yes') {
+
+
+                        $mno_short_name = strtolower($db->escapeDB(trim($_POST['mno_short_name'])));
+                        $mno_about_url = $db->escapeDB(trim($_POST['mno_about_url']));
+                        $mno_privacy_url = $db->escapeDB(trim($_POST['mno_privacy_url']));
+                        $mno_toc_url = $db->escapeDB(trim($_POST['mno_toc_url']));
+                        $mno_primary_color = $db->escapeDB(trim($_POST['mno_primary_color']));
+                        $mno_secondary_color = $db->escapeDB(trim($_POST['mno_secondary_color']));
+                        $mno_support_number = $db->escapeDB(trim($_POST['mno_support_number']));
+                        $mno_support_email = $db->escapeDB(trim($_POST['mno_support_email']));
+                        $aaa_api_username = $db->escapeDB(trim($_POST['aaa_api_username']));
+                        $aaa_api_password = $db->escapeDB(trim($_POST['aaa_api_password']));
+                        $aaa_tenant = $db->escapeDB(trim($_POST['aaa_tenant']));
+                        $aaa_product_owner = $db->escapeDB(trim($_POST['aaa_product_owner']));
+                        $aaa_api_url = $db->escapeDB(trim($_POST['aaa_api_url']));
+                        $aaa_api_url2 = $db->escapeDB(trim($_POST['vm_aaa_api_url']));
+                        $aaa_api_username_vm = $db->escapeDB(trim($_POST['vm_aaa_api_username']));
+                        $aaa_api_password_vm = $db->escapeDB(trim($_POST['vm_aaa_api_password']));
+                        $aaa_api_acc_org = $db->escapeDB(trim($_POST['api_acc_org']));
+                        $aaa_api_type = $db->escapeDB(trim($_POST['aaa_api_type']));
+                        $dsf_api_url = $db->escapeDB(trim($_POST['dsf_api_url']));
+                        $dsf_api_username = $db->escapeDB(trim($_POST['dsf_api_username']));
+                        $dsf_api_password = $db->escapeDB(trim($_POST['dsf_api_password']));
+                        $abuse_api_url = $db->escapeDB(trim($_POST['abuse_api_url']));
+                        $abuse_api_username = $db->escapeDB(trim($_POST['abuse_api_username']));
+                        $abuse_api_password = $db->escapeDB(trim($_POST['abuse_api_password']));
+
+                        $get_dynamic_product_id = $_POST['get_dynamic_product_id'];
+                        $prev_short_name = $_POST['prev_short_name'];
+                        $mno_account_name_prev = $_POST['mno_account_name_prev'];
+                        $mno_support_number_prev = $_POST['mno_support_number_prev'];
+                        $mno_support_email_prev = $_POST['mno_support_email_prev'];
+                        $mno_about_url_prev = $_POST['prev_about_url'];
+                        $mno_privacy_url_prev = $_POST['prev_privacy_url'];
+                        $mno_toc_url_prev = $_POST['prev_toc_url'];
+                        $mno_primary_color_prev = $_POST['prev_primary_color'];
+                        $mno_secondary_color_prev = $_POST['prev_secondary_color'];
+                        $mno_logo_url_prev = $_POST['prev_image_logo_url'];
+                        $mno_email_url_prev = $_POST['prev_image_email_url'];
+                        $mno_aaa_username_prev = $_POST['prev_aaa_username'];
+                        $mno_aaa_password_prev = $_POST['prev_aaa_password'];
+                        $mno_aaa_tenant_prev = $_POST['prev_aaa_tenant'];
+                        $mno_aaa_product_owner_prev = $_POST['prev_aaa_product_owner'];
+                        $mno_dsf_username_prev = $_POST['prev_dsf_username'];
+                        $mno_dsf_password_prev = $_POST['prev_dsf_password'];
+
+
+                        $mno_system_package = $dynamic_product_id;
+                        if ($get_edit_get == 1) {
+                            $mno_system_package = $get_dynamic_product_id;
+                        }
+
+                        $base_image_url = $db->setVal('global_url', 'ADMIN');
+
+
+                        if (isset($_POST['image_logo_name'])) {
+                            $image_logo_name = $_POST['image_logo_name'];
+                            $image_logo_name_prev = $_POST['image_logo_name_prev'];
+
+                            if ($upload_img->is_exists($image_logo_name, 'logo') != 1) {
+                                $moveResult1 = $upload_img->image_upload2($image_logo_name, 'logo');
+                                if ($moveResult1) {
+                                    $img1_uploaded = 1;
+                                } else {
+                                    $img1_uploaded = 0;
+                                }
+                            }
+
+                            $mno_logo_image_path = $upload_img->get_image($image_logo_name, 'logo');
+
+                            if ($image_logo_name != $image_logo_name_prev && $upload_img->is_exists($image_logo_name_prev, 'logo') == 1) {
+                                $remove_orig_image1 = $upload_img->remove_image($image_logo_name_prev, 'logo');
+                            }
+
+                            //-----------------------------------------------
+
+
+                            if ($campaign_upload_img->is_exists($image_logo_name) != 1) {
+                                $moveResult1 = $campaign_upload_img->image_upload2($image_logo_name);
+                                if ($moveResult1) {
+                                    $img1_uploaded = 1;
+                                } else {
+                                    $img1_uploaded = 0;
+                                }
+                            }
+
+                            $camp_image_path = $campaign_upload_img->get_image($image_logo_name);
+
+                            if ($image_logo_name != $image_logo_name_prev && $campaign_upload_img->is_exists($image_logo_name_prev) == 1) {
+                                $remove_orig_image1 = $campaign_upload_img->remove_image($image_logo_name_prev);
+                            }
+
+                            //-----------------------------------------------
+
+
+
+                            if ($tenant_upload_img->is_exists($image_logo_name) != 1) {
+                                $moveResult2 = $tenant_upload_img->image_upload($image_logo_name);
+                                if ($moveResult2) {
+                                    $imgt_uploaded = 1;
+                                } else {
+                                    $imgt_uploaded = 0;
+                                }
+                            }
+
+                            $tenant_logo_image_path = $tenant_upload_img->get_image($image_logo_name);
+
+
+                            if ($image_logo_name != $image_logo_name_prev && $tenant_upload_img->is_exists($image_logo_name_prev) == 1) {
+                                $remove_orig_image2 = $tenant_upload_img->remove_image($image_logo_name_prev);
+                            }
+                        }
+
+
+                        if (isset($_POST['image_email_name'])) {
+                            $image_email_name = $_POST['image_email_name'];
+                            $image_email_name_prev = $_POST['image_email_name_prev'];
+                            if ($upload_img->is_exists($image_email_name, 'welcome') != 1) {
+                                $moveResult1 = $upload_img->image_upload2($image_email_name, 'welcome');
+                                if ($moveResult1) {
+                                    $img1_uploaded = 1;
+                                } else {
+                                    $img1_uploaded = 0;
+                                }
+                            }
+
+                            $mno_email_image_path = $upload_img->get_image($image_email_name, 'welcome');
+
+
+                            if ($image_email_name != $image_email_name_prev && $upload_img->is_exists($image_email_name_prev, 'welcome') == 1) {
+                                $remove_orig_image2 = $upload_img->remove_image($image_email_name_prev, 'welcome');
+                            }
+
+
+                            if ($campaign_upload_img->is_exists($image_email_name) != 1) {
+                                $moveResult2 = $campaign_upload_img->image_upload2($image_email_name);
+                                if ($moveResult2) {
+                                    $campaign_uploaded = 1;
+                                } else {
+                                    $campaign_uploaded = 0;
+                                }
+                            }
+
+                            $campaign_email_image_path = $campaign_upload_img->get_image($image_email_name);
+
+
+                            if ($image_email_name != $image_email_name_prev && $campaign_upload_img->is_exists($image_email_name_prev) == 1) {
+                                $remove_orig_image2 = $campaign_upload_img->remove_image($image_email_name_prev);
+                            }
+
+
+                            if ($tenant_upload_img->is_exists($image_email_name) != 1) {
+                                $moveResult2 = $tenant_upload_img->image_upload($image_email_name);
+                                if ($moveResult2) {
+                                    $imgt_uploaded = 1;
+                                } else {
+                                    $imgt_uploaded = 0;
+                                }
+                            }
+
+                            $tenant_email_image_path = $tenant_upload_img->get_image($image_email_name);
+
+
+                            if ($image_email_name != $image_email_name_prev && $tenant_upload_img->is_exists($image_email_name_prev) == 1) {
+                                $remove_orig_image2 = $tenant_upload_img->remove_image($image_email_name_prev);
+                            }
+                        }
+
+
+
+                        if (isset($_POST['image_favicon_name'])) {
+                            $image_favicon_name = $_POST['image_favicon_name'];
+                            //$image_favicon_name = 'fav_'.$image_favicon_name;
+                            $image_favicon_name_prev = $_POST['image_favicon_name_prev'];
+
+                            if ($upload_img->is_exists($image_favicon_name, 'welcome') != 1) {
+                                $moveResult1 = $upload_img->image_upload2($image_favicon_name, 'welcome');
+                                if ($moveResult1) {
+                                    $img1_uploaded = 1;
+                                } else {
+                                    $img1_uploaded = 0;
+                                }
+                            }
+
+                            $mno_favicon_image_path = $upload_img->get_image($image_favicon_name, 'welcome');
+
+                            if ($image_favicon_name != $image_favicon_name_prev && $upload_img->is_exists($image_favicon_name_prev, 'welcome') == 1) {
+                                $remove_orig_image1 = $upload_img->remove_image($image_favicon_name_prev, 'welcome');
+                            }
+
+
+
+                            if ($tenant_upload_img->is_exists($image_favicon_name) != 1) {
+                                $moveResult2 = $tenant_upload_img->image_upload($image_favicon_name);
+                                if ($moveResult2) {
+                                    $imgt_uploaded = 1;
+                                } else {
+                                    $imgt_uploaded = 0;
+                                }
+                            }
+
+                            $tenant_favicon_image_path = $tenant_upload_img->get_image($image_favicon_name);
+
+
+                            if ($image_favicon_name != $image_favicon_name_prev && $tenant_upload_img->is_exists($image_favicon_name_prev) == 1) {
+                                $remove_orig_image2 = $tenant_upload_img->remove_image($image_favicon_name_prev);
+                            }
+                        }
+
+
+                        //https://bi-dmz-2.arrisi.com/campaign_portal/layout/DYNAMIC/img/s5.png
+
+                        $mno_logo_image_url = $base_image_url . '/' . $mno_logo_image_path;
+                        $mno_email_image_url = $base_image_url . '/' . $mno_email_image_path;
+                        $mno_favicon_image_url = $base_image_url . '/' . $mno_favicon_image_path;
+
+
+
+                        //default mvno
+                        if ($mnoAccType == 'Factory_Manager') {
+                        $dynamicMvnoSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='factory_manager_default_mvno_new'";
+                        }else{
+                        $dynamicMvnoSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='default_mvno_new'";
+                        }
+                        $dynamicMvnoSettings_res = $db->select1DB($dynamicMvnoSettings);
+                        //$dynamicMvnoSettings_row = mysql_fetch_assoc($dynamicMvnoSettings_res);
+                        $product_mvno_custom_settings = $dynamicMvnoSettings_res['settings'];
+
+                        //$final_array=$db->escapeDB($final_array);
+                        //print_r($final_array);
+
+                        //$ex=$db->execDB("UPDATE `admin_product_controls_custom` set settings='$final_array' WHERE `product_id`='$product_id'");
+
+
+
+
+                        $settings_vars_mvno = array(
+                            '{active_template}' => $dynamic_product_id
+                        );
+
+                        /*$settings_vars_mvno = array(
+                        '{default_ad_id}' => '1000',
+                        '{login_sign}' => $mno_short_name,
+                        '{support_no}' => $mno_support_number,
+                        '{support_em}' => $mno_support_email,
+                        '{about_url}' => $mno_about_url,
+                        '{privacy_url}' => $mno_privacy_url,
+                        '{primary_color}' => $mno_primary_color,
+                        '{secondary_color}' => $mno_secondary_color,
+                        '{logo_image_url}' => $mno_logo_image_url,
+                        '{email_image_url}' => $mno_email_image_url,
+                        '{aaa_username}' => $aaa_api_username,
+                        '{aaa_password}' => $aaa_api_password,
+                        '{aaa_tenant}' => $aaa_tenant,
+                        '{aaa_product_owner}' => $aaa_product_owner,
+                        '{dsf_username}' => $dsf_api_username,
+                        '{dsf_password}' => $dsf_api_password
+                        );
+
+
+                    $product_mvno_custom_settings = mysql_real_escape_string(strtr($product_mvno_custom_settings, $settings_vars_mvno));*/
+
+                        //default mvno
+
+
+                        //default mvno admin
+                        $product_mvno_custom_settings = $db->escapeDB(strtr($product_mvno_custom_settings, $settings_vars_mvno));
+                        if ($mnoAccType == 'Factory_Manager') {
+                        $dynamicAdminSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='factory_manager_default_mvno_admin_new'";   
+                        }else{
+                        $dynamicAdminSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='default_mvno_admin_new'";
+                        }
+                        $dynamicAdminSettings_res = $db->select1DB($dynamicAdminSettings);
+                        //$dynamicAdminSettings_row = mysql_fetch_assoc($dynamicAdminSettings_res);
+                        $product_admin_custom_settings = $dynamicAdminSettings_res['settings'];
+
+
+                        $settings_vars_admin = array(
+                            '{login_sign}' => $mno_short_name,
+                            '{location_package}' => $dynamic_mvno_id
+                        );
+
+
+                        $product_admin_custom_settings = $db->escapeDB(strtr($product_admin_custom_settings, $settings_vars_admin));
+
+                        //default mvno admin
+
+
+                        //default
+                        if ($mnoAccType == 'Factory_Manager') {
+                        $dynamicSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='factory_manager_default_new'";
+                        }else{
+                        $dynamicSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='default_new'";
+                        }
+                        $dynamicSettings_res = $db->select1DB($dynamicSettings);
+                        //$dynamicSettings_row = mysql_fetch_assoc($dynamicSettings_res);
+                        $product_controls_custom_settings = $dynamicSettings_res['settings'];
+                        //$operator_allowed_tab=$product_controls_custom_settings['general']['ALLOWED_TAB']['options'];
+
+                        $settings_vars = array(
+                            '{default_ad_id}' => '1000',
+                            '{login_sign}' => $mno_short_name,
+                            '{support_no}' => $mno_support_number,
+                            '{support_em}' => $mno_support_email,
+                            '{about_url}' => $mno_about_url,
+                            '{privacy_url}' => $mno_privacy_url,
+                            '{toc_url}' => $mno_toc_url,
+                            '{primary_color}' => $mno_primary_color,
+                            '{secondary_color}' => $mno_secondary_color,
+                            '{logo_image_url}' => $mno_logo_image_url,
+                            '{email_image_url}' => $mno_email_image_url,
+                            '{favicon_image_url}' => $mno_favicon_image_url,
+                            '{aaa_username}' => $aaa_api_username,
+                            '{aaa_password}' => $aaa_api_password,
+                            '{aaa_username_vm}' => $aaa_api_username_vm,
+                            '{aaa_password_vm}' => $aaa_api_password_vm,
+                            '{aaa_api_acc_org}' => $aaa_api_acc_org,
+                            '{aaa_url}' => $aaa_api_url,
+                            '{aaa_url2}' => $aaa_api_url2,
+                            '{aaa_type}' => $aaa_api_type,
+                            '{aaa_tenant}' => $aaa_tenant,
+                            '{aaa_auth_token}' => $aaa_api_acc_org,
+                            '{aaa_product_owner}' => $aaa_product_owner,
+                            '{dsf_url}' => $dsf_api_url,
+                            '{dsf_username}' => $dsf_api_username,
+                            '{dsf_password}' => $dsf_api_password,
+                            '{abuse_url}' => $abuse_api_url,
+                            '{abuse_username}' => $abuse_api_username,
+                            '{abuse_password}' => $abuse_api_password,
+                            '{mvno_admin_product}' => $dynamic_admin_id,
+                            '{mvno_product}' => $dynamic_mvno_id
+                        );
+
+
+                        $product_controls_custom_settings = strtr($product_controls_custom_settings, $settings_vars);
+
+                        $product_controls_custom_settings_default = json_decode($product_controls_custom_settings, true);
+
+                        //default
+
+                        if ($get_edit_get != 1) {
+
+                            $new_theme_data = array();
+                            $new_contenteditable_arr = array();
+                            $new_upload_arr = array();
+                            $new_mac_arr = array();
+                            $new_color_arr = array();
+
+                            $cont_value['element'] = 'welcome_txt';
+                            $cont_value['value'] = 'Welcome';
+
+                            $cont_value1['element'] = 'registration_btn';
+                            $cont_value1['value'] = 'Register';
+
+                            array_push($new_contenteditable_arr, $cont_value);
+                            array_push($new_contenteditable_arr, $cont_value1);
+
+
+                            $up_value['element'] = '.login_screen_logo';
+                            $up_value['type'] = 'theme_img_logo';
+                            $up_value['folder'] = 'logo';
+                            $up_value['value'] = 'default_arris_vtenant_login.jpg';
+
+                            $up_value1['element'] = '.login_img';
+                            $up_value1['type'] = 'background';
+                            $up_value1['folder'] = 'logo';
+                            $up_value1['value'] = 'default_arris_vtenant_top.png';
+
+                            $up_value2['element'] = '.index-body';
+                            $up_value2['type'] = 'background';
+                            $up_value2['folder'] = 'logo';
+                            $up_value2['maxSize'] = '1000';
+                            $up_value2['value'] = 'default_arris_vtenant_login.jpg';
+
+                            array_push($new_upload_arr, $up_value);
+                            array_push($new_upload_arr, $up_value1);
+                            array_push($new_upload_arr, $up_value2);
+
+
+                            // $mac_value['element']='.contact-us-txt';
+                            // $mac_value['value']='<p style=\"text-align: center;\"><strong>Need help? Call '.$mno_support_number.'</strong></p>';
+
+                            // array_push($new_mac_arr, $mac_value);
+                            $contact_us = '<p style=\"text-align: center;\"><strong>Need help? Call ' . $mno_support_number . '</strong></p>';
+                            $new_theme_data['contenteditable_arr'] = $new_contenteditable_arr;
+                            $new_theme_data['upload_arr'] = $new_upload_arr;
+                            $new_theme_data['mce_arr'] = $new_mac_arr;
+                            $new_theme_data['color_arr'] = $new_color_arr;
+                            $new_theme_data = $db->escapeDB(json_encode($new_theme_data));
+
+
+                            $rowe = $db->selectDB("SHOW TABLE STATUS LIKE 'mdu_themes_details'");
+                            $auto_inc_theme = $mno_short_name . '_DEFAULT_THEME_' . $rowe['data'][0]['Auto_increment'];
+
+                            $query_mdu_theme = "INSERT INTO `mdu_themes` (
+                                          `theme_name`,
+                                          `title`,
+                                          `theme_code`,
+                                          `theme_type`,
+                                          `distributor_code`,
+                                          `style_type`,
+                                          `welcome_text`,
+                                          `welcome_des`,
+                                          `contact_us`,
+                                          `theme_color`,
+                                          `light_color`,
+                                          `btn_secondary_color`,
+                                          `btn_color`,
+                                          `bg_color`,
+                                          `footer_color`,
+                                          `top_line_color`,
+                                          `login_screen_logo`,
+                                          `top_logo`,
+                                          `login_img`,
+                                          `bg_img`,
+                                          `favcon`,
+                                          `template_code`,
+                                          `create_date`,
+                                          `is_enable`,
+                                          `create_by`,
+                                          `theme_details_id`)
+                                        (SELECT
+                                          '$mno_short_name Default THEME',
+                                          `title`,
+                                          UUID(),
+                                          'MANUAL',
+                                          '$mno_id',
+                                          `style_type`,
+                                          'Welcome to $mno_short_name Mobility',
+                                          `welcome_des`,
+                                          '$contact_us',
+                                          `theme_color`,
+                                          `light_color`,
+                                          '$mno_secondary_color',
+                                          '$mno_primary_color',
+                                          `bg_color`,
+                                          `footer_color`,
+                                          `top_line_color`,
+                                          '$image_logo_name',
+                                          `top_logo`,
+                                          `login_img`,
+                                          `bg_img`,
+                                          '$image_favicon_name',
+                                          `template_code`,
+                                          now(),
+                                          `is_enable`,
+                                          '$user_name',
+                                          '$auto_inc_theme'
+                                        FROM
+                                          `mdu_themes`
+                                        WHERE `theme_code`='DEFAULT_THEME_DYNAMIC' LIMIT 1)";
+
+                            $ex_mdu = $db->execDB($query_mdu_theme);
+
+                            $Q = "INSERT INTO `mdu_themes_details` (
+                                            `unique_id`,
+                                            `theme_data`,
+                                            `completed`,
+                                            `create_date`,
+                                            `updated_by`
+                                          )
+                                          VALUES
+                                            (
+                                              '$auto_inc_theme',
+                                              '$new_theme_data',
+                                              '1',
+                                              NOW(),
+                                              'system'
+                                            )";
+                            $Q1 = $db->execDB($Q);
+                        }
+
+                        $rowe4 = $db->select1DB("SHOW TABLE STATUS LIKE 'exp_camphaign_ads'");
+
+                        $camphaign_id = $rowe4['Auto_increment'];
+
+
+
+                        $insert_campaign = $db->execDB("INSERT INTO `exp_camphaign_ads` (
+                                        `ad_id`,
+                                        `ad_name`,
+                                        `ad_description`,
+                                        `ad_type`,
+                                        `ad_category`,
+                                        `duration_seconds`,
+                                        `top_text`,
+                                        `bottom_text`,
+                                        `image1`,
+                                        `image5`,
+                                        `background_color`,
+                                        `welcome_url`,
+                                        `distributor`,
+                                        `create_date`
+                                        )
+                                        VALUES
+                                        (
+                                        '$camphaign_id',
+                                        '$mno_short_name',
+                                        '$mno_short_name',
+                                        'countdown_image',
+                                        'Default Ad Category',
+                                        '5',
+                                        '$mno_account_name',
+                                        'Get Online',
+                                        '$image_email_name',
+                                        '$image_logo_name',
+                                        '$mno_primary_color',
+                                        '$mno_about_url',
+                                        '$mno_id',
+                                        NOW()
+                                    )");
+                    }
+                }
+
+
+                if ($get_edit_get == 1) {
+                    if ($wag_ap_name == 'NO_PROFILE') {
+                        //API not call//
+                        $status_code = '200';
+                    } else {
+
+                        $status_code = '200';
+                    }
+                } else {
+                    if ($wag_ap_name == 'NO_PROFILE') {
+                        //API not call//
+                        $status_code = '200';
+                    } else {
+
+                        $status_code = '200';
+                    }
+                }
+                if ($status_code == '200') { //1
+
+                    ////////////MNO Default theme insert///////////////////////////////////
+                    if ($get_edit_get == 1) {
+
+
+                        //*************************UPDATE********************************************
+
+
+                        if ($mno_form_type == 'advanced_menu') { //advanced_menu
+                            $query0 = "UPDATE `exp_mno`
+                        SET
+                          `api_prefix`=$mno_api_prefix,
+                          `mno_description`='$mno_account_name',
+                          `ap_controller_name`='$Ap_controller',
+                          `mno_type`='$mnoAccType',
+                          `bussiness_address1`='$mno_address_1',
+                          `bussiness_address2`='$mno_address_2',
+                          `bussiness_address3`='$mno_address_3',
+                          `features`='$feature_json',
+                          `country`='$mno_country',
+                          `state_region`='$mno_state',
+                          `zip`='$mno_zip_code',
+                          `phone1`='$mno_mobile_1',
+                          `phone2`='$mno_mobile_2',
+                          `phone3`='$mno_mobile_3',
+                          `timezones`='$mno_time_zone',
+                          `aaa_data`='$aaa_data_op'
+                         WHERE `mno_id`='$edit_mno_id'";
+
+                            $query1 = "UPDATE
+              `admin_users`
+            SET
+              `full_name` = '$mno_full_name',
+              `email` = '$mno_email',
+              `mobile` = '$mno_mobile_1',
+              `timezone` = '$mno_time_zone'
+            WHERE `user_distributor` = '$edit_mno_id' AND user_type='MNO' AND access_role='admin' ORDER BY id LIMIT 1"; //AND `verification_number` IS NOT NULL
+
+                            if ($mno_sys_package == 'DYNAMIC_MNO_001' && $isDynamic == 'yes') {
+
+                                $dynamicSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='$get_dynamic_product_id'";
+                                $dynamicSettings_res = $db->select1DB($dynamicSettings);
+                                //$dynamicSettings_row = mysql_fetch_assoc($dynamicSettings_res);
+                                
+                                $product_controls_custom_settings = json_decode($dynamicSettings_res['settings'], true);
+                                $admin_product_id = $product_controls_custom_settings['general']['MVNO_ADMIN_PRODUCT']['options'];
+                                $mvno_product_id = $product_controls_custom_settings['general']['MVNO_PRODUCTS']['options'];
+                                $operator_allowed_tab = $product_controls_custom_settings['general']['ALLOWED_TAB']['options'];
+                                $network_pro = $product_controls_custom_settings_default['general']['NETWORK_PROFILE']['options'][$aaa_api_type];
+                                $vt_network_pro = $product_controls_custom_settings_default['general']['VTENANT_NETWORK_PROFILE']['options'][$aaa_api_type];
+                                $product_controls_custom_settings['general']['NETWORK_PROFILE']['options'] = $network_pro;
+                                $product_controls_custom_settings['general']['VTENANT_NETWORK_PROFILE']['options'] = $vt_network_pro;
+                                $product_controls_custom_settings['general']['LOGIN_SIGN']['options'] = $mno_short_name;
+                                $product_controls_custom_settings['general']['LOGIN_SIGN']['access_method'] = $mno_short_name;
+                                $product_controls_custom_settings['general']['SUPPORT_NUMBER']['options'] = $mno_support_number;
+                                $product_controls_custom_settings['general']['SUPPORT_EMAIL']['options'] = $mno_support_email;
+                                $product_controls_custom_settings['general']['VTENANT_MODULE']['options'] = $vtenant_module;
+                                $product_controls_custom_settings['branding']['ABOUT_URL']['options'] = $mno_about_url;
+                                $product_controls_custom_settings['branding']['PRIVACY_URL']['options'] = $mno_privacy_url;
+                                $product_controls_custom_settings['branding']['TOC_URL']['options'] = $mno_toc_url;
+                                $product_controls_custom_settings['branding']['PRIMARY_COLOR']['options'] = $mno_primary_color;
+                                $product_controls_custom_settings['branding']['SECONDARY_COLOR']['options'] = $mno_secondary_color;
+                                $product_controls_custom_settings['branding']['LOGO_IMAGE_URL']['options'] = $mno_logo_image_url;
+                                $product_controls_custom_settings['branding']['EMAIL_IMAGE_URL']['options'] = $mno_email_image_url;
+                                $product_controls_custom_settings['branding']['FAVICON_IMAGE_URL']['options'] = $mno_favicon_image_url;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_USERNAME']['options'] = $aaa_api_username;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_PASSWORD']['options'] = $aaa_api_password;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_TENANT']['options'] = $aaa_tenant;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_USERNAME_VM']['options'] = $aaa_api_username_vm;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_PASSWORD_VM']['options'] = $aaa_api_password_vm;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_SECURITY_TOKEN']['options'] = $aaa_api_acc_org;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_DATA']['options'] = $aaa_data;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_URL']['options'] = $aaa_api_url;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_URL2']['options'] = $aaa_api_url2;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_TYPE']['options'] = $aaa_api_type;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_PRODUCT_OWNER']['options'] = $aaa_product_owner;
+                                $product_controls_custom_settings['dsf_configuration']['DSF_URL']['options'] = $dsf_api_url;
+                                $product_controls_custom_settings['dsf_configuration']['DSF_USERNAME']['options'] = $dsf_api_username;
+                                $product_controls_custom_settings['dsf_configuration']['DSF_PASSWORD']['options'] = $dsf_api_password;
+                                $product_controls_custom_settings['abuse_configuration']['ABUSE_URL']['options'] = $abuse_api_url;
+                                $product_controls_custom_settings['abuse_configuration']['ABUSE_USERNAME']['options'] = $abuse_api_username;
+                                $product_controls_custom_settings['abuse_configuration']['ABUSE_PASSWORD']['options'] = $abuse_api_password;
+
+
+
+
+                                //update default_mvno_admin
+
+                                $dynamicAdminSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='$admin_product_id'";
+                                $dynamicAdminSettings_res = $db->select1DB($dynamicAdminSettings);
+                                //$dynamicAdminSettings_row = mysql_fetch_assoc($dynamicAdminSettings_res);
+
+
+                                $product_admin_custom_settings = json_decode($dynamicAdminSettings_res['settings'], true);
+                                $product_admin_custom_settings['general']['LOGIN_SIGN']['access_method'] = $mno_short_name;
+                                $product_admin_custom_settings = json_encode($product_admin_custom_settings);
+
+                                //$product_admin_custom_settings = $dynamicAdminSettings_row['settings'];
+
+                                /* $settings_var = array(
+                                    $prev_short_name => $mno_short_name
+                                );
+
+                                $product_admin_custom_settings = mysql_real_escape_string(strtr($product_admin_custom_settings, $settings_var));*/
+
+
+                                $query6 = "UPDATE `admin_product_controls_custom` SET `settings` = '$product_admin_custom_settings' WHERE `product_id` = '$admin_product_id' ";
+
+                                //update default_mvno_admin
+
+                                $dynamicMvnoSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='$mvno_product_id'";
+                                $dynamicMvnoSettings_res = $db->select1DB($dynamicMvnoSettings);
+                                //$dynamicMvnoSettings_row = mysql_fetch_assoc($dynamicMvnoSettings_res);
+                                $product_mvno_custom_settings = $dynamicMvnoSettings_res['settings'];
+                                if ($mnoAccType == 'Factory_Manager') {
+                                $product_mvno_custom_settings_default = $db->getValueAsf("SELECT `settings` as f FROM `admin_product_controls_custom` WHERE `product_id`='factory_manager_default_mvno'");
+                                }else{
+                                $product_mvno_custom_settings_default = $db->getValueAsf("SELECT `settings` as f FROM `admin_product_controls_custom` WHERE `product_id`='default_mvno'");
+                                }
+                                //$data_json=$value['settings'];
+                                $data_array = json_decode($product_mvno_custom_settings, true);
+                                //print_r($product_mvno_custom_settings_default);
+                                if ($edit_account == 1) {
+                                    $data_array = json_decode($dynamicMvnoSettings_res, true);
+                                }
+                                if (in_array('CAMPAIGN_MODULE', $featurearr)) {
+                                    $allowed_page = $data_array['general']['ALLOWED_PAGE']['options'];
+                                    $parent_product_code = $data_array['general']['PARENT_PRODUCT_CODE']['options'];
+                                    $campaign_page = json_decode($package_functions->getOptions('CAMPAIGN_MODULE', $parent_product_code), true);
+                                    foreach ($campaign_page as $value) {
+                                        if (!in_array($value, $allowed_page)) {
+                                            array_push($allowed_page, $value);
+                                        }
+                                    }
+
+                                    /*if (!in_array('campaign', $allowed_page)) {
+                                    array_push($allowed_page, 'campaign');
+                                }
+                                if (!in_array('reports', $allowed_page)) {
+                                    array_push($allowed_page, 'reports');
+                                }*/
+                                    $data_array['general']['ALLOWED_PAGE']['options'] = $allowed_page;
+                                    $data_array['general']['CAMPAIGN_OFF_ON']['options'] = 'ON';
+                                    $final_array = json_encode($data_array);
+
+
+                                    if (!in_array('CAMP_DEFAULT', $operator_allowed_tab)) {
+                                        array_push($operator_allowed_tab, 'CAMP_DEFAULT');
+                                    }
+                                    //print_r($operator_allowed_tab);
+                                    $product_controls_custom_settings['general']['ALLOWED_TAB']['options'] = $operator_allowed_tab;
+                                } else {
+                                    $operator_allowed_tab = array_diff($operator_allowed_tab, array('CAMP_DEFAULT'));
+                                    $product_controls_custom_settings['general']['ALLOWED_TAB']['options'] = $operator_allowed_tab;
+                                    if ($edit_account == 1) {
+                                        $data_array_default = json_decode($dynamicMvnoSettings_res, true);
+                                    } else {
+                                        $data_array_default = json_decode($product_mvno_custom_settings_default, true);
+                                    }
+
+                                    $allowed_page = $data_array_default['general']['ALLOWED_PAGE']['options'];;
+
+                                    $data_array['general']['ALLOWED_PAGE']['options'] = $allowed_page;
+                                    $data_array['general']['CAMPAIGN_OFF_ON']['options'] = 'OFF';
+                                    $final_array = json_encode($data_array);
+
+                                    //$final_array=$product_mvno_custom_settings_default;
+
+                                }
+
+                                //print_r($final_array); $db->escapeDB(strtr($product_mvno_custom_settings, $settings_vars_mvno));
+                                $settings_vars_mvno_new = array(
+                                    '{active_template}' => $get_dynamic_product_id
+                                );
+
+                                $final_array = $db->escapeDB(strtr($final_array, $settings_vars_mvno_new));
+                                $query22 = "UPDATE `admin_product_controls_custom` SET `settings` = '$final_array' WHERE `product_id` = '$mvno_product_id' ";
+                                $ex_mvno = $db->execDB($query22);
+                                $product_controls_custom_settings = json_encode($product_controls_custom_settings);
+                                $query2 = "UPDATE `admin_product_controls_custom` SET `settings` = '$product_controls_custom_settings' WHERE `product_id` = '$get_dynamic_product_id' ";
+
+
+                                //update default_mvno_admin
+
+                                $new_theme_data = array();
+                                $new_contenteditable_arr = array();
+                                $new_upload_arr = array();
+                                $new_mac_arr = array();
+                                $new_color_arr = array();
+
+                                $cont_value['element'] = 'welcome_txt';
+                                $cont_value['value'] = 'Welcome';
+
+                                $cont_value1['element'] = 'registration_btn';
+                                $cont_value1['value'] = 'Register';
+
+                                array_push($new_contenteditable_arr, $cont_value);
+                                array_push($new_contenteditable_arr, $cont_value1);
+
+
+                                $up_value['element'] = '.login_screen_logo';
+                                $up_value['type'] = 'theme_img_logo';
+                                $up_value['folder'] = 'logo';
+                                $up_value['value'] = 'default_arris_vtenant_login.jpg';
+
+                                $up_value1['element'] = '.login_img';
+                                $up_value1['type'] = 'background';
+                                $up_value1['folder'] = 'logo';
+                                $up_value1['value'] = 'default_arris_vtenant_top.png';
+
+                                $up_value2['element'] = '.index-body';
+                                $up_value2['type'] = 'background';
+                                $up_value2['folder'] = 'logo';
+                                $up_value2['maxSize'] = '1000';
+                                $up_value2['value'] = 'default_arris_vtenant_login.jpg';
+
+                                array_push($new_upload_arr, $up_value);
+                                array_push($new_upload_arr, $up_value1);
+                                array_push($new_upload_arr, $up_value2);
+
+
+                                $mac_value['element'] = '.contact-us-txt';
+                                $mac_value['value'] = '<p style=\"text-align: center;\"><strong>Need help? Call ' . $mno_support_number . '</strong></p>';
+
+                                array_push($new_mac_arr, $mac_value);
+
+                                $new_theme_data['contenteditable_arr'] = $new_contenteditable_arr;
+                                $new_theme_data['upload_arr'] = $new_upload_arr;
+                                $new_theme_data['mce_arr'] = $new_mac_arr;
+                                $new_theme_data['color_arr'] = $new_color_arr;
+                                $new_theme_data = $db->escapeDB(json_encode($new_theme_data));
+
+                                $default_campaign_id = $db->getValueAsf("SELECT `default_campaign_id` AS f FROM `exp_mno` WHERE `mno_id` = '$edit_mno_id'");
+
+                                $query3 = "UPDATE `admin_product_controls` SET `product_code` = '$mno_short_name' WHERE `product_code` = '$prev_short_name';";
+
+                                $get_logins_q = "SELECT `settings_value` FROM `exp_settings` WHERE `settings_code`='ALLOWED_LOGIN_PROFILES'";
+                                $get_logins = $db->select1DB($get_logins_q);
+                                //$logins_res = mysql_fetch_assoc($get_logins);
+
+
+                                $settings_val = str_replace($prev_short_name, $mno_short_name, $get_logins['settings_value']);
+
+                                $query5 = "UPDATE `exp_settings` SET `settings_value` = '$settings_val' WHERE `settings_code` = 'ALLOWED_LOGIN_PROFILES' ";
+
+
+                                $get_up_texts_q = "SELECT `text_details`,`text_code`,`title` FROM `exp_texts` WHERE `distributor`='$edit_mno_id'";
+                                $get_up_texts = $db->selectDB($get_up_texts_q);
+
+                                $text_replace = array($mno_account_name, $mno_support_number, $mno_support_email);
+                                $text_search = array($mno_account_name_prev, $mno_support_number_prev, $mno_support_email_prev);
+
+                                foreach ($get_up_texts['data'] as $get_texts_row) {
+
+                                    $up_text_code = $get_texts_row['text_code'];
+                                    $text_details_new = str_replace($text_search, $text_replace, $get_texts_row['text_details']);
+                                    $text_title_new = str_replace(ucfirst($mno_account_name_prev), ucfirst($mno_account_name), $get_texts_row['title']);
+
+                                    $query4 = "UPDATE `exp_texts` SET `title` = '$text_title_new', `text_details` = '$text_details_new' WHERE `distributor` = '$edit_mno_id' AND `text_code` = '$up_text_code'";
+
+                                    $update_texts = $db->execDB($query4);
+                                }
+
+                                $o_url = 'image_upload/logo/' . $image_logo_name;
+                                $t_url = $base_folder . '/template/' . $get_dynamic_product_id . '/gallery/logo/default_footer.png';
+                                copy($o_url, $t_url);
+
+                                $o_url1 = 'image_upload/welcome/' . $image_favicon_name;
+                                $t_url1 = $base_folder . '/template/' . $get_dynamic_product_id . '/img/DYNAMIC-favicon.ico';
+                                copy($o_url1, $t_url1);
+                            }
+                        } else {
+                            $query0 = "UPDATE `exp_mno` SET `full_name`='$mno_full_name',`email`='$mno_email',`mno_type`='$mnoAccType' WHERE `user_distributor`='$edit_mno_id' AND `access_role`='admin'";
+
+                            $query1 = "UPDATE
+              `admin_users`
+            SET
+              `full_name` = '$mno_full_name',
+              `email` = '$mno_email',
+              `mobile` = '$mno_mobile_1',
+              `timezone` = '$mno_time_zone'
+            WHERE `user_distributor` = '$edit_mno_id' ORDER BY id LIMIT 1";
+
+                            if ($mno_sys_package == 'DYNAMIC_MNO_001' && $isDynamic == 'yes') {
+                                $dynamicSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='$get_dynamic_product_id'";
+                                $dynamicSettings_res = $db->select1DB($dynamicSettings);
+                                //$dynamicSettings_row = mysql_fetch_assoc($dynamicSettings_res);
+                                
+                                $product_controls_custom_settings = json_decode($dynamicSettings_res['settings'], true);
+
+                                $admin_product_id = $product_controls_custom_settings['general']['MVNO_ADMIN_PRODUCT']['options'];
+                                $mvno_product_id = $product_controls_custom_settings['general']['MVNO_PRODUCTS']['options'];
+                                $operator_allowed_tab = $product_controls_custom_settings['general']['ALLOWED_TAB']['options'];
+                                $product_controls_custom_settings['general']['LOGIN_SIGN']['options'] = $mno_short_name;
+                                $product_controls_custom_settings['general']['LOGIN_SIGN']['access_method'] = $mno_short_name;
+                                $product_controls_custom_settings['general']['SUPPORT_NUMBER']['options'] = $mno_support_number;
+                                $product_controls_custom_settings['general']['SUPPORT_EMAIL']['options'] = $mno_support_email;
+                                $product_controls_custom_settings['general']['VTENANT_MODULE']['options'] = $vtenant_module;
+                                $product_controls_custom_settings['branding']['ABOUT_URL']['options'] = $mno_about_url;
+                                $product_controls_custom_settings['branding']['PRIVACY_URL']['options'] = $mno_privacy_url;
+                                $product_controls_custom_settings['branding']['TOC_URL']['options'] = $mno_toc_url;
+                                $product_controls_custom_settings['branding']['PRIMARY_COLOR']['options'] = $mno_primary_color;
+                                $product_controls_custom_settings['branding']['SECONDARY_COLOR']['options'] = $mno_secondary_color;
+                                $product_controls_custom_settings['branding']['LOGO_IMAGE_URL']['options'] = $mno_logo_image_url;
+                                $product_controls_custom_settings['branding']['EMAIL_IMAGE_URL']['options'] = $mno_email_image_url;
+                                $product_controls_custom_settings['branding']['FAVICON_IMAGE_URL']['options'] = $mno_favicon_image_url;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_USERNAME']['options'] = $aaa_api_username;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_PASSWORD']['options'] = $aaa_api_password;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_TENANT']['options'] = $aaa_tenant;
+                                $product_controls_custom_settings['aaa_configuration']['AAA_PRODUCT_OWNER']['options'] = $aaa_product_owner;
+                                $product_controls_custom_settings['dsf_configuration']['DSF_URL']['options'] = $dsf_api_url;
+                                $product_controls_custom_settings['dsf_configuration']['DSF_USERNAME']['options'] = $dsf_api_username;
+                                $product_controls_custom_settings['dsf_configuration']['DSF_PASSWORD']['options'] = $dsf_api_password;
+                                $product_controls_custom_settings['abuse_configuration']['ABUSE_URL']['options'] = $abuse_api_url;
+                                $product_controls_custom_settings['abuse_configuration']['ABUSE_USERNAME']['options'] = $abuse_api_username;
+                                $product_controls_custom_settings['abuse_configuration']['ABUSE_PASSWORD']['options'] = $abuse_api_password;
+
+
+                                $product_controls_custom_settings = json_encode($product_controls_custom_settings);
+
+                                $query2 = "UPDATE `admin_product_controls_custom` SET `settings` = '$product_controls_custom_settings' WHERE `product_id` = '$get_dynamic_product_id' ";
+
+
+                                //update default_mvno_admin
+
+                                $dynamicAdminSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='$admin_product_id'";
+                                $dynamicAdminSettings_res = $db->select1DB($dynamicAdminSettings);
+                                //$dynamicAdminSettings_row = mysql_fetch_assoc($dynamicAdminSettings_res);
+                                //$product_admin_custom_settings = $dynamicAdminSettings_row['settings'];
+
+                                $product_admin_custom_settings = json_decode($dynamicAdminSettings_res['settings'], true);
+                                $product_admin_custom_settings['general']['LOGIN_SIGN']['access_method'] = $mno_short_name;
+                                $product_admin_custom_settings = json_encode($product_admin_custom_settings);
+
+                                /* $settings_var = array(
+                                    $prev_short_name => $mno_short_name
+                                );
+
+                                $product_admin_custom_settings = mysql_real_escape_string(strtr($product_admin_custom_settings, $settings_var));*/
+
+                                $query6 = "UPDATE `admin_product_controls_custom` SET `settings` = '$product_admin_custom_settings' WHERE `product_id` = '$admin_product_id' ";
+
+                                $query7 = "UPDATE `mdu_themes` SET `login_screen_logo` = '$image_logo_name',`favcon` = '$image_favicon_name' WHERE `distributor_code` = '$edit_mno_id' AND `property_id` IS NULL;";
+
+
+                                //update default_mvno_admin
+
+                                $query3 = "UPDATE `admin_product_controls` SET `product_code` = '$mno_short_name' WHERE `product_code` = '$prev_short_name'";
+
+                                $get_logins_q = "SELECT `settings_value` FROM `exp_settings` WHERE `settings_code`='ALLOWED_LOGIN_PROFILES'";
+                                $get_logins = $db->select1DB($get_logins_q);
+                                //$logins_res = mysql_fetch_assoc($get_logins);
+
+
+                                $settings_val = str_replace($prev_short_name, $mno_short_name, $get_logins['settings_value']);
+
+                                $query5 = "UPDATE `exp_settings` SET `settings_value` = '$settings_val' WHERE `settings_code` = 'ALLOWED_LOGIN_PROFILES' ";
+
+
+                                $get_up_texts_q = "SELECT `text_details`,`text_code`,`title` FROM `exp_texts` WHERE `distributor`='$edit_mno_id'";
+                                $get_up_texts = $db->selectDB($get_up_texts_q);
+
+                                $text_replace = array($mno_account_name, $mno_support_number, $mno_support_email);
+                                $text_search = array($mno_account_name_prev, $mno_support_number_prev, $mno_support_email_prev);
+
+
+                                foreach ($get_up_texts['data'] as $get_texts_row) {
+
+                                    $up_text_code = $get_texts_row['text_code'];
+                                    $text_details_new = str_replace($text_search, $text_replace, $get_texts_row['text_details']);
+                                    $text_title_new = str_replace(ucfirst($mno_account_name_prev), ucfirst($mno_account_name), $get_texts_row['title']);
+
+                                    $query4 = "UPDATE `exp_texts` SET `title` = '$text_title_new', `text_details` = '$text_details_new' WHERE `distributor` = '$edit_mno_id' AND `text_code` = '$up_text_code'";
+
+                                    $update_texts = $db->execDB($query4);
+                                }
+
+                                $o_url = 'image_upload/logo/' . $image_logo_name;
+                                $t_url = $base_folder . '/template/' . $get_dynamic_product_id . '/gallery/logo/default_footer.png';
+                                copy($o_url, $t_url);
+
+                                $o_url1 = 'image_upload/welcome/' . $image_favicon_name;
+                                $t_url1 = $base_folder . '/template/' . $get_dynamic_product_id . '/img/DYNAMIC-favicon.ico';
+
+                                copy($o_url1, $t_url1);
+                            }
+                        }
+
+                        $lastfeatures = json_decode($featurearrold, true);
+
+
+                        $ex0 = $db->execDB($query0);
+                        //$ex0 = '';
+                        //////////////////////////////////////////////////////////////////////////////////////////////////
+
+                        //if (strlen($ex0) == 1) {
+                        if ($ex0 === true) {
+                            $ex1 = $db->execDB($query1);
+
+                            $query0_del = "DELETE FROM exp_mno_ap_controller WHERE `mno_id`='$edit_mno_id'";
+                            $ex0del = $db->execDB($query0_del);
+
+                            foreach ($_POST['AP_cont'] as $selectedOptionap) {
+                                $ap = $selectedOptionap;
+                                $query_01 = "INSERT INTO `exp_mno_ap_controller` (`mno_id`, `ap_controller`, `create_user`, `create_date`)
+                VALUES ('$edit_mno_id', '$ap', '$user_name',NOW())";
+                                $ex01 = $db->execDB($query_01);
+                            }
+
+                            $get_oraganization_q = "SELECT * FROM mdu_mno_organizations WHERE `mno`='$edit_mno_id'";
+                            $get_oraganization = $db->selectDB($get_oraganization_q);
+                            foreach ($get_oraganization['data'] as $get_org_row) {
+                                $vt_property_id_mno = $get_texts_row['property_id'];
+                                $query0_org = "UPDATE `mdu_organizations` SET `mno_system_package` = '$mno_sys_package' WHERE `property_id` = '$vt_property_id_mno'";
+                                $exquery0_org = $db->execDB($query0_org);
+                            }
+
+
+                            $query0_del = "DELETE FROM mdu_mno_organizations WHERE `mno`='$edit_mno_id'";
+                            $ex0del = $db->execDB($query0_del);
+
+                            foreach ($_POST['vt_group'] as $vtenants) {
+                                $str = "INSERT INTO mdu_mno_organizations(`mno`,`property_id`,`create_user`,`create_date`) VALUES ('%s','%s','%s',NOW())";
+                                $sql = sprintf($str, $edit_mno_id, $vtenants, $user_name);
+
+                                $ex01 = $db->execDB($sql);
+                            }
+
+                            if ($mno_sys_package == 'DYNAMIC_MNO_001' && $isDynamic == 'yes') {
+                                $ex2 = $db->execDB($query2);
+                                $ex3 = $db->execDB($query3);
+                                $ex5 = $db->execDB($query5);
+                                $ex6 = $db->execDB($query6);
+                                $ex6 = $db->execDB($query7);
+                                $ex6 = $db->execDB($query7_1);
+                            }
+
+                            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'3002', $message_functions->showMessage('operator_update_success'), '');
+                            $_SESSION['msg7'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_update_success') . "</strong></div>";
+                        } else {
+                            $db->userErrorLog('2001', $user_name, 'script - ' . $script);
+                            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2001', $message_functions->showMessage('operator_update_failed', '2001'), '');
+                            $_SESSION['msg7'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_update_failed', '2001') . "</strong></div>";
+                        }
+
+
+                        //******************************************************************
+
+
+                    } else {
+                        
+                        ////////////////////////////////////////////////////////////////////////////
+                        if ($mno_form_type == 'advanced_menu') { //advanced_menu
+                            $query0 = "INSERT INTO `exp_mno` (
+                          `api_prefix`,
+                          `mno_id`,
+                          `unique_id`,
+                          `mno_description`,
+                          `bussiness_address1`,
+                          `bussiness_address2`,
+                          `bussiness_address3`,
+                          `features`,
+                          `country`,
+                          `state_region`,
+                          `zip`,
+                          `phone1`,
+                          `phone2`,
+                          `phone3`,
+                          `timezones`,
+                          `is_enable`,
+                          `create_date`,
+                          create_user,
+                          `system_package`,
+                          `mno_type`,
+                          `aaa_data`,
+                          `default_campaign_id`)
+                        VALUES
+                          ( $mno_api_prefix,
+                           '$mno_id',
+                            '$unique_id',
+                            '$mno_account_name',
+                            '$mno_address_1',
+                            '$mno_address_2',
+                            '$mno_address_3',
+                            '$feature_json',
+                            '$mno_country',
+                            '$mno_state',
+                            '$mno_zip_code',
+                            '$mno_mobile_1',
+                            '$mno_mobile_2',
+                            '$mno_mobile_3',
+                            '$mno_time_zone',
+                            '2',
+                            NOW(),
+                            '$login_user_name'
+                            ,'$mno_system_package',
+                            '$mnoAccType',
+                            '$aaa_data_op',
+                            '$camphaign_id')";
+                        } else {
+                            $query0 = "INSERT INTO `exp_mno` (`system_package`,`mno_id`, `mno_description`, `mno_type`, `is_enable`,create_user, `create_date`)
+        VALUES ('$mno_sys_package','$mno_id', '$mno_account_name','$mnoAccType','0','$login_user_name', NOW())";
+                        }
+                        //echo $query0;
+
+
+                        $ex0 = $db->execDB($query0);
+
+                        if ($ex0 === true) {
+                            foreach ($featurearr as $value) {
+                                $db->changeFeature(new FeatureChange($value, 'Activated', $mno_id, $user_type, ''));
+                            }
+
+                            foreach ($_POST['AP_cont'] as $selectedOptionap) {}
+                            foreach ($_POST['vt_group'] as $vtgroup) {
+                                $query_01 = "INSERT INTO `mdu_mno_organizations` (`mno`, `property_id`, `create_user`, `create_date`)
+                VALUES ('$mno_id', '$vtgroup', '$user_name',NOW())";
+                                $ex01 = $db->execDB($query_01);
+
+                                $query0_org = "UPDATE `mdu_organizations` SET `mno_system_package` = '$mno_sys_package' WHERE `property_id` = '$vtgroup'";
+                                $exquery0_org = $db->execDB($query0_org);
+                            }
+
+
+                            $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
+            VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$mno_user_type', '$mno_id', '$mno_full_name', '$mno_email', '$mno_mobile_1', '$mno_time_zone', '2','$login_user_name', NOW(), '$user_type')";
+                            $ex0 = $db->execDB($query0);
+
+
+                            $to = $mno_email;
+                            $from = strip_tags($db->setVal("email", $mno_id));
+                            if (empty($from)) {
+                                $from = strip_tags($db->setVal("email", "ADMIN"));
+                            }
+
+                            $title = $db->setVal("short_title", "ADMIN");
+
+
+                            $link = $db->getSystemURL('login', $package_functions->getSectionType("LOGIN_SIGN", $mno_sys_package));
+
+                            if ($mno_sys_package == 'DYNAMIC_MNO_001' && $isDynamic == 'yes') {
+
+
+                                $link = $db->getSystemURL('login', $mno_short_name);
+                            }
+
+                            $email_content = $db->getEmailTemplate('MAIL', $system_package, 'ADMIN');
+
+                            $a = $email_content[0]['text_details'];
+
+                            $subject = $email_content[0]['title'];
+
+                            $vars = array(
+
+                                '{$user_full_name}' => $mno_full_name,
+                                '{$short_name}' => $title,
+                                '{$account_type}' => 'MNO',
+                                '{$user_name}' => $new_user_name,
+                                '{$password}' => $password,
+                                '{$link}' => $link
+                            );
+
+                            $message_full = strtr($a, $vars);
+                            //$message = mysql_escape_string($message_full);
+                            $message = $db->escapeDB($message_full);
+
+                            $qu = "INSERT INTO `admin_invitation_email` (`to`,`subject`,`message`,`distributor`,`user_name`,`password_re`, `create_date`)
+                    VALUES ('$to', '$subject', '$message', '$mno_id', '$new_user_name','$password', now())";
+                            $rrr = $db->execDB($qu);
+
+                            $rrr1 = $db->execDB($qu1);
+
+                            $email_send_method = $package_functions->getSectionType("EMAIL_SYSTEM", $system_package);
+                            include_once 'src/email/' . $email_send_method . '/index.php';
+
+                           $cunst_var = array();
+                            
+                            $cunst_var['system_package'] = $mno_sys_package;
+                            $cunst_var['mno_package'] = $system_package;
+                            $cunst_var['mno_id'] = $mno_id;
+                            $cunst_var['verticle'] = $verticle;
+
+
+                            $mail_obj = new email($cunst_var);
+                            $mail_obj->mno_system_package = $system_package;
+
+                            $mail_sent = $mail_obj->sendEmail($from, $to, $subject, $message_full, '', $title);
+
+                            
+                            if (isset($mno_sys_package)) {
+
+                                // echo '1';
+
+                                $access_role_id = $mno_id . "_support";
+                                $access_role_name = $mno_id . " Support";
+
+
+                                if ($package_functions->getSectionType("SUPPORT_AVAILABLE", $mno_sys_package, 'MNO') == '1') {
+
+                                    // echo '2';
+
+
+                                    $query0 = "INSERT INTO `admin_access_roles` (`access_role`,`description`,`distributor`,`create_user`,`create_date`)
+                    VALUES ('$access_role_id', 'Support', '$mno_id', '$user_name',now())";
+                                    $result0 = $db->execDB($query0);
+
+
+                                    $sys_pack = $mno_sys_package;
+
+                                    $gt_support_optioncode = $package_functions->getOptions('SUPPORT_AVAILABLE', $sys_pack, 'MNO');
+
+                                    $pieces1 = explode(",", $gt_support_optioncode);
+
+
+                                    //print_r($pieces1);
+
+                                    $len1 = count($pieces1);
+
+                                    for ($i = 0; $i < $len1; $i++) {
+
+
+                                        $query1 = "INSERT INTO `admin_access_roles_modules`
+                        (`access_role`, `module_name`, `distributor` , `create_user`, `create_date`)
+                        VALUES ('$access_role_id', '$pieces1[$i]', '$mno_id', '$user_name', now())";
+                                        $result1 = $db->execDB($query1);
+                                    }
+                                }
+
+                                if ($mno_sys_package == 'DYNAMIC_MNO_001' && $isDynamic == 'yes') {
+
+                                    //$data_json=$value['settings'];
+                                    $data_array = json_decode($product_mvno_custom_settings, true);
+                                    //print_r($product_controls_custom_settings);
+                                    $data_array_opt = json_decode($product_controls_custom_settings, true);
+                                    $network_pro = $data_array_opt['general']['NETWORK_PROFILE']['options'][$aaa_api_type];
+                                    $vt_network_pro = $data_array_opt['general']['VTENANT_NETWORK_PROFILE']['options'][$aaa_api_type];
+                                    $data_array_opt['general']['NETWORK_PROFILE']['options'] = $network_pro;
+                                    $data_array_opt['general']['VTENANT_NETWORK_PROFILE']['options'] = $vt_network_pro;
+                                    $data_array_opt['aaa_configuration']['AAA_DATA']['options'] = $aaa_data;
+                                    if ($aaa_api_type == 'ALE53') {
+                                    } else {
+                                    }
+                                    //print_r($data_array_opt);
+                                    if (in_array('CAMPAIGN_MODULE', $featurearr)) {
+                                        $allowed_page = $data_array['general']['ALLOWED_PAGE']['options'];
+                                        $operator_allowed_tab = $data_array_opt['general']['ALLOWED_TAB']['options'];
+                                        $parent_product_code = $data_array['general']['PARENT_PRODUCT_CODE']['options'];
+                                        $campaign_page = json_decode($package_functions->getOptions('CAMPAIGN_MODULE', $parent_product_code), true);
+                                        foreach ($campaign_page as $value) {
+                                            if (!in_array($value, $allowed_page)) {
+                                                array_push($allowed_page, $value);
+                                            }
+                                        }
+
+                                        if (!empty($data_array)) {
+                                            $data_array['general']['ALLOWED_PAGE']['options'] = $allowed_page;
+                                            $data_array['general']['CAMPAIGN_OFF_ON']['options'] = 'ON';
+                                            $final_array = json_encode($data_array);
+                                        } else {
+                                            $final_array = $product_mvno_custom_settings;
+                                        }
+                                        if (!in_array('CAMP_DEFAULT', $operator_allowed_tab)) {
+                                            array_push($operator_allowed_tab, 'CAMP_DEFAULT');
+                                        }
+                                        //print_r($operator_allowed_tab);
+                                        $data_array_opt['general']['ALLOWED_TAB']['options'] = $operator_allowed_tab;
+                                        
+                                    } else {
+                                        //$operator_allowed_tab=array_diff($operator_allowed_tab, array('CAMP_DEFAULT'));
+                                        //$product_controls_custom_settings['general']['ALLOWED_TAB']['options']=$operator_allowed_tab;
+                                        $final_array = $product_mvno_custom_settings;
+                                    }
+                                    $product_controls_custom_settings = json_encode($data_array_opt);
+                                    $product_mvno_custom_settings = $final_array;
+                                    $product_controls_custom_settings = $db->escapeDB($product_controls_custom_settings);
+
+                                    $get_texts_q = "SELECT * FROM `exp_texts` WHERE `distributor`='DYNAMIC_MNO_001'";
+                                    $get_texts = $db->selectDB($get_texts_q);
+
+                                    $text_replace = array($mno_account_name, $mno_support_number, $mno_support_email);
+                                    $text_search = array("[OPERATOR]", "[OPERATOR_NUMBER]", "[OPERATOR_EMAIL]");
+
+
+                                    foreach ($get_texts['data'] as $get_texts_row) {
+
+                                        $text_code_new = $get_texts_row['text_code'];
+
+                                        $text_title_new = str_replace("[OPERATOR]", ucfirst($mno_account_name), $get_texts_row['title']);
+                                        $text_veritcal_new = $get_texts_row['vertical'];
+                                        $text_updated_by_new = $get_texts_row['updated_by'];
+
+                                        $text_details_new = str_replace($text_search, $text_replace, $get_texts_row['text_details']);
+
+
+
+                                        $insert_texts_q = "INSERT INTO `exp_texts` (`text_code`,`title`,`text_details`,`vertical`,`distributor`,`create_date`, `updated_by`)
+                        VALUES ('$text_code_new', '$text_title_new', '$text_details_new', '$text_veritcal_new','$mno_id', now(), '$text_updated_by_new')";
+
+                                        $insert_texts = $db->execDB($insert_texts_q);
+                                    }
+
+                                    $get_logins_q = "SELECT `settings_value` FROM `exp_settings` WHERE `settings_code`='ALLOWED_LOGIN_PROFILES'";
+                                    $get_logins = $db->select1DB($get_logins_q);
+                                    //$logins_res = mysql_fetch_assoc($get_logins);
+
+                                    $login_sign_list = json_decode($get_logins['settings_value'], true);
+                                    $login_sign_list[$mno_short_name] = "1";
+                                    $settings_val = json_encode($login_sign_list);
+
+
+                                    $login_q = "UPDATE `exp_settings` SET `settings_value` = '$settings_val' WHERE `settings_code` = 'ALLOWED_LOGIN_PROFILES' ";
+
+                                    $result_login = $db->execDB($login_q);
+
+                                    //insert into admin_product_controls_custom
+                                    $adminProductControlsStatus ='1';
+                                    if ($mnoAccType == 'Factory_Manager') {
+                                    $adminProductControlsStatus ='2';
+                                    }
+                                    
+                                    $query_custom1 = "INSERT INTO `admin_product_controls_custom` (`product_id`, `product_name`, `product_description` , `settings`, `status`,`create_user`,`create_date`) VALUES ('$dynamic_mvno_id', 'MVNO', 'Dynamic MVNO Profile', '$product_mvno_custom_settings','$adminProductControlsStatus','admin', now())";
+
+                                    $result_custom1 = $db->execDB($query_custom1);
+
+
+                                    $query_custom2 = "INSERT INTO `admin_product_controls_custom` (`product_id`, `product_name`, `product_description` , `settings`, `status`,`create_user`,`create_date`) VALUES ('$dynamic_admin_id', 'MVNO Admin', 'Dynamic MVNO Admin Profile', '$product_admin_custom_settings','$adminProductControlsStatus','admin', now())";
+
+                                    $result_custom2 = $db->execDB($query_custom2);
+
+
+                                    $query_custom3 = "INSERT INTO `admin_product_controls_custom` (`product_id`, `product_name`, `product_description` , `settings`, `status`,`create_user`,`create_date`) VALUES ('$dynamic_product_id', 'Operator', 'Dynamic Profile', '$product_controls_custom_settings','$adminProductControlsStatus','admin', now())";
+
+                                    $result_custom3 = $db->execDB($query_custom3);
+
+
+                                    $insert_camp_q = "INSERT INTO `admin_product_controls` (`product_code`,`discription`,`feature_code`,`type`,`user_type`, `access_method`, `options`, `create_user`, `create_date`)
+                    VALUES ('$mno_short_name', 'layout description', 'CAMP_LAYOUT', 'option', 'ADMIN','DYNAMIC', '', 'admin', now())";
+
+                                    $insert_camp = $db->execDB($insert_camp_q);
+
+                                    $login_restrict_ar = array($dynamic_mvno_id, $dynamic_admin_id, $dynamic_product_id);
+                                    $login_restrict = implode(',', $login_restrict_ar);
+
+                                    $insert_login_q = "INSERT INTO `admin_product_controls` (`product_code`,`discription`,`feature_code`,`type`,`user_type`, `access_method`, `options`, `create_user`, `create_date`)
+                    VALUES ('$mno_short_name', 'Login Restriction', 'LOGIN_RESTRICTION', 'option', 'ADMIN','', '$login_restrict', 'admin', now())";
+
+                                    $insert_login = $db->execDB($insert_login_q);
+
+                                    $insert_prod_q = "INSERT INTO `admin_product_controls` (`product_code`,`discription`,`feature_code`,`type`,`user_type`, `access_method`, `options`, `create_user`, `create_date`)
+                    VALUES ('$mno_short_name', 'Operator product code', 'DEFAULT_PROFILE', 'option', 'ADMIN','', '$dynamic_product_id', 'admin', now())";
+
+                                    $insert_prod = $db->execDB($insert_prod_q);
+
+
+                                    $query_prod = "INSERT INTO `admin_product` (`product_name`, `discription` , `product_code`, `user_type`,`is_enable`,`create_user`,`create_date`) VALUES ('Dynamic Admin', 'Dynamic Admin', '$dynamic_admin_id', 'MVNO_ADMIN','1','admin', now())";
+
+                                    $result_prod = $db->execDB($query_prod);
+
+
+                                    $query_prod2 = "INSERT INTO `admin_product` (`product_name`, `discription` , `product_code`, `user_type`,`is_enable`,`create_user`,`create_date`) VALUES ('$mno_account_name', 'Dynamic user', '$dynamic_mvno_id', 'VENUE','1','admin', now())";
+
+                                    $result_prod2 = $db->execDB($query_prod2);
+
+                                    $db->createTemplate($base_folder . '/template/', $dynamic_product_id, $mno_account_name);
+                                    $o_url = 'image_upload/logo/' . $image_logo_name;
+                                    $t_url = $base_folder . '/template/' . $dynamic_product_id . '/gallery/logo/default_footer.png';
+                                    copy($o_url, $t_url);
+
+                                    $o_url1 = 'image_upload/welcome/' . $image_favicon_name;
+                                    $t_url1 = $base_folder . '/template/' . $dynamic_product_id . '/img/DYNAMIC-favicon.ico';
+                                    copy($o_url1, $t_url1);
+                                }
+                            }
+
+
+
+                            ///////////////////////////////////////////////
+                            $db->userLog($user_name, $script, 'Create Operator', '');
+                            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'', $message_functions->showMessage('operator_create_success'), '');
+
+                            $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_success') . "</strong></div>";
+                        } else {
+                            $db->userErrorLog('2001', $user_name, 'script - ' . $script);
+                            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2001', $message_functions->showMessage('operator_create_failed', '2001'), '');
+                            $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_failed', '2001') . "</strong></div>";
+                        }
+                    }
+                } //1
+
+                else { //1
+                    $db->userErrorLog('2009', $user_name, 'script - ' . $script);
+                    $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2001', $message_functions->showMessage('operator_create_failed', '2009'), '');
+                    $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_failed', '2009') . "</strong></div>";
+                } //1
+            } else {
+                $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_success') . "</strong></div>";
+            }
+        } //key validation
+
+        else {
+
+            $db->userErrorLog('2004', $user_name, 'script - ' . $script);
+
+            $sys_log->save(SysLog::FAC_PROPERTYACTION,SysLog::SAV_INFOMATION,'2004', $message_functions->showMessage('transection_fail', '2004'), '');
+
+            $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
+            header('Location: location.php');
+        }
+    }
 ?>
 <style>
 #live_camp .tablesaw-columntoggle-popup .btn-group > label {
