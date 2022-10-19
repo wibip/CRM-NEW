@@ -1617,6 +1617,117 @@ if (isset($_POST['submit_mno_form'])) { //6
             header('Location: operations.php');
         }
     }
+
+    if (isset($_POST['add_location_submit'])) {//5
+
+echo "string";
+        echo $_POST['business_name']; exit();
+
+        $create_location_btn_action = $_POST['btn_action'];
+
+
+        if ($_SESSION['FORM_SECRET'] == $_POST['form_secret5']) {
+
+                $update_id = $_POST['update_id'];
+                $provisioning_data = json_decode($db->getValueAsf("SELECT property_details as f FROM exp_provisioning_properties WHERE id='$update_id'"),true);
+                $parent_code = $_POST['business_id'];
+                $parent_ac_name = $_POST['business_name'];
+                $service_type = $_POST['service_type'];
+
+
+                $provisioning_setting = json_decode($db->getValueAsf("SELECT setting as f FROM exp_provisioning_setting WHERE id='$service_type'"),true);
+                $user_type1 = 'MVNO';
+
+                $icomme_number = $_POST['location_id'];
+
+                //  exit();/// need create vtenant icomme
+                $vt_icomme_number = $_POST['vt_location_id'];
+
+                $customer_type = trim($provisioning_setting['mvno_package']);
+                $parent_package = $provisioning_setting['parent_package'];
+                $guest_wlan_count = trim($provisioning_data['network_info']['Guest']['count']);
+                $pvt_wlan_count = trim($provisioning_data['network_info']['Private']['count']);
+                $gateway_type = trim($provisioning_setting['guest_gateway_type']);
+                $pr_gateway_type = trim($provisioning_setting['private_gateway_type']);
+                $business_type = trim($provisioning_setting['business_vertical']);
+                $location_name_old = trim($_POST['location_name_old']);
+                $dpsk_conroller = trim($provisioning_setting['admin_features']['controller']);
+                $dpsk_policies = trim($provisioning_setting['admin_features']['policie']);
+                $network_type = $provisioning_setting['package_type'];
+
+                 $category_mvnx = $_POST['category_mvnx'];
+
+                $dpsk_voucher = $db->escapeDB(trim($_POST['dpsk_voucher']));
+                $mno_first_name = $db->escapeDB(trim($_POST['mno_first_name']));
+                $mno_last_name = $db->escapeDB(trim($_POST['mno_last_name']));
+                $mvnx_full_name = $mno_first_name . ' ' . $mno_last_name;
+                $mvnx_email = trim($_POST['mno_email']);
+                $mvnx_address_1 = $db->escapeDB(trim($_POST['mno_address_1']));
+                $mvnx_address_2 = $db->escapeDB(trim($_POST['mno_address_2']));
+                $mvnx_address_3 = $db->escapeDB(trim($_POST['mno_address_3']));
+                $mvnx_mobile_1 = $db->escapeDB(trim($_POST['mno_mobile_1']));
+                $mvnx_mobile_2 = $db->escapeDB(trim($_POST['mno_mobile_2']));
+                $mvnx_mobile_3 = $db->escapeDB(trim($_POST['mno_mobile_3']));
+                $mvnx_country = $db->escapeDB(trim($_POST['mno_country']));
+                $mvnx_state = $db->escapeDB(trim($_POST['mno_state']));
+                $mvnx_zip_code = trim($_POST['mno_zip_code']);
+                $mvnx_time_zone = $_POST['mno_time_zone'];
+
+                $dtz = new DateTimeZone($mvnx_time_zone);
+
+                $time_in_sofia = new DateTime('now', $dtz);
+                $offset = $dtz->getOffset($time_in_sofia) / 3600;
+
+                $timezone_abbreviation = $time_in_sofia->format('T');
+                // get first 4 characters
+                $timezone_abbreviation = substr($timezone_abbreviation, 0, 4);
+
+
+                $offset1 = $dtz->getOffset($time_in_sofia);
+                $offset_val = CommonFunctions::formatOffset($offset1);
+
+                if ($offset_val == ' 00:00') {
+
+                    $offset_val = '+00:00';
+                }
+                $user_type1 = 'PROVISIONING';
+
+                if ($account_edit == '1') {
+                    $update_user = "UPDATE admin_users SET verification_number='$vt_icomme_number' WHERE user_distributor='$edit_distributor_code' AND `verification_number` IS NOT NULL";
+                                $db->execDB($update_user);
+
+                    $update_dis = "UPDATE exp_mno_distributor SET verification_number='$vt_icomme_number' WHERE distributor_code='$edit_distributor_code'";
+                    $db->execDB($update_dis);
+                }else{
+
+                    $br = $db->select1DB("SHOW TABLE STATUS LIKE 'exp_mno_distributor'");
+                    //$rowe = mysql_fetch_array($br);
+                    $auto_inc = $br['Auto_increment'];
+
+                    $mvnx_id = $user_type1 . $auto_inc;
+                    $distributor_code_new=$mvnx_id;
+
+                    $query01 = "INSERT INTO `exp_mno_distributor` (parent_id,`gateway_type`,`private_gateway_type`,`offset_val`,`wag_profile_enable`,`wag_profile`,`property_id`,`verification_number`,`network_type`,`ap_controller`,`system_package`,`zone_id`,`tunnel_type`,`private_tunnel_type`,`unique_id`,`distributor_code`, `distributor_name`,`bussiness_type`, `distributor_type`,`category`,num_of_ssid, `mno_id`, `parent_code`,`bussiness_address1`,`bussiness_address2`,`bussiness_address3`,`country`,`state_region`,`zip`,`phone1`,`phone2`,`phone3`,theme,site_title,time_zone,`language`,`advanced_features`,`is_enable`,`create_date`,`create_user`,`sw_controller`,`groupsid`,`default_campaign_id`,`dpsk_voucher`,`automation_enable`,`firewall_controller`,`organizations_id`,`wlan_count`)
+                    VALUES ('$parent_code','$gateway_type','$pr_gateway_type','$offset_val','$wag_enable','$wag_name','$zone_name','$icomme_number','$network_type','$ap_controller','$customer_type','$zoneid','$tunnel','$pr_tunnel','$unique_id','$mvnx_id', '$location_name', '$business_type','$user_type1','$category_mvnx','$mvnx_num_ssid', '$mno_id', '$user_distributor1','$mvnx_address_1','$mvnx_address_2','$mvnx_address_3','$mvnx_country','$mvnx_state','$mvnx_zip_code','$mvnx_mobile_1','$mvnx_mobile_2','$mvnx_mobile_3','$theme','$title','$tz','en','$advanced_features','0',now(),'$live_user_name','$sw_controller', '$groupsid','0','$dpsk_voucher','$automation_enable','$firewall_conroller','$firewall_organizations','$wlan_arr')";
+                    $ex0 = $db->execDB($query01);
+
+                    $query02 = "UPDATE `admin_users`
+                                        SET `user_name`='$dis_user_name',
+                                            `password`=CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))),
+                                            `access_role`='admin',
+                                            `user_type`='$user_type1',
+                                            `user_distributor`='$mvnx_id',
+                                            `full_name`='',
+                                            `email`='',
+                                            `mobile`='',
+                                            `is_enable`='1',
+                                            `create_date`=NOW(),
+                                            `create_user`='$user_name' WHERE `verification_number`='$icomme_number'";
+                    $db->execDB($query02);
+                }
+            
+        }
+    }
 ?>
 <style>
 #live_camp .tablesaw-columntoggle-popup .btn-group > label {
@@ -2641,7 +2752,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Operations</th>
-                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Controller</th>
+                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">API Profile</th>
                                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Edit</th>
                                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Remove</th>
                                                                 </tr>
@@ -2663,15 +2774,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                         $is_enable= $row[is_enable];
                                                                         $icomm_num=$row[verification_number];
 
-                                                                        $key_query01 = "SELECT ap_controller
-                                                                                    FROM exp_mno_ap_controller
-                                                                                    WHERE mno_id='$mno_id'";
-                                                                        $query_results01 = $db->selectDB($key_query01);
-                                                                        $ap_c="";
-                                                                        foreach ($query_results01 as $row1) {
-                                                                            $apc=$row1[ap_controller];
-                                                                            $ap_c.=$apc.',';
-                                                                        }
+                                                                        
                                                                         echo '<tr>
                                                                         <td> '.$mno_description.' </td>
                                                                         <td> '.trim($ap_c, ",").' </td>	';
@@ -2940,7 +3043,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                     <table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
                                                         <thead>
                                                             <tr>
-                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Business ID</th>
                                                                 <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Customer Account#
                                                                 </th>
                                                                 <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">MAC</th>
@@ -2954,9 +3056,9 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                         </thead>
                                                         <tbody>
                                                         <?php
-                                                            $key_query = "SELECT l.serial,l.model, l.id ,d.`ap_code`,d.`distributor_code`,l.`mac_address`,l.`create_date`,a.`distributor_name`,a.`verification_number`
-                                                                                                                FROM `exp_mno_distributor` a LEFT JOIN `exp_mno_distributor_aps` d  ON a.`distributor_code`=d.`distributor_code` LEFT JOIN `exp_locations_ap` l ON d.`ap_code`= l.`ap_code`
-                                                                                                                WHERE a.parent_id='$view_loc_code' GROUP BY d.`ap_code`,a.verification_number";
+                                                        
+                                                            $key_query = "SELECT d.`id` ,d.`distributor_code`,u.`verification_number`,d.`distributor_name`
+FROM `exp_mno_distributor` d LEFT JOIN `admin_users` u  ON u.`verification_number`=d.`verification_number` WHERE d.mno_id='$user_distributor' GROUP BY d.verification_number";
 
                                                             $query_results = $db->selectDB($key_query);
                                                             foreach ($query_results['data'] AS $row) {
