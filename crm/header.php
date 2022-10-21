@@ -5,9 +5,7 @@ header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
 header("Pragma: no-cache"); // HTTP 1.0.
 header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 
-
 $load_login_design = $_SESSION['logout_design'];
-
 
 ////////////////////////////
 
@@ -22,8 +20,7 @@ $input = '../install';
 $out = is_dir($input);
 $file = 'g54Hpz.act';
 $fileOut = file_exists($file);
-//var_dump($fileOut);
-//exit();
+
 if (!$fileOut || $out) {
 	echo "<h2> This product is not activate or not correctly installed... </h2>";
 	exit();
@@ -36,9 +33,6 @@ if (!$fileOut || $out) {
 <script type="text/javascript" src="js/jquery.min.js"></script>
 
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
-
-
-
 
 <!--[if gte IE 8]>
 <style type="text/css">
@@ -136,8 +130,6 @@ if (!$fileOut || $out) {
 			/*network.php*/
 			margin-left: 10px;
 		}
-
-
 	}
 
 	/*network_pr.php*/
@@ -148,7 +140,6 @@ if (!$fileOut || $out) {
 </style>
 
 <?php
-
 // GET PAGE SCRIPT
 $script = basename($_SERVER['PHP_SELF'], ".php");
 
@@ -167,30 +158,6 @@ $data_secret = $db_class1->setVal('data_secret', 'ADMIN');
 
 $package_functions = new package_functions();
 $app = new app_functions();
-//cox theme
-// $camp_layout = trim($db_class1->setVal('camp_layout','ADMIN'),"/");
-// require_once 'layout/'.$camp_layout.'/index.php';
-
-// $user_name = $_SESSION['user_name'];
-
-// 		$user_distributor=$db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
-
-// 		$system_package=$db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-// 		if (empty($system_package)) {
-// 			$system_package=$db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
-// 		}
-
-// 		$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT',$system_package);
-
-// 		if(empty($wifi_text) || $wifi_text ==''){
-// 		$wifi_text='WiFi';
-// 		}
-
-// 		$_SESSION['wifi_text'] = $wifi_text;
-
-
-
-//$_SESSION['WIFI_TEXT'] = $wifi_text;
 
 // TAB Organization
 if (isset($_GET['t'])) {
@@ -214,7 +181,6 @@ if ($_GET['s_token']) {
 		session_destroy();
 	}
 }
-
 
 
 if ($_GET['back_sup'] == 'true') {
@@ -275,16 +241,13 @@ if ($_GET['back_sup_logout'] == 'true') {
 	unset($_SESSION['full_name_old']);
 	unset($_SESSION['remote']);
 	unset($_SESSION['ori_user_uname']);
-
 	unset($_SESSION['p_detail']);
 	unset($_SESSION['p_token']);
-
 
 	$redirect_url = 'logout' . $extension . '?doLogout=true&product=' . $_COOKIE["system_package"] . '&login=' . $_COOKIE["load_login_design"];
 	header("Location: " . $redirect_url);
 	exit();
 }
-
 
 if ($_GET['back_master'] == 'true') {
 	parse_str($_SESSION['p_detail']);
@@ -293,7 +256,6 @@ if ($_GET['back_master'] == 'true') {
 	$_SESSION['access_role'] = $s_arole;
 	$_SESSION['full_name'] = $s_fname;
 	$_SESSION['parent_to_location_auto_login'] = 'no';
-
 
 	unset($_SESSION['p_detail']);
 	unset($_SESSION['p_token']);
@@ -336,11 +298,6 @@ if ($_GET['log_other'] == '1') {
 	$secu_token = $_GET['security_token'];
 
 	if ($secu_token == $_SESSION['security_token']) {
-
-		//echo 'match';
-
-		//get token and encode support user details
-
 		$s_uname = $_SESSION['user_name'];
 		$_SESSION['ori_user_uname'] = $s_uname;
 		$s_arole = $_SESSION['access_role'];
@@ -351,11 +308,8 @@ if ($_GET['log_other'] == '1') {
 		$decrypt_text = $app->encrypt_decrypt('decrypt', $string_pass);
 		parse_str($decrypt_text, $data_arr);
 		$s_details = 's_uname=' . $s_uname . '&s_arole=' . $s_arole . '&s_fname=' . $s_fname;
-
 		$_SESSION['s_token'] = md5(uniqid(rand(), true));
-
 		$s_detail_encode = base64_encode($_SESSION['s_token'] . $s_details);
-
 		$_SESSION['s_detail'] = $s_details;
 		$_SESSION['remote'] = 'yes';
 
@@ -363,30 +317,21 @@ if ($_GET['log_other'] == '1') {
 		$_SESSION['user_name'] = $data_arr[uname]; //$_GET['uname'];
 		$_SESSION['access_role'] = $data_arr[urole]; //$_GET['urole'];
 		$_SESSION['full_name'] = $data_arr[fname]; //$_GET['fname'];
-		/*$_SESSION['network_sync'] = 'true';
-	    $_SESSION['pr_network_sync'] = 'true';*/
-
 
 		$user_name = $_SESSION['user_name'];
-
 		$user_details = $db_class1->select1DB("SELECT  user_distributor ,user_type  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
-
 		$user_distributor = $user_details['user_distributor'];
-		//$system_package=$db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 
 		//Sync SSID,AP
 		$exec_cmd = 'php -f' . __DIR__ . '/ajax/syncAP.php ' . $user_distributor . ' > /dev/null &';
 		exec($exec_cmd);
-		//
-
-
+		
 		if ($user_details['user_type'] == 'MVNO_ADMIN') {
 
 			$realm_query = "SELECT `system_package`,parent_id AS verification_number  FROM mno_distributor_parent WHERE `parent_id`='$user_distributor'";
 		} else {
 			$realm_query = "SELECT `system_package`,verification_number,wired  FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'";
 		}
-
 
 		$realm_query_results = $db_class1->select1DB($realm_query);
 		//while($row=mysql_fetch_array($realm_query_results)){
@@ -424,8 +369,6 @@ if ($_GET['log_other'] == '1') {
 	}
 }
 
-
-
 if ($_GET['log_other'] == '2') {
 	$secu_token = $_GET['security_token'];
 
@@ -437,18 +380,13 @@ if ($_GET['log_other'] == '2') {
 		$s_fname = $_SESSION['full_name'];
 		$_SESSION['full_name_old'] = $s_fname;
 
-
 		// verify distributor belongs to parent
 		$string_pass = $_GET['key'];
 		$decrypt_text = $app->encrypt_decrypt('decrypt', $string_pass);
 		parse_str($decrypt_text, $data_arr);
-
 		$p_details = 's_uname=' . $s_uname . '&s_arole=' . $s_arole . '&s_fname=' . $s_fname;
-
 		$_SESSION['p_token'] = md5(uniqid(rand(), true));
-
 		$p_detail_encode = base64_encode($_SESSION['p_token'] . $p_details);
-
 		$_SESSION['p_detail'] = $p_details;
 		$_SESSION['remote'] = 'yes';
 
@@ -456,9 +394,6 @@ if ($_GET['log_other'] == '2') {
 		$_SESSION['user_name'] = $data_arr['uname'];
 		$_SESSION['access_role'] = $data_arr['urole'];
 		$_SESSION['full_name'] = $s_fname;
-		/*$_SESSION['network_sync'] = 'true';
-	    $_SESSION['pr_network_sync'] = 'true';*/
-
 		$user_name = $_SESSION['user_name'];
 
 		$user_type = $db_class1->getValueAsf("SELECT  user_type AS f  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
@@ -468,9 +403,7 @@ if ($_GET['log_other'] == '2') {
 		//Sync SSID,AP
 		$exec_cmd = 'php -f' . __DIR__ . '/ajax/syncAP.php ' . $user_distributor . ' > /dev/null &';
 		exec($exec_cmd);
-		//
-
-
+		
 		if ($user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN") {
 			$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 		} else if ($user_type == "MVNO_ADMIN") {
@@ -489,7 +422,6 @@ if ($_GET['log_other'] == '2') {
 		$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT', $system_package);
 		$theme_text = $package_functions->getMessageOptions('THEME_TEXT', $system_package);
 
-
 		if (empty($wifi_text) || $wifi_text == '') {
 			$wifi_text = 'WiFi';
 		}
@@ -499,26 +431,19 @@ if ($_GET['log_other'] == '2') {
 
 		$_SESSION['wifi_text'] = $wifi_text;
 
-
 		if (empty($theme_text) || $theme_text == '') {
 			$theme_text = 'theme';
 		}
 
 		$_SESSION['theme_text'] = $theme_text;
-
-		//$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-
 		$realm_query2 = "SELECT `network_type`,verification_number FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'";
 
 		$realm_query_results2 = $db_class1->select1DB($realm_query2);
-		//while($row=mysql_fetch_array($realm_query_results2)){
 		$network_type = $realm_query_results2['network_type'];
 		$uname_realm2 = $realm_query_results2['verification_number'];
-		//}
 		$isDynamic = $package_functions->isDynamic($system_package);
 
 		if ($new_design == 'yes' && ($network_type != 'VT' || $isDynamic)) {
-
 			$db_class1->userLog($user_name, $script, 'Properties Auto Login', $uname_realm2);
 			header("Location:intro" . $extension . "?p_token=$p_detail_encode");
 			exit();
@@ -534,25 +459,9 @@ if ($_GET['log_other'] == '2') {
 	}
 }
 
-
-
-
-
-
 /////// Login session failed ////
 if ($_SESSION['login'] != 'yes' && $script != 'verification') {
-
-	//	$log_query = "INSERT INTO admin_user_logs (user_name,module,create_date,unixtimestamp)
-	//	VALUES ('$user_name','LOGIN Failed',now(), UNIX_TIMESTAMP())";
-	//	$query_ex_log=mysql_query($log_query);
-
 	$db_class1->userLog($user_name, $script, 'LOGIN Failed', 'N/A');
-	//$redirect_url = $global_base_url; //"index".$extension;
-	//header( "Refresh:0; url=$redirect_url", true, 303);
-
-	// "<script>alert('aa');</script>";
-
-
 	$redirect_url = 'logout' . $extension . '?doLogout=true&product=' . $_COOKIE["system_package"] . '&login=' . $_COOKIE["load_login_design"];
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -560,7 +469,6 @@ if ($_SESSION['login'] != 'yes' && $script != 'verification') {
 	if (preg_match('~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT']) || (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false)) {
 		//echo "Ex";
 ?>
-
 		<meta http-equiv="refresh" content="0;URL='<?php echo $redirect_url; ?>'">
 	<?php
 
@@ -576,13 +484,10 @@ if ($_SESSION['login'] != 'yes' && $script != 'verification') {
 	exit();
 }
 
-
 // Collect session valiables
 $user_name = $_SESSION['user_name'];
-
 $access_role = $_SESSION['access_role'];
 $full_name = $_SESSION['full_name'];
-
 $_SESSION['timeout'] = time();
 $cookie_name = "timeout";
 $cookie_value = time();
@@ -592,11 +497,7 @@ setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
 require_once 'classes/logClass.php';
 $create_log = new logs($script, $user_name);
 
-
-
 // Get access role related information
-
-//echo $user_type;
 if ($user_type == 'MVNO_ADMIN') {
 	// Parent User
 	$key_query = "SELECT  `access_role`, user_type, user_distributor,is_enable,full_name
@@ -609,7 +510,6 @@ if ($user_type == 'MVNO_ADMIN') {
 	// general User
 }
 
-//exit();
 $query_results = $db_class1->select1DB($key_query);
 //while($row=mysql_fetch_array($query_results)){
 $access_role = $query_results[access_role];
@@ -633,7 +533,6 @@ if ($_SESSION['remote'] == 'yes') {
 
 	$active_user = '1';
 }
-//}
 
 $_SESSION['user_distributor'] = $user_distributor;
 
@@ -653,21 +552,7 @@ if ($_SESSION['login'] == 'yes') {
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //////// System Packages and features
-//echo $user_type.$user_distributor;
 if ($user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	if ($user_type == "MNO" || $user_type == "RESELLER_ADMIN" || $user_type == "SUPPORT") {
@@ -682,60 +567,19 @@ if ($user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $
 	$advanced_features = $db_class1->getValueAsf("SELECT `advanced_features` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 }
 
-
-
 if ($system_package == "N/A" || $system_package == "") {
 	$package_features = "all";
 	$system_package = "N/A";
 } else {
 	$features_array = array();
-	// $get_featuresq="SELECT	`feature_code` AS a FROM `admin_product_controls` WHERE `product_code`='$system_package'
-	//	AND `user_type`='$user_type' AND `access_method`='1' AND `type` IN ('group','tab','page')";
-
-	/*$get_featuresq="SELECT `feature_code`,`options` AS a FROM `admin_product_controls` WHERE `product_code`='$system_package'
-	AND `user_type`='$user_type' AND `feature_code` = 'ALLOWED_TAB' ";
-
-
-	$get_features=mysql_query($get_featuresq);
-	$features_array=array();
-
-
-	if($user_type=="SALES" && empty($features_array)){
-		$get_featuresq="SELECT `feature_code`,`options` AS a FROM `admin_product_controls` WHERE `product_code`='$system_package'
-		AND `user_type`='MNO' AND `feature_code` = 'ALLOWED_TAB' ";
-	
-	
-		$get_features=mysql_query($get_featuresq);
-		$features_array=array();
-	}
-	$i=0;*/
-
 	$features_tab = $package_functions->getOptions('ALLOWED_TAB', $system_package);
-
-
-	/*while($features=mysql_fetch_assoc($get_features)){
-		 $result=$features['a'];
-	//	$features_array[$i]=$features['a'];
-		$result1 =  json_decode($features['a'],true);
-
-	$features_array = array_merge($features_array, $result1);
-		$i++;
-	}*/
-
 	$result1 = json_decode($features_tab, true);
-	$features_array = array_merge($features_array, $result1);
-	//print_r($features_array);
-
-	//exit(); 
+	$features_array = array_merge($features_array, $result1); 
 }
-
-
-//if(strlen($advanced_features) > 0){
 
 $advanced_features = json_decode($advanced_features, true);
 
 if ($advanced_features['802.2x_authentication'] != '1') {
-
 	foreach ($features_array as $key => $value) {
 		if ($value == 'NET_AUTHENTICATION') {
 			unset($features_array[$key]);
@@ -745,41 +589,12 @@ if ($advanced_features['802.2x_authentication'] != '1') {
 			unset($features_array[$key]);
 		}
 	}
-
 	array_push($features_array, 'NET_PRI_PASS');
 }
-
-//}
-
-
-// if(strlen($advanced_features) < 1){
-
-//   $advanced_features = json_decode($advanced_features,true);
-
-//   if($advanced_features['802.2x_authentication']!='1'){
-
-//   	foreach ($features_array as $key => $value) {
-//   		if($value=='NET_AUTHENTICATION'){
-//   			unset($features_array[$key]);
-//   		}
-
-//   		if($value=='NET_AAA_SET'){
-//   			unset($features_array[$key]);
-//   		}
-
-//   	}
-
-//   	array_push($features_array, 'NET_PRI_PASS');
-
-//   }
-
-// }
-
 
 //message class
 require_once 'classes/messageClass.php';
 $message_functions = new message_functions($system_package);
-
 
 //////// End System Packages and features
 $login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
@@ -789,13 +604,9 @@ $page_intro = $package_functions->getSectionType("INTRO_PAGE", $system_package);
 $SUBMENU_VERTICALE = $package_functions->getSectionType("SUBMENU_VERTICALE", $system_package);
 
 if (isset($_SESSION['s_token']) || isset($_SESSION['p_token'])) {
-
 	$ori_user_uname = $_SESSION['ori_user_uname'];
-
 	$ori_user_type = $db_class1->getValueAsf("SELECT  user_type AS f  FROM  admin_users WHERE user_name = '$ori_user_uname' LIMIT 1");
-
 	$ori_user_distributor = $db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$ori_user_uname' LIMIT 1");
-
 	if ($ori_user_type == "MNO" || $ori_user_type == "ADMIN" || $ori_user_type == "SUPPORT" || $ori_user_type == "TECH") {
 		$ori_system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$ori_user_distributor'");
 	} else if ($ori_user_type == "MVNO_ADMIN") {
@@ -805,16 +616,11 @@ if (isset($_SESSION['s_token']) || isset($_SESSION['p_token'])) {
 	}
 
 	$session_logout_btn_display = $package_functions->getOptions('SESSION_LOGOUT_BUTTON_DISPLAY', $ori_system_package);
-
 	$logout_time = $package_functions->getOptions('SESSION_LOGOUT_TIME', $ori_system_package);
 } else {
-
 	$session_logout_btn_display = $package_functions->getOptions('SESSION_LOGOUT_BUTTON_DISPLAY', $system_package);
-
 	$logout_time = $package_functions->getOptions('SESSION_LOGOUT_TIME', $system_package);
 }
-
-
 
 if (strlen($camp_layout) == "0") {
 	$camp_layout = "DEFAULT_LAYOUT";
@@ -839,21 +645,15 @@ $getSectionType = $package_functions->getSectionType("HADER_OPTIONS", $system_pa
 
 $main_menu_clickble = $package_functions->getSectionType('MAIN_MANU_CLICKBLE', $system_package);
 
-
-
 if (strlen($top_menu) == "0" || $top_menu == '') {
 	$top_menu = 'top';
 }
-
 
 if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 	$main_menu_clickble = 'YES';
 }
 
-
-
 // New Access Functions
-
 function isModuleAccess($access_role, $module, $db_function)
 {
 	$sql1 = "SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role` = '$access_role' AND `module_name` = '$module' LIMIT 1";
@@ -867,8 +667,6 @@ function isModuleAccess($access_role, $module, $db_function)
 	}
 }
 
-
-
 // Menu Design
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
@@ -879,9 +677,6 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row[module_name]; // Retuns base access
 	}
 }
-
-
-//print_r($x);
 
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -900,12 +695,6 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-
-
-
-// print_r($x);
-//print_r($x_non_admin);
-
 /// Non Admin Modules
 foreach ($x_non_admin as $keyXn => $valueXn) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -917,40 +706,25 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 	}
 }
 
-
-//print_r($x);
 $allowed_pages = $x;
 //echo $system_package;
 $module_ids = join('", "', $x);
 $suspended = false;
 if ($user_type == 'MVNO') {
-	//echo $user_distributor;
 	//Pages allowed to wired properties
 	$wired_pages = ['add_tenant', 'manage_tenant', 'communicate', 'home', 'user_guide', 'venue_support'];
-
 	$dist_details = $db_class1->select1DB("SELECT d.wired,d.gateway_type,d.private_gateway_type,d.bussiness_type,d.network_type,d.other_settings,d.is_enable,m.system_package as mno_sys FROM exp_mno_distributor d JOIN exp_mno m ON d.mno_id=m.mno_id WHERE distributor_code='" . $user_distributor . "'");
 	$property_getaway_type = $dist_details['gateway_type'];
 	$property_business_type = $dist_details['bussiness_type'];
 	$property_wired = $dist_details['wired'];
 	/* start suspend location logout */
 	$is_enable = $dist_details['is_enable'];
-
 	$ale4_prod = ['LP_MNO_002', 'LP_MNO_003_LP', 'LP_MNO_004_SL'];
-
 	if (in_array($dist_details['mno_sys'], $ale4_prod)) {
 		$GLOBALS['qos_ale_version'] = 'ale4';
 	}
-
 	if ($is_enable == 3 && !isset($_SESSION['s_token'])) {
 		$suspended = true;
-		/* if(isset($_SESSION['p_token'])){
-			$redirect_url ='properties'.$extension.'?back_master_logout=true';
-			header("Location: ".$redirect_url);
-			exit();
-		}else{
-			//$redirect_url ='logout'.$extension.'?doLogout=true&product='.$system_package.'&login='.$load_login_design;
-			$suspended = true;
-		} */
 	}
 	/* end suspend location logout */
 	$network_type = $dist_details['network_type'];
@@ -966,6 +740,8 @@ if ($_GET['location_parent_id']) {
 		$edit_location_old = true;
 	}
 }
+
+var_dump($camp_layout);
 require_once 'layout/' . $camp_layout . '/config.php';
 
 $query_modules = "SELECT * FROM `admin_access_modules`
