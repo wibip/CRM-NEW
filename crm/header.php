@@ -741,7 +741,7 @@ if ($_GET['location_parent_id']) {
 	}
 }
 
-var_dump($camp_layout);
+// var_dump($camp_layout);
 require_once 'layout/' . $camp_layout . '/config.php';
 
 $query_modules = "SELECT * FROM `admin_access_modules`
