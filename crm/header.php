@@ -595,7 +595,7 @@ if ($advanced_features['802.2x_authentication'] != '1') {
 //message class
 require_once 'classes/messageClass.php';
 $message_functions = new message_functions($system_package);
-
+// var_dump($system_package);
 //////// End System Packages and features
 $login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
 $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $system_package);

@@ -894,7 +894,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				}
 				//update log//
 				$ex_log = userUpdateLog($status_change_id, $action_type, $user_name,$db);
-
+var_dump($ex_log);
 				if ($ex_log===true) {
 					$archive_q = "INSERT INTO `admin_users_archive` (user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,archive_by,archive_date,last_update,`status`)
 								SELECT user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,'$user_name',NOW(),last_update,'status_change'
@@ -1641,51 +1641,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 			});
 
-			/* 	$('#edit_profile').on('change paste keyup', function () {
-
-					if($('#edit_profile').data('bootstrapValidator').isValid()){
-						$('#edit_profile').data('bootstrapValidator').disableSubmitButtons(false);
-					}
-					else{
-						$('#edit_profile').data('bootstrapValidator').disableSubmitButtons(true);
-					}
-				});
-
-			*/
-
-
-			// edit user
-			/*  $('#edit-user-profile').formValidation({
-			     framework: 'bootstrap',
-			     fields: {
-			         access_role_2: {
-			             validators: {
-			                 <?php //echo $db->validateField('dropdown'); 
-								?>
-			             }
-			         },
-			         full_name_2: {
-			             validators: {
-			                 <?php //echo $db->validateField('person_full_name'); 
-								?>,
-			                 <?php // echo $db->validateField('not_require_special_character'); 
-								?>
-			             }
-			         },
-			         email_2: {
-			             validators: {
-			                 <?php //echo $db->validateField('email'); 
-								?>
-			             }
-			         },
-			         mobile_2: {
-			             validators: {
-			                 <?php //echo $db->validateField('mobile'); 
-								?>
-			             }
-			         }
-			     }
-			 }); */
 
 			// Create access Roles
 			$('#assign_roles_submit').bootstrapValidator({
