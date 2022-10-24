@@ -681,6 +681,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			$edit_id = $_GET['edit_id'];
 			$edit_user_data = $user_model->getUser($edit_id);
 		} else {
+			// var_dump('test');
 			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
 			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Oops, It seems you have refreshed the page. Please try again</strong></div>";
 			//header('Location: location.php?t=3');
@@ -894,7 +895,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				}
 				//update log//
 				$ex_log = userUpdateLog($status_change_id, $action_type, $user_name,$db);
-var_dump($ex_log);
+
 				if ($ex_log===true) {
 					$archive_q = "INSERT INTO `admin_users_archive` (user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,archive_by,archive_date,last_update,`status`)
 								SELECT user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,'$user_name',NOW(),last_update,'status_change'
@@ -1038,43 +1039,45 @@ var_dump($ex_log);
 				$usr_name = $db->getValueAsf("SELECT u.user_name AS f FROM admin_users u WHERE u.id='$user_rm_id' LIMIT 1");
 
 				$archive_record = "INSERT INTO `admin_users_archive` (
-					`id`,
-				`user_name`,
-				`password`,
-				`access_role`,
-				`user_type`,
-				`full_name`,
-				`email`,
-				`language`,
-				`mobile`,
-				`is_enable`,
-				`create_date`,
-				`create_user`,
-				`archive_by`,
-				`archive_date`
-				) (SELECT id,
-				`user_name`,
-				`password`,
-				`access_role`,
-				`user_type`,
-				`full_name`,
-				`email`,
-				`language`,
-				`mobile`,
-				`is_enable`,
-				`create_date`,
-				`create_user`,
-				'$user_name',
-				NOW()
-				FROM
-				`admin_users`
-				WHERE id='$user_rm_id')";
+																		`id`,
+																		`user_name`,
+																		`password`,
+																		`access_role`,
+																		`user_type`,
+																		`full_name`,
+																		`email`,
+																		`language`,
+																		`mobile`,
+																		`is_enable`,
+																		`create_date`,
+																		`create_user`,
+																		`archive_by`,
+																		`archive_date`
+																		) (SELECT id,
+																		`user_name`,
+																		`password`,
+																		`access_role`,
+																		`user_type`,
+																		`full_name`,
+																		`email`,
+																		`language`,
+																		`mobile`,
+																		`is_enable`,
+																		`create_date`,
+																		`create_user`,
+																		'$user_name',
+																		NOW()
+																		FROM
+																		`admin_users`
+																		WHERE id='$user_rm_id')";
 				$archive_record = $db->execDB($archive_record);
+
                 //print_r($archive_record);echo'--';
 				if ($archive_record===true) {
 					$edit_query = "DELETE FROM `admin_users`  WHERE `id` = '$user_rm_id'";
 					//$edit_result = mysql_query($edit_query);
 					$edit_result = $db->execDB($edit_query);
+
 					if ($edit_result===true) {
 						$create_log->save('3001', $message_functions->showNameMessage('role_role_remove_success', $user_full_name), '');
 						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showNameMessage('role_role_remove_success', $user_full_name) . "</strong></div>";
@@ -1194,10 +1197,7 @@ var_dump($ex_log);
 														<!-- /control-group -->
 												
 														<div class="control-group">
-															<label class="control-label" for="email_1">Email<sup>
-																	<font color="#FF0000"></font>
-																</sup></label>
-
+															<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
 															<div class="controls form-group col-lg-5">
 																<input class="form-control span4" id="email_1" name="email_1" placeholder="name@mycompany.com">
 															</div>
@@ -1270,9 +1270,7 @@ var_dump($ex_log);
 														<!-- /control-group -->
 														<?php } ?>
 														<div class="control-group">
-															<label class="control-label" for="mobile_1">Phone Number<sup>
-																	<font color="#FF0000"></font>
-																</sup></label>
+															<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
 															<div class="controls form-group col-lg-5">
 																<input class="form-control span4" id="mobile_1" name="mobile_1" type="text" placeholder="xxx-xxx-xxxx" maxlength="12">
 															</div>
@@ -1510,7 +1508,234 @@ var_dump($ex_log);
 												</div>
 												<!-- /widget -->
 											</div>
-										
+											
+											<!-- +++++++++++++++++++++++++++++ Edit users ++++++++++++++++++++++++++++++++ -->
+											<div <?php if (isset($tab5) && $tab5 == "set") { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="edit_users">
+												<div class="support_head_visible" style="display:none;">
+													<div class="header_hr"></div>
+													<div class="header_f1" style="width: 100%;">Edit Profile</div>
+													<br class="hide-sm"><br class="hide-sm">
+													<div class="header_f2" style="width: 100%;"></div>
+												</div>
+												<form autocomplete="off" id="edit-user-profile" action="?t=1" method="post" class="form-horizontal">
+												<?php
+													if(isset($tab5)){
+														if (isset($_SESSION['msg5'])) {
+															echo $_SESSION['msg5'];
+															unset($_SESSION['msg5']);
+														}
+
+														if (isset($_SESSION['msg1'])) {
+															echo $_SESSION['msg1'];
+															unset($_SESSION['msg1']);
+														}
+
+
+														if (isset($_SESSION['msg2'])) {
+															echo $_SESSION['msg2'];
+															unset($_SESSION['msg2']);
+														}
+
+														if (isset($_SESSION['msg3'])) {
+															echo $_SESSION['msg3'];
+															unset($_SESSION['msg3']);
+														}
+
+														if (isset($_SESSION['msg6'])) {
+															echo $_SESSION['msg6'];
+															unset($_SESSION['msg6']);
+														}
+													}
+												?>
+												<?php
+													if($_GET['edit_id']){
+														$id = $edit_user_data[0]->getId();
+														$user_name =  $edit_user_data[0]->getUserName();
+														$access_role_set = $edit_user_data[0]->getAccessRole();
+														$full_name = $edit_user_data[0]->getFullName();
+														$email = $edit_user_data[0]->getEmail();
+														$language_set = $edit_user_data[0]->getLanguage();
+														$user_type_set = $edit_user_data[0]->getUserType();
+														$timezone_set = $edit_user_data[0]->getTimezones();
+														$mobile = $edit_user_data[0]->getMobile(); 
+
+														if ($access_role_set=='admin' && $user_type_set =='SUPPORT') {
+															$access_role_s="Master Support Admin";
+														}
+														elseif ($access_role_set=='admin' && $user_type_set =='TECH') {
+															$access_role_s='Master Tech Admin';
+														}
+														elseif ($access_role_set=='admin') {
+															$access_role_s='Master Admin Peer';
+														}
+														else{
+															$access_role_s='Admin';
+														}
+													}
+
+													echo '<input type="hidden" name="form_secret" id="form_secret1" value="' . $_SESSION['FORM_SECRET'] . '" />';
+												?>
+													<fieldset>
+														<?php
+														echo '<input type="hidden" name="user_type" id="user_type2" value="' . $user_type . '">';
+														echo '<input type="hidden" name="loation" id="loation2" value="' . $user_distributor . '">';
+														echo '<input type="hidden" name="id" id="id" value="' . $id . '">';
+														?>
+														<div class="control-group">
+															<label class="control-label" for="full_name_2" _1>Full Name<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls form-group col-lg-5">
+																<input class="form-control span4" id="full_name_2" name="full_name_2" maxlength="25" type="text" value="<?php echo $full_name ?>">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="control-group">
+															<label class="control-label" for="email_2">Email<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls form-group col-lg-5">
+																<input class="form-control span4" id="email_2" name="email_2" type="text" value="<?php echo $email ?>">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="control-group">
+															<label class="control-label" for="language_2">Language</label>
+															<div class="controls form-group col-lg-5">
+																<select class="form-control span4" name="language_2" id="language_2">
+																	<?php
+																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
+																	$query_results=$db->selectDB($key_query);
+																	foreach($query_results['data'] AS $row){
+																		$language_code = $row[language_code];
+																		$language = $row[language];
+																		if ($language_code == $language_set) {
+																			echo '<option value="' . $language_code . '" selected>' . $language . '</option>';
+																		} else {
+																			echo '<option value="' . $language_code . '">' . $language . '</option>';
+																		}
+																	}
+																	?>
+																</select>
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<?php if ($access_role_set=='admin' || $user_type=='ADMIN') {?>
+														<div class="control-group timezone_2n" <?php if($user_type_set=='SUPPORT'){ echo 'style="display:none"'; } ?> >
+                                                             <label class="control-label" for="timezone_2">Time Zone<sup><font color="#FF0000"></font></sup></label>
+                                                             <div class="controls col-lg-5 form-group">
+                                                                 <select class="span4 form-control" id="timezone_2" name="timezone_2" autocomplete="off">
+                                                                     <option value="">Select Time Zone</option>
+                                                                     <?php
+                                                                     $utc = new DateTimeZone('UTC');
+                                                                     $dt = new DateTime('now', $utc);
+                                                                     foreach ($priority_zone_array as $tz){
+                                                                         $current_tz = new DateTimeZone($tz);
+                                                                         $offset =  $current_tz->getOffset($dt);
+                                                                         $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                                         $abbr = $transition[0]['abbr'];
+                                                                         if($timezone_set==$tz){
+                                                                             $select="selected";
+                                                                         }else{
+                                                                             $select="";
+                                                                         }
+                                                                         echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                                                     }
+
+                                                                     foreach(DateTimeZone::listIdentifiers() as $tz) {
+                                                                         //Skip
+                                                                         if(in_array($tz,$priority_zone_array))
+                                                                             continue;
+
+                                                                        $current_tz = new DateTimeZone($tz);
+                                                                        $offset =  $current_tz->getOffset($dt);
+                                                                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                                        $abbr = $transition[0]['abbr'];
+                                                                        
+                                                                        if($timezone_set==$tz){
+                                                                           $select="selected";
+                                                                        }else{
+                                                                            $select="";
+                                                                        }
+                                                                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                                                    }
+                                                                     ?>
+                                                                 </select>
+                                                             </div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+													<?php } ?>
+														<div class="control-group">
+															<label class="control-label" for="mobile_2">Phone Number<sup><font color="#FF0000"></font></sup></label>
+															<div class="form-group controls col-lg-5">
+																<input class="form-control span4" id="mobile_2" name="mobile_2" type="text" maxlength="12" value="<?php echo $mobile ?>">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="form-actions">
+															<button type="submit" name="edit-submita" id="edit-submita" class="btn btn-primary" disabled="disabled">Save</button>&nbsp; <strong>
+																<font color="#FF0000"></font><small></small>
+															</strong>
+															<button type="button" onclick="goto('?t=1')" class="btn btn-danger">Cancel</button>&nbsp;
+															<script type="text/javascript">
+																function goto(url) {
+																	window.location = url;
+																}
+																function footer_submitfn() {
+																	//alert("fn");
+																	$("#edit-submita").prop('disabled', false);
+																}
+															</script>
+														</div>
+														<!-- /form-actions -->
+													</fieldset>
+												</form>
+
+												<form onkeyup="footer_submitfn1();" onchange="footer_submitfn1();" autocomplete="off" id="edit-user-password" action="?t=1" method="post" class="form-horizontal">
+													<?php
+													echo '<input type="hidden" name="form_secret" id="form_secret2" value="' . $_SESSION['FORM_SECRET'] . '" />';
+													?>
+													<fieldset>
+														<legend>Reset Password</legend>
+														<?php
+														echo '<input type="hidden" name="user_type" id="user_type3" value="' . $user_type . '">';
+														echo '<input type="hidden" name="loation" id="loation3" value="' . $user_distributor . '">';
+														echo '<input type="hidden" name="id" id="id1" value="' . $id . '">';
+														?>
+														<div class="control-group">
+															<label class="control-label" for="full_name_2" _1>Password<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls col-lg-5">
+																<input class="span4" id="passwd" name="passwd" type="password" required>
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="control-group">
+															<label class="control-label" for="email_2">Confirm Password<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls col-lg-5">
+																<input class="span4" id="passwd_2" name="passwd_2" type="password" required="required">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="form-actions">
+															<button type="submit" name="edit-submita-pass" id="edit-submita-pass" class="btn btn-primary" disabled="disabled">Save</button>&nbsp; <strong>
+																<font color="#FF0000"></font><small></small>
+															</strong>
+															<button type="button" onclick="goto('?t=1')" class="btn btn-danger">Cancel</button>&nbsp;
+														</div>
+														<!-- /form-actions -->
+													</fieldset>
+												</form>
+
+												<script>
+													function footer_submitfn1() {
+														$("#edit-submita-pass").prop('disabled', false);
+													}
+												</script>
+											</div>
+											<!-- +++++++++++++++++++++++++++++ Edit users ++++++++++++++++++++++++++++++++ -->
 										</div>
 									</div>
 									<!-- /widget-content -->
@@ -1528,8 +1753,6 @@ var_dump($ex_log);
 		</div>
 		<!-- /main -->
 	<?php } ?>
-
-
 	<script type="text/javascript" src="js/formValidation.js"></script>
 	<script type="text/javascript" src="js/bootstrap_form.js"></script>
 	<script type="text/javascript" src="js/bootstrapValidator_new.js?v=14"></script>
@@ -1546,52 +1769,35 @@ var_dump($ex_log);
 					validating: 'glyphicon glyphicon-refresh'
 				},
 				fields: {
-					access_role_1: {
-						validators: {
-							
-
-							<?php echo $db->validateField('dropdown'); ?>
-						}
-					},
 					full_name_1: {
 						validators: {
 							<?php echo $db->validateField('person_full_name'); ?>,
 							<?php echo $db->validateField('not_require_special_character'); ?>
-							
 						}
 					},
 					email_1: {
 						validators: {
 							<?php echo $db->validateField('email_cant_upper'); ?>
-							
 						}
 					},
 					timezone_1: {
 						validators: {
 							<?php echo $db->validateField('notEmpty'); ?>
-							
 						}
 					},
 					mobile_1: {
 						validators: {
 							<?php echo $db->validateField('mobile'); ?>
-							
 						}
 					}
 				}
 			}).on('status.field.bv', function(e, data) {
-
 				if ($('#edit_profile').data('bootstrapValidator').isValid()) {
-
 					data.bv.disableSubmitButtons(false);
-
 				} else {
-
 					data.bv.disableSubmitButtons(true);
 				}
-
 			});
-
 			$('#edit-user-profile').bootstrapValidator({
 				framework: 'bootstrap',
 				xcluded: [':disabled', '[readonly]',':hidden', ':not(:visible)'],
@@ -1629,24 +1835,17 @@ var_dump($ex_log);
 					}
 				}
 			}).bootstrapValidator('validate').on('status.field.bv', function(e, data) {
-
 				if ($('#edit-user-profile').data('bootstrapValidator').isValid()) {
-
 					data.bv.disableSubmitButtons(false);
-
 				} else {
-
 					data.bv.disableSubmitButtons(true);
 				}
-
 			});
-
 
 			// Create access Roles
 			$('#assign_roles_submit').bootstrapValidator({
 				framework: 'bootstrap',
 				fields: {
-
 					'my_select[]': {
 						validators: {
 							<?php echo $db -> validateField('list'); ?>
@@ -1660,20 +1859,12 @@ var_dump($ex_log);
 					}
 				}
 			}).on('status.field.bv', function(e, data) {
-
 				if ($('#assign_roles_submit').data('bootstrapValidator').isValid()) {
-
 					data.bv.disableSubmitButtons(false);
-
 				} else {
-
 					data.bv.disableSubmitButtons(true);
 				}
-
-			});;
-
-
-
+			});
 
 			// Assign access Roles
 			$('#assign_roles_form').formValidation({
@@ -1730,19 +1921,12 @@ var_dump($ex_log);
 					}
 				}
 			}).on('status.field.bv', function(e, data) {
-
 				if ($('#peer_profile').data('bootstrapValidator').isValid()) {
-
 					data.bv.disableSubmitButtons(false);
-
 				} else {
-
 					data.bv.disableSubmitButtons(true);
 				}
-
 			});
-		
-
 
 		$('#API_profile').bootstrapValidator({
 				framework: 'bootstrap',
@@ -1786,25 +1970,19 @@ var_dump($ex_log);
 							identical: {
 								field: 'password_API',
 								message: '<p>The Password and Confirm Password are not the same.</p>'
-									}
+							}
 						}
 					}
 				}
 			}).on('status.field.bv', function(e, data) {
-
 				if ($('#API_profile').data('bootstrapValidator').isValid()) {
-
 					data.bv.disableSubmitButtons(false);
-
 				} else {
-
 					data.bv.disableSubmitButtons(true);
 				}
-
 			});
 		});
 	</script>
-
 
 	<?php
 	include 'footer.php';
@@ -1818,7 +1996,6 @@ var_dump($ex_log);
 
 		});
 	</script>
-
 
 	<!-- Alert messages js-->
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -1836,27 +2013,6 @@ var_dump($ex_log);
 			});
 			$("#submit_1").click(function() {});
 
-
-			$("#assign_roles_submita").easyconfirm({
-				locale: {
-					title: 'Role Creation',
-					text: 'Are you sure you want to save this Role?',
-					button: ['Cancel', ' Confirm'],
-					closeText: 'close'
-				}
-			});
-			$("#assign_roles_submita").click(function() {
-
-				/* if($('#assign_roles_submit').data('formValidation').isValid()){
-
-				}
-				else{
-					$('#assign_roles_submit').formValidation('revalidateField', 'my_select[]');
-				$('#assign_roles_submit').formValidation('revalidateField', 'access_role_name');
-				} */
-
-			});
-
 			$("#edit-submita").easyconfirm({
 				locale: {
 					title: 'Edit User',
@@ -1866,7 +2022,6 @@ var_dump($ex_log);
 				}
 			});
 			$("#edit-submita").click(function() {});
-
 
 			$("#edit-submita-pass").easyconfirm({
 				locale: {
@@ -1907,7 +2062,6 @@ var_dump($ex_log);
 			});
 			$("#submit_peer").click(function() {});
 
-
 			$("#submit_API_user").easyconfirm({
 				locale: {
 					title: 'Create API User',
@@ -1925,7 +2079,6 @@ var_dump($ex_log);
 			display: inline-block !important;
 		}
 	</style>
-
 
 	<script type="text/javascript">
 		function GetXmlHttpObject() {
@@ -1969,23 +2122,10 @@ var_dump($ex_log);
 		});
 
 		function checkModules() {
-			/*	var count = $("#mySelect :selected").length;
-		var count_txt= document.getElementById("access_role_name").value.length;
-
-		//alert(count_txt);
-
-
-		if(count==0){
-			document.getElementById("assign_roles_submita").disabled=true;
-		}else{
-			document.getElementById("assign_roles_submita").disabled=false;
-		}
-*/
 		}
 	</script>
 
 	<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
-
 	</body>
 
 </html>
