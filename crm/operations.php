@@ -87,10 +87,142 @@ $key_query2 = "SELECT settings_value FROM exp_settings WHERE settings_code = 'se
 $query_result2 = $db->select1DB($key_query2);
 $mno_form_type = $query_result2['settings_value'];
 
+if (isset($_POST['create_operation_submit'])) {//5
+
+
+        $create_location_btn_action = $_POST['btn_action'];
+
+
+        if ($_SESSION['FORM_SECRET'] == $_POST['form_secret5']) {
+
+                $update_id = $_POST['update_id'];
+                $provisioning_data = json_decode($db->getValueAsf("SELECT property_details as f FROM exp_provisioning_properties WHERE id='$update_id'"),true);
+                $parent_code = $_POST['business_id'];
+                $parent_ac_name = $_POST['business_name'];
+                $service_type = $_POST['service_type'];
+
+
+                $provisioning_setting = json_decode($db->getValueAsf("SELECT setting as f FROM exp_provisioning_setting WHERE id='$service_type'"),true);
+                $user_type1 = 'MVNO';
+
+                $icomme_number = $_POST['icomme'];
+
+                //  exit();/// need create vtenant icomme
+
+                $customer_type = trim($provisioning_setting['mvno_package']);
+                $parent_package = $provisioning_setting['parent_package'];
+                $guest_wlan_count = trim($provisioning_data['network_info']['Guest']['count']);
+                $pvt_wlan_count = trim($provisioning_data['network_info']['Private']['count']);
+                $gateway_type = trim($provisioning_setting['guest_gateway_type']);
+                $pr_gateway_type = trim($provisioning_setting['private_gateway_type']);
+                $business_type = 'MVNO';
+                $location_name_old = trim($_POST['location_name_old']);
+                $dpsk_conroller = trim($provisioning_setting['admin_features']['controller']);
+                $dpsk_policies = trim($provisioning_setting['admin_features']['policie']);
+                $network_type = $provisioning_setting['package_type'];
+
+                 $category_mvnx = $_POST['category_mvnx'];
+
+                $dpsk_voucher = $db->escapeDB(trim($_POST['dpsk_voucher']));
+                $mno_first_name = $db->escapeDB(trim($_POST['mno_first_name']));
+                $mno_last_name = $db->escapeDB(trim($_POST['mno_last_name']));
+                $mvnx_full_name = $mno_first_name . ' ' . $mno_last_name;
+                $mvnx_email = trim($_POST['client_email']);
+                $mvnx_address_1 = $db->escapeDB(trim($_POST['client_address_1']));
+                $mvnx_address_2 = $db->escapeDB(trim($_POST['client_address_2']));
+                $mvnx_address_3 = $db->escapeDB(trim($_POST['client_address_3']));
+                $mvnx_mobile_1 = $db->escapeDB(trim($_POST['client_mobile_1']));
+                $mvnx_mobile_2 = $db->escapeDB(trim($_POST['client_mobile_2']));
+                $mvnx_mobile_3 = $db->escapeDB(trim($_POST['client_mobile_3']));
+                $mvnx_country = $db->escapeDB(trim($_POST['client_country']));
+                $mvnx_state = $db->escapeDB(trim($_POST['client_state']));
+                $mvnx_zip_code = trim($_POST['client_zip_code']);
+                $mvnx_time_zone = $_POST['client_time_zone'];
+                
+                $dtz = new DateTimeZone($mvnx_time_zone);
+
+                $time_in_sofia = new DateTime('now', $dtz);
+                $offset = $dtz->getOffset($time_in_sofia) / 3600;
+
+                $timezone_abbreviation = $time_in_sofia->format('T');
+                // get first 4 characters
+                $timezone_abbreviation = substr($timezone_abbreviation, 0, 4);
+
+
+                $offset1 = $dtz->getOffset($time_in_sofia);
+                $offset_val = CommonFunctions::formatOffset($offset1);
+
+                if ($offset_val == ' 00:00') {
+
+                    $offset_val = '+00:00';
+                }
+                $user_type1 = 'PROVISIONING';
+
+                if ($account_edit == '1') {
+                    $update_user = "UPDATE admin_users SET verification_number='$vt_icomme_number' WHERE user_distributor='$edit_distributor_code' AND `verification_number` IS NOT NULL";
+                                $db->execDB($update_user);
+
+                    $db->execDB($update_dis);
+                    $query02 = "UPDATE `admin_users`
+                                        SET `user_name`='$dis_user_name',
+                                            `password`=CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))),
+                                            `access_role`='admin',
+                                            `user_type`='$user_type1',
+                                            `user_distributor`='$mvnx_id',
+                                            `full_name`='',
+                                            `email`='',
+                                            `mobile`='',
+                                            `is_enable`='1',
+                                            `create_date`=NOW(),
+                                            `create_user`='$user_name' WHERE `verification_number`='$icomme_number'";
+                    $db->execDB($query02);
+                }else{
+
+                    $br = $db->select1DB("SHOW TABLE STATUS LIKE 'exp_mno_distributor'");
+                    //$rowe = mysql_fetch_array($br);
+                    $auto_inc = $br['Auto_increment'];
+
+                    $mvnx_id = $user_type1 . $auto_inc;
+                    $distributor_code_new=$mvnx_id;
+                    $mvnx = str_pad($auto_inc, 8, "0", STR_PAD_LEFT);
+                        $unique_id = '2' . $mvnx;
+
+                        $dis_user_name = uniqid($mvnx_id);
+                        $parent_user_name = str_replace(' ', '_', strtolower(substr($mvnx_full_name, 0, 5) . $auto_inc));
+
+                    echo $query01 = "INSERT INTO `exp_mno_distributor` (`offset_val`,`verification_number`,`system_package`,`unique_id`,`distributor_code`, `distributor_name`,`bussiness_type`, `distributor_type`,`category`,num_of_ssid, `mno_id`, `parent_code`,`bussiness_address1`,`bussiness_address2`,`bussiness_address3`,`country`,`state_region`,`zip`,`phone1`,`phone2`,`phone3`,theme,site_title,time_zone,`language`,`advanced_features`,`is_enable`,`create_date`,`create_user`,`sw_controller`,`groupsid`,`default_campaign_id`,`dpsk_voucher`,`automation_enable`,`firewall_controller`,`organizations_id`,`wlan_count`)
+                    VALUES ('$offset_val','$icomme_number','$customer_type','$unique_id','$mvnx_id', '$location_name', '$business_type','$user_type1','$category_mvnx','$mvnx_num_ssid', '$mno_id', '$user_distributor1','$mvnx_address_1','$mvnx_address_2','$mvnx_address_3','$mvnx_country','$mvnx_state','$mvnx_zip_code','$mvnx_mobile_1','$mvnx_mobile_2','$mvnx_mobile_3','$theme','$title','$tz','en','$advanced_features','0',now(),'$live_user_name','$sw_controller', '$groupsid','0','$dpsk_voucher','$automation_enable','$firewall_conroller','$firewall_organizations','$wlan_arr')"; 
+                    $ex0 = $db->execDB($query01);
+
+                    $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
+            VALUES ('$dis_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$user_type1', '$user_distributor', '$mvnx_full_name', '$mvnx_email', '$mvnx_mobile_1', '$mvnx_time_zone', '1','$login_user_name', NOW(), '$user_type1')";
+                            $ex1 = $db->execDB($query0);
+                            exit();
+                }
+                if ($ex1 == 1) {
+                    $db->userLog($user_name, $script, 'Update Location', $location_name_s);
+                                $success_msg = $message_functions->showNameMessage('property_creation_success', $location_name_s);
+                                $sess_msg_id = 'msg_location_update';
+                                $_SESSION[msg5] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+                }else{
+                    $success_msg = $message_functions->showNameMessage('property_creation_failed', $location_name_s, 2002); //"[2002] Account [" . $location_name_s . "] update failed";
+                                $sess_msg_id = 'msg_location_update';
+                                $_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+                }
+            
+        }else{
+            $db->userErrorLog('2004', $user_name, 'script - ' . $script);
+
+            
+            $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
+            header('Location: operations.php');
+        }
+    }
+
+
 if (isset($_POST['submit_mno_form'])) { //6
         if (isset($_GET['mno_edit'])) {
             $edit_mno_id = $_GET['mno_edit_id'];
-            var_dump($edit_mno_id);die;
             $get_edit_get = 1;
             $get_mno_unque_q = "SELECT `unique_id`,`features` FROM `exp_mno` WHERE `mno_id`='$edit_mno_id'";
             $get_mno_unque = $db->selectDB($get_mno_unque_q);
@@ -107,20 +239,13 @@ if (isset($_POST['submit_mno_form'])) { //6
         $isDynamic = $isDynamic_res['access_method'];
 
         if ($_SESSION['FORM_SECRET'] == $_POST['form_secret6']) { //refresh validate
-
             $mno_account_name = $db->escapeDB(trim($_POST['mno_account_name']));
-
             $mno_user_type = trim($_POST['mno_user_type']);
-
             $mno_sys_package = trim($_POST['mno_sys_package']);
-
-            
             $mnoAccType=$mno_user_type;
             $mno_user_type = 'MNO';
-           
-
+        
             $mno_system_package = $mno_sys_package;
-
 
             if ($user_type != 'SALES') { //advanced_menu
                     //$mno_customer_type = trim($_POST['mno_customer_type']);
@@ -155,6 +280,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                 $login_user_name = $_SESSION['user_name'];
 
                 $br = $db->select1DB("SHOW TABLE STATUS LIKE 'exp_mno'");
+                // var_dump($br);die;
                 //$rowe = mysql_fetch_array($br);
                 $auto_inc = $br['Auto_increment'];
                 $mno_id = "MNO" . $auto_inc;
@@ -197,6 +323,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                         $status_code = '200';
                     }
                 }
+
                 if ($status_code == '200') { //1
                     ////////////MNO Default theme insert///////////////////////////////////
                     if ($get_edit_get == 1) {
@@ -566,7 +693,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                             foreach ($_POST['AP_cont'] as $selectedOptionap) {
                                 $ap = $selectedOptionap;
                                 $query_01 = "INSERT INTO `exp_mno_ap_controller` (`mno_id`, `ap_controller`, `create_user`, `create_date`)
-                VALUES ('$edit_mno_id', '$ap', '$user_name',NOW())";
+                                VALUES ('$edit_mno_id', '$ap', '$user_name',NOW())";
                                 $ex01 = $db->execDB($query_01);
                             }
 
@@ -609,11 +736,9 @@ if (isset($_POST['submit_mno_form'])) { //6
 
 
                     } else {
-                        
                         ////////////////////////////////////////////////////////////////////////////
                         if ($mno_form_type == 'advanced_menu') { //advanced_menu
                             $query0 = "INSERT INTO `exp_mno` (
-                          `api_prefix`,
                           `mno_id`,
                           `unique_id`,
                           `mno_description`,
@@ -633,11 +758,9 @@ if (isset($_POST['submit_mno_form'])) { //6
                           create_user,
                           `system_package`,
                           `mno_type`,
-                          `aaa_data`,
                           `default_campaign_id`)
                         VALUES
-                          ( $mno_api_prefix,
-                           '$mno_id',
+                          ( '$mno_id',
                             '$unique_id',
                             '$mno_account_name',
                             '$mno_address_1',
@@ -656,7 +779,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                             '$login_user_name'
                             ,'$mno_system_package',
                             '$mnoAccType',
-                            '$aaa_data_op',
                             '$camphaign_id')";
                         } else {
                             $query0 = "INSERT INTO `exp_mno` (`system_package`,`mno_id`, `mno_description`, `zip`, `default_campaign_id`, `mno_type`, `is_enable`,create_user, `create_date`)
@@ -666,9 +788,9 @@ if (isset($_POST['submit_mno_form'])) { //6
 
 
                         $ex0 = $db->execDB($query0);
-
+// echo($ex0);die;
                         if ($ex0 === true) {
-                            foreach ($featurearr as $value) {
+                            /*foreach ($featurearr as $value) {
                                 $db->changeFeature(new FeatureChange($value, 'Activated', $mno_id, $user_type, ''));
                             }
 
@@ -681,13 +803,14 @@ if (isset($_POST['submit_mno_form'])) { //6
                                 $query0_org = "UPDATE `mdu_organizations` SET `mno_system_package` = '$mno_sys_package' WHERE `property_id` = '$vtgroup'";
                                 $exquery0_org = $db->execDB($query0_org);
                             }
-
+*/
 
                             $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
             VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$mno_user_type', '$mno_id', '$mno_full_name', '$mno_email', '$mno_mobile_1', '$mno_time_zone', '2','$login_user_name', NOW(), '$user_type')";
+                        //    var_dump($query0);die;
                             $ex0 = $db->execDB($query0);
 
-
+                            /*
                             $to = $mno_email;
                             $from = strip_tags($db->setVal("email", $mno_id));
                             if (empty($from)) {
@@ -747,7 +870,7 @@ if (isset($_POST['submit_mno_form'])) { //6
 
                             $mail_sent = $mail_obj->sendEmail($from, $to, $subject, $message_full, '', $title);
 
-                            
+                            */
                             if (isset($mno_sys_package)) {
 
                                 // echo '1';
@@ -853,11 +976,11 @@ if (isset($_POST['submit_mno_form'])) { //6
                                         $text_details_new = str_replace($text_search, $text_replace, $get_texts_row['text_details']);
 
 
-
+                                        /*
                                         $insert_texts_q = "INSERT INTO `exp_texts` (`text_code`,`title`,`text_details`,`vertical`,`distributor`,`create_date`, `updated_by`)
                         VALUES ('$text_code_new', '$text_title_new', '$text_details_new', '$text_veritcal_new','$mno_id', now(), '$text_updated_by_new')";
 
-                                        $insert_texts = $db->execDB($insert_texts_q);
+                                        $insert_texts = $db->execDB($insert_texts_q);*/
                                     }
 
                                     $get_logins_q = "SELECT `settings_value` FROM `exp_settings` WHERE `settings_code`='ALLOWED_LOGIN_PROFILES'";
@@ -1809,6 +1932,7 @@ var_dump($delete);
                                             <form onkeyup="submit_mno_formfn();" onchange="submit_mno_formfn();" id="mno_form" name="mno_form" class="form-horizontal" method="POST" action="operations.php?<?php if($mno_edit==1){echo "t=8&mno_edit=1&mno_edit_id=$edit_mno_id";}else{echo "t=6";}?>" >
                                                 <?php
                                                 echo '<input type="hidden" name="form_secret6" id="form_secret6" value="'.$_SESSION['FORM_SECRET'].'" />';
+                                                echo '<input type="hidden" name="form_secret5" id="form_secret5" value="'.$_SESSION['FORM_SECRET'].'" />';
                                                 ?>
 
                                                 <fieldset>
