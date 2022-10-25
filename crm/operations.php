@@ -1303,7 +1303,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                             FROM
                               `exp_mno`
                             WHERE `mno_id` = '$remove_mno_id'");
-var_dump($delete);
+// var_dump($delete);
                     $delete2 = $db->execDB("DELETE FROM `exp_mno_ap_controller` WHERE `mno_id`='$remove_mno_id'");
                     $delete2 = $db->execDB("DELETE FROM `admin_users` WHERE `user_distributor`='$remove_mno_id'");
                     $delete2 = $db->execDB("DELETE FROM `mdu_mno_organizations` WHERE `mno`='$remove_mno_id'");
