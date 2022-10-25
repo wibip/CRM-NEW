@@ -1365,7 +1365,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														</script>
 
 														<div class="form-actions">
-															<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary">Save & Send Email Invitation</button>&nbsp; <strong>
+															<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary">Save</button>&nbsp; <strong>
 																<font color="#FF0000"></font><small></small>
 															</strong>
 														</div>
