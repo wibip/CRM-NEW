@@ -229,21 +229,6 @@ $_SESSION['FORM_SECRET'] = $secret;
 								<i class="icon-tags"></i>
 								<h3>Manage API Profiles</h3>
 							</div>
-								<?php
-										if(isset($_SESSION['msg17'])){
-											echo $_SESSION['msg17'];
-											unset($_SESSION['msg17']);
-
-										}
-										if(isset($_SESSION['msg1'])){
-											echo $_SESSION['msg1']; 
-											unset($_SESSION['msg1']);
-										}
-										if(isset($_SESSION['msg2'])){
-											echo $_SESSION['msg2']; 
-											unset($_SESSION['msg2']);	
-										}
-								?>
 							<!-- /widget-header -->
 							<div class="widget-content">
 								<div class="tabbable">
@@ -253,6 +238,21 @@ $_SESSION['FORM_SECRET'] = $secret;
 									</ul>
 									<br>
 									<div class="tab-content">
+									<?php
+											if(isset($_SESSION['msg17'])){
+												echo $_SESSION['msg17'];
+												unset($_SESSION['msg17']);
+
+											}
+											if(isset($_SESSION['msg1'])){
+												echo $_SESSION['msg1']; 
+												unset($_SESSION['msg1']);
+											}
+											if(isset($_SESSION['msg2'])){
+												echo $_SESSION['msg2']; 
+												unset($_SESSION['msg2']);	
+											}
+									?>
 										<!-- create_product tab -->
 										<div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="viewap">      	      			
 													      
