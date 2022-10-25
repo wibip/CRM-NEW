@@ -1096,6 +1096,120 @@ if (isset($_POST['submit_mno_form'])) { //6
             }
         } //key validation
     } //edit_mno
+    elseif (isset($_GET['remove_mno_id'])) {
+        // if ($_SESSION['FORM_SECRET'] == $_GET['token10']) {
+            $remove_mno_id = $_GET['remove_mno_id'];
+            if ($user_type != 'SALES') {
+                //archive
+                //*********************
+                $archive_q = "INSERT INTO `exp_mno_archive` (
+                      `id`,
+                      `mno_id`,
+                      `unique_id`,
+                      `mno_description`,
+                      `mno_portal_text`,
+                      `logo`,
+                      `top_line_color`,
+                      `mno_type`,
+                      `bussiness_address1`,
+                      `bussiness_address2`,
+                      `bussiness_address3`,
+                      `country`,
+                      `state_region`,
+                      `zip`,
+                      `phone1`,
+                      `phone2`,
+                      `phone3`,
+                      `is_enable`,
+                      `top_line_size`,
+                      `favicon_image`,
+                      `top_bg_pattern_image`,
+                      `theme_site_title`,
+                      `theme_logo`,
+                      `theme_style_type`,
+                      `theme_top_line_color`,
+                      `theme_color`,
+                      `theme_light_color`,
+                      `timezones`,
+                      `create_user`,
+                      `create_date`,
+                      `last_update`,
+                      `delete_by`,
+                      `delete_date`
+                    )
+                    SELECT
+                      `id`,
+                      `mno_id`,
+                      `unique_id`,
+                      `mno_description`,
+                      `mno_portal_text`,
+                      `logo`,
+                      `top_line_color`,
+                      `mno_type`,
+                      `bussiness_address1`,
+                      `bussiness_address2`,
+                      `bussiness_address3`,
+                      `country`,
+                      `state_region`,
+                      `zip`,
+                      `phone1`,
+                      `phone2`,
+                      `phone3`,
+                      `is_enable`,
+                      `top_line_size`,
+                      `favicon_image`,
+                      `top_bg_pattern_image`,
+                      `theme_site_title`,
+                      `theme_logo`,
+                      `theme_style_type`,
+                      `theme_top_line_color`,
+                      `theme_color`,
+                      `theme_light_color`,
+                      `timezones`,
+                      `create_user`,
+                      `create_date`,
+                      `last_update`,
+                      '$username',
+                      NOW()
+                    FROM
+                      `exp_mno` WHERE mno_id = '$remove_mno_id'";
+
+                    $keyquery = $db->execDB($archive_q);
+
+                    $delete = $db->execDB("DELETE
+                            FROM
+                              `exp_mno`
+                            WHERE `mno_id` = '$remove_mno_id'");
+var_dump($delete);
+                    $delete2 = $db->execDB("DELETE FROM `exp_mno_ap_controller` WHERE `mno_id`='$remove_mno_id'");
+                    $delete2 = $db->execDB("DELETE FROM `admin_users` WHERE `user_distributor`='$remove_mno_id'");
+                    $delete2 = $db->execDB("DELETE FROM `mdu_mno_organizations` WHERE `mno`='$remove_mno_id'");
+                    $delete2_1 = $db->execDB("DELETE FROM `exp_camphaign_ads` WHERE `ad_id` = '$default_campaign_id'");
+
+                    if ($delete === true) {
+                        $db->userErrorLog('2004', $user_name, 'script - ' . $script);
+                        $db->userLog($user_name, $script, 'Remove Operator', $rm_unique);
+                        $create_log->save('3001', $message_functions->showNameMessage('operator_remove_success', $remove_mno_id, '3001'), '');
+                        $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('operator_remove_success', $remove_mno_id) . "</strong></div>";
+                    } else {
+                        $db->userErrorLog('2001', $user_name, 'script - ' . $script);
+                        $create_log->save('2001', $message_functions->showMessage('operator_remove_failed', '2001'), '');
+                        $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_remove_failed', '2001') . "</strong></div>";
+                    }
+                
+            } else {
+                $create_log->save('3001', $message_functions->showNameMessage('operator_remove_success', $remove_mno_id, '3001'), '');
+                $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('operator_remove_success', $remove_mno_id) . "</strong></div>";
+            }
+        // } //key validation
+        // else {
+        //     $db->userErrorLog('2004', $user_name, 'script - ' . $script);
+        //     $create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
+
+        //     $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
+        //     //header('Location: location.php?t=1');
+        // }
+    } //remove_mno_id
 
 ?>
 <style>
@@ -2139,8 +2253,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                         $s= $row[s];
                                                                         $is_enable= $row[is_enable];
                                                                         $icomm_num=$row[verification_number];
-
-                                                                        
                                                                         echo '<tr>
                                                                         <td> '.$mno_description.' </td>
                                                                         <td> '.trim($ap_c, ",").' </td>	';
@@ -2163,10 +2275,10 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                             });
 
                                                                             </script></td>';
-                                                                            $distributor_exi = "SELECT * FROM `exp_mno_distributor` WHERE mno_id = '$mno_id'";
-                                                                            $query_results01 = $db->selectDB($distributor_exi);
-                                                                            $count_records_exi = count($query_results01);
-                                                                            if($count_records_exi == 0){
+                                                                            // $distributor_exi = "SELECT * FROM `exp_mno_distributor` WHERE mno_id = '$mno_id'";
+                                                                            // $query_results01 = $db->selectDB($distributor_exi);
+                                                                            // $count_records_exi = count($query_results01);
+                                                                            // if($count_records_exi == 0){
 
                                                                             //*********************************** Remove  *****************************************
                                                                             echo '<td><a href="javascript:void();" id="REMMNOACC_'.$mno_id.'"  class="btn btn-small btn-danger">
@@ -2189,10 +2301,10 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                             </script>';
 
 
-                                                                            }else{
+                                                                            // }else{
 
-                                                                                echo '<td><a class="btn btn-small btn-warning" disabled >&nbsp;<i class="icon icon-lock"></i>Remove</a></center>';
-                                                                            }
+                                                                            //     echo '<td><a class="btn btn-small btn-warning" disabled >&nbsp;<i class="icon icon-lock"></i>Remove</a></center>';
+                                                                            // }
                                                                         //****************************************************************************************
                                                                         echo ' </td>';
                                                                         echo '</tr>';
