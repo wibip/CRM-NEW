@@ -144,22 +144,12 @@ if(isset($_POST['create_ap_controller'])){
 		$edit_controller = trim($_GET['edit_controller']);
 		$get_wag_q="SELECT	* FROM `exp_locations_ap_controller` WHERE `id` = '$edit_controller'";
 		$get_wag=$db->selectDB($get_wag_q);
-		
-		//while($edit_wag_r=mysql_fetch_assoc($get_wag)){
 		foreach($get_wag['data'] AS $edit_wag_r){			
 			$edit_ap_control_name = $edit_wag_r['controller_name'];	
-			$edit_ap_brand = $edit_wag_r['brand'];
-			$edit_ap_mobile = $edit_wag_r['model'];
-			$edit_ap_ip_address = $edit_wag_r['ip_address'];
-			$edit_wag_dis=$edit_wag_r['description'];
-			$edit_time_zone=$edit_wag_r['time_zone'];
 			$edit_api_profile = $edit_wag_r['api_profile'];		
 			$edit_wag_url=$edit_wag_r['api_url'];	
-			$edit_wag_url_se=$edit_wag_r['api_url_se'];
 			$edit_wag_uname=$edit_wag_r['api_username'];
 			$edit_wag_pass=$edit_wag_r['api_password'];
-			$edit_wag_controller_description=json_decode($edit_wag_r['controller_description'],true);
-			$edit_wag_type=$edit_wag_r['type'];
 		}
 		$edit_wag=2;
 	}//key validation
@@ -171,98 +161,59 @@ if(isset($_POST['create_ap_controller'])){
 
 	}
 }//
-	
 
 if(isset($_POST['api_update'])){
-	$tab1="set";
-	$edit_wag=2;
-	$wag_secret=$_POST['update_wag_secret'];
-	if($wag_secret==$_SESSION['FORM_SECRET']){
-		$update_wag_name=$_POST['edit_ap_controller_name'];
-		$update_brand=$_POST['edit_brand'];
-		$update_model=$_POST['edit_model'];
-		$update_wag_dis=$_POST['edit_wag_dis'];
-		$update_time_zone=$_POST['edit_apc_time_zone'];
-		$update_ip_address=$_POST['edit_ip_address'];
-		$edit_api_profile_name=$_POST['edit_api_profile_name'];
+		$tab1="set";
+		$edit_wag=2;
+		$wag_secret=$_POST['update_wag_secret'];
+		if($wag_secret==$_SESSION['FORM_SECRET']){
+			$update_wag_name=$_POST['edit_ap_controller_name'];
+			$edit_api_profile_name=$_POST['edit_api_profile'];
+			$update_wag_url=trim($_POST['edit_api_url']);
+			$update_wag_uname=$_POST['edit_api_uname'];
+			$update_wag_pass=$_POST['edit_api_pass'];
 
-		$controll_type=$db->getValueAsf("SELECT `type` as f FROM `exp_locations_ap_controller` WHERE `controller_name`='$update_wag_name' LIMIT 1");
-		if($controll_type=='FIREWALL CONTROLLER'){
-			$edit_api_profile_name = 'meraki1';
-		}
-
-		if($controll_type=='DPSK'){
-			$edit_api_profile_name = 'CloudPath';
-		}
-
-		$update_wag_url=trim($_POST['edit_wag_url']);
-		$update_wag_url_se=$_POST['edit_wag_url_se'];
-		$update_wag_uname=$_POST['edit_wag_uname'];
-		$update_wag_pass=$_POST['edit_wag_pass'];
-		$api_key_se = trim($_POST['edit_api_key_se']);
-		$controller_description=array();
-		$controller_description['api_key'] = $api_key_se;
-		$controller_description_json= json_encode($controller_description);
-
-		$archive_q="INSERT INTO `exp_locations_ap_controller_archive`
-					(`controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,`archive_by`,`status`)
-					SELECT `controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,'$user_name','Update'
-					FROM `exp_locations_ap_controller`
-					WHERE `controller_name`='$update_wag_name'";
-		$archive_exe=$db->execDB($archive_q);
-
-		
-		$update_wag_q="UPDATE `exp_locations_ap_controller` SET
-						`time_zone`='$update_time_zone',
-						`api_profile`='$edit_api_profile_name',
-						`brand`='$update_brand',`model`='$update_model',
-						`ip_address`='$update_ip_address',
-						`description`='$update_wag_dis',
-						`api_url`='$update_wag_url',
-						`api_url_se`='$update_wag_url_se',
-						`api_username`='$update_wag_uname',
-						`api_password`='$update_wag_pass',
-						`controller_description`='$controller_description_json'
+			$archive_q="INSERT INTO `exp_locations_ap_controller_archive`
+						(`controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,`archive_by`,`status`)
+						SELECT `controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,'$user_name','Update'
+						FROM `exp_locations_ap_controller`
 						WHERE `controller_name`='$update_wag_name'";
-
-		$update_wag=$db->execDB($update_wag_q);
-		$edit_ap_control_name = $update_wag_name;
-		$edit_ap_brand = $update_brand;		
-		$edit_ap_mobile = $update_model;		
-		$edit_ap_ip_address = $update_ip_address;		
-		$edit_wag_dis=$update_wag_dis;
-		$edit_time_zone=$update_time_zone;
-		$edit_api_profile = $edit_api_profile_name;	
-		$edit_wag_url=$update_wag_url;		
-		$edit_wag_url_se=$update_wag_url_se;			
-		$edit_wag_uname=$update_wag_uname;		
-		$edit_wag_pass=$update_wag_pass;
-		$edit_wag_controller_description=json_decode($controller_description_json,true);
-
-		$edit_wag_type=$db->getValueAsf("SELECT `type` as f
-		FROM `exp_locations_ap_controller`
-		WHERE `controller_name`='$update_wag_name'");
-		
-		if($update_wag===true){
-			$create_log->save('3001',$message_functions->showMessage('ap_controller_update_success'),'');
+			$archive_exe=$db->execDB($archive_q);
+	
 			
-			$_SESSION['msg1']="<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_update_success')."</strong></div>";
+			$update_wag_q="UPDATE `exp_locations_ap_controller` SET 
+															`api_profile`='$edit_api_profile_name',
+															`api_url`='$update_wag_url',
+															`api_username`='$update_wag_uname',
+															`api_password`='$update_wag_pass'
+															WHERE `controller_name`='$update_wag_name'";
+
+			$update_wag=$db->execDB($update_wag_q);
+			$edit_ap_control_name = $update_wag_name;
+			$edit_api_profile = $edit_api_profile_name;
+			$edit_wag_url=$update_wag_url;
+			$edit_wag_uname=$update_wag_uname;
+			$edit_wag_pass=$update_wag_pass;
+
+			$edit_wag_type=$db->getValueAsf("SELECT `type` as f
+			FROM `exp_locations_ap_controller`
+			WHERE `controller_name`='$update_wag_name'");
+			
+			if($update_wag===true){
+				$create_log->save('3001',$message_functions->showMessage('ap_controller_update_success'),'');
+				$_SESSION['msg1']="<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_update_success')."</strong></div>";
+			}else{
+				$create_log->save('2001',$message_functions->showMessage('ap_controller_update_failed','2001'),'');
+				$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_update_failed','2001')."</strong></div>";
+			}
 		}else{
-			
-			$create_log->save('2001',$message_functions->showMessage('ap_controller_update_failed','2001'),'');
-			
-			$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_update_failed','2001')."</strong></div>";
+			$db->userErrorLog('2004', $user_name, 'script - '.$script);
+			$create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
+			$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('transection_fail','2004')."</strong></div>";
+			header('Location: operator_config.php?t=1');
 		}
-	}else{
-		$db->userErrorLog('2004', $user_name, 'script - '.$script);
-		
-		$create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
-
-		$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('transection_fail','2004')."</strong></div>";
-		header('Location: operator_config.php?t=1');
 	}
-}	
-					
+						
 //Form Refreshing avoid secret key/////
 $secret=md5(uniqid(rand(), true));
 $_SESSION['FORM_SECRET'] = $secret;
@@ -304,6 +255,102 @@ $_SESSION['FORM_SECRET'] = $secret;
 									<div class="tab-content">
 										<!-- create_product tab -->
 										<div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="viewap">      	      			
+													      
+									<?php
+										if($edit_wag==2){
+									?>
+										<form   onkeyup="admin_updatefn();" onchange="admin_updatefn();" class="form-horizontal" method="post" action="?t=1">
+											<input type="hidden" name="t" value="1">
+											<?php
+											echo '<input type="hidden" name="update_wag_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
+											?>
+											<fieldset>
+												<div class="control-group">
+													<label class="control-label" for="mg_product_code_1">API Profile<font color="#FF0000"></font></label>
+													<div class="controls col-lg-5 form-group">
+														<input class="span4 form-control" id="api_profile" name="edit_api_profile" type="text" value="<?php echo $edit_api_profile;?>">
+													</div>
+												</div>	
+												<div class="control-group">
+													<label class="control-label" for="mg_product_code_1">Version<font color="#FF0000"></font></label>
+													<div class="controls col-lg-5 form-group">
+																<select class="span4 form-control" name="edit_ap_controller_name" id="version" >
+																<option value="">Select Version</option>
+																<option value="APV1" <?=($edit_ap_control_name == "APV1" ? "selected" : "")?>>BI API v1</option>
+																<option value="APV2" <?=($edit_ap_control_name == "APV2" ? "selected" : "")?>>BI API v2</option>
+																<option value="APV3" <?=($edit_ap_control_name == "APV3" ? "selected" : "")?>>BI API v3</option>
+																<option value="APV4" <?=($edit_ap_control_name == "APV4" ? "selected" : "")?>>BI API v4</option>
+																<?php
+															// 		$key_query = "SELECT brand FROM `exp_locations_ap_controller_model` ORDER BY brand";
+																
+															// $query_results=$db->selectDB($key_query);
+															// foreach($query_results['data'] AS $row){
+															// 	$brand = $row['brand'];									
+								
+															// 	echo '<option value="'.$brand.'">'.$brand.'</option>';
+															// }
+															?>
+															</select>
+														</div>
+												</div>
+												
+												<div class="control-group">
+													<label class="control-label" for="approfile"> API URL<font color="#FF0000"></font></label>
+													<div class="controls">
+														<div class="input-prepend input-append ">
+															<input type="text"  value="<?php echo $edit_wag_url;?>" name="edit_api_url" class="span4" required="required">
+														</div>
+													</div>
+												</div>
+												<div class="control-group ed_ap_sw ed_dpsk">
+													<label class="control-label" for="approfile"> API Username<font color="#FF0000"></font></label>
+													<div class="controls">
+														<div class="input-prepend input-append ">
+															<input type="text"  value="<?php echo $edit_wag_uname;?>" name="edit_api_uname" class="span4">
+														</div>
+													</div>
+												</div>
+												<div class="control-group ed_ap_sw ed_dpsk">
+													<label class="control-label" for="approfile"> API Password<font color="#FF0000"></font></label>
+													<div class="controls">
+														<div class="input-prepend input-append ">
+															<input type="text"  value="<?php echo $edit_wag_pass;?>" name="edit_api_pass" class="span4 password_f" >
+														</div>
+													</div>
+												</div>
+											</fieldset>
+											<div class="form-actions">
+												<button disabled type="submit" name="api_update" id="admin_update" class="btn btn-primary">Update</button>
+												<button type="button" class="btn btn-info inline-btn"  onclick="goto1();" class="btn btn-danger">Cancel</button> 
+													<script>
+															function admin_updatefn() {
+																$("#admin_update").prop('disabled', false);
+															}
+															
+															function goto1(url){              
+																window.location = "?";              
+															}
+																									
+															var value = '<?php echo $edit_wag_type; ?>';
+															if(value=='FIREWALL CONTROLLER'){
+																$(".ed_ap_sw").css("display", "none");
+																$(".ed_firewall").css("display", "block");
+															}else if(value=='DPSK'){
+																$(".ed_ap_sw").css("display", "none");
+																$(".ed_firewall").css("display", "block");
+																$(".ed_dpsk").css("display", "block");
+																
+															}else{
+																$(".ed_firewall").css("display", "none");
+																$(".ed_ap_sw").css("display", "block");
+															}
+																
+                                                        </script>
+											</div>
+										</form>
+										<?php
+										}
+										?>
 											<div class="widget widget-table action-table">
 												<div class="widget-header">
 													<i class="icon-th-list"></i>
@@ -412,10 +459,10 @@ $_SESSION['FORM_SECRET'] = $secret;
                                                         <div class="controls col-lg-5 form-group">
                                      								<select class="span4 form-control" name="version" id="version" >
                                                                     <option value="">Select Version</option>
-																	<option value="AP">BI API v1</option>
-																	<option value="AP">BI API v2</option>
-																	<option value="AP">BI API v3</option>
-																	<option value="AP">BI API v4</option>
+																	<option value="APV1">BI API v1</option>
+																	<option value="APV2">BI API v2</option>
+																	<option value="APV3">BI API v3</option>
+																	<option value="APV4">BI API v4</option>
 																	<?php
 																// 		$key_query = "SELECT brand FROM `exp_locations_ap_controller_model` ORDER BY brand";
 																	

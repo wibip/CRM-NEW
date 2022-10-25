@@ -66,8 +66,6 @@ $logger = Logger::getLogger();
 		.ui-datepicker-calendar td>a {
 			min-width: 0px !important;
 		}
-
-
 		.tooltipster-content p {
 
 			width: 200px !important;
@@ -95,14 +93,11 @@ $logger = Logger::getLogger();
 	}
 
 	?>
-
-
 	<link rel="stylesheet" href="css/jquery-ui-alert.css" type="text/css" />
 
 	<?php
 	// TAB Organization
 	if (isset($_GET['t'])) {
-
 		$variable_tab = 'tab' . $_GET['t'];
 		$$variable_tab = 'set';
 	} else {
@@ -123,79 +118,13 @@ $logger = Logger::getLogger();
 	//Admin loc archive parth
 	$archive_path = $db->setVal('LOGS_FILE_DIR', 'ADMIN');
 
-	//Error log search
-	if (isset($_POST['error_lg'])) {
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
-
-			$query_error_lg = "SELECT E.`error_id`,E.`description`,L.`error_details`,S.`location_id`,S.`token_id`,S.`mac`,S.`ssid`,S.`customer_id`,C.`email`,L.`create_date`
-									FROM exp_error_log L,exp_errors E,exp_customer_session S
-									left join `exp_customer` C
-									on S.`customer_id`= C.`customer_id`
-									WHERE E.`error_id`=L.`error_id`
-									AND S.`token_id`=L.`token`
-									AND S.`location_id`= '$user_distributor'";
-
-			if ($_POST['ssid'] != NULL) {
-				$ssid = $_POST['ssid'];
-				$query_error_lg .= " AND `ssid`='" . $ssid . "'";
-			}
-
-			if ($_POST['mac'] != NULL) {
-				$mac = $_POST['mac'];
-				$query_error_lg .= " AND `mac`='" . $mac . "'";
-			}
-
-			if ($_POST['email'] != NULL) {
-				$email = $_POST['email'];
-				$query_error_lg .= " AND `email`='" . $email . "'";
-			}
-
-			if ($_POST['start_date'] != NULL && $_POST['end_date'] != NULL) {
-
-
-				$end_datem = DateTime::createFromFormat('m/d/Y', $_POST['end_date'])->format('Y-m-d');
-				$st_datem = DateTime::createFromFormat('m/d/Y', $_POST['strat_date'])->format('Y-m-d');
-
-				$mg_end = $end_datem;
-				$mg_start = $st_datem;
-
-				$mg_start_date = $_POST['start_date'] . ' 00:00:00';
-				$mg_end_date = $_POST['end_date'] . ' 23:59:59';
-
-				$query_error_lg .= " AND L.`create_date` BETWEEN '" . $mg_start_date . "' AND '" . $mg_end_date . "'";
-			} else {
-				$mg_end_date = "";
-				$mg_start_date = "";
-			}
-
-			$query_error_lg .= " ORDER BY L.`id` DESC";
-
-			if ($_POST['limit'] != NULL) {
-				$limit = $_POST['limit'];
-				$query_error_lg .= " LIMIT " . $limit;
-			}
-
-			//echo $query_error_lg;
-			// $result_error_lgs = mysql_query($query_error_lg);
-			// if ($result_error_lgs) {
-
-			// }
-
-			$result_error_lgs = $db->selectDB($query_error_lg);
-		}
-	}
-
 	if (isset($_POST['prepaid_lg'])) {
 		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
-
 			$userLog = $logger->getObjectProvider()->getObjectOther();
-
 			if ($user_type != 'ADMIN') {
 				$userLog->setUserDistributor($user_distributor);
 			}
-			//$userLog->user_type = $user_type;
-
-
+	
 			if ($_POST['realm36'] != NULL) {
 				$userLog->setRealm($_POST['realm36']);
 			}
@@ -206,39 +135,27 @@ $logger = Logger::getLogger();
 			if ($_POST['start_date36'] != NULL && $_POST['end_date36'] != NULL) {
 				$mg_end3 = $_POST['end_date36'];
 				$mg_start3 = $_POST['start_date36'];
-
 				$end_date = DateTime::createFromFormat('m/d/Y', $mg_end3)->format('Y-m-d');
 				$st_date = DateTime::createFromFormat('m/d/Y', $mg_start3)->format('Y-m-d');
-
-
 				$mg_start_date3 = $st_date . ' 00:00:00';
 				$mg_end_date3 = $end_date . ' 23:59:59';
-
 				$d_start = new DateTime($mg_start_date3, new DateTimeZone($log_time_zone));
 				$mg_start_date_tz = $d_start->getTimestamp();
 
 				$d_end = new DateTime($mg_end_date3, new DateTimeZone($log_time_zone));
 				$mg_end_date_tz = $d_end->getTimestamp();
-
-
-				//$key_query1 .= " AND l.`unixtimestamp` BETWEEN '".$mg_start_date_tz."' AND '".$mg_end_date_tz."'";
 				$userLog->from = $mg_start_date_tz;
 				$userLog->to = $mg_end_date_tz;
-
-				//echo $key_query1;
 			}
 
 			if ($_POST['limit36'] != NULL) {
 				$limit3 = $_POST['limit36'];
 				$userLog->limit = $limit3;
-
-				//$key_query1.=" LIMIT ".$limit3;
 			} else {
 				$userLog->limit = 100;
 			}
 
-
-			//$query_results1_user=mysql_query($key_query1);
+			var_dump($userLog);
 			$query_results1_resel = $logger->GetLog($userLog);
 		}
 	}
@@ -291,312 +208,16 @@ $logger = Logger::getLogger();
 		}
 	}
 
-	//property_logs
-	if (isset($_POST['property_lg'])) {
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
-
-			require_once 'DTO/object_data.php';
-			$log = new object_data();
-			$log->type = 'property_activity_ui';
-
-			$get_property = $_POST['property'];
-			//$key_query1 = "SELECT l.user_name,l.module, l.create_date,l.unixtimestamp,l.task,l.reference,l.ip FROM admin_user_logs l WHERE l.`user_name`='".$name."'";
-
-			$log->property = $get_property;
-
-			if ($_POST['start_date24'] != NULL && $_POST['end_date24'] != NULL) {
-				$mg_end_24 = $_POST['end_date24'];
-				$mg_start_24 = $_POST['start_date24'];
-
-				$end_date = DateTime::createFromFormat('m/d/Y', $mg_end_24)->format('Y-m-d');
-				$st_date = DateTime::createFromFormat('m/d/Y', $mg_start_24)->format('Y-m-d');
-
-				$mg_start_date24 = $st_date . ' 00:00:00';
-				$mg_end_date24 = $end_date . ' 23:59:59';
-
-				$d_start = new DateTime($mg_start_date24, new DateTimeZone($log_time_zone));
-				$mg_start_date_tz = $d_start->getTimestamp();
-
-				$d_end = new DateTime($mg_end_date24, new DateTimeZone($log_time_zone));
-				$mg_end_date_tz = $d_end->getTimestamp();
-
-				$log->from = $mg_start_date_tz;
-				$log->to = $mg_end_date_tz;
-			}
-
-			if ($_POST['limit24'] != NULL) {
-				$limit24 = $_POST['limit24'];
-				$log->limit = $limit24;
-			}
-
-
-
-			$query_results24 = $logger->getCustom($log);
-		}
-	}
-
-	//auth_logs
-	if (isset($_POST['auth_lg'])) {
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
-			if ($user_type == 'ADMIN') {
-
-				$key_query1 = "SELECT l.user_name,l.module, l.create_date FROM admin_user_logs l, admin_users u
-					WHERE l.user_name = u.user_name AND u.user_type = '$user_type'";
-			} else {
-
-				$key_query1 = "SELECT l.user_name,l.module, l.create_date FROM admin_user_logs l, admin_users u
-					WHERE l.user_name = u.user_name AND u.user_distributor = '$user_distributor' AND u.user_type = '$user_type' ";
-			}
-			$key_query1 = "SELECT * 
-				FROM `exp_auth_profile_logs` WHERE id>0 ";
-
-			if ($_POST['name'] != NULL) {
-				$name = $_POST['name'];
-				if ($name != -1) {
-					$key_query1 .= " AND `function`='" . $name . "'";
-				}
-			}
-
-			if ($_POST['start_date11'] != NULL && $_POST['end_date11'] != NULL) {
-				$mg_end11 = $_POST['end_date11'];
-				$mg_start11 = $_POST['start_date11'];
-
-				$end_date = DateTime::createFromFormat('m/d/Y', $mg_end11)->format('Y-m-d');
-				$st_date = DateTime::createFromFormat('m/d/Y', $mg_start11)->format('Y-m-d');
-
-
-				$mg_start_date11 = $st_date . ' 00:00:00';
-				$mg_end_date11 = $end_date . ' 23:59:59';
-
-
-				$d_start11 = new DateTime($mg_start_date11, new DateTimeZone($log_time_zone));
-				$mg_start_date_tz11 = $d_start11->getTimestamp();
-
-				$d_end11 = new DateTime($mg_end_date11, new DateTimeZone($log_time_zone));
-				$mg_end_date_tz11 = $d_end11->getTimestamp();
-
-				$key_query1 .= " AND `unixtimestamp` BETWEEN '" . $mg_start_date_tz11 . "' AND '" . $mg_end_date_tz11 . "'";
-				//echo $key_query1;
-			} else {
-				$mg_end_date11 = "";
-				$mg_start_date11 = "";
-			}
-
-			$key_query1 .= " ORDER BY id DESC";
-
-			if ($_POST['limit3'] != NULL) {
-				$limit3 = $_POST['limit3'];
-				$key_query1 .= " LIMIT " . $limit3;
-			} else {
-				$key_query1 .= " LIMIT 50";
-			}
-			//echo $key_query1;
-
-
-			//$query_results11=mysql_query($key_query1);
-
-			$query_results11 = $db->selectDB($key_query1);
-		}
-	}
-
-
-	// Access_logs
-	if (isset($_POST['access_lg'])) {
-		//echo "string";
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
-
-			$query_2 = "SELECT E.`status_id`,E.`description`,L.`access_details`,S.`location_id`,S.`token_id`,S.`mac`,S.`ssid`,S.`customer_id`,C.`email`,L.`create_date`
-									FROM exp_points_logs L,exp_points E,exp_customer_session S
-									left join `exp_customer` C
-									on S.`customer_id`= C.`customer_id`
-									WHERE E.`status_id`=L.`access_id`
-									AND S.`token_id`=L.`token`
-
-									AND S.`location_id`= '$user_distributor'";
-
-			if ($_POST['ssid2'] != NULL) {
-				$ssid2 = $_POST['ssid2'];
-				$query_2 .= " AND `ssid`='" . $ssid2 . "'";
-			}
-
-			if ($_POST['mac2'] != NULL) {
-				$mac2 = $_POST['mac2'];
-				$query_2 .= " AND `mac`='" . $mac2 . "'";
-			}
-
-			if ($_POST['email_2'] != NULL) {
-				$email_2 = $_POST['email_2'];
-				//echo $email_2;
-				$query_2 .= " AND `email`='" . $email_2 . "'";
-			}
-
-			if ($_POST['start_date2'] != NULL && $_POST['end_date2'] != NULL) {
-
-				$end_date2 = DateTime::createFromFormat('m/d/Y', $_POST['strat_date2'])->format('Y-m-d');
-				$st_date2 = DateTime::createFromFormat('m/d/Y', $_POST['end_date2'])->format('Y-m-d');
-
-				$mg_end2 = $end_date2;
-				$mg_start2 = $st_date2;
-				$mg_start_date2 = $_POST['start_date2'] . ' 00:00:00';
-				$mg_end_date2 = $_POST['end_date2'] . ' 23:59:59';
-				$query_2 .= " AND L.`create_date` BETWEEN '" . $mg_start_date2 . "' AND '" . $mg_end_date2 . "'";
-			} else {
-				$mg_end_date2 = "";
-				$mg_start_date2 = "";
-			}
-
-			$query_2 .= " ORDER BY S.session_starting_time DESC, L.token DESC, L.id";
-
-			if ($_POST['limit2'] != NULL) {
-				$limit2 = $_POST['limit2'];
-				$query_2 .= " LIMIT " . $limit2;
-			} else {
-				$query_2 .= " LIMIT 50";
-			}
-
-			//				echo $query_2;
-			//$query_results2 = mysql_query($query_2);
-			$query_results2 = $db->selectDB($query_2);
-		}
-	}
-
-
-	// redirection_log
-	if (isset($_POST['redirection_lg'])) {
-		//echo "string";
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
-
-			$query_4 = "SELECT * FROM `exp_redirection_log`";
-
-			/*"SELECT E`status_id`,E`description`,L.`token`,L.`access_details`,L.`create_date`
-									FROM `exp_points` p, `exp_points_logs` l
-									WHERE E`status_id`=L.`access_id`";*/
-
-
-			if ($_POST['mac4'] != NULL) {
-				$mac4 = $_POST['mac4'];
-				$query_4 .= " WHERE `mac`='" . $mac4 . "'";
-			}
-
-			if ($_POST['realm4'] != NULL) {
-				$realm4 = $_POST['realm4'];
-
-				if ($_POST['mac4'] != NULL) {
-					$query_4 .= " AND `group_id`='" . $realm4 . "'";
-				} else {
-
-					$query_4 .= " WHERE `group_id`='" . $realm4 . "'";
-				}
-			}
-
-			if ($_POST['start_date4'] != NULL && $_POST['end_date4'] != NULL) {
-
-				$end_date4 = DateTime::createFromFormat('m/d/Y', $_POST['end_date4'])->format('Y-m-d');
-				$st_date4 = DateTime::createFromFormat('m/d/Y', $_POST['start_date4'])->format('Y-m-d');
-
-				$mg_start_4 = $_POST['start_date4'];
-				$mg_end_4 = $_POST['end_date4'];
-
-				$mg_start_date4 = $st_date4 . ' 00:00:00';
-				$mg_end_date4 = $end_date4 . ' 23:59:59';
-
-				if ($_POST['mac4'] != NULL || $_POST['realm4'] != NULL) {
-					$query_4 .= " AND `create_date` BETWEEN '" . $mg_start_date4 . "' AND '" . $mg_end_date4 . "'";
-				} else {
-					$query_4 .= " WHERE `create_date` BETWEEN '" . $mg_start_date4 . "' AND '" . $mg_end_date4 . "'";
-				}
-			} else {
-				$mg_end_date4 = "";
-				$mg_start_date4 = "";
-			}
-
-			$query_4 .= " ORDER BY id DESC";
-
-			if ($_POST['limit4'] != NULL) {
-				$limit4 = $_POST['limit4'];
-				$query_4 .= " LIMIT " . $limit4;
-			} else {
-				$query_4 .= " LIMIT 50";
-			}
-
-			// echo $query_4;
-			//$query_results4 = mysql_query($query_4);
-			$query_results4 = $db->selectDB($query_4);;
-		}
-	}
-
-
-
-	//Property activiry logs
-	/*if(isset($_POST['property_log_submit'])){
-
-	
-	if($_SESSION['FORM_SECRET']==$_POST['form_secret']){
-
-		$get_property = $_POST['property'];
-
-		$get_property_ex= explode('/',$get_property);
-
-		if($get_property_ex[1]=='B'){
-		 $query_24 = "SELECT * FROM `exp_mno_distributor` d JOIN `admin_user_logs` l ON d.`distributor_code`=l.`user_distributor`  WHERE d.`parent_id` = '$get_property_ex[0]' ";
-		}else{
-			$query_24	="SELECT * FROM `admin_user_logs` l WHERE l. `user_distributor` = '$get_property_ex[0]'";
-		}
-
-
-
-
-	   if ($_POST['start_date24'] != NULL && $_POST['end_date24'] != NULL) {
-		   
-		   $end_date24 = DateTime::createFromFormat('m/d/Y', $_POST['end_date24'])->format('Y-m-d');
-		   $st_date24 = DateTime::createFromFormat('m/d/Y', $_POST['start_date24'])->format('Y-m-d');
-		   
-		   $mg_start_24 = $_POST['start_date24'];
-		   $mg_end_24 = $_POST['end_date24'];
-		   
-		   $mg_start_date24 = $st_date24.' 00:00:00';
-		   $mg_end_date24 = $end_date24.' 23:59:59';
-
-		   $query_24 .= " AND l.`create_date` BETWEEN '".$mg_start_date24."' AND '".$mg_end_date24."'";
-
-	   }else{
-		   $mg_end_date24 = "";
-		   $mg_start_date24 = "";
-	   }
-
-	     $query_24 .= " ORDER BY l.id DESC";
-
-	   if ($_POST['limit24'] != NULL) {
-		   $limit24 = $_POST['limit24'];
-		   $query_24 .= " LIMIT ".$limit24;
-	   }else{
-		   $query_24 .= " LIMIT 50";
-	   }
-
-	   //echo $query_24;
-	   $query_results24 = mysql_query($query_24);
-   }
-
-}
-*/
-
 	//Form Refreshing avoid secret key/////
 	$secret = md5(uniqid(rand(), true));
 	$_SESSION['FORM_SECRET'] = $secret;
-
-
-
 	$logs_mid = 'layout/' . $camp_layout . '/views/logs_mid.php';
 
 	if (($new_design == 'yes') && file_exists($logs_mid)) {
 
 		include_once $logs_mid;
 	} else {
-
-
 	?>
-
-
 		<div class="main">
 			<div class="custom-tabs"></div>
 			<div class="main-inner">
@@ -619,51 +240,13 @@ $logger = Logger::getLogger();
 
 									<div class="tabbable">
 										<ul class="nav nav-tabs newTabs">
-											<!-- <li class="active"><a href="#error_logs" data-toggle="tab">Error Logs</a></li> -->
-
-
-
-											<!--< ?php
-											if ($user_type == 'MVNE' || $user_type == 'MVNO') {
-											?>
-												<li < ?php if (isset($tab2)) { ?>class="active" < ?php } ?>><a href="#access_logs" data-toggle="tab">Access Logs</a></li>
-											< ?php } ?>
-
-											< ?php
-											if ($user_type == 'MVNE' || $user_type == 'MVNO') {
-											?>
-												<li < ?php if (isset($tab1)) { ?>class="active" < ?php } ?>><a href="#error_logs" data-toggle="tab">Error Logs</a></li>
-											< ?php }
-											if ($user_type == 'MNO' || $user_type == "SALES" || $user_type == "SUPPORT") {
-											?>
-												<li < ?php if (isset($tab3)) { ?>class="one_tab active" < ?php } else {
-																										echo 'class="one_tab"';
-																									} ?>><a href="#user_activity_logs" data-toggle="tab">User Activity Logs</a></li>
-												< ?php if (in_array("PROPERTY_LOG", $features_array) || $package_features == "all") { ?>
-													<li < ?php if (isset($tab24)) { ?>class="active" < ?php } ?>><a href="#property_activity_logs" data-toggle="tab">Property Activity Logs</a></li>
-													<li < ?php if (isset($tab25)) { ?>class="active" < ?php } ?>><a href="#property_activity_logs_download" data-toggle="tab">Property Activity Logs Download</a></li>
-
-												< ?php }
-												if (in_array("PREPAID_MODULE_N", $mno_feature)) {
-												?>
-
-													<li < ?php if (isset($tab36)) { ?>class="active" < ?php } ?>><a href="#prepaid_activity_logs" data-toggle="tab">Prepaid API Logs</a></li>-->
-
-												<?php //}
-											// } else {
-
+											
+												<?php 
 												if ($package_features == "all" || in_array("OTHER_LOG", $features_array)) { ?>
-
 													<li <?php if (isset($tab36)) { ?>class="active" <?php } ?>><a href="#prepaid_activity_logs" data-toggle="tab">API Logs</a></li>
-
 												<?php } ?>
-
 												<li <?php if (isset($tab3)) { ?>class="active" <?php } ?>><a href="#user_activity_logs" data-toggle="tab">User Activity Logs</a></li>
-												<!--< ?php if (in_array("AUTH_LOGS", $features_array) || $package_features == "all") { ?>
-													<li < ?php if (isset($tab11)) { ?>class="active" < ?php } ?>><a href="#auth_logs" data-toggle="tab">Auth Logs</a></li>
-												< ?php } ?>-->
-											<?php 
-											// } ?>
+										
 										</ul>
 										<br>
 
@@ -1205,7 +788,6 @@ $logger = Logger::getLogger();
 												<br>
 												<form id="prepaid_activity_logs_form" name="prepaid_activity_logs" method="post" class="form-horizontal" action="?t=36">
 													<fieldset>
-
 														<div id="response_d3">
 															<?php
 															if (isset($_SESSION['msg24'])) {
@@ -1241,17 +823,13 @@ $logger = Logger::getLogger();
 																	<option value="Delete_device"> Delete Dpsk Device </option>
 																	<option value="assign_policy"> Assign Policy </option>
 																</select>
-
-
 															</div>
 														</div>
 
 														<div class="control-group ">
 															<label class="control-label" for="name">Realm</label>
 															<div class="controls form-group">
-
 																<input class="span2 form-control" name="realm36" id="realm36" value=<?php echo $realm36 ?>>
-
 															</div>
 														</div>
 
@@ -1278,11 +856,7 @@ $logger = Logger::getLogger();
 
 														<div class="control-group">
 															<label class="control-label" for="radiobtns">Period</label>
-
 															<div class="controls form-group">
-																<? php // echo $mg_start_24."------".$mg_end_24 
-																?>
-
 																<input class="inline_error inline_error_1 span2 form-control" id="start_date36" name="start_date36" type="text" value="<?php if (isset($mg_start_date36)) {
 																																															echo $mg_start_36;
 																																														} ?>" placeholder="mm/dd/yyyy">
@@ -1292,8 +866,6 @@ $logger = Logger::getLogger();
 																																													} ?>" placeholder="mm/dd/yyyy">
 
 																<input type="hidden" name="date36" />
-
-
 															</div>
 															<!-- /controls -->
 														</div>
@@ -1331,10 +903,8 @@ $logger = Logger::getLogger();
 																	</tr>
 																</thead>
 																<tbody>
-
 																	<?php
 																	$activity_arr = array();
-
 																	foreach ($query_results1_resel as $row) {
 																		$function = $row->getfunction();
 																		if (empty($function)) {
