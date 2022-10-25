@@ -1209,7 +1209,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 															<label class="control-label" for="language_1">Language</label>
 															<div class="controls form-group col-lg-5">
 																<select class="form-control span4" name="language_1" id="language_1">
-																	<option value="en">English</option>
 																	<?php
 																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
 																		$query_results=$db->selectDB($key_query);
@@ -1402,7 +1401,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																<thead>
 																	<tr>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Username</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Access Role</th>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="10">Full Name</th>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Email</th>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="10">Created By</th>
@@ -1452,7 +1450,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 																		echo '<tr>
 																				<td> ' . $user_name1 . ' </td>
-																				<td> ' . $access_role_desc . ' </td>
 																				<td> ' . $full_name . ' </td>
 																				<td> ' . $email . ' </td>
 																				<td> ' . $create_user . ' </td>';

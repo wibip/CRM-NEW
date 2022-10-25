@@ -192,16 +192,11 @@ if(empty($theme_text) || $theme_text ==''){
         continue;
     }
 
-		if(in_array($module_name,$m_n)){
-
-
-
-		 $redirect_url = $global_base_url."/".$module_name.$extension;
+	if(in_array($module_name,$m_n)){
+		$redirect_url = $global_base_url."/".$module_name.$extension;
 		header( "Location: $redirect_url");
 		exit();
-
-
-		}
+	}
 
 	}
 }
