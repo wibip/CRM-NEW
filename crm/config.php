@@ -101,7 +101,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 	require_once 'classes/faqClass.php';
 	include 'header.php';
 
-	$camp_base_url = $db->setVal('camp_base_url', 'ADMIN');
+	$global_url = $db->setVal('global_url', 'ADMIN');
 
 	////////////Tab open////
 	if ($user_type == 'MNO') {
@@ -330,14 +330,14 @@ if ($wag_ap_name != 'NO_PROFILE') {
 													</div>
 												</div>
 												<div class="control-group" <?php
-																			if (!array_key_exists('captive_url', $tab1_field_ar) && $system_package != 'N/A') {
+																			if (!array_key_exists('global_url', $tab1_field_ar) && $system_package != 'N/A') {
 																				echo ' style="display:none";';
 																			}
 																			?> style="margin-bottom: 0px !important;">
 
 													<label class="control-label" for="radiobtns">CRM URL</label>
 													<div class="controls form-group">
-														<input class="span4 form-control" id="camp_url" name="camp_url" type="text" value="<?php echo $db->setVal("camp_base_url", $user_distributor); ?>">
+														<input class="span4 form-control" id="global_url" name="global_url" type="text" value="<?php echo $db->setVal("global_url", $user_distributor); ?>">
 													</div>
 												</div>
 												<div class="form-actions ">
@@ -413,7 +413,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 							<?php echo $db->validateField('notEmpty'); ?>
 						}
 					},
-					camp_url: {
+					global_url: {
 						validators: {
 							<?php echo $db->validateField('notEmpty'); ?>
 						}
@@ -462,14 +462,14 @@ if ($wag_ap_name != 'NO_PROFILE') {
 
 			switch (type) {
 				case 'system':
-					var camp_url = document.getElementById("camp_url").value;
+					var global_url = document.getElementById("global_url").value;
 					var main_title = document.getElementById("main_title").value;
 					var master_email = document.getElementById("master_email").value;
 					var time_zone = document.getElementById("time_zone").value;
 					var top_line_color = "";
 
 					url = url +
-						"&camp_url=" + encodeURIComponent(camp_url) +
+						"&global_url=" + encodeURIComponent(global_url) +
 						"&main_title=" + encodeURIComponent(main_title) +
 						"&master_email=" + encodeURIComponent(master_email) +
 						"&time_zone=" + encodeURIComponent(time_zone);
