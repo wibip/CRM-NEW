@@ -274,7 +274,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                     // } else {
                     //     $vtenant_module = '';
                     // }
-var_dump($featurearr);
+// var_dump($featurearr);
                     $feature_json = $db->escapeDB(json_encode($featurearr));
                
                 $login_user_name = $_SESSION['user_name'];
@@ -785,8 +785,8 @@ var_dump($featurearr);
         VALUES ('$mno_sys_package','$mno_id', '$mno_account_name', '$mno_zip_code', '$camphaign_id', '$mnoAccType','0','$login_user_name', NOW())";
                         }
                         //echo $query0;
-var_dump($mno_state);
-var_dump($query0);
+// var_dump($mno_state);
+// var_dump($query0);
                         $ex0 = $db->execDB($query0);
 // echo($ex0);die;
                         if ($ex0 === true) {
@@ -880,9 +880,6 @@ var_dump($query0);
 
 
                                 if ($package_functions->getSectionType("SUPPORT_AVAILABLE", $mno_sys_package, 'MNO') == '1') {
-
-                                    // echo '2';
-
 
                                     $query0 = "INSERT INTO `admin_access_roles` (`access_role`,`description`,`distributor`,`create_user`,`create_date`)
                     VALUES ('$access_role_id', 'Support', '$mno_id', '$user_name',now())";
@@ -1949,7 +1946,7 @@ var_dump($query0);
                                                         <div class="controls col-lg-5 form-group" readonly>
                                                             <select onchange="add_module(this)" multiple="multiple" name="api_profile[]" id="api_profile" class="span4 form-control">
                                                                     <?php
-                                                                    $key_query="SELECT c.controller_name,c.description,c.brand,c.api_profile,c.id,count(c.id) as assign_count FROM `exp_locations_ap_controller` c ";
+                                                                    $key_query="SELECT c.controller_name,c.description,c.brand,c.api_profile,c.id FROM `exp_locations_ap_controller` c ";
                                                                     $query_results=$db->selectDB($key_query);
                                                                     foreach($query_results['data'] AS $rowe){
                                                                         if($get_edit_api_profile==$rowe[id]){
