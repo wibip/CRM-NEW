@@ -269,7 +269,7 @@ $modules = [
             ],
             [
                 "id" => "crm_create",
-                "name" => "CRM",
+                "name" => "Create",
                 "module" => "crm/1"
             ]
         ]
