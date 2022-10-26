@@ -737,49 +737,51 @@ if (isset($_POST['submit_mno_form'])) { //6
 
                     } else {
                         ////////////////////////////////////////////////////////////////////////////
+                        // var_dump($mno_country);
+                        // var_dump($mno_state); die;
                         if ($mno_form_type == 'advanced_menu') { //advanced_menu
                             $query0 = "INSERT INTO `exp_mno` (
-                          `mno_id`,
-                          `unique_id`,
-                          `mno_description`,
-                          `bussiness_address1`,
-                          `bussiness_address2`,
-                          `bussiness_address3`,
-                          `features`,
-                          `country`,
-                          `state_region`,
-                          `zip`,
-                          `phone1`,
-                          `phone2`,
-                          `phone3`,
-                          `timezones`,
-                          `is_enable`,
-                          `create_date`,
-                          create_user,
-                          `system_package`,
-                          `mno_type`,
-                          `default_campaign_id`)
-                        VALUES
-                          ( '$mno_id',
-                            '$unique_id',
-                            '$mno_account_name',
-                            '$mno_address_1',
-                            '$mno_address_2',
-                            '$mno_address_3',
-                            '$feature_json',
-                            '$mno_country',
-                            '$mno_state',
-                            '$mno_zip_code',
-                            '$mno_mobile_1',
-                            '$mno_mobile_2',
-                            '$mno_mobile_3',
-                            '$mno_time_zone',
-                            '2',
-                            NOW(),
-                            '$login_user_name'
-                            ,'$mno_system_package',
-                            '$mnoAccType',
-                            '$camphaign_id')";
+                                `mno_id`,
+                                `unique_id`,
+                                `mno_description`,
+                                `bussiness_address1`,
+                                `bussiness_address2`,
+                                `bussiness_address3`,
+                                `features`,
+                                `country`,
+                                `state_region`,
+                                `zip`,
+                                `phone1`,
+                                `phone2`,
+                                `phone3`,
+                                `timezones`,
+                                `is_enable`,
+                                `create_date`,
+                                create_user,
+                                `system_package`,
+                                `mno_type`,
+                                `default_campaign_id`)
+                                VALUES
+                                ( '$mno_id',
+                                    '$unique_id',
+                                    '$mno_account_name',
+                                    '$mno_address_1',
+                                    '$mno_address_2',
+                                    '$mno_address_3',
+                                    '$feature_json',
+                                    '$mno_country',
+                                    '$mno_state',
+                                    '$mno_zip_code',
+                                    '$mno_mobile_1',
+                                    '$mno_mobile_2',
+                                    '$mno_mobile_3',
+                                    '$mno_time_zone',
+                                    '2',
+                                    NOW(),
+                                    '$login_user_name'
+                                    ,'$mno_system_package',
+                                    '$mnoAccType',
+                                    '$camphaign_id')";
                         } else {
                             $query0 = "INSERT INTO `exp_mno` (`system_package`,`mno_id`, `mno_description`, `zip`, `default_campaign_id`, `mno_type`, `is_enable`,create_user, `create_date`)
         VALUES ('$mno_sys_package','$mno_id', '$mno_account_name', '$mno_zip_code', '$camphaign_id', '$mnoAccType','0','$login_user_name', NOW())";
@@ -2054,7 +2056,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                 
                                                                 foreach ($country_result['data'] as $row) {
                                                                     $select="";
-                                                                    if($row[a]==$get_edit_mno_country || $row[a]== "US"){
+                                                                    if($row[a]==$get_edit_mno_country){
                                                                         $select="selected";
                                                                     }
                                                                     echo '<option value="'.$row[a].'" '.$select.'>'.$row[b].'</option>';
@@ -2072,14 +2074,19 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                         <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_state" placeholder="State or Region" name="mno_state" required autocomplete="off">
                                                             <?php
                                                                 echo '<option value="">Select State</option>';
-                                                                
-                                                                foreach ($get_regions as $state) {
-                                                                    $select="";
-                                                                    if($get_edit_mno_state_region==$state['states_code']){
-                                                                        $select="selected";
+                                                                // var_dump($get_regions['data']);
+                                                                foreach ($get_regions['data'] AS $state) {
+                                                                    //edit_state_region , get_edit_mno_state_region
+                                                                    if($get_edit_mno_state_region == 'N/A') {
+                                                                        echo '<option selected value="N/A">Others</option>';
+                                                                    } else {
+                                                                        if ($get_edit_mno_state_region == $state['states_code']) {
+                                                                            echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                                        } else {
+                                                                            echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                                        }
                                                                     }
                                                                     
-                                                                    echo '<option '.$select.' value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
                                                                 }
                                                             ?>
                                                             </select>
