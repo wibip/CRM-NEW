@@ -269,12 +269,12 @@ if (isset($_POST['submit_mno_form'])) { //6
                     $time_offset = ($offset < 0 ? $offset : "+" . $offset);
 
                     $featurearr = $_POST['api_profile'];
-                    if (in_array('VTENANT_MODULE', $featurearr)) {
-                        $vtenant_module = 'Vtenant';
-                    } else {
-                        $vtenant_module = '';
-                    }
-
+                    // if (in_array('VTENANT_MODULE', $featurearr)) {
+                    //     $vtenant_module = 'Vtenant';
+                    // } else {
+                    //     $vtenant_module = '';
+                    // }
+var_dump($featurearr);
                     $feature_json = $db->escapeDB(json_encode($featurearr));
                
                 $login_user_name = $_SESSION['user_name'];
@@ -785,8 +785,8 @@ if (isset($_POST['submit_mno_form'])) { //6
         VALUES ('$mno_sys_package','$mno_id', '$mno_account_name', '$mno_zip_code', '$camphaign_id', '$mnoAccType','0','$login_user_name', NOW())";
                         }
                         //echo $query0;
-
-
+var_dump($mno_state);
+var_dump($query0);
                         $ex0 = $db->execDB($query0);
 // echo($ex0);die;
                         if ($ex0 === true) {
@@ -1089,11 +1089,11 @@ if (isset($_POST['submit_mno_form'])) { //6
     }
 
      elseif (isset($_GET['edit_mno_id'])) {
-        if ($_SESSION['FORM_SECRET'] == $_GET['token10']) {
+        // if ($_SESSION['FORM_SECRET'] == $_GET['token10']) {
             $edit_mno_id = $_GET['edit_mno_id'];
             $get_edit_mno_details_q = "SELECT * FROM `exp_mno` WHERE `mno_id`='$edit_mno_id'";
             $mno_data = $db->select1DB($get_edit_mno_details_q);
-            //        print_r($get_edit_mno_details);
+                //    print_r($get_edit_mno_details);
             //        while($mno_data=mysql_fetch_assoc($get_edit_mno_details)){
             $get_edit_mno_id = $mno_data['id'];
             $get_edit_mno_mno_id = $mno_data['mno_id'];
@@ -1217,7 +1217,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                 $mno_edit = 1;
             } else {
             }
-        } //key validation
+        // } //key validation
     } //edit_mno
     elseif (isset($_GET['remove_mno_id'])) {
         // if ($_SESSION['FORM_SECRET'] == $_GET['token10']) {
@@ -1951,14 +1951,14 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                     <?php
                                                                     $key_query="SELECT c.controller_name,c.description,c.brand,c.api_profile,c.id,count(c.id) as assign_count FROM `exp_locations_ap_controller` c ";
                                                                     $query_results=$db->selectDB($key_query);
-                                                                            foreach($query_results['data'] AS $rowe){
-                                                                                if($get_edit_api_profile==$rowe[id]){
-                                                                                    $select="selected";
-                                                                                }else{
-                                                                                    $select="";
-                                                                                }
-                                                                                echo '<option '.$select.' value='.$rowe[id].' data-vt="'.$rowe[controller_name].'" >'.$rowe[api_profile].'</option>';
-                                                                            }
+                                                                    foreach($query_results['data'] AS $rowe){
+                                                                        if($get_edit_api_profile==$rowe[id]){
+                                                                            $select="selected";
+                                                                        }else{
+                                                                            $select="";
+                                                                        }
+                                                                        echo '<option '.$select.' value='.$rowe[id].' data-vt="'.$rowe[controller_name].'" >'.$rowe[api_profile].'</option>';
+                                                                    }
                                                                     ?>
                                                             </select>
                                                         </div>
@@ -2054,11 +2054,12 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                             <select name="mno_country" id="mno_country" class="span4 form-control" autocomplete="off">
                                                                 <option value="">Select Country</option>
                                                                 <?php
-                                                                $select="";
+                                                                
                                                                 foreach ($country_result['data'] as $row) {
-                                                                    // if($row[a]==$get_edit_mno_country || $row[a]== "US"){
-                                                                    //     $select="selected";
-                                                                    // }
+                                                                    $select="";
+                                                                    if($row[a]==$get_edit_mno_country || $row[a]== "US"){
+                                                                        $select="selected";
+                                                                    }
                                                                     echo '<option value="'.$row[a].'" '.$select.'>'.$row[b].'</option>';
                                                                 }
                                                                 ?>
@@ -2074,13 +2075,14 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                         <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_state" placeholder="State or Region" name="mno_state" required autocomplete="off">
                                                             <?php
                                                                 echo '<option value="">Select State</option>';
+                                                                
                                                                 foreach ($get_regions as $state) {
-                                                                    //edit_state_region , get_edit_mno_state_region
-                                                                    // if($get_edit_mno_state_region==$state['states_code']) {
-                                                                    //     echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                                    // }else{
-                                                                        echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                                    // }
+                                                                    $select="";
+                                                                    if($get_edit_mno_state_region==$state['states_code']){
+                                                                        $select="selected";
+                                                                    }
+                                                                    
+                                                                    echo '<option '.$select.' value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
                                                                 }
                                                             ?>
                                                             </select>
