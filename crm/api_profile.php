@@ -259,7 +259,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 									<?php
 										if($edit_wag==2){
 									?>
-										<form   onkeyup="admin_updatefn();" onchange="admin_updatefn();" class="form-horizontal" method="post" action="?t=1">
+										<form onkeyup="admin_updatefn();" onchange="admin_updatefn();" class="form-horizontal" method="post" action="?t=1">
 											<input type="hidden" name="t" value="1">
 											<?php
 											echo '<input type="hidden" name="update_wag_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
@@ -268,13 +268,13 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<div class="control-group">
 													<label class="control-label" for="mg_product_code_1">API Profile<font color="#FF0000"></font></label>
 													<div class="controls col-lg-5 form-group">
-														<input class="span4 form-control" id="api_profile" name="edit_api_profile" type="text" value="<?php echo $edit_api_profile;?>">
+														<input class="span4 form-control" id="api_profile" name="edit_api_profile" type="text" value="<?php echo $edit_api_profile;?>" required="required">
 													</div>
 												</div>	
 												<div class="control-group">
 													<label class="control-label" for="mg_product_code_1">Version<font color="#FF0000"></font></label>
 													<div class="controls col-lg-5 form-group">
-																<select class="span4 form-control" name="edit_ap_controller_name" id="version" >
+															<select class="span4 form-control" name="edit_ap_controller_name" id="version" required="required">
 																<option value="">Select Version</option>
 																<option value="APV1" <?=($edit_ap_control_name == "APV1" ? "selected" : "")?>>BI API v1</option>
 																<option value="APV2" <?=($edit_ap_control_name == "APV2" ? "selected" : "")?>>BI API v2</option>
@@ -295,7 +295,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 												</div>
 												
 												<div class="control-group">
-													<label class="control-label" for="approfile"> API URL<font color="#FF0000"></font></label>
+													<label class="control-label" for="approfile"> API Server URL<font color="#FF0000"></font></label>
 													<div class="controls">
 														<div class="input-prepend input-append ">
 															<input type="text"  value="<?php echo $edit_wag_url;?>" name="edit_api_url" class="span4" required="required">
@@ -306,7 +306,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 													<label class="control-label" for="approfile"> API Username<font color="#FF0000"></font></label>
 													<div class="controls">
 														<div class="input-prepend input-append ">
-															<input type="text"  value="<?php echo $edit_wag_uname;?>" name="edit_api_uname" class="span4">
+															<input type="text"  value="<?php echo $edit_wag_uname;?>" name="edit_api_uname" class="span4" required="required">
 														</div>
 													</div>
 												</div>
@@ -314,7 +314,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 													<label class="control-label" for="approfile"> API Password<font color="#FF0000"></font></label>
 													<div class="controls">
 														<div class="input-prepend input-append ">
-															<input type="text"  value="<?php echo $edit_wag_pass;?>" name="edit_api_pass" class="span4 password_f" >
+															<input type="text"  value="<?php echo $edit_wag_pass;?>" name="edit_api_pass" class="span4 password_f" required="required">
 														</div>
 													</div>
 												</div>
@@ -331,19 +331,6 @@ $_SESSION['FORM_SECRET'] = $secret;
 																window.location = "?";              
 															}
 																									
-															var value = '<?php echo $edit_wag_type; ?>';
-															if(value=='FIREWALL CONTROLLER'){
-																$(".ed_ap_sw").css("display", "none");
-																$(".ed_firewall").css("display", "block");
-															}else if(value=='DPSK'){
-																$(".ed_ap_sw").css("display", "none");
-																$(".ed_firewall").css("display", "block");
-																$(".ed_dpsk").css("display", "block");
-																
-															}else{
-																$(".ed_firewall").css("display", "none");
-																$(".ed_ap_sw").css("display", "block");
-															}
 																
                                                         </script>
 											</div>
@@ -451,13 +438,13 @@ $_SESSION['FORM_SECRET'] = $secret;
 													<div class="control-group">
                                                         <label class="control-label" for="mg_product_code_1">API Profile<font color="#FF0000"></font></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="api_profile" name="api_profile" type="text">
+                                                            <input class="span4 form-control" id="api_profile" name="api_profile" type="text" required="required">
                                                         </div>
                                                     </div>
 													<div class="control-group">
                                                         <label class="control-label" for="mg_product_code_1">Version<font color="#FF0000"></font></label>
                                                         <div class="controls col-lg-5 form-group">
-                                     								<select class="span4 form-control" name="version" id="version" >
+                                     							<select class="span4 form-control" name="version" id="version" required="required">
                                                                     <option value="">Select Version</option>
 																	<option value="APV1">BI API v1</option>
 																	<option value="APV2">BI API v2</option>
@@ -479,19 +466,21 @@ $_SESSION['FORM_SECRET'] = $secret;
 													<div class="control-group">
                                                         <label class="control-label" for="mg_product_code_1">API Server URL<font color="#FF0000"></font></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="api_server_url" name="api_server_url" type="text" >
+															<div class="input-prepend input-append ">
+																<input class="span4 form-control" id="api_server_url" name="api_server_url" type="text" required="required">
+															</div>
                                                         </div>
                                                     </div>
 													<div class="control-group">
                                                         <label class="control-label" for="mg_product_code_1">API Username<font color="#FF0000"></font></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="api_username" name="api_username" type="text" >
+                                                            <input class="span4 form-control" id="api_username" name="api_username" type="text"required="required" >
                                                         </div>
                                                     </div>
 													<div class="control-group">
                                                         <label class="control-label" for="mg_product_code_1">API Password<font color="#FF0000"></font></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="api_password" name="api_password" type="text" >
+                                                            <input class="span4 form-control" id="api_password" name="api_password" type="text" required="required">
                                                         </div>
                                                     </div>													
 													<div class="form-actions">
@@ -528,72 +517,7 @@ include 'footer.php';
 <script type="text/javascript" src="js/formValidation.js"></script>
 <script type="text/javascript" src="js/bootstrapValidator.js"></script>
 <script type="text/javascript">
-	$('#create_ap_controller_form').bootstrapValidator({
-            framework: 'bootstrap',
-            excluded: ':disabled',
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                type: {
-                    validators: {
-                        <?php echo $db->validateField('notEmpty'); ?>
-                    }
-                },
-                ap_con_name : {
-                    validators: {
-						<?php echo $db->validateField('notEmpty'); ?>,
-						remote: {
-                            message: '<p>Controller Name already exists</p>',
-                            method: 'POST',
-                            url: 'ajax/validate_apcontroller.php',
-                        }			
-                    }
-                },
-                brand: {
-                    validators: {
-                        <?php echo $db->validateField('notEmpty'); ?>
-                    }
-                },
-                model : {
-                    validators: {
-                        <?php echo $db->validateField('notEmpty'); ?>
-                    }
-                },
-                desc: {
-                    validators: {
-                        <?php echo $db->validateField('notEmpty'); ?>
-                    }
-                },
-				apc_time_zone: {
-                    validators: {
-                        <?php echo $db->validateField('notEmpty'); ?>
-                    }
-                },
-                api_url: {
-                    validators: {
-                        <?php echo $db->validateField('notEmpty'); ?>
-                    }
-                },
-				api_key_se: {
-                    validators: {
-                        <?php echo $db->validateField('notEmpty'); ?>
-                    }
-                },
-                api_uname : {
-                    validators: {
-                        <?php echo $db->validateField('notEmpty'); ?>
-                    }
-                },
-                api_pass: {
-                    validators: {
-                        <?php echo $db->validateField('notEmpty'); ?>
-                    }
-                }
-            }
-        });
+	
 </script>
 <!-- Alert messages js-->
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
