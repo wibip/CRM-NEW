@@ -376,8 +376,8 @@ $_SESSION['FORM_SECRET'] = $secret;
 																			$id = $row['id'];
 																			$assign_count = $row['assign_count'];
 																			echo '<tr>
-																			<td> '.$controller_name.' </td>
 																			<td> '.$api_profile.' </td>
+																			<td> '.$controller_name.' </td>
 																			<td> '.$api_url.' </td>';
 																				echo '<td><a href="javascript:void();" id="AP_'.$id.'"  class="btn btn-small btn-info">
 																					<i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
