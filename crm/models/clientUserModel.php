@@ -66,38 +66,13 @@ class clientUserModel
 
     public function getClient($id)
     {
-        $q = sprintf("SELECT *
-                      FROM crm_clients WHERE id =%s",  $this->connection->GetSQLValueString($id, "text"));
-        $data = $this->connection->selectDB($q);
-
-        require_once dirname(__FILE__) . '/../entity/crm_clients.php';
-
-        $data_array = array();
-        foreach ($data['data'] as $row) {
-            $row_data = new crm_clients(
-                $row['id'],
-                $row['user_name'],
-                '',
-                $row['access_role'],
-                $row['user_type'],
-                $row['user_distributor'],
-                $row['full_name'],
-                $row['email'],
-                $row['language'],
-                $row['timezone'],
-                $row['mobile'],
-                $row['verification_number'],
-                $row['is_enable'],
-                $row['global_user_id'],
-                $row['create_date'],
-                $row['create_user'],
-                $row['last_update'],
-                $row['activation_date']
-            );
-            array_push($data_array, $row_data);
+        $q = sprintf("SELECT * FROM crm_clients WHERE id =%s",  $this->connection->GetSQLValueString($id, "text"));
+        $query_results = $this->connection->selectDB($q);
+        if(isset($query_results['rowCount']) && $query_results['rowCount'] > 0) {
+            return $query_results['data'];
+        } else {
+            return false;
         }
-
-        return $data_array;
     }
 
     public function deleteClient($id)
@@ -315,40 +290,6 @@ class clientUserModel
             
     }
 
-
-     //get api useres(users.php)
-     function get_apiUseres()
-     {
-        
-        
-             $q = "SELECT *
-             FROM crm_clients  where user_type = 'API'";
-         
- 
- 
-         $data = $this->connection->selectDB($q);
- 
-         $data_array = array();
-         foreach ($data['data'] as $row) {
- 
-             $row_data = new User();
- 
-             $row_data->id = $row['id'];
-             $row_data->user_name = $row['user_name'];
-             $row_data->full_name = $row['full_name'];
-             $row_data->timezone = $row['timezone'];
-             
-             $row_data->email = $row['email'];
-             
- 
-             array_push($data_array, $row_data);
-         }
- 
- 
-       
-         return $data_array;
-     }
-
     // user log update
     function userUpdateLog($user_id, $action_type, $action_by)
     {
@@ -437,6 +378,81 @@ class clientUserModel
         } else {
             return false;
         }
+    }
+
+    public function createNewClient($post) {
+            $full_name = $post['full_name_1'];
+			//get table auto increment
+			$br_q = "SHOW TABLE STATUS LIKE 'crm_clients'";
+			$result2=$this->connection->selectDB($br_q);
+	
+			foreach($result2['data'] AS $rowe){
+				$auto_inc = $rowe['Auto_increment'];
+			}
+
+			$new_user_name = htmlspecialchars(str_replace(' ', '_', strtolower(substr($full_name, 0, 5) . 'u' . $auto_inc)));
+			$password  = CommonFunctions::randomPassword();
+
+			$access_role = 'client';
+			$user_type = 'PROVISIONING';
+			// $user_distributor = $post['loation'];
+			$user_distributor = "";
+			$email = htmlspecialchars($post['email_1']);
+			$language = $post['language_1'];
+			$timezone = $post['timezone_1'];
+			$address_1 = htmlspecialchars($post['address_1']);
+			$address_2 = htmlspecialchars($post['address_2']);
+			$country = $post['country'];
+			$state = $post['state'];
+			$zip_code = htmlspecialchars($post['zip_code']);
+			$mobile = htmlspecialchars($post['mobile_1']);
+
+			$pw_query = "SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1(\"$password\"))))) AS f";
+			$updated_pw='';
+			$pw_results=$this->connection->selectDB($pw_query);
+			foreach($pw_results['data'] AS $row){
+				$updated_pw = strtoupper($row['f']);
+			}
+
+			$query = "INSERT INTO admin_users
+					(user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`,mobile, is_enable, create_date,create_user)
+					VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$user_distributor','$full_name','$email', '$language' ,'$timezone', '$mobile','2',now(),'$user_name')";
+			$ex =$this->connection->execDB($query);
+
+			if ($ex===true) {
+				$idContAutoInc = $this->connection->getValueAsf("SELECT LAST_INSERT_ID() as f");
+				$query_clients = 'INSERT INTO crm_clients
+						(user_id,user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`,`bussiness_address1`,`bussiness_address2`,`country`,`state_region`,`zip`, mobile, is_enable, create_date,create_user)
+						VALUES ('.$idContAutoInc.',
+								"'.$new_user_name.'",
+								"'.$updated_pw.'",
+								"'.$access_role.'",
+								"'.$user_type.'",
+								"'.$user_distributor.'",
+								"'.$full_name.'",
+								"'.$email.'", 
+								"'.$language.'" ,
+								"'.$timezone.'",
+								"'.$address_1.'", 
+								"'.$address_2.'", 
+								"'.$country.'", 
+								"'.$state.'",
+								"'.$zip_code.'", 
+								"'.$mobile.'",
+								2,
+								now(),
+								"'.$user_name.'")';
+				$result_clients =$this->connection->execDB($query_clients);
+
+				$msg = str_replace("user","client",$message_functions->showNameMessage('user_create_success', $new_user_name));
+				$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
+				//Activity log
+				$this->connection->userLog($user_name, $script, 'Create User', $new_user_name);
+			} else {
+				$msg = str_replace("user","client",$message_functions->showMessage('user_create_fail', '2001'));
+				$this->connection->userErrorLog('2001', $user_name, 'script - ' . $script);
+				$_SESSION['msg2'] = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
+			}
     }
 
 
