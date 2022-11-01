@@ -24,9 +24,9 @@ $client_model = new clientUserModel();
 $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 
 //load countries
-$country_sql="SELECT * FROM (SELECT `country_code` AS a,`country_name` AS b FROM `exp_mno_country` WHERE `default_select`=1 ORDER BY `country_name` ASC) AS a
-                            UNION ALL
-                            SELECT * FROM (SELECT `country_code`,`country_name` FROM `exp_mno_country` WHERE `default_select`=0 ORDER BY `country_name` ASC) AS b";
+$country_sql="SELECT * FROM (SELECT `country_code` AS a,`country_name` AS b FROM `exp_country` WHERE `default_select`=1 ORDER BY `country_name` ASC) AS a
+				UNION ALL
+				SELECT * FROM (SELECT `country_code`,`country_name` FROM `exp_country` WHERE `default_select`=0 ORDER BY `country_name` ASC) AS b";
 $country_result = $db->selectDB($country_sql);
 //load country states
 $regions_sql="SELECT `states_code`, `description` FROM `exp_country_states` ORDER BY description";
@@ -40,6 +40,8 @@ foreach ($get_regions['data'] as $state) {
 
 $utc = new DateTimeZone('UTC');
 $dt = new DateTime('now', $utc);
+
+// var_dump($user_distributor);
 ?>
 
 <head>
@@ -81,1550 +83,8 @@ $dt = new DateTime('now', $utc);
 	<!--table colimn show hide-->
 	<script type="text/javascript" src="js/tablesaw.js"></script>
 	<script type="text/javascript" src="js/tablesaw-init.js"></script>
+<script type="text/javascript">
 
-	<?php
-	include 'header.php';
-	// TAB Organization
-	if (isset($_GET['t'])) {
-		$variable_tab = 'tab' . $_GET['t'];
-		$$variable_tab = 'set';
-	} else {
-		//initially page loading///
-		$tab1 = "set";
-	}
-
-	$priority_zone_array = array(
-    "America/New_York",
-    "America/Chicago",
-    "America/Denver",
-    "America/Los_Angeles",
-    "America/Anchorage",
-    "Pacific/Honolulu",
-);
-
-function userUpdateLog($user_id, $action_type, $action_by,$db)
-{
-		$update_query = "INSERT INTO `crm_clients_update` (
-															`user_name`,
-															`password`,
-															`access_role`,
-															`user_type`,
-															`user_distributor`,
-															`full_name`,
-															`email`,
-															`language`,
-															`mobile`,
-															`is_enable`,
-															`create_date`,
-															`create_user`,
-															`update_type`,
-															`update_by`,
-															`update_date`
-															)(SELECT
-															`user_name`,
-															`password`,
-															`access_role`,
-															`user_type`,
-															`user_distributor`,
-															`full_name`,
-															`email`,
-															`language`,
-															`mobile`,
-															`is_enable`,
-															`create_date`,
-															`create_user`,
-															'$action_type',
-															'$action_by',
-															NOW()
-															FROM
-															`crm_clients`
-															WHERE id='$user_id')";
-		$ex_update_log = $db->execDB($update_query);
-		return $ex_update_log;
-	}
-
-	if (isset($_POST['submit_1'])) {
-		if ($user_type != "SALES") {
-			$full_name = $_POST['full_name_1'];
-			$br_q = "SHOW TABLE STATUS LIKE 'crm_clients'";
-			$result2=$db->selectDB($br_q);
-	
-			foreach($result2['data'] AS $rowe){
-				$auto_inc = $rowe['Auto_increment'];
-			}
-
-			$new_user_name = str_replace(' ', '_', strtolower(substr($full_name, 0, 5) . 'u' . $auto_inc));
-			$password  = CommonFunctions::randomPassword();
-
-			if ($user_type == 'SALES') {
-				$msg = $message_functions->showNameMessage('user_create_success', $new_user_name);
-
-				$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
-			} else {
-				$access_role = $_POST['access_role_1'];
-				$user_type = $_POST['user_type'];
-				$loation = $_POST['loation'];
-				$email = $_POST['email_1'];
-				$language = $_POST['language_1'];
-				$timezone = $_POST['timezone_1'];
-				$mobile = $_POST['mobile_1'];
-
-				$pw_query = "SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1(\"$password\"))))) AS f";
-				$updated_pw='';
-				$pw_results=$db->selectDB($pw_query);
-  				foreach($pw_results['data'] AS $row){
-					$updated_pw = strtoupper($row['f']);
-				}
-
-				$query = "INSERT INTO crm_clients
-						(user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`, mobile, is_enable, create_date,create_user)
-						VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$loation','$full_name','$email', '$language' ,'$timezone', '$mobile','2',now(),'$user_name')";
-				$ex =$db->execDB($query);
-
-				if ($ex===true) {
-					if ($user_type == 'ADMIN') {
-						$dist = 'ADMIN';
-					} else if ($user_type == 'MNO') {
-						$dist = $user_distributor;
-					} else {
-						$kmno_query = "SELECT mno_id FROM exp_mno_distributor where distributor_code = '$user_distributor'";
-						$query_results=$db->selectDB($kmno_query);
-						foreach($query_results['data'] AS $row){
-							$dist = $row['mno_id'];
-						}
-					}
-
-					if ($access_role == 'ADMIN') {
-						$acc_type = 'Admin';
-					} else {
-						$acc_type = 'User';
-					}
-
-					$to = $email;
-
-					if ($package_functions->getSectionType('EMAIL_USER_TEMPLATE', $system_package) == "own") {
-						$email_content = $db->getEmailTemplate('USER_MAIL', $system_package, 'MNO', $user_distributor);
-						$a = $email_content[0]['text_details'];
-						$subject = $email_content[0]['title'];
-
-						if (strlen($subject) == '0') {
-							$email_content = $db->getEmailTemplate('USER_MAIL', $package_functions->getAdminPackage(), 'ADMIN');
-							$a = $email_content[0]['text_details'];
-							$subject = $email_content[0]['title'];
-						}
-					} else {
-						$a = $db->textVal('MAIL', 'ADMIN');
-						$subject = $db->textTitle('MAIL', 'ADMIN');
-					}
-
-					$support_number = $package_functions->getMessageOptions('SUPPORT_NUMBER',$system_package,$property_business_type);
-					$login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
-					$link = $db->getSystemURL('login', $login_design);
-
-					$vars = array(
-						'{$user_full_name}' => $full_name,
-						'{$short_name}'        => $db->setVal("short_title", $user_distributor),
-						'{$account_type}' => $user_type,
-						'{$user_name}' => $new_user_name,
-						'{$password}' => $password,
-						'{$support_number}' => $support_number,
-						'{$link}' => $link
-
-					);
-
-					$message_full = strtr($a, $vars);
-					$message = $message_full;
-					$from = strip_tags($db->setVal("email", $mno_id));
-					if (empty($from)) {
-						$from = strip_tags($db->setVal("email", $user_distributor));
-						if (empty($from)) {
-							$from = strip_tags($db->setVal("email", "ADMIN"));
-						}
-					}
-
-					$title = $db->setVal("short_title", $user_distributor);
-
-					$email_send_method = $package_functions->getSectionType("EMAIL_SYSTEM", $system_package);
-					include_once 'src/email/' . $email_send_method . '/index.php';
-					$cunst_var = array();
-					//$cunst_var['template'] = $package_functions->getOptions('EMAIL_TEMPLATE', $system_package);
-					$cunst_var['system_package'] = $system_package;
-					$cunst_var['mno_package'] = $system_package;
-                    $cunst_var['mno_id'] = $mno_id;
-                    $cunst_var['verticle'] = $property_business_type;
-					$mail_obj = new email($cunst_var);
-
-					$mail_obj->mno_system_package = $system_package;
-					$mail_sent = $mail_obj->sendEmail($from, $to, $subject, $message_full, '', $title);
-					$msg = $message_functions->showNameMessage('user_create_success', $new_user_name);
-
-					$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
-
-					//Activity log
-					$db->userLog($user_name, $script, 'Create User', $new_user_name);
-				} else {
-					$msg = $message_functions->showMessage('user_create_fail', '2001');
-					$db->userErrorLog('2001', $user_name, 'script - ' . $script);
-					$_SESSION['msg2'] = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
-				}
-			}
-		} else {
-			$msg = $message_functions->showNameMessage('user_create_success', $new_user_name);
-
-			$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
-		}
-	}
-	//assign Roles removes
-	elseif (isset($_GET['remove_id'])) {
-		if ($_SESSION['FORM_SECRET'] == $_GET['token2']) {
-			$remove_id = $_GET['remove_id'];
-			$qq1 = "INSERT INTO `admin_access_roles_modules_archive`
-				(`access_role`, `module_name`, `distributor`, `create_user`, `archive_by`, `archive_date`)
-				(SELECT  `access_role`, `module_name`, `distributor`, `create_user`, '$user_name', NOW()
-				FROM `admin_access_roles_modules` WHERE `id`='$remove_id' LIMIT 1)";
-			//$rr1 = mysql_query($qq1);
-			$rr1 = $db->execDB($qq1);
-
-			$qq2 = "DELETE FROM `admin_access_roles_modules` WHERE `id`='$remove_id'";
-			$rr2 = $db->execDB($qq2);
-
-			if ($rr1===true && $rr2===true) {
-				$msg = $message_functions->showMessage('module_assign_remove_success');
-				$_SESSION['msg3'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
-			} else {
-				$msg = $message_functions->showMessage('module_assign_remove_fail', '2003');
-				$db->userErrorLog('2003', $user_name, 'script - ' . $script);
-				$_SESSION['msg3'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
-			}
-		} else {
-			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$msg = $message_functions->showMessage('transection_fail', '2004');
-			$_SESSION['msg3'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
-		}
-	}
-
-	//  to the form edit user
-	elseif (isset($_GET['edit_id'])) {
-		if ($_SESSION['FORM_SECRET'] == $_GET['token']) {
-			$edit_id = $_GET['edit_id'];
-			$edit_user_data = $user_model->getUser($edit_id);
-		} else {
-			// var_dump('test');
-			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Oops, It seems you have refreshed the page. Please try again</strong></div>";
-			//header('Location: location.php?t=3');
-			$tab2 = "set";
-			$tab3 = "not";
-		}
-	}
-	//edit user
-	elseif (isset($_POST['edit-submita'])) {
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { //refresh validate
-			if ($user_type != "SALES") {
-				$id = $_POST['id'];
-				$access_role = $_POST['access_role_2'];
-				//$user_type = $_POST['user_type'];
-				//$loation = $_POST['loation'];
-				$full_name = $_POST['full_name_2'];
-				$email = $_POST['email_2'];
-				$language = $_POST['language_2'];
-				$timezone = $_POST['timezone_2'];
-				$mobile = $_POST['mobile_2'];
-				// $sub_user_type = ($access_role=='Master Support Admin')?'SUPPORT':'MNO';
-				$access_role = ($access_role=='Master Support Admin'|| $access_role=='Master Admin Peer')?'admin':$access_role;			
-				//update log//
-				$ex_log = userUpdateLog($id, 'EDIT_PROFILE', $user_name,$db);
-
-				if ($ex_log===true) {
-					$get_user_detail_q = "SELECT u.user_name, u.email, u.user_name FROM crm_clients u WHERE u.id='$id' LIMIT 1";
-					$user_details = $db->select1DB($get_user_detail_q);
-					$edit_user_name = $user_details['user_name'];
-					$old_email = $user_details['email'];
-					$archive_q = "INSERT INTO `crm_clients_archive` (user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,archive_by,archive_date,last_update,`status`)
-								SELECT user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,'$edit_user_name',NOW(),last_update,'update'
-								FROM `crm_clients` WHERE id='$id'";
-					$archive_result = $db->execDB($archive_q);
-
-					$edit_query = "UPDATE `crm_clients`
-									SET `access_role` = '$access_role',
-									`full_name` ='$full_name',
-									`email` = '$email',
-									`language` = '$language',
-									`timezone` = '$timezone',
-									`mobile` =  '$mobile'
-									WHERE `id` = '$id'";
-					$edit_result = $db->execDB($edit_query);
-
-					if ($email != $old_email && $edit_result===true) {
-						$t = date("ymdhis", time());
-						$string = $edit_user_name . '|' . $t . '|' . $email;
-						$encript_resetkey = $app->encrypt_decrypt('encrypt', $string);
-						$unique_key = $db->getValueAsf("SELECT REPLACE(UUID(),'-','') as f");
-						$qq = "UPDATE admin_reset_password SET status = 'cancel' WHERE user_name='$edit_user_name' AND status='pending'";
-						$rr = $db->execDB($qq);
-
-						if ($rr===true) {
-							$ip = $_SERVER['REMOTE_ADDR'];
-							$q1 = "INSERT INTO admin_reset_password (user_name, status, security_key,unique_key, ip, create_date) VALUES('$edit_user_name', 'pending', '$encript_resetkey','$unique_key', '$ip', NOW())";
-							//$r1 = mysql_query($q1);
-							$r1 = $db->execDB($q1);
-						}
-						$support_number = $package_functions->getMessageOptions('SUPPORT_NUMBER',$system_package,$property_business_type);
-
-						if ($r1===true) {
-							if ($package_functions->getSectionType('EMAIL_USER_TEMPLATE', $system_package) == "own") {
-								$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL', $system_package, 'MNO', $user_distributor);
-								$a = $email_content[0]['text_details'];
-								$subject = $email_content[0]['title'];
-
-								if (strlen($subject) == '0') {
-									$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL', $package_functions->getAdminPackage(), 'ADMIN');
-									$a = $email_content[0]['text_details'];
-									$subject = $email_content[0]['title'];
-								}
-							} else {
-								$a = $db->textVal('PASSWORD_RESET_MAIL', 'ADMIN');
-								$subject = $db->textTitle('PASSWORD_RESET_MAIL', 'ADMIN');
-							}
-
-							$login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
-							$link = $db->getSystemURL('reset_pwd', $login_design, $unique_key);
-							$vars = array(
-								'{$user_full_name}' => $full_name,
-								'{$short_name}' => $db->setVal("short_title", $user_distributor),
-								'{$account_type}' => $user_type,
-								'{$link}' => $link,
-								'{$support_number}' => $support_number,
-								'{$user_ID}' => $edit_user_name
-
-							);
-
-							$message_full = strtr($a, $vars);
-							$message = $message_full;
-
-							$from = strip_tags($db->setVal("email", $user_distributor));
-							if (empty($from)) {
-								$from = strip_tags($db->setVal("email", "ADMIN"));
-							}
-
-							$title = $db->setVal("short_title", $user_distributor);
-
-							$email_send_method = $package_functions->getSectionType("EMAIL_SYSTEM", $system_package);
-							include_once 'src/email/' . $email_send_method . '/index.php';
-							$cunst_var = array();
-							//$cunst_var['template'] = $package_functions->getOptions('EMAIL_TEMPLATE', $system_package);
-							$cunst_var['system_package'] = $system_package;
-			                $cunst_var['mno_package'] = $system_package;
-			                $cunst_var['mno_id'] = $mno_id;
-			                $cunst_var['verticle'] = $property_business_type;
-							$mail_obj = new email($cunst_var);
-							$mail_obj->mno_system_package = $system_package;
-							$mail_sent = $mail_obj->sendEmail($from, $email, $subject, $message_full, '', $title);
-						}
-					}
-
-					if ($edit_result) {
-						$create_log->save('3001', $message_functions->showNameMessage('role_edit_success', $edit_user_name), '');
-						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('role_edit_success', $edit_user_name) . "</strong></div>";
-
-						//Activity log
-						$db->userLog($user_name, $script, 'Modify User', $edit_user_name);
-					} else {
-						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						$create_log->save('2002', $message_functions->showMessage('role_edit_failed', '2002'), '');
-						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('role_edit_failed', '2002') . "</strong></div>";
-					}
-				} else {
-					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-					$create_log->save('2002', $message_functions->showMessage('role_edit_failed', '2002'), '');
-					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('role_edit_failed', '2002') . "</strong></div>";
-				}
-			} else {
-				$create_log->save('3001', $message_functions->showNameMessage('role_edit_success', $edit_user_name), '');
-				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('role_edit_success', $edit_user_name) . "</strong></div>";
-			}
-		} else {
-			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
-			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
-		}
-	} elseif (isset($_POST['edit-submita-pass'])) {
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { //refresh validate
-			if ($user_type != "SALES") {
-				$id = $_POST['id'];
-				$passwd = $_POST['passwd'];
-				$passwd_2 = $_POST['passwd_2'];
-				if ($passwd == $passwd_2) {
-					$user_full_name = $db->getValueAsf("SELECT u.full_name AS f FROM crm_clients u WHERE u.id='$id' LIMIT 1");
-					//update log//
-					$ex_log = userUpdateLog($id, 'RESET_PASSWORD', $user_name,$db);
-					if ($ex_log===true) {
-						$pw_query = "SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1(\"$passwd\"))))) AS f";
-						$updated_pw='';
-						$pw_results=$db->selectDB($pw_query);
-
-						foreach($pw_results['data'] AS $row){
-							$updated_pw = strtoupper($row['f']);
-						}
-
-						$edit_query = "UPDATE `crm_clients`
-										SET `password` = '$updated_pw'
-										WHERE `id` = '$id'";
-						$edit_result = $db->execDB($edit_query);
-
-						if ($edit_result===true) {
-							$create_log->save('3001', $message_functions->showNameMessage('role_password_edit_success', $user_full_name), '');
-							$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('role_password_edit_success', $user_full_name) . "</strong></div>";
-
-							//Activity log
-							$db->userLog($user_name, $script, 'Reset Password', $user_full_name);
-						} else {
-							$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-							$create_log->save('2002', $message_functions->showMessage('role_password_edit_failed', '2002'), '');
-							$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('role_password_edit_failed', '2002') . "</strong></div>";
-						}
-					} else {
-						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						$create_log->save('2002', $message_functions->showMessage('role_password_edit_failed', '2002'), '');
-						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('role_password_edit_failed', '2002') . "</strong></div>";
-					}
-				} else {
-					$db->userErrorLog('2006', $user_name, 'script - ' . $script);
-					$create_log->save('2006', $message_functions->showMessage('role_password_edit_failed', '2006'), '');
-					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('role_password_edit_failed', '2006') . "</strong></div>";
-					//Password confirmation failed
-				}
-			} else {
-				$create_log->save('3001', $message_functions->showNameMessage('role_password_edit_success', $user_full_name), '');
-				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('role_password_edit_success', $user_full_name) . "</strong></div>";
-			}
-		} else {
-			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
-			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
-		}
-	}
-	//login status change////
-	elseif (isset($_GET['status_change_id'])) {
-		if ($_SESSION['FORM_SECRET'] == $_GET['token']) { //refresh validate
-			if ($user_type != "SALES") {
-				$status_change_id = $_GET['status_change_id'];
-				$action_sts = $_GET['action_sts'];
-				$user_full_name = $db->getValueAsf("SELECT u.full_name AS f FROM crm_clients u WHERE u.id='$status_change_id' LIMIT 1");
-				$usr_name = $db->getValueAsf("SELECT u.user_name AS f FROM crm_clients u WHERE u.id='$status_change_id' LIMIT 1");
-
-				if ($action_sts == '1') {
-					$action_type = "ACCOUNT_ENABLE";
-					$set = 'enabled';
-				} else {
-					$action_type = "ACCOUNT_DISABLE";
-					$set = 'disabled';
-				}
-				//update log//
-				$ex_log = userUpdateLog($status_change_id, $action_type, $user_name,$db);
-
-				if ($ex_log===true) {
-					$archive_q = "INSERT INTO `crm_clients_archive` (user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,archive_by,archive_date,last_update,`status`)
-								SELECT user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,'$user_name',NOW(),last_update,'status_change'
-								FROM `crm_clients` WHERE id='$status_change_id'";
-					$archive_result = $db->execDB($archive_q);
-
-					$edit_query = "UPDATE  `crm_clients` SET `is_enable` = '$action_sts' WHERE `id` = '$status_change_id'";
-					$edit_result = $db->execDB($edit_query);
-
-					if ($edit_result===true) {
-						$en_dis_msg = '';
-						if ($set == 'enabled') {
-							$susmsg = $message_functions->showNameMessage('role_user_name_enable_success', $user_full_name);
-							$en_dis_msg = 'Enable';
-						} elseif ($set == 'disabled') {
-							$susmsg = $message_functions->showNameMessage('role_user_name_disable_success', $user_full_name);
-							$en_dis_msg = 'Disable';
-						}
-
-						$create_log->save('3001', $susmsg, '');
-						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $susmsg . " </strong></div>";
-
-						//Activity log
-						$db->userLog($user_name, $script, $en_dis_msg . ' User', $usr_name);
-					} else {
-						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						$create_log->save('2001', $message_functions->showMessage('role_user_name_enable_failed', '2001'), '');
-						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showMessage('role_user_name_enable_failed', '2001') . "</strong></div>";
-					}
-				} else {
-					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong> [2002] Something went wrong,please try again</strong></div>";
-				}
-			} else {
-				$action_sts = $_GET['action_sts'];
-				if ($action_sts == '1') {
-					$action_type = "ACCOUNT_ENABLE";
-					$set = 'enabled';
-				} else {
-					$action_type = "ACCOUNT_DISABLE";
-					$set = 'disabled';
-				}
-
-				if ($set == 'enabled') {
-					$susmsg = $message_functions->showNameMessage('role_user_name_enable_success', $user_full_name);
-					$en_dis_msg = 'Enable';
-				} elseif ($set == 'disabled') {
-					$susmsg = $message_functions->showNameMessage('role_user_name_disable_success', $user_full_name);
-					$en_dis_msg = 'Disable';
-				}
-
-				$create_log->save('3001', $susmsg, '');
-				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $susmsg . " </strong></div>";
-			}
-		} else {
-			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
-			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>�</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
-		}
-	}
-	//user remove////
-	elseif (isset($_GET['user_rm_id'])) {
-		if ($_SESSION['FORM_SECRET'] == $_GET['token']) { //refresh validate
-			if ($user_type != "SALES") {
-				$user_rm_id = $_GET['user_rm_id'];
-				$user_full_name = $db->getValueAsf("SELECT u.full_name AS f FROM crm_clients u WHERE u.id='$user_rm_id' LIMIT 1");
-				$usr_name = $db->getValueAsf("SELECT u.user_name AS f FROM crm_clients u WHERE u.id='$user_rm_id' LIMIT 1");
-
-				$archive_record = "INSERT INTO `crm_clients_archive` (
-																		`id`,
-																		`user_name`,
-																		`password`,
-																		`access_role`,
-																		`user_type`,
-																		`full_name`,
-																		`email`,
-																		`language`,
-																		`mobile`,
-																		`is_enable`,
-																		`create_date`,
-																		`create_user`,
-																		`archive_by`,
-																		`archive_date`
-																		) (SELECT id,
-																		`user_name`,
-																		`password`,
-																		`access_role`,
-																		`user_type`,
-																		`full_name`,
-																		`email`,
-																		`language`,
-																		`mobile`,
-																		`is_enable`,
-																		`create_date`,
-																		`create_user`,
-																		'$user_name',
-																		NOW()
-																		FROM
-																		`crm_clients`
-																		WHERE id='$user_rm_id')";
-				$archive_record = $db->execDB($archive_record);
-
-                //print_r($archive_record);echo'--';
-				if ($archive_record===true) {
-					$edit_query = "DELETE FROM `crm_clients`  WHERE `id` = '$user_rm_id'";
-					//$edit_result = mysql_query($edit_query);
-					$edit_result = $db->execDB($edit_query);
-
-					if ($edit_result===true) {
-						$create_log->save('3001', $message_functions->showNameMessage('role_role_remove_success', $user_full_name), '');
-						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showNameMessage('role_role_remove_success', $user_full_name) . "</strong></div>";
-
-						//Activity log
-						$db->userLog($user_name, $script, 'Remove User', $usr_name);
-					} else {
-						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						$create_log->save('2002', $message_functions->showMessage('role_role_remove_failed', '2002'), '');
-						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showMessage('role_role_remove_failed', '2002') . "</strong></div>";
-					}
-				} else {
-					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-					$create_log->save('2002', $message_functions->showMessage('role_role_remove_failed', '2002'), '');
-					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showMessage('role_role_remove_failed', '2002') . "</strong></div>";
-				}
-			} else {
-				$create_log->save('3001', $message_functions->showNameMessage('role_role_remove_success', $user_full_name), '');
-				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showNameMessage('role_role_remove_success', $user_full_name) . "</strong></div>";
-			}
-		} else {
-			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
-			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
-		}
-	} 
-	//Form Refreshing avoid secret key/////
-	$secret = md5(uniqid(rand(), true));
-	$_SESSION['FORM_SECRET'] = $secret;
-	$users_mid = 'layout/' . $camp_layout . '/views/users_mid.php';
-	if (($new_design == 'yes') && file_exists($users_mid)) {
-		include_once $users_mid;
-	} else {
-	?>
-		<div class="main">
-			<div class="custom-tabs"></div>
-			<div class="main-inner">
-				<div class="container">
-					<div class="row">
-						<div class="span12">
-							<div class="widget ">
-								<div class="widget-header">
-									<!-- <i class="icon-user"></i> -->
-									<h3>Client Management</h3>
-								</div>
-								<!-- /widget-header -->
-								<div class="widget-content">
-									<div class="tabbable">
-										<ul class="nav nav-tabs newTabs">
-											<li <?php if (isset($tab1) ) { ?>class="active" <?php } ?>><a href="#show_clients" data-toggle="tab">Active Clients</a></li>
-											<li <?php if (isset($tab2) || isset($tab3)) { ?>class="active" <?php } ?>><a href="#create_clients" data-toggle="tab"> <?=(isset($tab3) ? "Update" : "Create")?> Clients</a></li>
-										</ul>
-										<br>
-										<div class="tab-content">
-											<!-- +++++++++++++++++++++++++++++ client list ++++++++++++++++++++++++++++++++ -->
-											<div <?php if (isset($tab1)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="show_clients">
-												<div id="response_d3"></div>
-												<div class="widget widget-table action-table">
-													<div class="widget-header">
-														<!-- <i class="icon-th-list"></i> -->
-														<h3>Active Users</h3>
-													</div>
-													<!-- /widget-header -->
-													<div class="widget-content table_response">
-														<div style="overflow-x:auto;">
-															<table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
-																<thead>
-																	<tr>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Username</th>																		
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Access Role</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="10">Full Name</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Email</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="10">Created By</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Edit</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="6">Disable</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="7">Remove</th>
-																	</tr>
-																</thead>
-																<tbody>
-																	<?php
-																	$query_results = $client_model->get_activeClients();
-																	if(isset($query_results['rowCount']) && $query_results['rowCount'] > 0) {
-																		foreach ($query_results as $row) {
-																			$id = $row[id];
-																			$user_name1 = $row[user_name];
-																			$full_name = $row[full_name];
-																			$access_role = $row[access_role];
-																			$access_role_desc = $row['description'];
-																			$user_distributor1 = $row[user_distributor];
-																			$email = $row[email];
-																			$is_enable = $row[is_enable];
-																			$create_user = $row[create_user];
-
-																			if ($is_enable == '1' || $is_enable == '2') {
-																				$btn_icon = 'thumbs-down';
-																				$show_value = '<font color="#00CC00"><strong>Enable</strong></font>';
-																				$btn_color = 'warning';
-																				$btn_title = 'disable';
-																				$action_status = 0;
-																			} else {
-																				$btn_icon = 'thumbs-up';
-																				$show_value = '<font color="#FF0000"><strong>Disable</strong></font>';
-																				$btn_color = 'success';
-																				$btn_title = 'enable';
-																				$action_status = 1;
-																			}
-
-																			echo '<tr>
-																					<td> ' . $user_name1 . ' </td>
-																					<td> ' . $access_role_desc . ' </td>
-																					<td> ' . $full_name . ' </td>
-																					<td> ' . $email . ' </td>
-																					<td> ' . $create_user . ' </td>';
-
-																			echo '<td><a href="javascript:void();" id="APE_' . $id . '"  class="btn btn-small btn-primary">
-																					<i class="btn-icon-only icon-wrench"></i>&nbsp;Edit</a><script type="text/javascript">
-																					$(document).ready(function() {
-																					$(\'#APE_' . $id . '\').easyconfirm({locale: {
-																							title: \'Edit User\',
-																							text: \'Are you sure you want to edit this user?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																							button: [\'Cancel\',\' Confirm\'],
-																							closeText: \'close\'
-																							}});
-																						$(\'#APE_' . $id . '\').click(function() {
-																							window.location = "?token=' . $secret . '&t=5&edit_id=' . $id . '"
-																						});
-																						});
-																					</script></td><td><a href="javascript:void();" id="LS_' . $id . '"  class="btn btn-small btn-' . $btn_color . '">
-																					<i class="btn-icon-only icon-' . $btn_icon . '"></i>&nbsp;' . ucfirst($btn_title) . '</a><script type="text/javascript">
-																					$(document).ready(function() {
-																					$(\'#LS_' . $id . '\').easyconfirm({locale: {
-																							title: \'' . ucfirst($btn_title) . ' User\',
-																							text: \'Are you sure you want to ' . $btn_title . ' this user?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																							button: [\'Cancel\',\' Confirm\'],
-																							closeText: \'close\'
-																							}});
-																						$(\'#LS_' . $id . '\').click(function() {
-																							window.location = "?token=' . $secret . '&t=1&status_change_id=' . $id . '&action_sts=' . $action_status . '"
-																						});
-																						});
-																					</script></td><td><a href="javascript:void();" id="RU_' . $id . '"  class="btn btn-small btn-danger">
-																					<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a><script type="text/javascript">
-																					$(document).ready(function() {
-																					$(\'#RU_' . $id . '\').easyconfirm({locale: {
-																							title: \'Remove User\',
-																							text: \'Are you sure you want to remove [' . $user_name1 . '] user?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																							button: [\'Cancel\',\' Confirm\'],
-																							closeText: \'close\'
-																							}});
-																						$(\'#RU_' . $id . '\').click(function() {
-																							window.location = "?token=' . $secret . '&t=1&user_rm_id=' . $id . '"
-																						});
-																						});
-																					</script></td>';		
-																			echo '</tr>';
-																		}
-																	} else {
-																		echo '<tr><td colspan="6" style="text-align: center;">Results not found</td></tr>';
-																	}
-																	
-																	?>
-																</tbody>
-															</table>
-														</div>
-													</div>
-													<!-- /widget-content -->
-												</div>
-												<!-- /widget -->
-											</div>
-
-											<!-- +++++++++++++++++++++++++++++ create clients ++++++++++++++++++++++++++++++++ -->
-											<div <?php if (isset($tab2)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_clients">
-												<div class="users_head_visible" style="display:none;"><div class="header_hr"></div><div class="header_f1" style="width: 100%">Users</div>
-												<br class="hide-sm"><br class="hide-sm"><div class="header_f2" style="width: fit-content;"> </div></div>
-												<div id="response_d3"></div>
-
-												<?php
-													if(isset($tab2)){
-														if (isset($_SESSION['msg5'])) {
-															echo $_SESSION['msg5'];
-															unset($_SESSION['msg5']);
-														}
-
-														if (isset($_SESSION['msg1'])) {
-															echo $_SESSION['msg1'];
-															unset($_SESSION['msg1']);
-														}
-
-
-														if (isset($_SESSION['msg2'])) {
-															echo $_SESSION['msg2'];
-															unset($_SESSION['msg2']);
-														}
-
-														if (isset($_SESSION['msg3'])) {
-															echo $_SESSION['msg3'];
-															unset($_SESSION['msg3']);
-														}
-
-														if (isset($_SESSION['msg6'])) {
-															echo $_SESSION['msg6'];
-															unset($_SESSION['msg6']);
-														}
-													}
-												?>
-												<!-- action="controller/User_Controller.php" -->
-												<form autocomplete="off" id="edit_profile" action="users.php" method="post" class="form-horizontal">
-													<fieldset>
-														<?php
-														echo '<input type="hidden" name="user_type" id="user_type1" value="' . $user_type . '">';
-														echo '<input type="hidden" name="loation" id="loation1" value="' . $user_distributor . '">';
-														?>
-														<!-- /control-group -->
-														<div class="control-group">
-															<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls col-lg-5 form-group">
-																<input class="form-control span4" id="full_name_1" name="full_name_1" maxlength="25" type="text">
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-												
-														<div class="control-group">
-															<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls form-group col-lg-5">
-																<input class="form-control span4" id="email_1" name="email_1" placeholder="name@mycompany.com">
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-
-														<div class="control-group">
-															<label class="control-label" for="language_1">Language</label>
-															<div class="controls form-group col-lg-5">
-																<select class="form-control span4" name="language_1" id="language_1">
-																	<?php
-																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
-																		$query_results=$db->selectDB($key_query);
-																		foreach($query_results['data'] AS $row){
-																			$language_code = $row[language_code];
-																			$language = $row[language];
-																			echo '<option value="' . $language_code . '">' . $language . '</option>';
-																		}
-																	?>
-																</select>
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<?php if ($user_type=='ADMIN') { ?>
-														<div class="control-group">
-                                                             <label class="control-label" for="timezone_1">Time Zone<sup><font color="#FF0000"></font></sup></label>
-                                                             <div class="controls col-lg-5 form-group">
-                                                                 <select class="span4 form-control" id="timezone_1" name="timezone_1" autocomplete="off">
-                                                                     <option value="">Select Time Zone</option>
-                                                                     <?php
-                                                                     $utc = new DateTimeZone('UTC');
-                                                                     $dt = new DateTime('now', $utc);
-                                                                     foreach ($priority_zone_array as $tz){
-                                                                         $current_tz = new DateTimeZone($tz);
-                                                                         $offset =  $current_tz->getOffset($dt);
-                                                                         $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-                                                                         $abbr = $transition[0]['abbr'];
-                                                                         if($timezone_set==$tz){
-                                                                             $select="selected";
-                                                                         }else{
-                                                                             $select="";
-                                                                         }
-                                                                         echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-                                                                     }
-                                                                     foreach(DateTimeZone::listIdentifiers() as $tz) {
-                                                                         //Skip
-                                                                         if(in_array($tz,$priority_zone_array))
-                                                                             continue;
-
-                                                                        $current_tz = new DateTimeZone($tz);
-                                                                        $offset =  $current_tz->getOffset($dt);
-                                                                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-                                                                        $abbr = $transition[0]['abbr'];
-                                                                        
-                                                                        if($timezone_set==$tz){
-                                                                           $select="selected";
-                                                                        }else{
-                                                                            $select="";
-                                                                        }
-                                                                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-                                                                    }
-                                                                     ?>
-                                                                 </select>
-                                                             </div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<?php } ?>
-														<div class="control-group">
-															<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls form-group col-lg-5">
-																<input class="form-control span4" id="mobile_1" name="mobile_1" type="text" placeholder="xxx-xxx-xxxx" maxlength="12">
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<script type="text/javascript">
-															$(document).ready(function() {
-																$("#mobile_1").keypress(function(event) {
-																	var ew = event.which;
-																	//alert(ew);
-																	//if(ew == 8||ew == 0||ew == 46||ew == 45)
-																	//if(ew == 8||ew == 0||ew == 45)
-																	if (ew == 8 || ew == 0)
-																		return true;
-																	if (48 <= ew && ew <= 57)
-																		return true;
-																	return false;
-																});
-
-																$('#mobile_1').focus(function() {
-																	$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-																	$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
-																});
-
-																$('#mobile_1').keyup(function() {
-																	$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-																	$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
-																});
-
-																$("#mobile_1").keydown(function(e) {
-																	var mac = $('#mobile_1').val();
-																	var len = mac.length + 1;
-																	if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
-																		mac1 = mac.replace(/[^0-9]/g, '');
-																	} else {
-																		if (len == 4) {
-																			$('#mobile_1').val(function() {
-																				return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
-																			});
-																		} else if (len == 8) {
-																			$('#mobile_1').val(function() {
-																				return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
-																				//console.log('mac2 ' + mac);
-
-																			});
-																		}
-																	}
-																	$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
-																});
-															});
-														</script>
-														<div class="control-group">
-                                                        <label class="control-label" for="mno_address_1">Address<sup><font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_address_1" placeholder="Address" name="mno_address_1" type="text" value="<?php echo$get_edit_mno_ad1;?>" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <div class="control-group">
-                                                        <label class="control-label" for="mno_address_2">City<sup><font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_address_2" placeholder="City" name="mno_address_2" type="text" value="<?php echo $get_edit_mno_ad2;?>" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <div class="control-group">
-                                                        <label class="control-label" for="mno_country" >Country<font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select name="mno_country" id="mno_country" class="span4 form-control" autocomplete="off">
-                                                                <option value="">Select Country</option>
-                                                                <?php
-                                                                
-                                                                foreach ($country_result['data'] as $row) {
-                                                                    $select="";
-                                                                    if($row[a]==$get_edit_mno_country){
-                                                                        $select="selected";
-                                                                    }
-                                                                    echo '<option value="'.$row[a].'" '.$select.'>'.$row[b].'</option>';
-                                                                }
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <script language="javascript">
-                                                       populateCountries("mno_country", "mno_state");
-                                                    </script>
-                                                    <div class="control-group">
-                                                        <label class="control-label" for="mno_state">State/Region<font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                        <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_state" placeholder="State or Region" name="mno_state" required autocomplete="off">
-                                                            <?php
-                                                                echo '<option value="">Select State</option>';
-                                                                // var_dump($get_regions['data']);
-                                                                foreach ($get_regions['data'] AS $state) {
-                                                                    //edit_state_region , get_edit_mno_state_region
-                                                                    if($get_edit_mno_state_region == 'N/A') {
-                                                                        echo '<option selected value="N/A">Others</option>';
-                                                                    } else {
-                                                                        if ($get_edit_mno_state_region == $state['states_code']) {
-                                                                            echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                                        } else {
-                                                                            echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                                        }
-                                                                    }
-                                                                    
-                                                                }
-                                                            ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="control-group">
-                                                        <label class="control-label" for="mno_region">ZIP Code<sup><font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $get_edit_mno_zip?>" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <script type="text/javascript">
-                                                    $(document).ready(function() {
-                                                        $("#mno_zip_code").keydown(function (e) {
-                                                            var mac = $('#mno_zip_code').val();
-                                                            var len = mac.length + 1;
-                                                            // Allow: backspace, delete, tab, escape, enter, '-' and .
-                                                            if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                                                                        // Allow: Ctrl+A, Command+A
-                                                                    (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: Ctrl+C, Command+C
-                                                                    (e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: Ctrl+x, Command+x
-                                                                    (e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: Ctrl+V, Command+V
-                                                                    (e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: home, end, left, right, down, up
-                                                                    (e.keyCode >= 35 && e.keyCode <= 40)) {
-                                                                // let it happen, don't do anything
-                                                                return;
-                                                            }
-                                                            // Ensure that it is a number and stop the keypress
-                                                            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                                                                e.preventDefault();
-                                                            }
-                                                        });
-                                                    });
-                                                    </script>
-
-														<div class="form-actions">
-															<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary">Create Account</button>&nbsp; <strong>
-																<font color="#FF0000"></font><small></small>
-															</strong>
-														</div>
-														<!-- /form-actions -->
-													</fieldset>
-												</form>
-												<script type="text/javascript">
-													$(document).ready(function() {
-														document.getElementById("submit_1").disabled = true;
-													});
-
-													function newus_ck() {
-														var name = document.getElementById('full_name_1').value;
-														var email = document.getElementById('email_1').value;
-														var numb = document.getElementById('mobile_1').value;
-														if (name == '' || email == '' || numb == '') {
-															document.getElementById("submit_1").disabled = true;
-														} else {
-															document.getElementById("submit_1").disabled = false;
-														}
-													}
-												</script>
-												
-											</div>
-	
-											<!-- +++++++++++++++++++++++++++++ Edit clients ++++++++++++++++++++++++++++++++ -->
-											<div <?php if (isset($tab3) && $tab3 == "set") { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_clients">
-												<div class="support_head_visible" style="display:none;">
-													<div class="header_hr"></div>
-													<div class="header_f1" style="width: 100%;">Edit Profile</div>
-													<br class="hide-sm"><br class="hide-sm">
-													<div class="header_f2" style="width: 100%;"></div>
-												</div>
-												<form autocomplete="off" id="edit-user-profile" action="?t=1" method="post" class="form-horizontal">
-												<?php
-													if(isset($tab3)){
-														if (isset($_SESSION['msg5'])) {
-															echo $_SESSION['msg5'];
-															unset($_SESSION['msg5']);
-														}
-
-														if (isset($_SESSION['msg1'])) {
-															echo $_SESSION['msg1'];
-															unset($_SESSION['msg1']);
-														}
-
-
-														if (isset($_SESSION['msg2'])) {
-															echo $_SESSION['msg2'];
-															unset($_SESSION['msg2']);
-														}
-
-														if (isset($_SESSION['msg3'])) {
-															echo $_SESSION['msg3'];
-															unset($_SESSION['msg3']);
-														}
-
-														if (isset($_SESSION['msg6'])) {
-															echo $_SESSION['msg6'];
-															unset($_SESSION['msg6']);
-														}
-													}
-												?>
-												<?php
-													if($_GET['edit_id']){
-														$id = $edit_user_data[0]->getId();
-														$user_name =  $edit_user_data[0]->getUserName();
-														$access_role_set = $edit_user_data[0]->getAccessRole();
-														$full_name = $edit_user_data[0]->getFullName();
-														$email = $edit_user_data[0]->getEmail();
-														$language_set = $edit_user_data[0]->getLanguage();
-														$user_type_set = $edit_user_data[0]->getUserType();
-														$timezone_set = $edit_user_data[0]->getTimezones();
-														$mobile = $edit_user_data[0]->getMobile(); 
-
-														if ($access_role_set=='admin' && $user_type_set =='SUPPORT') {
-															$access_role_s="Master Support Admin";
-														}
-														elseif ($access_role_set=='admin' && $user_type_set =='TECH') {
-															$access_role_s='Master Tech Admin';
-														}
-														elseif ($access_role_set=='admin') {
-															$access_role_s='Master Admin Peer';
-														}
-														else{
-															$access_role_s='Admin';
-														}
-													}
-
-													echo '<input type="hidden" name="form_secret" id="form_secret1" value="' . $_SESSION['FORM_SECRET'] . '" />';
-												?>
-													<fieldset>
-														<?php
-														echo '<input type="hidden" name="user_type" id="user_type2" value="' . $user_type . '">';
-														echo '<input type="hidden" name="loation" id="loation2" value="' . $user_distributor . '">';
-														echo '<input type="hidden" name="id" id="id" value="' . $id . '">';
-														?>
-														<div class="control-group">
-															<label class="control-label" for="access_role_2">Access Role<sup><font color="#FF0000"></font></sup></label>
-
-															<div class="controls form-group col-lg-5" readonly>
-																<select onchange="access_timezone()" class="form-control span4" name="access_role_2" id="access_role_2" value=<?php echo $access_role_set; ?> >
-																	<option value="">Select Access Role</option>
-																	<?php
-																	if($access_role_set=='admin'){
-																		$a_selected = ($access_role_s=='Master Admin Peer')?'selected':'';
-																		$b_selected = ($access_role_s=='Master Support Admin')?'selected':'';
-																		echo '<option value="Master Admin Peer" '.$a_selected.'>Master Admin Peer</option>
-																		<option value="Master Support Admin" '.$b_selected.'>Master Support Admin</option>';
-																	}
-																	$key_query = "SELECT access_role,description FROM admin_access_roles WHERE distributor = '$user_distributor' ORDER BY description";
-																	$query_results=$db->selectDB($key_query);
-																	foreach($query_results['data'] AS $row){
-																		$access_role = $row[access_role];
-																		if ($access_role == $access_role_set) {
-																			$description = $row[description];
-																			echo '<option value="' . $access_role . '" selected>' . $description . '</option>';
-																		} else {
-																			$description = $row[description];
-																			echo '<option value="' . $access_role . '">' . $description . '</option>';
-																		}
-																	}
-																	?>
-																</select>
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<script type="text/javascript">
-															function access_timezone() {
-																var role=$('#access_role_2').val();
-																<?php if ($user_type!='ADMIN') { ?>
-																if (role=='Master Admin Peer') {
-																	$('.timezone_2n').show();
-																}
-																else{
-																	$('.timezone_2n').hide();
-																}
-																<?php }?>                          
-                                                            }
-														</script>
-														<div class="control-group">
-															<label class="control-label" for="full_name_2" _1>Full Name<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls form-group col-lg-5">
-																<input class="form-control span4" id="full_name_2" name="full_name_2" maxlength="25" type="text" value="<?php echo $full_name ?>">
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<div class="control-group">
-															<label class="control-label" for="email_2">Email<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls form-group col-lg-5">
-																<input class="form-control span4" id="email_2" name="email_2" type="text" value="<?php echo $email ?>">
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<div class="control-group">
-															<label class="control-label" for="language_2">Language</label>
-															<div class="controls form-group col-lg-5">
-																<select class="form-control span4" name="language_2" id="language_2">
-																	<?php
-																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
-																	$query_results=$db->selectDB($key_query);
-																	foreach($query_results['data'] AS $row){
-																		$language_code = $row[language_code];
-																		$language = $row[language];
-																		if ($language_code == $language_set) {
-																			echo '<option value="' . $language_code . '" selected>' . $language . '</option>';
-																		} else {
-																			echo '<option value="' . $language_code . '">' . $language . '</option>';
-																		}
-																	}
-																	?>
-																</select>
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<?php if ($access_role_set=='admin' || $user_type=='ADMIN') {?>
-														<div class="control-group timezone_2n" <?php if($user_type_set=='SUPPORT'){ echo 'style="display:none"'; } ?> >
-                                                             <label class="control-label" for="timezone_2">Time Zone<sup><font color="#FF0000"></font></sup></label>
-                                                             <div class="controls col-lg-5 form-group">
-                                                                 <select class="span4 form-control" id="timezone_2" name="timezone_2" autocomplete="off">
-                                                                     <option value="">Select Time Zone</option>
-                                                                     <?php
-                                                                     $utc = new DateTimeZone('UTC');
-                                                                     $dt = new DateTime('now', $utc);
-                                                                     foreach ($priority_zone_array as $tz){
-                                                                         $current_tz = new DateTimeZone($tz);
-                                                                         $offset =  $current_tz->getOffset($dt);
-                                                                         $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-                                                                         $abbr = $transition[0]['abbr'];
-                                                                         if($timezone_set==$tz){
-                                                                             $select="selected";
-                                                                         }else{
-                                                                             $select="";
-                                                                         }
-                                                                         echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-                                                                     }
-
-                                                                     foreach(DateTimeZone::listIdentifiers() as $tz) {
-                                                                         //Skip
-                                                                         if(in_array($tz,$priority_zone_array))
-                                                                             continue;
-
-                                                                        $current_tz = new DateTimeZone($tz);
-                                                                        $offset =  $current_tz->getOffset($dt);
-                                                                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-                                                                        $abbr = $transition[0]['abbr'];
-                                                                        
-                                                                        if($timezone_set==$tz){
-                                                                           $select="selected";
-                                                                        }else{
-                                                                            $select="";
-                                                                        }
-                                                                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-                                                                    }
-                                                                     ?>
-                                                                 </select>
-                                                             </div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-													<?php } ?>
-														<div class="control-group">
-															<label class="control-label" for="mobile_2">Phone Number<sup><font color="#FF0000"></font></sup></label>
-															<div class="form-group controls col-lg-5">
-																<input class="form-control span4" id="mobile_2" name="mobile_2" type="text" maxlength="12" value="<?php echo $mobile ?>">
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<script type="text/javascript">
-															$(document).ready(function() {
-																$('#mobile_2').focus(function() {
-																	$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-																	$('#edit-user-profile').data('bootstrapValidator').updateStatus('mobile_2', 'NOT_VALIDATED').validateField('mobile_2');
-																});
-
-																$('#mobile_2').keyup(function() {
-																	$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-																	$('#edit-user-profile').data('bootstrapValidator').updateStatus('mobile_2', 'NOT_VALIDATED').validateField('mobile_2');
-																});
-
-																$("#mobile_2").keydown(function(e) {
-																	var mac = $('#mobile_2').val();
-																	var len = mac.length + 1;
-																	if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
-																		mac1 = mac.replace(/[^0-9]/g, '');
-																	} else {
-																		if (len == 4) {
-																			$('#mobile_2').val(function() {
-																				return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
-																			});
-																		} else if (len == 8) {
-																			$('#mobile_2').val(function() {
-																				return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
-																			});
-																		}
-																	}
-
-																	$("#mobile_2").keypress(function(event) {
-																		var ew = event.which;
-																		//alert(ew);
-																		//if(ew == 8||ew == 0||ew == 46||ew == 45)
-																		if (ew == 8 || ew == 0)
-																			return true;
-																		if (48 <= ew && ew <= 57)
-																			return true;
-																		return false;
-																	});
-
-																	$('#edit-user-profile').data('bootstrapValidator').updateStatus('mobile_2', 'NOT_VALIDATED').validateField('mobile_2');
-																});
-															});
-														</script>
-														<div class="control-group">
-                                                        <label class="control-label" for="mno_address_1">Address<sup><font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_address_1" placeholder="Address" name="mno_address_1" type="text" value="<?php echo$get_edit_mno_ad1;?>" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <div class="control-group">
-                                                        <label class="control-label" for="mno_address_2">City<sup><font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_address_2" placeholder="City" name="mno_address_2" type="text" value="<?php echo $get_edit_mno_ad2;?>" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <div class="control-group">
-                                                        <label class="control-label" for="mno_country" >Country<font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select name="mno_country" id="mno_country" class="span4 form-control" autocomplete="off">
-                                                                <option value="">Select Country</option>
-                                                                <?php
-                                                                
-                                                                foreach ($country_result['data'] as $row) {
-                                                                    $select="";
-                                                                    if($row[a]==$get_edit_mno_country){
-                                                                        $select="selected";
-                                                                    }
-                                                                    echo '<option value="'.$row[a].'" '.$select.'>'.$row[b].'</option>';
-                                                                }
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <script language="javascript">
-                                                       populateCountries("mno_country", "mno_state");
-                                                    </script>
-                                                    <div class="control-group">
-                                                        <label class="control-label" for="mno_state">State/Region<font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                        <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_state" placeholder="State or Region" name="mno_state" required autocomplete="off">
-                                                            <?php
-                                                                echo '<option value="">Select State</option>';
-                                                                // var_dump($get_regions['data']);
-                                                                foreach ($get_regions['data'] AS $state) {
-                                                                    //edit_state_region , get_edit_mno_state_region
-                                                                    if($get_edit_mno_state_region == 'N/A') {
-                                                                        echo '<option selected value="N/A">Others</option>';
-                                                                    } else {
-                                                                        if ($get_edit_mno_state_region == $state['states_code']) {
-                                                                            echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                                        } else {
-                                                                            echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                                        }
-                                                                    }
-                                                                    
-                                                                }
-                                                            ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="control-group">
-                                                        <label class="control-label" for="mno_region">ZIP Code<sup><font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $get_edit_mno_zip?>" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                    <script type="text/javascript">
-                                                    $(document).ready(function() {
-                                                        $("#mno_zip_code").keydown(function (e) {
-                                                            var mac = $('#mno_zip_code').val();
-                                                            var len = mac.length + 1;
-                                                            // Allow: backspace, delete, tab, escape, enter, '-' and .
-                                                            if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                                                                        // Allow: Ctrl+A, Command+A
-                                                                    (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: Ctrl+C, Command+C
-                                                                    (e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: Ctrl+x, Command+x
-                                                                    (e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: Ctrl+V, Command+V
-                                                                    (e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                        // Allow: home, end, left, right, down, up
-                                                                    (e.keyCode >= 35 && e.keyCode <= 40)) {
-                                                                // let it happen, don't do anything
-                                                                return;
-                                                            }
-                                                            // Ensure that it is a number and stop the keypress
-                                                            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                                                                e.preventDefault();
-                                                            }
-                                                        });
-                                                    });
-                                                    </script>
-														<div class="form-actions">
-															<button type="submit" name="edit-submita" id="edit-submita" class="btn btn-primary" disabled="disabled">Update Account</button>&nbsp; <strong>
-																<font color="#FF0000"></font><small></small>
-															</strong>
-															<button type="button" onclick="goto('?t=1')" class="btn btn-danger">Cancel</button>&nbsp;
-															<script type="text/javascript">
-																function goto(url) {
-																	window.location = url;
-																}
-																function footer_submitfn() {
-																	//alert("fn");
-																	$("#edit-submita").prop('disabled', false);
-																}
-															</script>
-														</div>
-														<!-- /form-actions -->
-													</fieldset>
-												</form>
-
-												<form onkeyup="footer_submitfn1();" onchange="footer_submitfn1();" autocomplete="off" id="edit-user-password" action="?t=1" method="post" class="form-horizontal">
-													<?php
-													echo '<input type="hidden" name="form_secret" id="form_secret2" value="' . $_SESSION['FORM_SECRET'] . '" />';
-													?>
-													<fieldset>
-														<legend>Reset Password</legend>
-														<?php
-														echo '<input type="hidden" name="user_type" id="user_type3" value="' . $user_type . '">';
-														echo '<input type="hidden" name="loation" id="loation3" value="' . $user_distributor . '">';
-														echo '<input type="hidden" name="id" id="id1" value="' . $id . '">';
-														?>
-														<div class="control-group">
-															<label class="control-label" for="full_name_2" _1>Password<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls col-lg-5">
-																<input class="span4" id="passwd" name="passwd" type="password" required>
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<div class="control-group">
-															<label class="control-label" for="email_2">Confirm Password<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls col-lg-5">
-																<input class="span4" id="passwd_2" name="passwd_2" type="password" required="required">
-															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<div class="form-actions">
-															<button type="submit" name="edit-submita-pass" id="edit-submita-pass" class="btn btn-primary" disabled="disabled">Save</button>&nbsp; <strong>
-																<font color="#FF0000"></font><small></small>
-															</strong>
-															<button type="button" onclick="goto('?t=1')" class="btn btn-danger">Cancel</button>&nbsp;
-														</div>
-														<!-- /form-actions -->
-													</fieldset>
-												</form>
-
-												<script>
-													function footer_submitfn1() {
-														$("#edit-submita-pass").prop('disabled', false);
-													}
-												</script>
-											</div>
-											<!-- +++++++++++++++++++++++++++++ Edit users ++++++++++++++++++++++++++++++++ -->	
-										</div>
-									</div>
-									<!-- /widget-content -->
-								</div>
-							</div>
-							<!-- /widget -->
-						</div>
-						<!-- /span12 -->
-					</div>
-					<!-- /row -->
-				</div>
-				<!-- /container -->
-			</div>
-			<!-- /main-inner -->
-		</div>
-		<!-- /main -->
-	<?php } ?>
-	<script type="text/javascript" src="js/formValidation.js"></script>
-	<script type="text/javascript" src="js/bootstrap_form.js"></script>
-	<script type="text/javascript" src="js/bootstrapValidator_new.js?v=14"></script>
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-			//create user form validation
-			$('#edit_profile').bootstrapValidator({
-				framework: 'bootstrap',
-				xcluded: [':disabled', '[readonly]',':hidden', ':not(:visible)'],
-				feedbackIcons: {
-					valid: 'glyphicon glyphicon-ok',
-					invalid: 'glyphicon glyphicon-remove',
-					validating: 'glyphicon glyphicon-refresh'
-				},
-				fields: {
-					full_name_1: {
-						validators: {
-							<?php echo $db->validateField('person_full_name'); ?>,
-							<?php echo $db->validateField('not_require_special_character'); ?>
-						}
-					},
-					email_1: {
-						validators: {
-							<?php echo $db->validateField('email_cant_upper'); ?>
-						}
-					},
-					timezone_1: {
-						validators: {
-							<?php echo $db->validateField('notEmpty'); ?>
-						}
-					},
-					mobile_1: {
-						validators: {
-							<?php echo $db->validateField('mobile'); ?>
-						}
-					}
-				}
-			}).on('status.field.bv', function(e, data) {
-				if ($('#edit_profile').data('bootstrapValidator').isValid()) {
-					data.bv.disableSubmitButtons(false);
-				} else {
-					data.bv.disableSubmitButtons(true);
-				}
-			});
-			$('#edit-user-profile').bootstrapValidator({
-				framework: 'bootstrap',
-				xcluded: [':disabled', '[readonly]',':hidden', ':not(:visible)'],
-				feedbackIcons: {
-					valid: 'glyphicon glyphicon-ok',
-					invalid: 'glyphicon glyphicon-remove',
-					validating: 'glyphicon glyphicon-refresh'
-				},
-				fields: {
-					access_role_2: {
-						validators: {
-							<?php echo $db -> validateField('dropdown'); ?>
-						}
-					},
-					full_name_2: {
-						validators: {
-							<?php echo $db -> validateField('person_full_name'); ?> ,
-							<?php echo $db -> validateField('not_require_special_character'); ?>
-						}
-					},
-					email_2: {
-						validators: {
-							<?php echo $db -> validateField('email_cant_upper'); ?>
-						}
-					},
-					timezone_2: {
-						validators: {
-							<?php echo $db -> validateField('notEmpty'); ?>
-						}
-					},
-					mobile_2: {
-						validators: {
-							<?php echo $db -> validateField('mobile'); ?>
-						}
-					}
-				}
-			}).bootstrapValidator('validate').on('status.field.bv', function(e, data) {
-				if ($('#edit-user-profile').data('bootstrapValidator').isValid()) {
-					data.bv.disableSubmitButtons(false);
-				} else {
-					data.bv.disableSubmitButtons(true);
-				}
-			});
-
-		});
-	</script>
-
-	<?php
-	include 'footer.php';
-	?>
-
-	<script src="js/base.js"></script>
-	<script src="js/jquery.chained.js"></script>
-	<script type="text/javascript" charset="utf-8">
-		$(document).ready(function() {
-			$("#loation").chained("#user_type");
-
-		});
-	</script>
-	<script type="text/javascript">
-  // Countries
     var country_arr = new Array( "United States of America","Afghanistan", "Albania", "Algeria", "American Samoa", "Angola", "Anguilla", "Antartica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Ashmore and Cartier Island", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burma", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Clipperton Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo, Democratic Republic of the", "Congo, Republic of the", "Cook Islands", "Costa Rica", "Cote d'Ivoire", "Croatia", "Cuba", "Cyprus", "Czeck Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Europa Island", "Falkland Islands (Islas Malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern and Antarctic Lands", "Gabon", "Gambia, The", "Gaza Strip", "Georgia", "Germany", "Ghana", "Gibraltar", "Glorioso Islands", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and McDonald Islands", "Holy See (Vatican City)", "Honduras", "Hong Kong", "Howland Island", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Ireland, Northern", "Israel", "Italy", "Jamaica", "Jan Mayen", "Japan", "Jarvis Island", "Jersey", "Johnston Atoll", "Jordan", "Juan de Nova Island", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia, Former Yugoslav Republic of", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Man, Isle of", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia, Federated States of", "Midway Islands", "Moldova", "Monaco", "Mongolia", "Montserrat", "Morocco", "Mozambique", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcaim Islands", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romainia", "Russia", "Rwanda", "Saint Helena", "Saint Kitts and Nevis", "Saint Lucia", "Saint Pierre and Miquelon", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Scotland", "Senegal", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia and South Sandwich Islands", "Spain", "Spratly Islands", "Sri Lanka", "Sudan", "Suriname", "Svalbard", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Tobago", "Toga", "Tokelau", "Tonga", "Trinidad", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Virgin Islands", "Wales", "Wallis and Futuna", "West Bank", "Western Sahara", "Yemen", "Yugoslavia", "Zambia", "Zimbabwe");
 
     // States
@@ -2148,10 +608,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
     s_a_val[252] = "N/A";
 
     function populateStates(countryElementId, stateElementId) {
-
         var selectedCountryIndex = document.getElementById(countryElementId).selectedIndex;
-
-
         var stateElement = document.getElementById(stateElementId);
 
         stateElement.length = 0; // Fixed by Julian Woods
@@ -2162,17 +619,14 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
         var state_arr_val = s_a_val[selectedCountryIndex].split("|");
 
         if(selectedCountryIndex != 0){
-        for (var i = 0; i < state_arr.length; i++) {
-            stateElement.options[stateElement.length] = new Option(state_arr[i], state_arr_val[i]);
+			for (var i = 0; i < state_arr.length; i++) {
+				stateElement.options[stateElement.length] = new Option(state_arr[i], state_arr_val[i]);
+			}
         }
-        }
-
     }
 
     function populateCountries(countryElementId, stateElementId) {
-
         var countryElement = document.getElementById(countryElementId);
-
         if (stateElementId) {
             countryElement.onchange = function () {
                 populateStates(countryElementId, stateElementId);
@@ -2180,6 +634,1488 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
         }
     }
     </script>
+	<?php
+	include 'header.php';
+	// TAB Organization
+	if (isset($_GET['t'])) {
+		$variable_tab = 'tab' . $_GET['t'];
+		$$variable_tab = 'set';
+	} else {
+		//initially page loading///
+		$tab1 = "set";
+	}
+
+	$priority_zone_array = array(
+    "America/New_York",
+    "America/Chicago",
+    "America/Denver",
+    "America/Los_Angeles",
+    "America/Anchorage",
+    "Pacific/Honolulu",
+);
+
+function userUpdateLog($user_id, $action_type, $action_by,$db)
+{
+		$update_query = "INSERT INTO `admin_users_update` (
+															`user_name`,
+															`password`,
+															`access_role`,
+															`user_type`,
+															`user_distributor`,
+															`full_name`,
+															`email`,
+															`language`,
+															`mobile`,
+															`is_enable`,
+															`create_date`,
+															`create_user`,
+															`update_type`,
+															`update_by`,
+															`update_date`
+															)(SELECT
+															`user_name`,
+															`password`,
+															`access_role`,
+															`user_type`,
+															`user_distributor`,
+															`full_name`,
+															`email`,
+															`language`,
+															`mobile`,
+															`is_enable`,
+															`create_date`,
+															`create_user`,
+															'$action_type',
+															'$action_by',
+															NOW()
+															FROM
+															`crm_clients`
+															WHERE id='$user_id')";
+		$ex_update_log = $db->execDB($update_query);
+		return $ex_update_log;
+	}
+
+	if (isset($_POST['submit_1'])) {
+			$full_name = $_POST['full_name_1'];
+			//get table auto increment
+			$br_q = "SHOW TABLE STATUS LIKE 'crm_clients'";
+			$result2=$db->selectDB($br_q);
+	
+			foreach($result2['data'] AS $rowe){
+				$auto_inc = $rowe['Auto_increment'];
+			}
+
+			$new_user_name = htmlspecialchars(str_replace(' ', '_', strtolower(substr($full_name, 0, 5) . 'u' . $auto_inc)));
+			$password  = CommonFunctions::randomPassword();
+
+			$access_role = 'client';
+			$user_type = 'PROVISIONING';
+			// $user_distributor = $_POST['loation'];
+			$user_distributor = "";
+			$email = htmlspecialchars($_POST['email_1']);
+			$language = $_POST['language_1'];
+			$timezone = $_POST['timezone_1'];
+			$address_1 = htmlspecialchars($_POST['address_1']);
+			$address_2 = htmlspecialchars($_POST['address_2']);
+			$country = $_POST['country'];
+			$state = $_POST['state'];
+			$zip_code = htmlspecialchars($_POST['zip_code']);
+			
+
+			$pw_query = "SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1(\"$password\"))))) AS f";
+			$updated_pw='';
+			$pw_results=$db->selectDB($pw_query);
+			foreach($pw_results['data'] AS $row){
+				$updated_pw = strtoupper($row['f']);
+			}
+
+			$query = "INSERT INTO admin_users
+					(user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`,mobile, is_enable, create_date,create_user)
+					VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$user_distributor','$full_name','$email', '$language' ,'$timezone', '$mobile','2',now(),'$user_name')";
+			$ex =$db->execDB($query);
+
+			if ($ex===true) {
+				$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+				$query_clients = 'INSERT INTO crm_clients
+						(user_id,user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`,`bussiness_address1`,`bussiness_address2`,`country`,`state_region`,`zip`, mobile, is_enable, create_date,create_user)
+						VALUES ('.$idContAutoInc.',
+								"'.$new_user_name.'",
+								"'.$updated_pw.'",
+								"'.$access_role.'",
+								"'.$user_type.'",
+								"'.$user_distributor.'",
+								"'.$full_name.'",
+								"'.$email.'", 
+								"'.$language.'" ,
+								"'.$timezone.'",
+								"'.$address_1.'", 
+								"'.$address_2.'", 
+								"'.$country.'", 
+								"'.$state.'",
+								"'.$zip_code.'", 
+								"'.$mobile.'",
+								2,
+								now(),
+								"'.$user_name.'")';
+				$result_clients =$db->execDB($query_clients);
+
+				$msg = str_replace("user","client",$message_functions->showNameMessage('user_create_success', $new_user_name));
+				$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
+				//Activity log
+				$db->userLog($user_name, $script, 'Create User', $new_user_name);
+			} else {
+				$msg = str_replace("user","client",$message_functions->showMessage('user_create_fail', '2001'));
+				$db->userErrorLog('2001', $user_name, 'script - ' . $script);
+				$_SESSION['msg2'] = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
+			}
+	}
+	//assign Roles removes
+	elseif (isset($_GET['remove_id'])) {
+		if ($_SESSION['FORM_SECRET'] == $_GET['token2']) {
+			$remove_id = $_GET['remove_id'];
+			$qq1 = "INSERT INTO `admin_access_roles_modules_archive`
+				(`access_role`, `module_name`, `distributor`, `create_user`, `archive_by`, `archive_date`)
+				(SELECT  `access_role`, `module_name`, `distributor`, `create_user`, '$user_name', NOW()
+				FROM `admin_access_roles_modules` WHERE `id`='$remove_id' LIMIT 1)";
+			//$rr1 = mysql_query($qq1);
+			$rr1 = $db->execDB($qq1);
+
+			$qq2 = "DELETE FROM `admin_access_roles_modules` WHERE `id`='$remove_id'";
+			$rr2 = $db->execDB($qq2);
+
+			if ($rr1===true && $rr2===true) {
+				$msg = str_replace("user","client",$message_functions->showMessage('module_assign_remove_success'));
+				$_SESSION['msg3'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
+			} else {
+				$msg = str_replace("user","client",$message_functions->showMessage('module_assign_remove_fail', '2003'));
+				$db->userErrorLog('2003', $user_name, 'script - ' . $script);
+				$_SESSION['msg3'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
+			}
+		} else {
+			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
+			$msg = str_replace("user","client",$message_functions->showMessage('transection_fail', '2004'));
+			$_SESSION['msg3'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
+		}
+	}
+	//  to the form edit user
+	elseif (isset($_GET['edit_id'])) {
+		if ($_SESSION['FORM_SECRET'] == $_GET['token']) {
+			$edit_id = $_GET['edit_id'];
+			$edit_user_data = $client_model->getClient($edit_id);
+		} else {
+			// var_dump('test');
+			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
+			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Oops, It seems you have refreshed the page. Please try again</strong></div>";
+			//header('Location: location.php?t=3');
+			$tab2 = "set";
+			$tab3 = "not";
+		}
+	}
+	//edit user
+	elseif (isset($_POST['edit-submita'])) {
+		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { //refresh validate
+			if ($user_type != "SALES") {
+				$id = $_POST['id'];
+				$access_role = $_POST['access_role_2'];
+				//$user_type = $_POST['user_type'];
+				//$loation = $_POST['loation'];
+				$full_name = $_POST['full_name_2'];
+				$email = $_POST['email_2'];
+				$language = $_POST['language_2'];
+				$timezone = $_POST['timezone_2'];
+				$mobile = $_POST['mobile_2'];
+				// $sub_user_type = ($access_role=='Master Support Admin')?'SUPPORT':'MNO';
+				$access_role = ($access_role=='Master Support Admin'|| $access_role=='Master Admin Peer')?'admin':$access_role;			
+				//update log//
+				$ex_log = userUpdateLog($id, 'EDIT_PROFILE', $user_name,$db);
+
+				if ($ex_log===true) {
+					$get_user_detail_q = "SELECT u.user_name, u.email, u.user_name FROM crm_clients u WHERE u.id='$id' LIMIT 1";
+					$user_details = $db->select1DB($get_user_detail_q);
+					$edit_user_name = $user_details['user_name'];
+					$old_email = $user_details['email'];
+					$archive_q = "INSERT INTO `crm_clients_archive` (user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,archive_by,archive_date,last_update,`status`)
+								SELECT user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,'$edit_user_name',NOW(),last_update,'update'
+								FROM `crm_clients` WHERE id='$id'";
+					$archive_result = $db->execDB($archive_q);
+
+					$edit_query = "UPDATE `crm_clients`
+									SET `access_role` = '$access_role',
+									`full_name` ='$full_name',
+									`email` = '$email',
+									`language` = '$language',
+									`timezone` = '$timezone',
+									`mobile` =  '$mobile'
+									WHERE `id` = '$id'";
+					$edit_result = $db->execDB($edit_query);
+
+					if ($email != $old_email && $edit_result===true) {
+						$t = date("ymdhis", time());
+						$string = $edit_user_name . '|' . $t . '|' . $email;
+						$encript_resetkey = $app->encrypt_decrypt('encrypt', $string);
+						$unique_key = $db->getValueAsf("SELECT REPLACE(UUID(),'-','') as f");
+						$qq = "UPDATE admin_reset_password SET status = 'cancel' WHERE user_name='$edit_user_name' AND status='pending'";
+						$rr = $db->execDB($qq);
+
+						if ($rr===true) {
+							$ip = $_SERVER['REMOTE_ADDR'];
+							$q1 = "INSERT INTO admin_reset_password (user_name, status, security_key,unique_key, ip, create_date) VALUES('$edit_user_name', 'pending', '$encript_resetkey','$unique_key', '$ip', NOW())";
+							//$r1 = mysql_query($q1);
+							$r1 = $db->execDB($q1);
+						}
+						$support_number = $package_functions->getMessageOptions('SUPPORT_NUMBER',$system_package,$property_business_type);
+
+						if ($r1===true) {
+							if ($package_functions->getSectionType('EMAIL_USER_TEMPLATE', $system_package) == "own") {
+								$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL', $system_package, 'MNO', $user_distributor);
+								$a = $email_content[0]['text_details'];
+								$subject = $email_content[0]['title'];
+
+								if (strlen($subject) == '0') {
+									$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL', $package_functions->getAdminPackage(), 'ADMIN');
+									$a = $email_content[0]['text_details'];
+									$subject = $email_content[0]['title'];
+								}
+							} else {
+								$a = $db->textVal('PASSWORD_RESET_MAIL', 'ADMIN');
+								$subject = $db->textTitle('PASSWORD_RESET_MAIL', 'ADMIN');
+							}
+
+							$login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
+							$link = $db->getSystemURL('reset_pwd', $login_design, $unique_key);
+							$vars = array(
+								'{$user_full_name}' => $full_name,
+								'{$short_name}' => $db->setVal("short_title", $user_distributor),
+								'{$account_type}' => $user_type,
+								'{$link}' => $link,
+								'{$support_number}' => $support_number,
+								'{$user_ID}' => $edit_user_name
+
+							);
+
+							$message_full = strtr($a, $vars);
+							$message = $message_full;
+
+							$from = strip_tags($db->setVal("email", $user_distributor));
+							if (empty($from)) {
+								$from = strip_tags($db->setVal("email", "ADMIN"));
+							}
+
+							$title = $db->setVal("short_title", $user_distributor);
+
+							$email_send_method = $package_functions->getSectionType("EMAIL_SYSTEM", $system_package);
+							include_once 'src/email/' . $email_send_method . '/index.php';
+							$cunst_var = array();
+							//$cunst_var['template'] = $package_functions->getOptions('EMAIL_TEMPLATE', $system_package);
+							$cunst_var['system_package'] = $system_package;
+			                $cunst_var['mno_package'] = $system_package;
+			                $cunst_var['mno_id'] = $mno_id;
+			                $cunst_var['verticle'] = $property_business_type;
+							$mail_obj = new email($cunst_var);
+							$mail_obj->mno_system_package = $system_package;
+							$mail_sent = $mail_obj->sendEmail($from, $email, $subject, $message_full, '', $title);
+						}
+					}
+
+					if ($edit_result) {
+						$create_log->save('3001', str_replace("user","client",$message_functions->showNameMessage('role_edit_success', $edit_user_name)), '');
+						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showNameMessage('role_edit_success', $edit_user_name)) . "</strong></div>";
+
+						//Activity log
+						$db->userLog($user_name, $script, 'Modify User', $edit_user_name);
+					} else {
+						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
+						$create_log->save('2002', str_replace("user","client",$message_functions->showMessage('role_edit_failed', '2002')), '');
+						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showMessage('role_edit_failed', '2002')) . "</strong></div>";
+					}
+				} else {
+					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
+					$create_log->save('2002', str_replace("user","client",$message_functions->showMessage('role_edit_failed', '2002')), '');
+					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showMessage('role_edit_failed', '2002')) . "</strong></div>";
+				}
+			} else {
+				$create_log->save('3001', str_replace("user","client",$message_functions->showNameMessage('role_edit_success', $edit_user_name)), '');
+				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showNameMessage('role_edit_success', $edit_user_name)) . "</strong></div>";
+			}
+		} else {
+			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
+			$create_log->save('2004', str_replace("user","client",$message_functions->showMessage('transection_fail', '2004')), '');
+			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showMessage('transection_fail', '2004')) . "</strong></div>";
+		}
+	} elseif (isset($_POST['edit-submita-pass'])) {
+		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { //refresh validate
+			if ($user_type != "SALES") {
+				$id = $_POST['id'];
+				$passwd = $_POST['passwd'];
+				$passwd_2 = $_POST['passwd_2'];
+				if ($passwd == $passwd_2) {
+					$user_full_name = $db->getValueAsf("SELECT u.full_name AS f FROM crm_clients u WHERE u.id='$id' LIMIT 1");
+					//update log//
+					$ex_log = userUpdateLog($id, 'RESET_PASSWORD', $user_name,$db);
+					if ($ex_log===true) {
+						$pw_query = "SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1(\"$passwd\"))))) AS f";
+						$updated_pw='';
+						$pw_results=$db->selectDB($pw_query);
+
+						foreach($pw_results['data'] AS $row){
+							$updated_pw = strtoupper($row['f']);
+						}
+
+						$edit_query = "UPDATE `crm_clients`
+										SET `password` = '$updated_pw'
+										WHERE `id` = '$id'";
+						$edit_result = $db->execDB($edit_query);
+
+						if ($edit_result===true) {
+							$create_log->save('3001', str_replace("user","client",$message_functions->showNameMessage('role_password_edit_success', $user_full_name)), '');
+							$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showNameMessage('role_password_edit_success', $user_full_name)) . "</strong></div>";
+
+							//Activity log
+							$db->userLog($user_name, $script, 'Reset Password', $user_full_name);
+						} else {
+							$db->userErrorLog('2002', $user_name, 'script - ' . $script);
+							$create_log->save('2002', str_replace("user","client",$message_functions->showMessage('role_password_edit_failed', '2002')), '');
+							$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showMessage('role_password_edit_failed', '2002')) . "</strong></div>";
+						}
+					} else {
+						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
+						$create_log->save('2002', str_replace("user","client",$message_functions->showMessage('role_password_edit_failed', '2002')), '');
+						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showMessage('role_password_edit_failed', '2002')) . "</strong></div>";
+					}
+				} else {
+					$db->userErrorLog('2006', $user_name, 'script - ' . $script);
+					$create_log->save('2006', str_replace("user","client",$message_functions->showMessage('role_password_edit_failed', '2006')), '');
+					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showMessage('role_password_edit_failed', '2006')) . "</strong></div>";
+					//Password confirmation failed
+				}
+			} else {
+				$create_log->save('3001', str_replace("user","client",$message_functions->showNameMessage('role_password_edit_success', $user_full_name)), '');
+				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showNameMessage('role_password_edit_success', $user_full_name)) . "</strong></div>";
+			}
+		} else {
+			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
+			$create_log->save('2004', str_replace("user","client",$message_functions->showMessage('transection_fail', '2004')), '');
+			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . str_replace("user","client",$message_functions->showMessage('transection_fail', '2004')) . "</strong></div>";
+		}
+	}
+	//login status change////
+	elseif (isset($_GET['status_change_id'])) {
+		if ($_SESSION['FORM_SECRET'] == $_GET['token']) { 
+				$status_change_id = $_GET['status_change_id'];
+				$action_sts = $_GET['action_sts'];
+				$user_full_name = $db->getValueAsf("SELECT u.full_name AS f FROM crm_clients u WHERE u.id='$status_change_id' LIMIT 1");
+				$usr_name = $db->getValueAsf("SELECT u.user_name AS f FROM crm_clients u WHERE u.id='$status_change_id' LIMIT 1");
+
+				if ($action_sts == '1') {
+					$action_type = "ACCOUNT_ENABLE";
+					$set = 'enabled';
+				} else {
+					$action_type = "ACCOUNT_DISABLE";
+					$set = 'disabled';
+				}
+				//update log//
+				$ex_log = userUpdateLog($status_change_id, $action_type, $user_name,$db);
+
+				if ($ex_log===true) {
+					$archive_q = "INSERT INTO `crm_clients_archive` (user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,archive_by,archive_date,last_update,`status`)
+								SELECT user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,'$user_name',NOW(),last_update,'status_change'
+								FROM `crm_clients` WHERE id='$status_change_id'";
+					$archive_result = $db->execDB($archive_q);
+
+					$edit_query = "UPDATE  `crm_clients` SET `is_enable` = '$action_sts' WHERE `id` = '$status_change_id'";
+					$edit_result = $db->execDB($edit_query);
+
+					if ($edit_result===true) {
+						$en_dis_msg = '';
+						if ($set == 'enabled') {
+							$susmsg = str_replace("User","Client",$message_functions->showNameMessage('role_user_name_enable_success', $user_full_name));
+							$en_dis_msg = 'Enable';
+						} elseif ($set == 'disabled') {
+							$susmsg = str_replace("User","Client",$message_functions->showNameMessage('role_user_name_disable_success', $user_full_name));
+							$en_dis_msg = 'Disable';
+						}
+
+						$create_log->save('3001', $susmsg, '');
+						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $susmsg . " </strong></div>";
+
+						//Activity log
+						$db->userLog($user_name, $script, $en_dis_msg . ' Client', $usr_name);
+					} else {
+						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
+						$create_log->save('2001', str_replace("User","Client",$message_functions->showMessage('role_user_name_enable_failed', '2001')), '');
+						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . str_replace("User","Client",$message_functions->showMessage('role_user_name_enable_failed', '2001')) . "</strong></div>";
+					}
+				} else {
+					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
+					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong> [2002] Something went wrong,please try again</strong></div>";
+				}
+		} else {
+			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
+			$create_log->save('2004', str_replace("User","Client",$message_functions->showMessage('transection_fail', '2004')), '');
+			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>�</button><strong>" . str_replace("User","Client",$message_functions->showMessage('transection_fail', '2004')) . "</strong></div>";
+		}
+	}
+	//client remove////
+	elseif (isset($_GET['user_rm_id'])) {
+		if ($_SESSION['FORM_SECRET'] == $_GET['token']) { 
+				$user_rm_id = $_GET['user_rm_id'];
+				$user_full_name = $db->getValueAsf("SELECT u.full_name AS f FROM crm_clients u WHERE u.id='$user_rm_id' LIMIT 1");
+				$usr_name = $db->getValueAsf("SELECT u.user_name AS f FROM crm_clients u WHERE u.id='$user_rm_id' LIMIT 1");
+
+				$archive_record = "INSERT INTO `crm_clients_archive` (
+																		`id`,
+																		`user_name`,
+																		`password`,
+																		`access_role`,
+																		`user_type`,
+																		`full_name`,
+																		`email`,
+																		`language`,
+																		`mobile`,
+																		`is_enable`,
+																		`create_date`,
+																		`create_user`,
+																		`archive_by`,
+																		`archive_date`
+																		) (SELECT id,
+																		`user_name`,
+																		`password`,
+																		`access_role`,
+																		`user_type`,
+																		`full_name`,
+																		`email`,
+																		`language`,
+																		`mobile`,
+																		`is_enable`,
+																		`create_date`,
+																		`create_user`,
+																		'$user_name',
+																		NOW()
+																		FROM
+																		`crm_clients`
+																		WHERE id='$user_rm_id')";
+				$archive_record = $db->execDB($archive_record);
+
+                //print_r($archive_record);echo'--';
+				if ($archive_record===true) {
+					$edit_query = "DELETE FROM `crm_clients`  WHERE `id` = '$user_rm_id'";
+					//$edit_result = mysql_query($edit_query);
+					$edit_result = $db->execDB($edit_query);
+
+					if ($edit_result===true) {
+						$create_log->save('3001', str_replace("User","Client",$message_functions->showNameMessage('user_remove_success', $user_full_name)), '');
+						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . str_replace("User","Client",$message_functions->showNameMessage('user_remove_success', $user_full_name)) . "</strong></div>";
+
+						//Activity log
+						$db->userLog($user_name, $script, 'Remove Client', $usr_name);
+					} else {
+						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
+						$create_log->save('2002', str_replace("User","Client",$message_functions->showMessage('role_role_remove_failed', '2002')), '');
+						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . str_replace("User","Client",$message_functions->showMessage('role_role_remove_failed', '2002')) . "</strong></div>";
+					}
+				} else {
+					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
+					$create_log->save('2002', str_replace("User","Client",$message_functions->showMessage('role_role_remove_failed', '2002')), '');
+					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . str_replace("User","Client",$message_functions->showMessage('role_role_remove_failed', '2002')) . "</strong></div>";
+				}
+		} else {
+			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
+			$create_log->save('2004', str_replace("User","Client",$message_functions->showMessage('transection_fail', '2004')), '');
+			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . str_replace("User","Client",$message_functions->showMessage('transection_fail', '2004')) . "</strong></div>";
+		}
+	} 
+	//Form Refreshing avoid secret key/////
+	$secret = md5(uniqid(rand(), true));
+	$_SESSION['FORM_SECRET'] = $secret;
+	$users_mid = 'layout/' . $camp_layout . '/views/users_mid.php';
+	if (($new_design == 'yes') && file_exists($users_mid)) {
+		include_once $users_mid;
+	} else {
+	?>
+		<div class="main">
+			<div class="custom-tabs"></div>
+			<div class="main-inner">
+				<div class="container">
+					<div class="row">
+						<div class="span12">
+							<div class="widget ">
+								<div class="widget-header">
+									<!-- <i class="icon-user"></i> -->
+									<h3>Client Management</h3>
+								</div>
+								<!-- /widget-header -->
+								<div class="widget-content">
+									<div class="tabbable">
+										<ul class="nav nav-tabs newTabs">
+											<li <?php if (isset($tab1) ) { ?>class="active" <?php } ?>><a href="#show_clients" data-toggle="tab">Active Clients</a></li>
+											<li <?php if (isset($tab2) || isset($tab3)) { ?>class="active" <?php } ?>><a href="#create_clients" data-toggle="tab"> <?=(isset($tab3) ? "Update" : "Create")?> Clients</a></li>
+										</ul>
+										<br>
+										<div class="tab-content">
+											<!-- +++++++++++++++++++++++++++++ client list ++++++++++++++++++++++++++++++++ -->
+											<div <?php if (isset($tab1)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="show_clients">
+												<div id="response_d3"></div>
+												<?php
+													if(isset($tab1)){
+														if (isset($_SESSION['msg5'])) {
+															echo $_SESSION['msg5'];
+															unset($_SESSION['msg5']);
+														}
+
+														if (isset($_SESSION['msg1'])) {
+															echo $_SESSION['msg1'];
+															unset($_SESSION['msg1']);
+														}
+
+														if (isset($_SESSION['msg2'])) {
+															echo $_SESSION['msg2'];
+															unset($_SESSION['msg2']);
+														}
+
+														if (isset($_SESSION['msg3'])) {
+															echo $_SESSION['msg3'];
+															unset($_SESSION['msg3']);
+														}
+
+														if (isset($_SESSION['msg6'])) {
+															echo $_SESSION['msg6'];
+															unset($_SESSION['msg6']);
+														}
+													}
+												?>
+												<div class="widget widget-table action-table">
+													<div class="widget-header">
+														<!-- <i class="icon-th-list"></i> -->
+														<h3>Active Users</h3>
+													</div>
+													<!-- /widget-header -->
+													<div class="widget-content table_response">
+														<div style="overflow-x:auto;">
+															<table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
+																<thead>
+																	<tr>
+																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Username</th>
+																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Full Name</th>
+																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Email</th>
+																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="10">Created By</th>
+																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Edit</th>
+																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="6">Disable</th>
+																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="7">Remove</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<?php
+																	$query_results = $client_model->get_activeClients();
+																	if(isset($query_results['rowCount']) && $query_results['rowCount'] > 0) {
+																		foreach ($query_results['data'] as $row) {
+																			$id = $row[id];
+																			$user_name1 = $row[user_name];
+																			$full_name = $row[full_name];
+																			$access_role = $row[access_role];
+																			$access_role_desc = $row['description'];
+																			$user_distributor1 = $row[user_distributor];
+																			$email = $row[email];
+																			$is_enable = $row[is_enable];
+																			$create_user = $row[create_user];
+
+																			if ($is_enable == '1' || $is_enable == '2') {
+																				$btn_icon = 'thumbs-down';
+																				$show_value = '<font color="#00CC00"><strong>Enable</strong></font>';
+																				$btn_color = 'warning';
+																				$btn_title = 'disable';
+																				$action_status = 0;
+																			} else {
+																				$btn_icon = 'thumbs-up';
+																				$show_value = '<font color="#FF0000"><strong>Disable</strong></font>';
+																				$btn_color = 'success';
+																				$btn_title = 'enable';
+																				$action_status = 1;
+																			}
+
+																			echo '<tr>
+																					<td> ' . $user_name1 . ' </td>
+																					<td> ' . $full_name . ' </td>
+																					<td> ' . $email . ' </td>
+																					<td> ' . $create_user . ' </td>';
+
+																			echo '<td><a href="javascript:void();" id="APE_' . $id . '"  class="btn btn-small btn-primary">
+																					<i class="btn-icon-only icon-wrench"></i>&nbsp;Edit</a><script type="text/javascript">
+																					$(document).ready(function() {
+																					$(\'#APE_' . $id . '\').easyconfirm({locale: {
+																							title: \'Edit Client\',
+																							text: \'Are you sure you want to edit this client?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																							button: [\'Cancel\',\' Confirm\'],
+																							closeText: \'close\'
+																							}});
+																						$(\'#APE_' . $id . '\').click(function() {
+																							window.location = "?token=' . $secret . '&t=5&edit_id=' . $id . '"
+																						});
+																						});
+																					</script></td><td><a href="javascript:void();" id="LS_' . $id . '"  class="btn btn-small btn-' . $btn_color . '">
+																					<i class="btn-icon-only icon-' . $btn_icon . '"></i>&nbsp;' . ucfirst($btn_title) . '</a><script type="text/javascript">
+																					$(document).ready(function() {
+																					$(\'#LS_' . $id . '\').easyconfirm({locale: {
+																							title: \'' . ucfirst($btn_title) . ' Client\',
+																							text: \'Are you sure you want to ' . $btn_title . ' this client?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																							button: [\'Cancel\',\' Confirm\'],
+																							closeText: \'close\'
+																							}});
+																						$(\'#LS_' . $id . '\').click(function() {
+																							window.location = "?token=' . $secret . '&t=1&status_change_id=' . $id . '&action_sts=' . $action_status . '"
+																						});
+																						});
+																					</script></td><td><a href="javascript:void();" id="RU_' . $id . '"  class="btn btn-small btn-danger">
+																					<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a><script type="text/javascript">
+																					$(document).ready(function() {
+																					$(\'#RU_' . $id . '\').easyconfirm({locale: {
+																							title: \'Remove Client\',
+																							text: \'Are you sure you want to remove [' . $user_name1 . '] client?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																							button: [\'Cancel\',\' Confirm\'],
+																							closeText: \'close\'
+																							}});
+																						$(\'#RU_' . $id . '\').click(function() {
+																							window.location = "?token=' . $secret . '&t=1&user_rm_id=' . $id . '"
+																						});
+																						});
+																					</script></td>';		
+																			echo '</tr>';
+																		}
+																	} else {
+																		echo '<tr><td colspan="6" style="text-align: center;">Results not found</td></tr>';
+																	}
+																	
+																	?>
+																</tbody>
+															</table>
+														</div>
+													</div>
+													<!-- /widget-content -->
+												</div>
+												<!-- /widget -->
+											</div>
+
+											<!-- +++++++++++++++++++++++++++++ create clients ++++++++++++++++++++++++++++++++ -->
+											<div <?php if (isset($tab2)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_clients">
+												<div class="users_head_visible" style="display:none;"><div class="header_hr"></div><div class="header_f1" style="width: 100%">Users</div>
+												<br class="hide-sm"><br class="hide-sm"><div class="header_f2" style="width: fit-content;"> </div></div>
+												<div id="response_d3"></div>
+
+												<?php
+													if(isset($tab2)){
+														if (isset($_SESSION['msg5'])) {
+															echo $_SESSION['msg5'];
+															unset($_SESSION['msg5']);
+														}
+
+														if (isset($_SESSION['msg1'])) {
+															echo $_SESSION['msg1'];
+															unset($_SESSION['msg1']);
+														}
+
+														if (isset($_SESSION['msg2'])) {
+															echo $_SESSION['msg2'];
+															unset($_SESSION['msg2']);
+														}
+
+														if (isset($_SESSION['msg3'])) {
+															echo $_SESSION['msg3'];
+															unset($_SESSION['msg3']);
+														}
+
+														if (isset($_SESSION['msg6'])) {
+															echo $_SESSION['msg6'];
+															unset($_SESSION['msg6']);
+														}
+													}
+												?>
+												<!-- action="controller/User_Controller.php" -->
+												<form autocomplete="off" id="edit_profile" action="clients.php" method="post" class="form-horizontal">
+													<fieldset>
+														<?php
+														echo '<input type="hidden" name="user_type" id="user_type1" value="' . $user_type . '">';
+														echo '<input type="hidden" name="loation" id="loation1" value="' . $user_distributor . '">';
+														?>
+														<!-- /control-group -->
+														<div class="control-group">
+															<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls col-lg-5 form-group">
+																<input class="form-control span4" id="full_name_1" name="full_name_1" maxlength="25" type="text">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+												
+														<div class="control-group">
+															<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls form-group col-lg-5">
+																<input class="form-control span4" id="email_1" name="email_1" placeholder="name@mycompany.com">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+
+														<div class="control-group">
+															<label class="control-label" for="language_1">Language</label>
+															<div class="controls form-group col-lg-5">
+																<select class="form-control span4" name="language_1" id="language_1">
+																	<?php
+																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
+																		$query_results=$db->selectDB($key_query);
+																		foreach($query_results['data'] AS $row){
+																			$language_code = $row[language_code];
+																			$language = $row[language];
+																			echo '<option value="' . $language_code . '">' . $language . '</option>';
+																		}
+																	?>
+																</select>
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<?php if ($user_type=='ADMIN') { ?>
+														<div class="control-group">
+                                                             <label class="control-label" for="timezone_1">Time Zone<sup><font color="#FF0000"></font></sup></label>
+                                                             <div class="controls col-lg-5 form-group">
+                                                                 <select class="span4 form-control" id="timezone_1" name="timezone_1" autocomplete="off">
+                                                                     <option value="">Select Time Zone</option>
+                                                                     <?php
+                                                                     $utc = new DateTimeZone('UTC');
+                                                                     $dt = new DateTime('now', $utc);
+                                                                     foreach ($priority_zone_array as $tz){
+                                                                         $current_tz = new DateTimeZone($tz);
+                                                                         $offset =  $current_tz->getOffset($dt);
+                                                                         $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                                         $abbr = $transition[0]['abbr'];
+                                                                         if($timezone_set==$tz){
+                                                                             $select="selected";
+                                                                         }else{
+                                                                             $select="";
+                                                                         }
+                                                                         echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                                                     }
+                                                                     foreach(DateTimeZone::listIdentifiers() as $tz) {
+                                                                         //Skip
+                                                                         if(in_array($tz,$priority_zone_array))
+                                                                             continue;
+
+                                                                        $current_tz = new DateTimeZone($tz);
+                                                                        $offset =  $current_tz->getOffset($dt);
+                                                                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                                        $abbr = $transition[0]['abbr'];
+                                                                        
+                                                                        if($timezone_set==$tz){
+                                                                           $select="selected";
+                                                                        }else{
+                                                                            $select="";
+                                                                        }
+                                                                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                                                    }
+                                                                     ?>
+                                                                 </select>
+                                                             </div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<?php } ?>
+														<div class="control-group">
+															<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls form-group col-lg-5">
+																<input class="form-control span4" id="mobile_1" name="mobile_1" type="text" placeholder="xxx-xxx-xxxx" maxlength="12">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<script type="text/javascript">
+															$(document).ready(function() {
+																$("#mobile_1").keypress(function(event) {
+																	var ew = event.which;
+																	//alert(ew);
+																	//if(ew == 8||ew == 0||ew == 46||ew == 45)
+																	//if(ew == 8||ew == 0||ew == 45)
+																	if (ew == 8 || ew == 0)
+																		return true;
+																	if (48 <= ew && ew <= 57)
+																		return true;
+																	return false;
+																});
+
+																$('#mobile_1').focus(function() {
+																	$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+																	$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
+																});
+
+																$('#mobile_1').keyup(function() {
+																	$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+																	$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
+																});
+
+																$("#mobile_1").keydown(function(e) {
+																	var mac = $('#mobile_1').val();
+																	var len = mac.length + 1;
+																	if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
+																		mac1 = mac.replace(/[^0-9]/g, '');
+																	} else {
+																		if (len == 4) {
+																			$('#mobile_1').val(function() {
+																				return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
+																			});
+																		} else if (len == 8) {
+																			$('#mobile_1').val(function() {
+																				return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
+																				//console.log('mac2 ' + mac);
+
+																			});
+																		}
+																	}
+																	$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
+																});
+															});
+														</script>
+														<div class="control-group">
+                                                        <label class="control-label" for="address_1">Address<sup><font color="#FF0000"></font></sup></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input class="span4 form-control" id="address_1" placeholder="Address" name="address_1" type="text" value="<?php echo$get_edit_mno_ad1;?>" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="address_2">City<sup><font color="#FF0000"></font></sup></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input class="span4 form-control" id="address_2" placeholder="City" name="address_2" type="text" value="<?php echo $get_edit_mno_ad2;?>" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="country" >Country<font color="#FF0000"></font></sup></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <select name="country" id="country" class="span4 form-control" autocomplete="off">
+                                                                <option value="">Select Country</option>
+                                                                <?php
+                                                                
+                                                                foreach ($country_result['data'] as $row) {
+                                                                    $select="";
+                                                                    if($row[a]==$get_edit_country){
+                                                                        $select="selected";
+                                                                    }
+                                                                    echo '<option value="'.$row[a].'" '.$select.'>'.$row[b].'</option>';
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <script language="javascript">
+                                                       populateCountries("country", "state");
+                                                    </script>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="state">State/Region<font color="#FF0000"></font></sup></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                        <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="state" placeholder="State or Region" name="state" required autocomplete="off">
+                                                            <?php
+                                                                echo '<option value="">Select State</option>';
+                                                                // var_dump($get_regions['data']);
+                                                                foreach ($get_regions['data'] AS $state) {
+                                                                    //edit_state_region , get_edit_state_region
+                                                                    if($get_edit_state_region == 'N/A') {
+                                                                        echo '<option selected value="N/A">Others</option>';
+                                                                    } else {
+                                                                        if ($get_edit_state_region == $state['states_code']) {
+                                                                            echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                                        } else {
+                                                                            echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                                        }
+                                                                    }
+                                                                    
+                                                                }
+                                                            ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="region">ZIP Code<sup><font color="#FF0000"></font></sup></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input class="span4 form-control" id="zip_code" maxlength="5" placeholder="XXXXX" name="zip_code" type="text" value="<?php echo $get_edit_mno_zip?>" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $("#zip_code").keydown(function (e) {
+                                                            var mac = $('#zip_code').val();
+                                                            var len = mac.length + 1;
+                                                            // Allow: backspace, delete, tab, escape, enter, '-' and .
+                                                            if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
+                                                                        // Allow: Ctrl+A, Command+A
+                                                                    (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: Ctrl+C, Command+C
+                                                                    (e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: Ctrl+x, Command+x
+                                                                    (e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: Ctrl+V, Command+V
+                                                                    (e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: home, end, left, right, down, up
+                                                                    (e.keyCode >= 35 && e.keyCode <= 40)) {
+                                                                // let it happen, don't do anything
+                                                                return;
+                                                            }
+                                                            // Ensure that it is a number and stop the keypress
+                                                            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                                                                e.preventDefault();
+                                                            }
+                                                        });
+                                                    });
+                                                    </script>
+
+														<div class="form-actions">
+															<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary">Create Account</button>&nbsp; <strong>
+																<font color="#FF0000"></font><small></small>
+															</strong>
+														</div>
+														<!-- /form-actions -->
+													</fieldset>
+												</form>
+												<script type="text/javascript">
+													$(document).ready(function() {
+														document.getElementById("submit_1").disabled = true;
+													});
+
+													function newus_ck() {
+														var name = document.getElementById('full_name_1').value;
+														var email = document.getElementById('email_1').value;
+														var numb = document.getElementById('mobile_1').value;
+														if (name == '' || email == '' || numb == '') {
+															document.getElementById("submit_1").disabled = true;
+														} else {
+															document.getElementById("submit_1").disabled = false;
+														}
+													}
+												</script>
+												
+											</div>
+	
+											<!-- +++++++++++++++++++++++++++++ Edit clients ++++++++++++++++++++++++++++++++ -->
+											<div <?php if (isset($tab3) && $tab3 == "set") { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_clients">
+												<div class="support_head_visible" style="display:none;">
+													<div class="header_hr"></div>
+													<div class="header_f1" style="width: 100%;">Edit Profile</div>
+													<br class="hide-sm"><br class="hide-sm">
+													<div class="header_f2" style="width: 100%;"></div>
+												</div>
+												<form autocomplete="off" id="edit-user-profile" action="?t=1" method="post" class="form-horizontal">
+												<?php
+													if(isset($tab3)){
+														if (isset($_SESSION['msg5'])) {
+															echo $_SESSION['msg5'];
+															unset($_SESSION['msg5']);
+														}
+
+														if (isset($_SESSION['msg1'])) {
+															echo $_SESSION['msg1'];
+															unset($_SESSION['msg1']);
+														}
+
+
+														if (isset($_SESSION['msg2'])) {
+															echo $_SESSION['msg2'];
+															unset($_SESSION['msg2']);
+														}
+
+														if (isset($_SESSION['msg3'])) {
+															echo $_SESSION['msg3'];
+															unset($_SESSION['msg3']);
+														}
+
+														if (isset($_SESSION['msg6'])) {
+															echo $_SESSION['msg6'];
+															unset($_SESSION['msg6']);
+														}
+													}
+												?>
+												<?php
+													if($_GET['edit_id']){
+														$id = $edit_user_data[0]->getId();
+														$user_name =  $edit_user_data[0]->getUserName();
+														$access_role_set = $edit_user_data[0]->getAccessRole();
+														$full_name = $edit_user_data[0]->getFullName();
+														$email = $edit_user_data[0]->getEmail();
+														$language_set = $edit_user_data[0]->getLanguage();
+														$user_type_set = $edit_user_data[0]->getUserType();
+														$timezone_set = $edit_user_data[0]->getTimezones();
+														$mobile = $edit_user_data[0]->getMobile(); 
+
+														if ($access_role_set=='admin' && $user_type_set =='SUPPORT') {
+															$access_role_s="Master Support Admin";
+														}
+														elseif ($access_role_set=='admin' && $user_type_set =='TECH') {
+															$access_role_s='Master Tech Admin';
+														}
+														elseif ($access_role_set=='admin') {
+															$access_role_s='Master Admin Peer';
+														}
+														else{
+															$access_role_s='Admin';
+														}
+													}
+
+													echo '<input type="hidden" name="form_secret" id="form_secret1" value="' . $_SESSION['FORM_SECRET'] . '" />';
+												?>
+													<fieldset>
+														<?php
+														echo '<input type="hidden" name="user_type" id="user_type2" value="' . $user_type . '">';
+														echo '<input type="hidden" name="loation" id="loation2" value="' . $user_distributor . '">';
+														echo '<input type="hidden" name="id" id="id" value="' . $id . '">';
+														?>
+														<div class="control-group">
+															<label class="control-label" for="access_role_2">Access Role<sup><font color="#FF0000"></font></sup></label>
+
+															<div class="controls form-group col-lg-5" readonly>
+																<select onchange="access_timezone()" class="form-control span4" name="access_role_2" id="access_role_2" value=<?php echo $access_role_set; ?> >
+																	<option value="">Select Access Role</option>
+																	<?php
+																	if($access_role_set=='admin'){
+																		$a_selected = ($access_role_s=='Master Admin Peer')?'selected':'';
+																		$b_selected = ($access_role_s=='Master Support Admin')?'selected':'';
+																		echo '<option value="Master Admin Peer" '.$a_selected.'>Master Admin Peer</option>
+																		<option value="Master Support Admin" '.$b_selected.'>Master Support Admin</option>';
+																	}
+																	$key_query = "SELECT access_role,description FROM admin_access_roles WHERE distributor = '$user_distributor' ORDER BY description";
+																	$query_results=$db->selectDB($key_query);
+																	foreach($query_results['data'] AS $row){
+																		$access_role = $row[access_role];
+																		if ($access_role == $access_role_set) {
+																			$description = $row[description];
+																			echo '<option value="' . $access_role . '" selected>' . $description . '</option>';
+																		} else {
+																			$description = $row[description];
+																			echo '<option value="' . $access_role . '">' . $description . '</option>';
+																		}
+																	}
+																	?>
+																</select>
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<script type="text/javascript">
+															function access_timezone() {
+																var role=$('#access_role_2').val();
+																<?php if ($user_type!='ADMIN') { ?>
+																if (role=='Master Admin Peer') {
+																	$('.timezone_2n').show();
+																}
+																else{
+																	$('.timezone_2n').hide();
+																}
+																<?php }?>                          
+                                                            }
+														</script>
+														<div class="control-group">
+															<label class="control-label" for="full_name_2" _1>Full Name<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls form-group col-lg-5">
+																<input class="form-control span4" id="full_name_2" name="full_name_2" maxlength="25" type="text" value="<?php echo $full_name ?>">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="control-group">
+															<label class="control-label" for="email_2">Email<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls form-group col-lg-5">
+																<input class="form-control span4" id="email_2" name="email_2" type="text" value="<?php echo $email ?>">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="control-group">
+															<label class="control-label" for="language_2">Language</label>
+															<div class="controls form-group col-lg-5">
+																<select class="form-control span4" name="language_2" id="language_2">
+																	<?php
+																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
+																	$query_results=$db->selectDB($key_query);
+																	foreach($query_results['data'] AS $row){
+																		$language_code = $row[language_code];
+																		$language = $row[language];
+																		if ($language_code == $language_set) {
+																			echo '<option value="' . $language_code . '" selected>' . $language . '</option>';
+																		} else {
+																			echo '<option value="' . $language_code . '">' . $language . '</option>';
+																		}
+																	}
+																	?>
+																</select>
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<?php if ($access_role_set=='admin' || $user_type=='ADMIN') {?>
+														<div class="control-group timezone_2n" <?php if($user_type_set=='SUPPORT'){ echo 'style="display:none"'; } ?> >
+                                                             <label class="control-label" for="timezone_2">Time Zone<sup><font color="#FF0000"></font></sup></label>
+                                                             <div class="controls col-lg-5 form-group">
+                                                                 <select class="span4 form-control" id="timezone_2" name="timezone_2" autocomplete="off">
+                                                                     <option value="">Select Time Zone</option>
+                                                                     <?php
+                                                                     $utc = new DateTimeZone('UTC');
+                                                                     $dt = new DateTime('now', $utc);
+                                                                     foreach ($priority_zone_array as $tz){
+                                                                         $current_tz = new DateTimeZone($tz);
+                                                                         $offset =  $current_tz->getOffset($dt);
+                                                                         $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                                         $abbr = $transition[0]['abbr'];
+                                                                         if($timezone_set==$tz){
+                                                                             $select="selected";
+                                                                         }else{
+                                                                             $select="";
+                                                                         }
+                                                                         echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                                                     }
+
+                                                                     foreach(DateTimeZone::listIdentifiers() as $tz) {
+                                                                         //Skip
+                                                                         if(in_array($tz,$priority_zone_array))
+                                                                             continue;
+
+                                                                        $current_tz = new DateTimeZone($tz);
+                                                                        $offset =  $current_tz->getOffset($dt);
+                                                                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                                        $abbr = $transition[0]['abbr'];
+                                                                        
+                                                                        if($timezone_set==$tz){
+                                                                           $select="selected";
+                                                                        }else{
+                                                                            $select="";
+                                                                        }
+                                                                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                                                    }
+                                                                     ?>
+                                                                 </select>
+                                                             </div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+													<?php } ?>
+														<div class="control-group">
+															<label class="control-label" for="mobile_2">Phone Number<sup><font color="#FF0000"></font></sup></label>
+															<div class="form-group controls col-lg-5">
+																<input class="form-control span4" id="mobile_2" name="mobile_2" type="text" maxlength="12" value="<?php echo $mobile ?>">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<script type="text/javascript">
+															$(document).ready(function() {
+																$('#mobile_2').focus(function() {
+																	$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+																	$('#edit-user-profile').data('bootstrapValidator').updateStatus('mobile_2', 'NOT_VALIDATED').validateField('mobile_2');
+																});
+
+																$('#mobile_2').keyup(function() {
+																	$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+																	$('#edit-user-profile').data('bootstrapValidator').updateStatus('mobile_2', 'NOT_VALIDATED').validateField('mobile_2');
+																});
+
+																$("#mobile_2").keydown(function(e) {
+																	var mac = $('#mobile_2').val();
+																	var len = mac.length + 1;
+																	if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
+																		mac1 = mac.replace(/[^0-9]/g, '');
+																	} else {
+																		if (len == 4) {
+																			$('#mobile_2').val(function() {
+																				return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
+																			});
+																		} else if (len == 8) {
+																			$('#mobile_2').val(function() {
+																				return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
+																			});
+																		}
+																	}
+
+																	$("#mobile_2").keypress(function(event) {
+																		var ew = event.which;
+																		//alert(ew);
+																		//if(ew == 8||ew == 0||ew == 46||ew == 45)
+																		if (ew == 8 || ew == 0)
+																			return true;
+																		if (48 <= ew && ew <= 57)
+																			return true;
+																		return false;
+																	});
+
+																	$('#edit-user-profile').data('bootstrapValidator').updateStatus('mobile_2', 'NOT_VALIDATED').validateField('mobile_2');
+																});
+															});
+														</script>
+														<div class="control-group">
+                                                        <label class="control-label" for="address_1">Address<sup><font color="#FF0000"></font></sup></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input class="span4 form-control" id="address_1" placeholder="Address" name="address_1" type="text" value="<?php echo$get_edit_mno_ad1;?>" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="address_2">City<sup><font color="#FF0000"></font></sup></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input class="span4 form-control" id="address_2" placeholder="City" name="address_2" type="text" value="<?php echo $get_edit_mno_ad2;?>" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="country" >Country<font color="#FF0000"></font></sup></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <select name="country" id="country" class="span4 form-control" autocomplete="off">
+                                                                <option value="">Select Country</option>
+                                                                <?php
+                                                                
+                                                                foreach ($country_result['data'] as $row) {
+                                                                    $select="";
+                                                                    if($row[a]==$get_edit_country){
+                                                                        $select="selected";
+                                                                    }
+                                                                    echo '<option value="'.$row[a].'" '.$select.'>'.$row[b].'</option>';
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <script language="javascript">
+                                                       populateCountries("country", "state");
+                                                    </script>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="state">State/Region<font color="#FF0000"></font></sup></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                        <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="state" placeholder="State or Region" name="state" required autocomplete="off">
+                                                            <?php
+                                                                echo '<option value="">Select State</option>';
+                                                                // var_dump($get_regions['data']);
+                                                                foreach ($get_regions['data'] AS $state) {
+                                                                    //edit_state_region , get_edit_state_region
+                                                                    if($get_edit_state_region == 'N/A') {
+                                                                        echo '<option selected value="N/A">Others</option>';
+                                                                    } else {
+                                                                        if ($get_edit_state_region == $state['states_code']) {
+                                                                            echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                                        } else {
+                                                                            echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                                        }
+                                                                    }
+                                                                    
+                                                                }
+                                                            ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label class="control-label" for="region">ZIP Code<sup><font color="#FF0000"></font></sup></label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <input class="span4 form-control" id="zip_code" maxlength="5" placeholder="XXXXX" name="zip_code" type="text" value="<?php echo $get_edit_mno_zip?>" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $("#zip_code").keydown(function (e) {
+                                                            var mac = $('#zip_code').val();
+                                                            var len = mac.length + 1;
+                                                            // Allow: backspace, delete, tab, escape, enter, '-' and .
+                                                            if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
+                                                                        // Allow: Ctrl+A, Command+A
+                                                                    (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: Ctrl+C, Command+C
+                                                                    (e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: Ctrl+x, Command+x
+                                                                    (e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: Ctrl+V, Command+V
+                                                                    (e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+                                                                        // Allow: home, end, left, right, down, up
+                                                                    (e.keyCode >= 35 && e.keyCode <= 40)) {
+                                                                // let it happen, don't do anything
+                                                                return;
+                                                            }
+                                                            // Ensure that it is a number and stop the keypress
+                                                            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                                                                e.preventDefault();
+                                                            }
+                                                        });
+                                                    });
+                                                    </script>
+														<div class="form-actions">
+															<button type="submit" name="edit-submita" id="edit-submita" class="btn btn-primary" disabled="disabled">Update Account</button>&nbsp; <strong>
+																<font color="#FF0000"></font><small></small>
+															</strong>
+															<button type="button" onclick="goto('?t=1')" class="btn btn-danger">Cancel</button>&nbsp;
+															<script type="text/javascript">
+																function goto(url) {
+																	window.location = url;
+																}
+																function footer_submitfn() {
+																	//alert("fn");
+																	$("#edit-submita").prop('disabled', false);
+																}
+															</script>
+														</div>
+														<!-- /form-actions -->
+													</fieldset>
+												</form>
+
+												<form onkeyup="footer_submitfn1();" onchange="footer_submitfn1();" autocomplete="off" id="edit-user-password" action="?t=1" method="post" class="form-horizontal">
+													<?php
+													echo '<input type="hidden" name="form_secret" id="form_secret2" value="' . $_SESSION['FORM_SECRET'] . '" />';
+													?>
+													<fieldset>
+														<legend>Reset Password</legend>
+														<?php
+														echo '<input type="hidden" name="user_type" id="user_type3" value="' . $user_type . '">';
+														echo '<input type="hidden" name="loation" id="loation3" value="' . $user_distributor . '">';
+														echo '<input type="hidden" name="id" id="id1" value="' . $id . '">';
+														?>
+														<div class="control-group">
+															<label class="control-label" for="full_name_2" _1>Password<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls col-lg-5">
+																<input class="span4" id="passwd" name="passwd" type="password" required>
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="control-group">
+															<label class="control-label" for="email_2">Confirm Password<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls col-lg-5">
+																<input class="span4" id="passwd_2" name="passwd_2" type="password" required="required">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="form-actions">
+															<button type="submit" name="edit-submita-pass" id="edit-submita-pass" class="btn btn-primary" disabled="disabled">Save</button>&nbsp; <strong>
+																<font color="#FF0000"></font><small></small>
+															</strong>
+															<button type="button" onclick="goto('?t=1')" class="btn btn-danger">Cancel</button>&nbsp;
+														</div>
+														<!-- /form-actions -->
+													</fieldset>
+												</form>
+
+												<script>
+													function footer_submitfn1() {
+														$("#edit-submita-pass").prop('disabled', false);
+													}
+												</script>
+											</div>
+											<!-- +++++++++++++++++++++++++++++ Edit users ++++++++++++++++++++++++++++++++ -->	
+										</div>
+									</div>
+									<!-- /widget-content -->
+								</div>
+							</div>
+							<!-- /widget -->
+						</div>
+						<!-- /span12 -->
+					</div>
+					<!-- /row -->
+				</div>
+				<!-- /container -->
+			</div>
+			<!-- /main-inner -->
+		</div>
+		<!-- /main -->
+	<?php } ?>
+	<script type="text/javascript" src="js/formValidation.js"></script>
+	<script type="text/javascript" src="js/bootstrap_form.js"></script>
+	<script type="text/javascript" src="js/bootstrapValidator_new.js?v=14"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			//create user form validation
+			$('#edit_profile').bootstrapValidator({
+				framework: 'bootstrap',
+				xcluded: [':disabled', '[readonly]',':hidden', ':not(:visible)'],
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					full_name_1: {
+						validators: {
+							<?php echo $db->validateField('person_full_name'); ?>,
+							<?php echo $db->validateField('not_require_special_character'); ?>
+						}
+					},
+					email_1: {
+						validators: {
+							<?php echo $db->validateField('email_cant_upper'); ?>
+						}
+					},
+					timezone_1: {
+						validators: {
+							<?php echo $db->validateField('notEmpty'); ?>
+						}
+					},
+					mobile_1: {
+						validators: {
+							<?php echo $db->validateField('mobile'); ?>
+						}
+					}
+				}
+			}).on('status.field.bv', function(e, data) {
+				if ($('#edit_profile').data('bootstrapValidator').isValid()) {
+					data.bv.disableSubmitButtons(false);
+				} else {
+					data.bv.disableSubmitButtons(true);
+				}
+			});
+			$('#edit-user-profile').bootstrapValidator({
+				framework: 'bootstrap',
+				xcluded: [':disabled', '[readonly]',':hidden', ':not(:visible)'],
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					access_role_2: {
+						validators: {
+							<?php echo $db -> validateField('dropdown'); ?>
+						}
+					},
+					full_name_2: {
+						validators: {
+							<?php echo $db -> validateField('person_full_name'); ?> ,
+							<?php echo $db -> validateField('not_require_special_character'); ?>
+						}
+					},
+					email_2: {
+						validators: {
+							<?php echo $db -> validateField('email_cant_upper'); ?>
+						}
+					},
+					timezone_2: {
+						validators: {
+							<?php echo $db -> validateField('notEmpty'); ?>
+						}
+					},
+					mobile_2: {
+						validators: {
+							<?php echo $db -> validateField('mobile'); ?>
+						}
+					}
+				}
+			}).bootstrapValidator('validate').on('status.field.bv', function(e, data) {
+				if ($('#edit-user-profile').data('bootstrapValidator').isValid()) {
+					data.bv.disableSubmitButtons(false);
+				} else {
+					data.bv.disableSubmitButtons(true);
+				}
+			});
+
+		});
+	</script>
+
+	<?php
+	include 'footer.php';
+	?>
+
+	<script src="js/base.js"></script>
+	<script src="js/jquery.chained.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {
+			$("#loation").chained("#user_type");
+
+		});
+	</script>
+	
 
 	<!-- Alert messages js-->
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -2189,7 +2125,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 			$("#submit_1").easyconfirm({
 				locale: {
-					title: 'New Admin Account',
+					title: 'New Client Account',
 					text: 'Are you sure you want to save this information?',
 					button: ['Cancel', ' Confirm'],
 					closeText: 'close'
@@ -2199,7 +2135,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 			$("#edit-submita").easyconfirm({
 				locale: {
-					title: 'Edit User',
+					title: 'Edit Client',
 					text: 'Are you sure you want to update this profile?',
 					button: ['Cancel', ' Confirm'],
 					closeText: 'close'

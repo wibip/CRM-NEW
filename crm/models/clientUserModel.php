@@ -66,11 +66,8 @@ class clientUserModel
 
     public function getClient($id)
     {
-
         $q = sprintf("SELECT *
                       FROM crm_clients WHERE id =%s",  $this->connection->GetSQLValueString($id, "text"));
-
-
         $data = $this->connection->selectDB($q);
 
         require_once dirname(__FILE__) . '/../entity/crm_clients.php';
