@@ -20,6 +20,7 @@ $db = new db_functions();
 require_once dirname(__FILE__) . '/models/userMainModel.php';
 $user_model = new userMainModel();
 $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
+$page = 'User';
 ?>
 
 <head>
@@ -124,172 +125,134 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	}
 
 	if (isset($_POST['submit_1'])) {
-		if ($user_type != "SALES") {
-			$full_name = $_POST['full_name_1'];
-			$br_q = "SHOW TABLE STATUS LIKE 'admin_users'";
-			$result2=$db->selectDB($br_q);
-	
-			foreach($result2['data'] AS $rowe){
-				$auto_inc = $rowe['Auto_increment'];
-			}
+		$full_name = $_POST['full_name_1'];
+		$br_q = "SHOW TABLE STATUS LIKE 'admin_users'";
+		$result2=$db->selectDB($br_q);
 
-			$new_user_name = str_replace(' ', '_', strtolower(substr($full_name, 0, 5) . 'u' . $auto_inc));
-			$password  = CommonFunctions::randomPassword();
+		foreach($result2['data'] AS $rowe){
+			$auto_inc = $rowe['Auto_increment'];
+		}
 
-			if ($user_type == 'SALES') {
-				$msg = $message_functions->showNameMessage('user_create_success', $new_user_name);
+		$new_user_name = str_replace(' ', '_', strtolower(substr($full_name, 0, 5) . 'u' . $auto_inc));
+		$password  = CommonFunctions::randomPassword();
 
-				$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
+		$access_role = $_POST['access_role_1'];
+		$user_type = $_POST['user_type'];
+		$loation = $_POST['loation'];
+		$email = $_POST['email_1'];
+		$language = $_POST['language_1'];
+		$timezone = $_POST['timezone_1'];
+		$mobile = $_POST['mobile_1'];
+
+		$pw_query = "SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1(\"$password\"))))) AS f";
+		$updated_pw='';
+		$pw_results=$db->selectDB($pw_query);
+		foreach($pw_results['data'] AS $row){
+			$updated_pw = strtoupper($row['f']);
+		}
+
+		$query = "INSERT INTO admin_users
+				(user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`, mobile, is_enable, create_date,create_user)
+				VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$loation','$full_name','$email', '$language' ,'$timezone', '$mobile','2',now(),'$user_name')";
+		$ex =$db->execDB($query);
+
+		if ($ex===true) {
+			$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+			if ($user_type == 'ADMIN') {
+				$dist = 'ADMIN';
+			} else if ($user_type == 'MNO') {
+				$dist = $user_distributor;
 			} else {
-				$access_role = $_POST['access_role_1'];
-				$user_type = $_POST['user_type'];
-				$loation = $_POST['loation'];
-				$email = $_POST['email_1'];
-				$language = $_POST['language_1'];
-				$timezone = $_POST['timezone_1'];
-				$mobile = $_POST['mobile_1'];
-
-				$pw_query = "SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1(\"$password\"))))) AS f";
-				$updated_pw='';
-				$pw_results=$db->selectDB($pw_query);
-  				foreach($pw_results['data'] AS $row){
-					$updated_pw = strtoupper($row['f']);
-				}
-
-				$query = "INSERT INTO admin_users
-						(user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`, mobile, is_enable, create_date,create_user)
-						VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$loation','$full_name','$email', '$language' ,'$timezone', '$mobile','2',now(),'$user_name')";
-				$ex =$db->execDB($query);
-
-				if ($ex===true) {
-					if ($user_type == 'ADMIN') {
-						$dist = 'ADMIN';
-					} else if ($user_type == 'MNO') {
-						$dist = $user_distributor;
-					} else {
-						$kmno_query = "SELECT mno_id FROM exp_mno_distributor where distributor_code = '$user_distributor'";
-						$query_results=$db->selectDB($kmno_query);
-						foreach($query_results['data'] AS $row){
-							$dist = $row['mno_id'];
-						}
-					}
-
-					if ($access_role == 'ADMIN') {
-						$acc_type = 'Admin';
-					} else {
-						$acc_type = 'User';
-					}
-
-					$to = $email;
-
-					if ($package_functions->getSectionType('EMAIL_USER_TEMPLATE', $system_package) == "own") {
-						$email_content = $db->getEmailTemplate('USER_MAIL', $system_package, 'MNO', $user_distributor);
-						$a = $email_content[0]['text_details'];
-						$subject = $email_content[0]['title'];
-
-						if (strlen($subject) == '0') {
-							$email_content = $db->getEmailTemplate('USER_MAIL', $package_functions->getAdminPackage(), 'ADMIN');
-							$a = $email_content[0]['text_details'];
-							$subject = $email_content[0]['title'];
-						}
-					} else {
-						$a = $db->textVal('MAIL', 'ADMIN');
-						$subject = $db->textTitle('MAIL', 'ADMIN');
-					}
-
-					$support_number = $package_functions->getMessageOptions('SUPPORT_NUMBER',$system_package,$property_business_type);
-					$login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
-					$link = $db->getSystemURL('login', $login_design);
-
-					$vars = array(
-						'{$user_full_name}' => $full_name,
-						'{$short_name}'        => $db->setVal("short_title", $user_distributor),
-						'{$account_type}' => $user_type,
-						'{$user_name}' => $new_user_name,
-						'{$password}' => $password,
-						'{$support_number}' => $support_number,
-						'{$link}' => $link
-
-					);
-
-					$message_full = strtr($a, $vars);
-					$message = $message_full;
-					$from = strip_tags($db->setVal("email", $mno_id));
-					if (empty($from)) {
-						$from = strip_tags($db->setVal("email", $user_distributor));
-						if (empty($from)) {
-							$from = strip_tags($db->setVal("email", "ADMIN"));
-						}
-					}
-
-					$title = $db->setVal("short_title", $user_distributor);
-
-					$email_send_method = $package_functions->getSectionType("EMAIL_SYSTEM", $system_package);
-					include_once 'src/email/' . $email_send_method . '/index.php';
-					$cunst_var = array();
-					//$cunst_var['template'] = $package_functions->getOptions('EMAIL_TEMPLATE', $system_package);
-					$cunst_var['system_package'] = $system_package;
-					$cunst_var['mno_package'] = $system_package;
-                    $cunst_var['mno_id'] = $mno_id;
-                    $cunst_var['verticle'] = $property_business_type;
-					$mail_obj = new email($cunst_var);
-
-					$mail_obj->mno_system_package = $system_package;
-					$mail_sent = $mail_obj->sendEmail($from, $to, $subject, $message_full, '', $title);
-					$msg = $message_functions->showNameMessage('user_create_success', $new_user_name);
-
-					$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
-
-					//Activity log
-					$db->userLog($user_name, $script, 'Create User', $new_user_name);
-				} else {
-					$msg = $message_functions->showMessage('user_create_fail', '2001');
-					$db->userErrorLog('2001', $user_name, 'script - ' . $script);
-					$_SESSION['msg2'] = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
+				$kmno_query = "SELECT mno_id FROM exp_mno_distributor where distributor_code = '$user_distributor'";
+				$query_results=$db->selectDB($kmno_query);
+				foreach($query_results['data'] AS $row){
+					$dist = $row['mno_id'];
 				}
 			}
-		} else {
-			$msg = $message_functions->showNameMessage('user_create_success', $new_user_name);
 
-			$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $msg . '</strong></div>';
-		}
-	}
-	//assign Roles removes
-	elseif (isset($_GET['remove_id'])) {
-		if ($_SESSION['FORM_SECRET'] == $_GET['token2']) {
-			$remove_id = $_GET['remove_id'];
-			$qq1 = "INSERT INTO `admin_access_roles_modules_archive`
-				(`access_role`, `module_name`, `distributor`, `create_user`, `archive_by`, `archive_date`)
-				(SELECT  `access_role`, `module_name`, `distributor`, `create_user`, '$user_name', NOW()
-				FROM `admin_access_roles_modules` WHERE `id`='$remove_id' LIMIT 1)";
-			//$rr1 = mysql_query($qq1);
-			$rr1 = $db->execDB($qq1);
-
-			$qq2 = "DELETE FROM `admin_access_roles_modules` WHERE `id`='$remove_id'";
-			$rr2 = $db->execDB($qq2);
-
-			if ($rr1===true && $rr2===true) {
-				$msg = $message_functions->showMessage('module_assign_remove_success');
-				$_SESSION['msg3'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
+			if ($access_role == 'ADMIN') {
+				$acc_type = 'Admin';
 			} else {
-				$msg = $message_functions->showMessage('module_assign_remove_fail', '2003');
-				$db->userErrorLog('2003', $user_name, 'script - ' . $script);
-				$_SESSION['msg3'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
+				$acc_type = 'User';
 			}
+
+			/*
+			$to = $email;
+
+			if ($package_functions->getSectionType('EMAIL_USER_TEMPLATE', $system_package) == "own") {
+				$email_content = $db->getEmailTemplate('USER_MAIL', $system_package, 'MNO', $user_distributor);
+				$a = $email_content[0]['text_details'];
+				$subject = $email_content[0]['title'];
+
+				if (strlen($subject) == '0') {
+					$email_content = $db->getEmailTemplate('USER_MAIL', $package_functions->getAdminPackage(), 'ADMIN');
+					$a = $email_content[0]['text_details'];
+					$subject = $email_content[0]['title'];
+				}
+			} else {
+				$a = $db->textVal('MAIL', 'ADMIN');
+				$subject = $db->textTitle('MAIL', 'ADMIN');
+			}
+
+			$support_number = $package_functions->getMessageOptions('SUPPORT_NUMBER',$system_package,$property_business_type);
+			$login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
+			$link = $db->getSystemURL('login', $login_design);
+
+			$vars = array(
+				'{$user_full_name}' => $full_name,
+				'{$short_name}'        => $db->setVal("short_title", $user_distributor),
+				'{$account_type}' => $user_type,
+				'{$user_name}' => $new_user_name,
+				'{$password}' => $password,
+				'{$support_number}' => $support_number,
+				'{$link}' => $link
+
+			);
+
+			$message_full = strtr($a, $vars);
+			$message = $message_full;
+			$from = strip_tags($db->setVal("email", $mno_id));
+			if (empty($from)) {
+				$from = strip_tags($db->setVal("email", $user_distributor));
+				if (empty($from)) {
+					$from = strip_tags($db->setVal("email", "ADMIN"));
+				}
+			}
+
+			$title = $db->setVal("short_title", $user_distributor);
+
+			$email_send_method = $package_functions->getSectionType("EMAIL_SYSTEM", $system_package);
+			include_once 'src/email/' . $email_send_method . '/index.php';
+			$cunst_var = array();
+			//$cunst_var['template'] = $package_functions->getOptions('EMAIL_TEMPLATE', $system_package);
+			$cunst_var['system_package'] = $system_package;
+			$cunst_var['mno_package'] = $system_package;
+			$cunst_var['mno_id'] = $mno_id;
+			$cunst_var['verticle'] = $property_business_type;
+			$mail_obj = new email($cunst_var);
+
+			$mail_obj->mno_system_package = $system_package;
+			$mail_sent = $mail_obj->sendEmail($from, $to, $subject, $message_full, '', $title); */
+
+
+			$message_response = $message_functions->showNameMessage('user_create_success', $new_user_name);
+			$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create User',$idContAutoInc,'',$message_response);
+			$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $message_response . '</strong></div>';
+
 		} else {
-			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$msg = $message_functions->showMessage('transection_fail', '2004');
-			$_SESSION['msg3'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
+			$message_response = $message_functions->showMessage('user_create_fail', '2001');
+			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create User',0,'2001',$message_response);
+			$db->userErrorLog('2001', $user_name, 'script - ' . $script);
+			$_SESSION['msg2'] = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $message_response . '</strong></div>';
 		}
 	}
-
 	//  to the form edit user
 	elseif (isset($_GET['edit_id'])) {
 		if ($_SESSION['FORM_SECRET'] == $_GET['token']) {
 			$edit_id = $_GET['edit_id'];
 			$edit_user_data = $user_model->getUser($edit_id);
 		} else {
-			// var_dump('test');
+			$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Load User',$_GET['edit_id'],'2004','Oops, It seems you have refreshed the page. Please try again');
 			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
 			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Oops, It seems you have refreshed the page. Please try again</strong></div>";
 			//header('Location: location.php?t=3');
@@ -404,33 +367,40 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 					}
 
 					if ($edit_result) {
-						$create_log->save('3001', $message_functions->showNameMessage('role_edit_success', $edit_user_name), '');
-						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('role_edit_success', $edit_user_name) . "</strong></div>";
-
-						//Activity log
-						$db->userLog($user_name, $script, 'Modify User', $edit_user_name);
+						$message_response = $message_functions->showNameMessage('role_edit_success', $edit_user_name);
+						$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Modify User',$id,'3001',$message_response);
+						// $create_log->save('3001', $message_functions->showNameMessage('role_edit_success', $edit_user_name), '');
+						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 					} else {
+						$message_response = $message_functions->showMessage('role_edit_failed', '2002');
+						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify User',$id,'2002',$message_response);
 						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						$create_log->save('2002', $message_functions->showMessage('role_edit_failed', '2002'), '');
-						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('role_edit_failed', '2002') . "</strong></div>";
+						// $create_log->save('2002', $message_functions->showMessage('role_edit_failed', '2002'), '');
+						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 					}
 				} else {
+					$message_response = $message_functions->showMessage('role_edit_failed', '2002');
+					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify User',$id,'2002',$message_response);
 					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-					$create_log->save('2002', $message_functions->showMessage('role_edit_failed', '2002'), '');
-					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('role_edit_failed', '2002') . "</strong></div>";
+					// $create_log->save('2002', $message_functions->showMessage('role_edit_failed', '2002'), '');
+					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 				}
 			} else {
-				$create_log->save('3001', $message_functions->showNameMessage('role_edit_success', $edit_user_name), '');
-				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('role_edit_success', $edit_user_name) . "</strong></div>";
+				$message_response = $message_functions->showNameMessage('role_edit_success', $edit_user_name);
+				$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify User',$id,'3001',$message_response);
+				// $create_log->save('3001', $message_functions->showNameMessage('role_edit_success', $edit_user_name), '');
+				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 			}
 		} else {
+			$message_response = $message_functions->showMessage('transection_fail', '2004');
+			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify User',$id,'2004',$message_response);
 			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
-			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
+			// $create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
+			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 		}
-	} elseif (isset($_POST['edit-submita-pass'])) {
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { //refresh validate
-			if ($user_type != "SALES") {
+	} 
+	elseif (isset($_POST['edit-submita-pass'])) {
+		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { 
 				$id = $_POST['id'];
 				$passwd = $_POST['passwd'];
 				$passwd_2 = $_POST['passwd_2'];
@@ -453,41 +423,43 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						$edit_result = $db->execDB($edit_query);
 
 						if ($edit_result===true) {
-							$create_log->save('3001', $message_functions->showNameMessage('role_password_edit_success', $user_full_name), '');
-							$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('role_password_edit_success', $user_full_name) . "</strong></div>";
-
-							//Activity log
-							$db->userLog($user_name, $script, 'Reset Password', $user_full_name);
+							$message_response = $message_functions->showNameMessage('role_password_edit_success', $user_full_name);
+							$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'User Password Reset',$id,'3001',$message_response);
+							// $create_log->save('3001', $message_functions->showNameMessage('role_password_edit_success', $user_full_name), '');
+							$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 						} else {
+							$message_response = $message_functions->showMessage('role_password_edit_failed', '2002');
+							$db->addLogs($user_name, 'ERROR',$user_type, $page, 'User Password Reset',$id,'2002',$message_response);
 							$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-							$create_log->save('2002', $message_functions->showMessage('role_password_edit_failed', '2002'), '');
-							$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('role_password_edit_failed', '2002') . "</strong></div>";
+							// $create_log->save('2002', $message_functions->showMessage('role_password_edit_failed', '2002'), '');
+							$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 						}
 					} else {
+						$message_response = $message_functions->showMessage('role_password_edit_failed', '2002');
+						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'User Password Reset',$id,'2002',$message_response);
 						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						$create_log->save('2002', $message_functions->showMessage('role_password_edit_failed', '2002'), '');
-						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('role_password_edit_failed', '2002') . "</strong></div>";
+						// $create_log->save('2002', $message_functions->showMessage('role_password_edit_failed', '2002'), '');
+						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 					}
 				} else {
+					$message_response = $message_functions->showMessage('role_password_edit_failed', '2006');
+					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'User Password Reset',$id,'2006',$message_response);
 					$db->userErrorLog('2006', $user_name, 'script - ' . $script);
-					$create_log->save('2006', $message_functions->showMessage('role_password_edit_failed', '2006'), '');
-					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('role_password_edit_failed', '2006') . "</strong></div>";
+					// $create_log->save('2006', $message_functions->showMessage('role_password_edit_failed', '2006'), '');
+					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 					//Password confirmation failed
 				}
-			} else {
-				$create_log->save('3001', $message_functions->showNameMessage('role_password_edit_success', $user_full_name), '');
-				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('role_password_edit_success', $user_full_name) . "</strong></div>";
-			}
 		} else {
+			$message_response = $message_functions->showMessage('transection_fail', '2004');
+			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'User Password Reset',$id,'2004',$message_response);
 			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
-			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
+			// $create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
+			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 		}
 	}
 	//login status change////
 	elseif (isset($_GET['status_change_id'])) {
-		if ($_SESSION['FORM_SECRET'] == $_GET['token']) { //refresh validate
-			if ($user_type != "SALES") {
+		if ($_SESSION['FORM_SECRET'] == $_GET['token']) {
 				$status_change_id = $_GET['status_change_id'];
 				$action_sts = $_GET['action_sts'];
 				$user_full_name = $db->getValueAsf("SELECT u.full_name AS f FROM admin_users u WHERE u.id='$status_change_id' LIMIT 1");
@@ -515,58 +487,42 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 					if ($edit_result===true) {
 						$en_dis_msg = '';
 						if ($set == 'enabled') {
-							$susmsg = $message_functions->showNameMessage('role_user_name_enable_success', $user_full_name);
+							$message_response = $message_functions->showNameMessage('role_user_name_enable_success', $user_full_name);
 							$en_dis_msg = 'Enable';
 						} elseif ($set == 'disabled') {
-							$susmsg = $message_functions->showNameMessage('role_user_name_disable_success', $user_full_name);
+							$message_response = $message_functions->showNameMessage('role_user_name_disable_success', $user_full_name);
 							$en_dis_msg = 'Disable';
 						}
 
-						$create_log->save('3001', $susmsg, '');
-						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $susmsg . " </strong></div>";
+						$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'User status change',$status_change_id,'3001',$message_response);
+						// $create_log->save('3001', $susmsg, '');
+						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . " </strong></div>";
 
 						//Activity log
-						$db->userLog($user_name, $script, $en_dis_msg . ' User', $usr_name);
+						// $db->userLog($user_name, $script, $en_dis_msg . ' User', $usr_name);
 					} else {
+						$message_response = $message_functions->showMessage('role_user_name_enable_failed', '2001');
+						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'User status change',$status_change_id,'2001',$message_response);
 						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						$create_log->save('2001', $message_functions->showMessage('role_user_name_enable_failed', '2001'), '');
-						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showMessage('role_user_name_enable_failed', '2001') . "</strong></div>";
+						// $create_log->save('2001', $message_functions->showMessage('role_user_name_enable_failed', '2001'), '');
+						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 					}
 				} else {
+					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'User status change',$status_change_id,'2002','Something went wrong,please try again');
 					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
 					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong> [2002] Something went wrong,please try again</strong></div>";
 				}
-			} else {
-				$action_sts = $_GET['action_sts'];
-				if ($action_sts == '1') {
-					$action_type = "ACCOUNT_ENABLE";
-					$set = 'enabled';
-				} else {
-					$action_type = "ACCOUNT_DISABLE";
-					$set = 'disabled';
-				}
-
-				if ($set == 'enabled') {
-					$susmsg = $message_functions->showNameMessage('role_user_name_enable_success', $user_full_name);
-					$en_dis_msg = 'Enable';
-				} elseif ($set == 'disabled') {
-					$susmsg = $message_functions->showNameMessage('role_user_name_disable_success', $user_full_name);
-					$en_dis_msg = 'Disable';
-				}
-
-				$create_log->save('3001', $susmsg, '');
-				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $susmsg . " </strong></div>";
-			}
 		} else {
+			$message_response = $message_functions->showMessage('transection_fail', '2004');
+			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'User status change',$status_change_id,'2004',$message_response);
 			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
-			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>�</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
+			// $create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
+			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>�</button><strong>" . $message_response . "</strong></div>";
 		}
 	}
 	//user remove////
 	elseif (isset($_GET['user_rm_id'])) {
-		if ($_SESSION['FORM_SECRET'] == $_GET['token']) { //refresh validate
-			if ($user_type != "SALES") {
+		if ($_SESSION['FORM_SECRET'] == $_GET['token']) {
 				$user_rm_id = $_GET['user_rm_id'];
 				$user_full_name = $db->getValueAsf("SELECT u.full_name AS f FROM admin_users u WHERE u.id='$user_rm_id' LIMIT 1");
 				$usr_name = $db->getValueAsf("SELECT u.user_name AS f FROM admin_users u WHERE u.id='$user_rm_id' LIMIT 1");
@@ -612,31 +568,173 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 					$edit_result = $db->execDB($edit_query);
 
 					if ($edit_result===true) {
-						$create_log->save('3001', $message_functions->showNameMessage('role_role_remove_success', $user_full_name), '');
-						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showNameMessage('role_role_remove_success', $user_full_name) . "</strong></div>";
+						$message_response = $message_functions->showNameMessage('role_role_remove_success', $user_full_name);
+						$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Remove User',$user_rm_id,'3001',$message_response);
+						// $create_log->save('3001', $message_functions->showNameMessage('role_role_remove_success', $user_full_name), '');
+						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 
 						//Activity log
-						$db->userLog($user_name, $script, 'Remove User', $usr_name);
+						// $db->userLog($user_name, $script, 'Remove User', $usr_name);
 					} else {
+						$message_response = $message_functions->showMessage('role_role_remove_failed', '2002');
+						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Remove User',$user_rm_id,'2002',$message_response);
 						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						$create_log->save('2002', $message_functions->showMessage('role_role_remove_failed', '2002'), '');
-						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showMessage('role_role_remove_failed', '2002') . "</strong></div>";
+						// $create_log->save('2002', $message_functions->showMessage('role_role_remove_failed', '2002'), '');
+						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 					}
 				} else {
+					$message_response = $message_functions->showMessage('role_role_remove_failed', '2002');
+					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Remove User',$user_rm_id,'2002',$message_response);
 					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-					$create_log->save('2002', $message_functions->showMessage('role_role_remove_failed', '2002'), '');
-					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showMessage('role_role_remove_failed', '2002') . "</strong></div>";
+					// $create_log->save('2002', $message_functions->showMessage('role_role_remove_failed', '2002'), '');
+					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 				}
-			} else {
-				$create_log->save('3001', $message_functions->showNameMessage('role_role_remove_success', $user_full_name), '');
-				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showNameMessage('role_role_remove_success', $user_full_name) . "</strong></div>";
-			}
 		} else {
+			$message_response = $message_functions->showMessage('transection_fail', '2004');
+			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Remove User',$user_rm_id,'2004',$message_response);
 			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			$create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
-			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
+			// $create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
+			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 		}
 	} 
+	//create and assign Roles
+	elseif (isset($_POST['assign_roles_submita'])) {
+		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { //refresh validate
+				$access_role_name = trim($_POST['access_role_name']);
+				//	$description = trim($_POST['description']);
+				$access_role_id = time() . $user_type . $user_distributor;
+				if (strtoupper($access_role_name) == "ADMIN") {
+					$msg = $message_functions->showMessage('user_admin_not_allow');
+					$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
+				} else {
+					$query0 = "INSERT INTO `admin_access_roles` (`access_role`,`description`,`distributor`,`create_user`,`create_date`)
+				 VALUES ('$access_role_id', '$access_role_name', '$user_distributor', '$user_name',now())";
+					foreach ($_POST['my_select'] as $selectedOption) {
+						$module_name = $selectedOption;
+						$query1 = "REPLACE INTO `admin_access_roles_modules`
+					(`access_role`, `module_name`, `distributor` , `create_user`, `create_date`)
+					VALUES ('$access_role_id', '$module_name', '$user_distributor', '$user_name', now())";
+						$result1 = $db->execDB($query1);
+					}
+					if ($result1===true) {
+						$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+						$result0 =$db->execDB($query0);
+						$query12 = "INSERT INTO `admin_access_roles_modules`
+									(`access_role`, `module_name`, `distributor` , `create_user`, `create_date`)
+									VALUES ('$access_role_id', 'profile', '$user_distributor', '$user_name', now())";
+						$result12 =$db->execDB($query12);
+					}
+
+					if ($result0===true) {
+						$message_response = $message_functions->showNameMessage('role_role_create_success', $access_role_name);
+						$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create Access Role',$idContAutoInc,'3001',$message_response);
+						// $create_log->save('3001', $message_functions->showNameMessage('role_role_create_success', $access_role_name), '');
+						$_SESSION['msg2'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
+
+						//Activity log
+						// $db->userLog($user_name, $script, 'Create Access Role', $access_role_name);
+					} else {
+						$message_response = $message_functions->showMessage('role_role_create_failed', '2001');
+						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Access Role',$idContAutoInc,'2001',$message_response);
+						$db->userErrorLog('2001', $user_name, 'script - ' . $script);
+						// $create_log->save('2001', $message_functions->showMessage('role_role_create_failed', '2001'), '');
+						$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
+					}
+				}
+		} //key validation
+		else {
+			$message_response = $message_functions->showMessage('transection_fail', '2004');
+			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Access Role',0,'2004',$message_response);
+			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
+			// $create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
+			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
+		}
+	} 
+	//remove Roles
+	elseif (isset($_GET['remove_id']) && isset($_GET['remove_access_role'])) {
+		if ($_SESSION['FORM_SECRET'] == $_GET['token2']) {
+				$remove_id = $_GET['remove_id'];
+				$remove_access_role = $_GET['remove_access_role'];
+				$role_name = $_GET['description'];
+				$cnt = "SELECT COUNT(*) AS f FROM `admin_users` WHERE `access_role` = '$remove_access_role' AND `user_distributor` = '$user_distributor'";
+				$count_result = $db->getValueAsf($cnt);
+
+				if ($count_result > 0) {
+					$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong> Access Role is already assigned</strong></div>";
+				} else {
+					$q_remove_archive = "INSERT INTO `admin_access_roles_archive`
+										(`access_role`, `description`, `distributor`, `create_user`, `archive_by`, `archive_date`)
+										(SELECT  `access_role`, `description`, `distributor`, `create_user`, '$user_name', NOW()
+										FROM `admin_access_roles` WHERE `id`='$remove_id' LIMIT 1)";
+					$result_remove_archive = $db->execDB($q_remove_archive);
+
+					$getMod_q = "SELECT * FROM `admin_access_roles` WHERE `id`='$remove_id'";
+					$getMod_r=$db->selectDB($getMod_q);
+					
+  					foreach($getMod_r['data'] AS $row){
+						$access_role = $row['access_role'];
+						$getModRol_q = "SELECT * FROM `admin_access_roles_modules` WHERE `access_role`='$access_role'";
+						$getModRol_r=$db->selectDB($getModRol_q);
+	
+						foreach($getModRol_r['data'] AS $row){
+							$qq1 = "INSERT INTO `admin_access_roles_modules_archive`
+									(`access_role`, `module_name`, `distributor`, `create_user`, `archive_by`, `archive_date`)
+									(SELECT  `access_role`, `module_name`, `distributor`, `create_user`, '$user_name', NOW()
+									FROM `admin_access_roles_modules` WHERE `access_role`='$access_role' LIMIT 1)";
+							//$rr1 = mysql_query($qq1);
+							$rr1=$db->execDB($qq1);
+						}
+					}
+
+					// var_dump($result_remove_archive);
+					if ($result_remove_archive===true) {
+						$q_remove_dis = "DELETE FROM `admin_access_roles` WHERE `id`='$remove_id'";
+						$result_remove_dis = $db->execDB($q_remove_dis);
+
+						$q_remove = "DELETE FROM `admin_access_roles_modules`
+									WHERE `access_role`='$remove_access_role' AND `distributor` = '$user_distributor'";
+						$result_remove = $db->execDB($q_remove);
+						// $msg = $message_functions->showMessage('user_remove_success');
+						if ($result_remove_dis) {
+							$message_response = $message_functions->showMessage('user_remove_success');
+							$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Remove Access Role',$remove_id,'3001',$message_response);
+							$_SESSION['msg2'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
+							//Activity log
+							// $db->userLog($user_name, $script, 'Remove Access Role', $role_name);
+						} else {
+							$message_response = $message_functions->showMessage('user_remove_fail', '2003');
+							$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Access Role',$remove_id,'2003',$message_response);
+							// $msg = $message_functions->showMessage('user_remove_fail', '2003');
+							$db->userErrorLog('2003', $user_name, 'script - ' . $script);
+							$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
+						}
+					}
+				}
+		} else {
+			$message_response = $message_functions->showMessage('transection_is_failed', '2004');
+			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Access Role',$remove_id,'2004',$message_response);
+			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
+			// $msg = $message_functions->showMessage('transection_is_failed', '2004');
+			$_SESSION['msg1'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
+		}
+	} 
+	//Load edit role
+	elseif (isset($_GET['role_ID'])) {
+		if ($_SESSION['FORM_SECRET'] == $_GET['form_secreat']) {
+			$role_id = $_GET['role_ID'];
+			$role_array;
+			$i = 0;
+			$role_result = $db->selectDB("SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role`='$role_id'");
+			foreach($role_result['data'] AS $role){
+				$role_array[$i] = $role['module_name'];
+				$i++;
+			}
+				$i = 0;
+		} else {
+			$_SESSION['msg3'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>Oops, It seems you have refreshed the page. Please try again</strong></div>";
+		}
+	}
+
 	//Form Refreshing avoid secret key/////
 	$secret = md5(uniqid(rand(), true));
 	$_SESSION['FORM_SECRET'] = $secret;
@@ -1328,18 +1426,13 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 													}
 												</script>
 											</div>
-											<!-- +++++++++++++++++++++++++++++ Edit users ++++++++++++++++++++++++++++++++ -->
-
 											<!-- +++++++++++++++++++++++++++++ create Roles ++++++++++++++++++++++++++++++++ -->
 											<div <?php if (isset($tab3)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_roles">
 
-
 												<div class="users_head_visible" style="display:none;"><div class="header_hr"></div><div class="header_f1" style="width: 100%">
-    Roles</div>
-<br class="hide-sm"><br class="hide-sm"><div class="header_f2" style="width: fit-content;"> </div></div>
-
-
-																								<?php
+													Roles</div>
+												<br class="hide-sm"><br class="hide-sm"><div class="header_f2" style="width: fit-content;"> </div></div>
+												<?php
 													if(isset($tab3)){
 														if (isset($_SESSION['msg5'])) {
 															echo $_SESSION['msg5'];
@@ -1373,63 +1466,42 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 												if (!(isset($_GET['role_edit_id']))) {
 													?>
 
-
 													<form autocomplete="off" id="assign_roles_submit" name="assign_roles_submit" method="post" class="form-horizontal" action="?t=3">
 														<fieldset>
-
-															<div id="response_d3">
-
-															</div>
+															<div id="response_d3"></div>
 															<?php
 															echo '<input type="hidden" name="form_secret" id="form_secret" value="' . $_SESSION['FORM_SECRET'] . '" />';
 															?>
-
 															<div class="control-group">
 																<label class="control-label" for="access_role_name">Access Role Name</label>
 																<div class="controls form-group col-lg-5">
-																	<input class="form-control span2" id="access_role_name" name="access_role_name" type="text" onblur="checkModules()">
+																	<input class="form-control span2" id="access_role_name" name="access_role_name" type="text">
 																</div>
 															</div>
-
-
-
 															<div class="control-group">
 																<label class="control-label" for="my_select">Modules</label>
 
 																<div class="controls form-group col-lg-5">
 																	<select class="form-control span4" multiple="multiple" id="my_select" name="my_select[]">
 																		<option value="" disabled="disabled"> Choose Module(s)</option>
-
 																		<?php
-
 																		if ($user_type == 'SUPPORT') {
 																			if ($system_package == 'N/A') {
 																				$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1";
 																				$modules1 = $db->selectDB($q1);
 																				$modules = $modules1['data'];
 																			} else {
-
-																				/*echo $q1="SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a ,`admin_product_controls` c
-																		WHERE c.`source`=a.`module_name` AND c.`product_code`='$system_package' AND c.type='page' AND c.`access_method`='1'
-																		AND a.`user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1 AND c.user_type='$user_type'";
-																		*/
 																				$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`<>'profile' AND a.`module_name` <>'users' AND a.is_enable=1";
 																				$modules1 = $db->selectDB($q11);
-
-
 																				$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
 																				$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
-
 																				$modules2 = json_decode($allow_pages);
-																				//print_r($modules2);
-
 																				foreach ($modules1['data'] as $key => $value) {
 																					if (!in_array($value['module_name'], $modules2)) {
 
 																						unset($modules1['data'][$key]);
 																					}
 																				}
-
 																				$modules = $modules1['data'];
 																			}
 																		} else {
@@ -1440,102 +1512,52 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																				$modules1 = $db->selectDB($q1);
 																				$modules = $modules1['data'];
 																			} else {
-
-																				/*echo $q1="SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a ,`admin_product_controls` c
-																		WHERE c.`source`=a.`module_name` AND c.`product_code`='$system_package' AND c.type='page' AND c.`access_method`='1'
-																		AND a.`user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1 AND c.user_type='$user_type'";
-																		*/
-
 																				$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`<>'profile' AND a.`module_name` <>'users' AND a.is_enable=1";
 																				$modules1 = $db->selectDB($q11);
-																				//print_r($modules1['data']);
-
-
 																				$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
 																				$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
-
 																				$modules2 = json_decode($allow_pages);
-																				//print_r($modules2);
-
 																				foreach ($modules1['data'] as $key => $value) {
 																					if (!in_array($value['module_name'], $modules2)) {
-
 																						unset($modules1['data'][$key]);
 																					}
 																				}
-
 																				$modules = $modules1['data'];
-																				//print_r($modules1['data']);
-
 																			}
 																		}
-
-
-
-																		//$query_results = mysql_query($q1);
-
 																		foreach ($modules as $row) {
 																			$module_name = $row[module_name];
 																			$module = $row[name_group];
-																			//$description = $row[description];
-
 																			if ($module_name == 'support' && $user_type == 'SUPPORT') {
-
 																				echo "<option value='" . $module_name . "' selected class='disabled'>" . $module . "</option>";
 																			} else {
-
 																				echo "<option value='" . $module_name . "'>" . $module . "</option>";
 																			}
 																		}
 																		?>
-
-
 																	</select>
 																</div>
 																<!-- /controls -->
 															</div>
 															<!-- /control-group -->
-
 															<div class="form-actions">
 																<button type="submit" name="assign_roles_submita" id="assign_roles_submita" class="btn btn-primary">Save</button>
-
 															</div>
 														</fieldset>
 													</form>
 
 													<script type="text/javascript">
 														$(document).ready(function() {
-
-
 															document.getElementById("assign_roles_submita").disabled = true;
-
 														});
 													</script>
-
-
-
-
 												<?php
 												}
-
 												if (isset($_GET['role_edit_id'])) {
 													?>
-
-
-													<script type="text/javascript">
-														$(document).ready(function() {
-
-
-
-														});
-													</script>
-
-
 													<form autocomplete="off" id="assign_roles_form" name="assign_roles_form" method="post" class="form-horizontal" action="?t=3">
 														<fieldset>
-
 															<div id="response_d3">
-
 															</div>
 															<?php
 															echo '<input type="hidden" name="form_secret" value="' . $_SESSION['FORM_SECRET'] . '" />';
@@ -1545,52 +1567,29 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	window.location.href = "users.php?t=3&role_ID=" + role_ID + "&form_secreat=" + '<?php echo $secret; ?>' + "";
 																}
 															</script>
-
 															<div class="control-group">
 																<label class="control-label" for="access_role_field">Roles</label>
 																<div class="controls col-lg-5 form-group">
-
 																	<input type="hidden" name="access_role_field" id="access_role_field11" value="<?php echo $_GET['role_ID']; ?>">
 																	<select class="span4 form-control" name="access_role_field11" id="access_role_field" disabled="disabled" onchange="get_roles(this.value)">
 																		<option value="">Select Role</option>
 																		<?php
-
-
 																		if ($user_type == 'SUPPORT') {
-
 																			$key_query = "SELECT a.`access_role` ,a.description
-																		FROM `admin_access_roles` a , `admin_access_roles_modules` b
-																		WHERE a.`distributor` ='$user_distributor' AND a.`distributor`=b.`distributor` AND b.`module_name`='support' AND a.`access_role`=b.`access_role`
-																		GROUP BY a.`access_role`";
+																			FROM `admin_access_roles` a , `admin_access_roles_modules` b
+																			WHERE a.`distributor` ='$user_distributor' AND a.`distributor`=b.`distributor` AND b.`module_name`='support' AND a.`access_role`=b.`access_role`
+																			GROUP BY a.`access_role`";
 																		} else {
 																			$key_query = "SELECT `access_role` ,description
 																					FROM `admin_access_roles`
 																					WHERE `distributor` ='$user_distributor'";
 																		}
 
-
-
-																		if ($user_type == 'MNO') {
-
-																			if (isset($_GET['role_ID'])) {
-
-																				//echo '<option selected value="'.$user_distributor.'_support">Support</option>';
-																			} else {
-
-																				//	echo '<option value="'.$user_distributor.'_support">Support</option>';
-
-																			}
-																		}
-
-																		// $query_results = mysql_query($key_query);
-																		// while ($row = mysql_fetch_array($query_results)) {
-
+																		echo $key_query;
 																		$query_results=$db->selectDB($key_query);
-	
+																		var_dump($query_results);
   																		foreach($query_results['data'] AS $row){
-
-
-																			$tag_name = $row[access_role];
+																			$tag_name = $row['access_role'];
 																			$description1 = $row[description];
 																			if ($role_id == $tag_name) {
 																				$selected = 'selected';
@@ -1606,117 +1605,66 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 															<div class="control-group">
 																<label class="control-label" for="my_select_roles">Modules</label>
-
 																<div class="controls col-lg-5 form-group">
 																	<select class="span4 form-control" multiple="multiple" id="my_select_roles" name="my_select_roles[]">
 																		<option value="" disabled="disabled"> Choose Module(s)</option>
 																		<?php
-
-
 																		if ($user_type == 'SUPPORT') {
-
 																			if ($system_package == 'N/A') {
 																				$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1";
-
 																				$modules1 = $db->selectDB($q1);
 																				$modules = $modules1['data'];
 																			} else {
-
-																				/*$q1="SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a ,`admin_product_controls` c
-																		WHERE c.`source`=a.`module_name` AND c.`product_code`='$system_package' AND c.type='page' AND c.`access_method`='1'
-																		AND a.`user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1 AND c.user_type='$user_type'";
-
-																		*/
-
 																				$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`<>'profile' AND a.`module_name` <>'users' AND a.is_enable=1";
 																				$modules1 = $db->selectDB($q11);
-
-
 																				$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
-
 																				$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
-
 																				$modules2 = json_decode($allow_pages);
-																				//print_r($modules2);
-
 																				foreach ($modules1['data'] as $key => $value) {
 																					if (!in_array($value['module_name'], $modules2)) {
-
 																						unset($modules1['data'][$key]);
 																					}
 																				}
-
 																				$modules = $modules1['data'];
 																			}
 																		} else {
-
 																			if ($system_package == 'N/A') {
 																				$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1";
 
 																				$modules1 = $db->selectDB($q1);
 																				$modules = $modules1['data'];
 																			} else {
-
-																				/*$q1="SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a ,`admin_product_controls` c
-																		WHERE c.`source`=a.`module_name` AND c.`product_code`='$system_package' AND c.type='page' AND c.`access_method`='1'
-																		AND a.`user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1 AND c.user_type='$user_type'";
-																		*/
-
 																				$q1 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`<>'profile' AND a.`module_name` <>'users' AND a.is_enable=1";
 																				$modules1 = $db->selectDB($q1);
-																				//print_r($modules1['data']);
-
-
 																				$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
 																				$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
 
 																				$modules2 = json_decode($allow_pages);
-																				//$modules2 = json_decode($db->select1DB($q12)['options']);
-																				//print_r($modules2);
-
 																				foreach ($modules1['data'] as $key => $value) {
 																					if (!in_array($value['module_name'], $modules2)) {
-
 																						unset($modules1['data'][$key]);
 																					}
 																				}
-
 																				$modules = $modules1['data'];
 																			}
 																		}
-
-
-
-
-
-
-																		//$q1 = "SELECT A.`module_name`, M.`module`, M.`description` FROM `admin_access_modules` AS A, `admin_main_modules` AS M
-																		//WHERE A.`module_name` = M.`module_name` AND `user_type` = '$user_type' AND A.`module_name`<>'profile' AND A.`module_name` <>'users'";
-
-
 																		foreach ($modules as $key => $row) {
 																			$module_name = $row[module_name];
 																			$module = $row[name_group];
 																			if (in_array($module_name, $role_array)) {
 																				$selected = "selected";
-
 																				if ($module_name == 'support' && $user_type == 'SUPPORT') {
-
 																					$selected = "class='disabled' selected";
 																				}
 																			} else {
 																				$selected = "";
-
 																				if ($module_name == 'support' && $user_type == 'SUPPORT') {
-
 																					$selected = "class='disabled' selected";
 																				}
 																			}
 																			echo "<option " . $selected . " value='" . $module_name . "'>" . $module . "</option>";
 																		}
 																		?>
-
-
 																	</select>
 																</div>
 																<!-- /controls -->
@@ -1733,31 +1681,16 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 													<script type="text/javascript">
 														$(document).ready(function() {
-
-
 															var e = document.getElementById("access_role_field");
 															var manval = e.options[e.selectedIndex].value;
-
 															if (manval == '') {
 																document.getElementById("assign_rolesa").disabled = true;
-
 															} else {
-																//document.getElementById("assign_rolesa").disabled = false;
-
 															}
-
 														});
 													</script>
 
 												<?php } ?>
-
-
-
-
-
-
-
-
 												<div class="widget widget-table action-table">
 													<div class="widget-header">
 														<!-- <i class="icon-th-list"></i> -->
@@ -1777,42 +1710,30 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	</tr>
 																</thead>
 																<tbody>
-
 																	<?php
-
-
 																	if ($user_type == 'SUPPORT') {
-
-
-																		$key_query = "SELECT r.id, r.`access_role`,r.`description`, GROUP_CONCAT(CONCAT('<li>',a.`name_group`,'</li>') SEPARATOR '') AS m_list,m.`module_name`,r.`create_date` FROM `admin_access_roles_modules` m LEFT JOIN `admin_access_roles` r
-												ON r.`access_role`=m.`access_role`,
-												`admin_access_modules` a
-												WHERE r.`distributor`='$user_distributor'
-												AND a.`module_name`=m.`module_name`
-												AND a.`user_type`='$user_type' AND m.`module_name`='support'
-												GROUP BY r.access_role
-												ORDER BY r.`access_role`";
+																		$key_query = "SELECT r.id, r.`access_role`,r.`description`, GROUP_CONCAT(CONCAT('<li>',a.`name_group`,'</li>') SEPARATOR '') AS m_list,m.`module_name`,r.`create_date` 
+																			FROM `admin_access_roles_modules` m LEFT JOIN `admin_access_roles` r
+																			ON r.`access_role`=m.`access_role`,
+																			`admin_access_modules` a
+																			WHERE r.`distributor`='$user_distributor'
+																			AND a.`module_name`=m.`module_name`
+																			AND a.`user_type`='$user_type' AND m.`module_name`='support'
+																			GROUP BY r.access_role
+																			ORDER BY r.`access_role`";
 																	} else {
-
-
-																		$key_query = "SELECT r.id, r.`access_role`,r.`description`, GROUP_CONCAT(CONCAT('<li>',a.`name_group`,'</li>') SEPARATOR '') AS m_list,m.`module_name`,DATE_FORMAT(r.`create_date`,'%m/%d/%Y %h:%i %p') AS create_date FROM `admin_access_roles_modules` m LEFT JOIN `admin_access_roles` r
-																ON r.`access_role`=m.`access_role`,
-																`admin_access_modules` a
-																WHERE r.`distributor`='$user_distributor'
-																AND a.`module_name`=m.`module_name`
-																AND a.`user_type`='$user_type'
-																GROUP BY r.access_role
-																ORDER BY r.`access_role`";
+																		$key_query = "SELECT r.id, r.`access_role`,r.`description`, GROUP_CONCAT(CONCAT('<li>',a.`name_group`,'</li>') SEPARATOR '') AS m_list,m.`module_name`,DATE_FORMAT(r.`create_date`,'%m/%d/%Y %h:%i %p') AS create_date 
+																						FROM `admin_access_roles_modules` m LEFT JOIN `admin_access_roles` r
+																						ON r.`access_role`=m.`access_role`,
+																						`admin_access_modules` a
+																						WHERE r.`distributor`='$user_distributor'
+																						AND a.`module_name`=m.`module_name`
+																						AND a.`user_type`='$user_type'
+																						GROUP BY r.access_role
+																						ORDER BY r.`access_role`";
 																	}
-
-																	// $query_results = mysql_query($key_query);
-																	// while ($row = mysql_fetch_array($query_results)) {
-
 																	$query_results=$db->selectDB($key_query);
-	
 																	foreach($query_results['data'] AS $row){
-
-
 																		$access_role = $row[access_role];
 																		$description = $row[description];
 																		$create_date = $row[create_date];
@@ -1823,87 +1744,66 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																		$check_role = $db->SelectDB("SELECT * FROM `admin_users` u WHERE u.`access_role`='$access_role'");
 
 																		echo '<tr>
-													<td> ' . $description . ' </td>
-
-													<td >  <a class="btn" id="' . $access_role . '"> View </a> ';
-																		echo '<script>
-												        $(document).ready(function() {
-
-												            $(\'#' . $access_role . '\').tooltipster({
-												                content: $("' . $m_list . '"),
-												                theme: \'tooltipster-shadow\',
-												                animation: \'grow\',
-												                onlyOne: true,
-												                trigger: \'click\'
-
-												            });
-
-
-												        });
-												    </script></td>' .
+																				<td> ' . $description . ' </td>
+																				<td >  <a class="btn" id="' . $access_role . '"> View </a> ';
+																									echo '<script>
+																					$(document).ready(function() {
+																						$(\'#' . $access_role . '\').tooltipster({
+																							content: $("' . $m_list . '"),
+																							theme: \'tooltipster-shadow\',
+																							animation: \'grow\',
+																							onlyOne: true,
+																							trigger: \'click\'
+																						});
+																					});
+																				</script></td>' .
 																			'<td> ' . $create_date . ' </td>';
 																		/////////////////////////////////////////////
-
 																		echo '<td>';
 																		echo '<a href="javascript:void();" id="RE_' . $id_access_role . '"  class="btn btn-small btn-primary">
-											<i class="btn-icon-only icon-wrench"></i>&nbsp;Edit</a><script type="text/javascript">
-											$(document).ready(function() {
-											$(\'#RE_' . $id_access_role . '\').easyconfirm({locale: {
-													title: \'Role Edit\',
-													text: \'Are you sure you want to edit this Role?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-													button: [\'Cancel\',\' Confirm\'],
-													closeText: \'close\'
-												     }});
-												$(\'#RE_' . $id_access_role . '\').click(function() {
-													window.location = "?form_secreat=' . $secret . '&t=3&role_ID=' . $access_role . '&role_edit_id=' . $id_access_role . '"
-												});
-												});
-											</script>';
+																				<i class="btn-icon-only icon-wrench"></i>&nbsp;Edit</a><script type="text/javascript">
+																				$(document).ready(function() {
+																				$(\'#RE_' . $id_access_role . '\').easyconfirm({locale: {
+																						title: \'Role Edit\',
+																						text: \'Are you sure you want to edit this Role?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																						button: [\'Cancel\',\' Confirm\'],
+																						closeText: \'close\'
+																						}});
+																					$(\'#RE_' . $id_access_role . '\').click(function() {
+																						window.location = "?form_secreat=' . $secret . '&t=3&role_ID=' . $access_role . '&role_edit_id=' . $id_access_role . '"
+																					});
+																					});
+																				</script>';
 																		echo '</td>';
-
-
-
 																		echo '<td>';
 																		if ($check_role['rowCount'] == 0) {
 																			echo '<a href="javascript:void();" id="AP_' . $id_access_role . '"  class="btn btn-small btn-primary">
-											<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a><script type="text/javascript">
-											$(document).ready(function() {
-											$(\'#AP_' . $id_access_role . '\').easyconfirm({locale: {
-													title: \'Role Remove\',
-													text: \'Are you sure you want to remove this Role?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-													button: [\'Cancel\',\' Confirm\'],
-													closeText: \'close\'
-												     }});
-												$(\'#AP_' . $id_access_role . '\').click(function() {
-													window.location = "?token2=' . $secret . '&t=3&remove_access_role=' . $access_role . '&description=' . $description . '&remove_id=' . $id_access_role . '"
-												});
-												});
-											</script>';
+																					<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a><script type="text/javascript">
+																					$(document).ready(function() {
+																					$(\'#AP_' . $id_access_role . '\').easyconfirm({locale: {
+																							title: \'Role Remove\',
+																							text: \'Are you sure you want to remove this Role?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																							button: [\'Cancel\',\' Confirm\'],
+																							closeText: \'close\'
+																							}});
+																						$(\'#AP_' . $id_access_role . '\').click(function() {
+																							window.location = "?token2=' . $secret . '&t=3&remove_access_role=' . $access_role . '&description=' . $description . '&remove_id=' . $id_access_role . '"
+																						});
+																						});
+																					</script>';
 																		} else {
-
 																			echo	'<a class="btn btn-small btn-primary" disabled>
-											<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a>';
+																					<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a>';
 																		}
-
 																		echo '</td>';
 																	}
-
 																	?>
-
-
-
-
-
 																</tbody>
 															</table>
 														</div>
 													</div>
 												</div>
-
 											</div>
-
-
-
 										</div>
 									</div>
 									<!-- /widget-content -->
@@ -2010,19 +1910,56 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				}
 			});
 
+			// Create access Roles
+			$('#assign_roles_submit').bootstrapValidator({
+				framework: 'bootstrap',
+				fields: {
+					'my_select[]': {
+						validators: {
+							<?php echo $db -> validateField('list'); ?>
+						}
+					},
+					access_role_name: {
+						validators: {
+							<?php echo $db -> validateField('access_role_name'); ?> ,
+							<?php echo $db -> validateField('not_require_special_character'); ?>
+						}
+					}
+				}
+			}).on('status.field.bv', function(e, data) {
+				if ($('#assign_roles_submit').data('bootstrapValidator').isValid()) {
+					data.bv.disableSubmitButtons(false);
+				} else {
+					data.bv.disableSubmitButtons(true);
+				}
+			});
+			// Assign access Roles
+			$('#assign_roles_form').formValidation({
+				framework: 'bootstrap',
+				fields: {
+					access_role_field: {
+						validators: {
+							<?php echo $db -> validateField('dropdown'); ?>
+						}
+					},
+					'my_select_roles[]': {
+						validators: {
+							<?php echo $db -> validateField('multi_select'); ?>
+						}
+					}
+				}
+			});
 		});
 	</script>
 
 	<?php
 	include 'footer.php';
 	?>
-
 	<script src="js/base.js"></script>
 	<script src="js/jquery.chained.js"></script>
 	<script type="text/javascript" charset="utf-8">
 		$(document).ready(function() {
 			$("#loation").chained("#user_type");
-
 		});
 	</script>
 
@@ -2061,6 +1998,15 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				}
 			});
 			$("#edit-submita-pass").click(function() {});
+
+			$("#assign_roles_submita").easyconfirm({
+				locale: {
+					title: 'Role Creation',
+					text: 'Are you sure you want to save this Role?',
+					button: ['Cancel', ' Confirm'],
+					closeText: 'close'
+				}
+			});
 		});
 	</script>
 	<style type="text/css">
@@ -2090,11 +2036,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	<script src="js/jquery.multi-select.js" type="text/javascript"></script>
 	<script>
 		$(document).ready(function() {
-			checkModules();
+			$('#my_select').multiSelect(); 
+			$('#my_select_roles').multiSelect();
 		});
-
-		function checkModules() {
-		}
 	</script>
 
 	<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
