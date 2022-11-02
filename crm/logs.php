@@ -103,13 +103,13 @@ $logger = Logger::getLogger();
 	} else {
 		//initially page loading///
 		if ($user_type == 'MNO' || $user_type == 'MVNA' || $user_type == "SALES" || $user_type == "SUPPORT") {
-			$tab36 = "set";
+			$tab3 = "set";
 		} else if ($user_type == 'MVNE') {
 			$tab2 = "set";
 		} else if ($user_type == 'MVNO') {
 			$tab2 = "set";
 		} else {
-			$tab36 = "set";
+			$tab3 = "set";
 		}
 	}
 	$fearuresjson = $db->getValueAsf("SELECT features as f FROM `exp_mno` WHERE mno_id='$user_distributor'");
@@ -240,13 +240,11 @@ $logger = Logger::getLogger();
 
 									<div class="tabbable">
 										<ul class="nav nav-tabs newTabs">
-											
-												<?php 
-												if ($package_features == "all" || in_array("OTHER_LOG", $features_array)) { ?>
-													<li <?php if (isset($tab36)) { ?>class="active" <?php } ?>><a href="#prepaid_activity_logs" data-toggle="tab">API Logs</a></li>
-												<?php } ?>
-												<li <?php if (isset($tab3)) { ?>class="active" <?php } ?>><a href="#user_activity_logs" data-toggle="tab">User Activity Logs</a></li>
-										
+											<li <?php if (isset($tab3)) { ?>class="active" <?php } ?>><a href="#user_activity_logs" data-toggle="tab">User Activity Logs</a></li>
+											<?php 
+											if ($package_features == "all" || in_array("OTHER_LOG", $features_array)) { ?>
+												<li <?php if (isset($tab36)) { ?>class="active" <?php } ?>><a href="#prepaid_activity_logs" data-toggle="tab">API Logs</a></li>
+											<?php } ?>
 										</ul>
 										<br>
 
@@ -620,7 +618,7 @@ $logger = Logger::getLogger();
 																<option value="-1"> All </option>
 																<?php
 
-																$user_select_qu = "SELECT user_name FROM `admin_users` WHERE `user_distributor` = '$user_distributor'";
+																$user_select_qu = "SELECT user_name FROM `admin_users` ";
 																// $user_select_re = mysql_query($user_select_qu);
 																// while($row_user = mysql_fetch_array($user_select_re)){
 

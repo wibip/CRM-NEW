@@ -315,11 +315,12 @@ class db_functions extends dbTasks
 		}
 	}
 
-	public function addLogs($user_name, $log_type, $user_type, $section, $related_id=0,$detail_id=0, $log_details = null){
+	public function addLogs($user_name, $log_type, $user_type, $page, $section, $related_id=0,$detail_id=0, $log_details = null){
 		$data = [
 			'user_name' => $user_name,
 			'log_type' => $log_type,
 			'user_type' => $user_type,
+			'page' => $page,
 			'section' => $section,
 			'related_id' => $related_id,
 			'detail_id' => $detail_id,
