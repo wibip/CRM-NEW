@@ -153,7 +153,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 		$query = "INSERT INTO admin_users
 				(user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`, mobile, is_enable, create_date,create_user)
-				VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$loation','$full_name','$email', '$language' ,'$timezone', '$mobile','2',now(),'$user_name')";
+				VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$loation','$full_name','$email', '$language' ,'$timezone', '$mobile','1',now(),'$user_name')";
 		$ex =$db->execDB($query);
 
 		if ($ex===true) {
