@@ -604,8 +604,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				//	$description = trim($_POST['description']);
 				$access_role_id = time() . $user_type . $user_distributor;
 				if (strtoupper($access_role_name) == "ADMIN") {
-					$msg = $message_functions->showMessage('user_admin_not_allow');
-					$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $msg . "</strong></div>";
+					$message_response = $message_functions->showMessage('user_admin_not_allow');
+					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Access Role',0,'',$message_response);
+					// $msg = $message_functions->showMessage('user_admin_not_allow');
+					$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 				} else {
 					$query0 = "INSERT INTO `admin_access_roles` (`access_role`,`description`,`distributor`,`create_user`,`create_date`)
 				 VALUES ('$access_role_id', '$access_role_name', '$user_distributor', '$user_name',now())";
