@@ -27,75 +27,6 @@ class db_functions extends dbTasks
 		return $this->packageClass;
 	}
 
-
-	////////////////////////////////////////////////////////////////////////
-
-	// public function createToken($token, $ip, $mac, $network_ses_id, $location_string)
-	// {
-	// 	$query = "INSERT INTO exp_security_tokens
-	// 	(mac, ip,network_session_id,location_string,token_id,current_step,create_date)
-	// 	VALUES ('$mac','$ip','$network_ses_id','$location_string','$token','1',now())";
-
-	// 	$query_results = mysql_query($query);
-
-	// 	if ($query_results) {
-	// 		return '1';
-	// 	} else {
-	// 		return '0';
-	// 	}
-	// }
-
-	////////////////////////////////////////////////////////////////////////
-	// public function getVariable($var_code, $language)
-	// {
-
-	// 	$query = "SELECT $language FROM exp_variables WHERE var_code = '$var_code' LIMIT 1";
-	// 	$query_results = mysql_query($query);
-	// 	while ($row = mysql_fetch_array($query_results)) {
-	// 		$result = $row[$language];
-	// 	}
-	// 	return $result;
-	// }
-
-
-	/////////////////////////////////////////////////////////////////////////
-	// public function getPlugin($type)
-	// {
-
-	// 	$q1 = "SELECT `plugin_code`,`description` FROM `exp_plugins` WHERE `type` = '$type'";
-	// 	$re1 = mysql_query($q1);
-	// 	while ($row = mysql_fetch_array($re1)) {
-	// 		$result[] = $row;
-	// 	}
-	// 	return $q1;
-	// }
-
-
-	/////////////////////////////////////////////////////////////////////////
-	/*public function getManualReg($field, $mno, $distributor){
-
-		$q1 = "SELECT `$field` FROM `exp_manual_reg_profile` WHERE `distributor` = '$distributor'";
-		$re1 = mysql_query($q1);
-
-		if(mysql_num_rows($re1)==0){
-			$q1 = "SELECT `$field` FROM `exp_manual_reg_profile` WHERE `distributor` = '$mno'";
-			$re1 = mysql_query($q1);
-		}
-
-		if(mysql_num_rows($re1)==0){
-			$q1 = "SELECT `$field` FROM `exp_manual_reg_profile` WHERE `distributor` = 'ADMIN'";
-			$re1 = mysql_query($q1);
-		}
-
-
-		while($row=mysql_fetch_array($re1)){
-			$result = $row[$field];
-		}
-		return $result;
-	}*/
-
-
-
 	///////////////////////////////////////////////////////////
 
 	public function userErrorLog($error_id, $user_name, $error_details = null)
@@ -130,18 +61,6 @@ class db_functions extends dbTasks
 			return false;
 		}
 	}
-
-	//////////////////////////////////////////////////////////////////////////////
-
-	// function runQuery($query)
-	// {
-	// 	$result = mysql_query($query);
-	// 	while ($row = mysql_fetch_assoc($result)) {
-	// 		$resultset[] = $row;
-	// 	}
-	// 	if (!empty($resultset))
-	// 		return $resultset;
-	// }
 
 	function numRows($query)
 	{
@@ -329,6 +248,18 @@ class db_functions extends dbTasks
 		];
 		$re1 = $this->insertData('crm_user_logs', $data);
 		return 1;
+	}
+
+	public function getDataFromLogsField($field){
+		$sql = "SELECT DISTINCT ".$field." FROM crm_user_logs";
+		$result = $this->selectDB($sql);
+		// var_dump($result['data']);
+		if($result['rowCount'] > 0) {
+			return $result['data'];
+		} else {
+			return false;
+		}
+		
 	}
 
 	private static function recurse_copy($src, $dst)
