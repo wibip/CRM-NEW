@@ -44,6 +44,8 @@ $utc = new DateTimeZone('UTC');
 $dt = new DateTime('now', $utc);
 
 $page = 'Client';
+
+
 ?>
 
 <head>
@@ -638,6 +640,7 @@ $page = 'Client';
     </script>
 	<?php
 	include 'header.php';
+	// var_dump($user_distributor);
 	// TAB Organization
 	if (isset($_GET['t'])) {
 		$variable_tab = 'tab' . $_GET['t'];
@@ -794,8 +797,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 				$access_role = 'client';
 				$user_type = 'PROVISIONING';
-				// $user_distributor = $_POST['loation'];
-				$user_distributor = "";
 				$email = htmlspecialchars($_POST['email_1']);
 				$language = $_POST['language_1'];
 				$timezone = $_POST['timezone_1'];

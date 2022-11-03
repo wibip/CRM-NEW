@@ -181,7 +181,7 @@ if ($_GET['s_token']) {
 		session_destroy();
 	}
 }
-
+$user_distributor = $db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$s_uname' LIMIT 1");
 
 if ($_GET['back_sup'] == 'true') {
 	parse_str($_SESSION['s_detail']);
@@ -203,7 +203,7 @@ if ($_GET['back_sup'] == 'true') {
 
 	//$user_name = $_SESSION['user_name'];
 
-	$user_distributor = $db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$s_uname' LIMIT 1");
+	
 
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT', $system_package);
