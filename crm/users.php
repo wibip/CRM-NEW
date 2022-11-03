@@ -808,7 +808,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														echo '<input type="hidden" name="loation" id="loation1" value="' . $user_distributor . '">';
 														?>
 														<div class="control-group">
-															<label class="control-label" for="access_role_1">Access Role<sup><font color="#FF0000"></font></sup></label>
+															<label class="control-label" for="access_role_1">Access Role <?=$user_type?><sup><font color="#FF0000"></font></sup></label>
 
 															<div class="controls col-lg-5 form-group">
 																<select class="span4 form-control" name="access_role_1" id="access_role_1">
