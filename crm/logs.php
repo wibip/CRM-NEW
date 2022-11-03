@@ -104,93 +104,26 @@ $logTypes = $db->getDataFromLogsField('log_type');
 	//Admin loc archive parth
 	$archive_path = $db->setVal('LOGS_FILE_DIR', 'ADMIN');
 
-	if (isset($_POST['prepaid_lg'])) {
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
-			$userLog = $logger->getObjectProvider()->getObjectOther();
-			if ($user_type != 'ADMIN') {
-				$userLog->setUserDistributor($user_distributor);
-			}
-	
-			if ($_POST['realm36'] != NULL) {
-				$userLog->setRealm($_POST['realm36']);
-			}
-
-			if ($_POST['function36'] != NULL) {
-				$userLog->setFunction($_POST['function36']);
-			}
-			if ($_POST['start_date36'] != NULL && $_POST['end_date36'] != NULL) {
-				$mg_end3 = $_POST['end_date36'];
-				$mg_start3 = $_POST['start_date36'];
-				$end_date = DateTime::createFromFormat('m/d/Y', $mg_end3)->format('Y-m-d');
-				$st_date = DateTime::createFromFormat('m/d/Y', $mg_start3)->format('Y-m-d');
-				$mg_start_date3 = $st_date . ' 00:00:00';
-				$mg_end_date3 = $end_date . ' 23:59:59';
-				$d_start = new DateTime($mg_start_date3, new DateTimeZone($log_time_zone));
-				$mg_start_date_tz = $d_start->getTimestamp();
-
-				$d_end = new DateTime($mg_end_date3, new DateTimeZone($log_time_zone));
-				$mg_end_date_tz = $d_end->getTimestamp();
-				$userLog->from = $mg_start_date_tz;
-				$userLog->to = $mg_end_date_tz;
-			}
-
-			if ($_POST['limit36'] != NULL) {
-				$limit3 = $_POST['limit36'];
-				$userLog->limit = $limit3;
-			} else {
-				$userLog->limit = 100;
-			}
-
-			var_dump($userLog);
-			$query_results1_resel = $logger->GetLog($userLog);
-		}
-	}
-
 	//activity_logs
 	if (isset($_POST['activity_lg'])) {
 		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
-			$userLog = $logger->getObjectProvider()->getObjectUser();
-			$userLog->setUserDistributor($user_distributor);
-			$userLog->user_type = $user_type;
+			$userName = (isset($_POST['name']) && $_POST['name'] != '-1') ? $_POST['name'] : null;
+			$limit = isset($_POST['limit'])  ? $_POST['limit'] : null;
+			$logType = (isset($_POST['log_type']) && $_POST['log_type'] != '-1') ? $_POST['log_type'] : null;
+			$page = (isset($_POST['pages']) && $_POST['pages'] != '-1') ? $_POST['pages'] : null;
 
-			if ($_POST['name'] != NULL) {
-				$name = $_POST['name'];
-				if ($name != -1) {
-					$userLog->setUsername($name);
-					//$key_query1.=" AND u.user_name='$name'";
-				}
+			if ($_POST['start_date'] != NULL && $_POST['end_date'] != NULL) {
+				$mg_end = $_POST['end_date'];
+				$mg_start = $_POST['start_date'];
+
+				$en_date = DateTime::createFromFormat('m/d/Y', $mg_end)->format('Y-m-d');
+				$st_date = DateTime::createFromFormat('m/d/Y', $mg_start)->format('Y-m-d');
+
+				$start_date = $st_date . ' 00:00:00';
+				$end_date = $en_date . ' 23:59:59';
 			}
 
-			if ($_POST['start_date3'] != NULL && $_POST['end_date3'] != NULL) {
-				$mg_end3 = $_POST['end_date3'];
-				$mg_start3 = $_POST['start_date3'];
-
-				$end_date = DateTime::createFromFormat('m/d/Y', $mg_end3)->format('Y-m-d');
-				$st_date = DateTime::createFromFormat('m/d/Y', $mg_start3)->format('Y-m-d');
-
-				$mg_start_date3 = $st_date . ' 00:00:00';
-				$mg_end_date3 = $end_date . ' 23:59:59';
-
-				$d_start = new DateTime($mg_start_date3, new DateTimeZone($log_time_zone));
-				$mg_start_date_tz = $d_start->getTimestamp();
-
-				$d_end = new DateTime($mg_end_date3, new DateTimeZone($log_time_zone));
-				$mg_end_date_tz = $d_end->getTimestamp();
-
-				$userLog->from = $mg_start_date_tz;
-				$userLog->to = $mg_end_date_tz;
-			}
-
-			$key_query1 .= " ORDER BY l.id DESC";
-			if ($_POST['limit3'] != NULL) {
-				$limit3 = $_POST['limit3'];
-				$userLog->limit = $limit3;
-
-			} else {
-				$userLog->limit = 100;
-			}
-
-			$query_results1_user = $logger->GetLog($userLog);
+			$query_results1_user = $db->getLogsByFilters($start_date,$end_date,$limit,$userName,$logType,$page);
 		}
 	}
 
@@ -317,17 +250,17 @@ $logTypes = $db->getDataFromLogsField('log_type');
 														</div>
 													</div>
 													<div class="control-group ">
-														<label class="control-label" for="limit3">Limit</label>
+														<label class="control-label" for="limit">Limit</label>
 														<?php
-														if (!isset($limit3)) {
-															$limit3 = 50;
+														if (!isset($limit)) {
+															$limit = 50;
 														}
 														?>
 														<div class="controls form-group">
-															<?php echo '<input class="span2 form-control limit_log" id="limit3" name="limit3" value="' . $limit3 . '" type="text"  title="Set the upper limit of how many log records you want to be displayed in the table below." placeholder="50">' ?>
+															<?php echo '<input class="span2 form-control limit_log" id="limit" name="limit" value="' . $limit . '" type="text"  title="Set the upper limit of how many log records you want to be displayed in the table below." placeholder="50">' ?>
 															<script type="text/javascript">
 																$(document).ready(function() {
-																	$('#limit3').tooltip();
+																	$('#limit').tooltip();
 																});
 															</script>
 														</div>
@@ -335,12 +268,12 @@ $logTypes = $db->getDataFromLogsField('log_type');
 													<div class="control-group">
 														<label class="control-label" for="radiobtns">Period</label>
 														<div class="controls form-group">
-															<input class="inline_error inline_error_1 span2 form-control" id="start_date3" name="start_date3" type="text" value="<?php if (isset($mg_start_date3)) {
-																																														echo $mg_start3;
+															<input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($mg_start_date)) {
+																																														echo $mg_start;
 																																													} ?>" placeholder="mm/dd/yyyy">
 															to
-															<input class="inline_error inline_error_1 span2 form-control" id="end_date3" name="end_date3" type="text" value="<?php if (isset($mg_end_date3)) {
-																																													echo $mg_end3;
+															<input class="inline_error inline_error_1 span2 form-control" id="end_date" name="end_date" type="text" value="<?php if (isset($mg_end_date)) {
+																																													echo $mg_end;
 																																												} ?>" placeholder="mm/dd/yyyy">
 
 															<input type="hidden" name="date3" />
@@ -356,18 +289,7 @@ $logTypes = $db->getDataFromLogsField('log_type');
 											<div class="widget widget-table action-table">
 												<div class="widget-header">
 													<!-- <i class="icon-th-list"></i> -->
-													<?php
-													$row_count33 = count($query_results1_user);
-													if ($row_count33 > 0) {
-													?>
-														<h3>User Activity Logs
-														<?php
-													} else {
-														?>
-															<h3>User Activity Logs
-															<?php
-														}
-															?>
+														<h3>User Activity Logs</h3>
 												</div>
 												<!-- /widget-header -->
 												<div class="widget-content table_response">
@@ -376,37 +298,28 @@ $logTypes = $db->getDataFromLogsField('log_type');
 															<thead>
 																<tr>
 																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">User Name</th>
-																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Module Name</th>
-																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Task</th>
-																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Reference</th>
-																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="10">IP</th>
+																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Log Type</th>
+																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Page</th>
+																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Details</th>
 																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Date</th>
 																</tr>
 															</thead>
 															<tbody>
 																<?php
 																foreach ($query_results1_user as $row) {
-																	$user_name = $row->getUsername(user_name);
-																	$module = $row->getModule();
-																	$create_date = $row->getCreateDate();
-																	$task = $row->getTask();
-																	$reference = $row->getReference();
-																	$ip = $row->getIp();
-
-																	$unixtimestamp = (int) $row->getUnixtimestamp();
-																	$dt = new DateTime("@$unixtimestamp");
-																	$dt->setTimezone(new DateTimeZone($log_time_zone));
-																	$unix_date = $dt->format('m/d/Y h:i:s A');
-																	$dt2 = new DateTime($create_date);
-																	$create_date = $dt2->format('m/d/Y h:i:s A');
+																	$user_name = $row['user_name'];
+																	$log_type = $row['log_type'];
+																	// $create_date = $row['create_date'];
+																	$page = $row['page'];
+																	$log_details = $row['log_details'];
+																	$create_date = date("m/d/Y h:i:s A", strtotime($row['create_date']));
 
 																	echo '<tr>
 																			<td> ' . $user_name . ' </td>
-																			<td> ' . $module . ' </td>
-																			<td> ' . $task . ' </td>
-																			<td> ' . $reference . ' </td>
-																			<td> ' . $ip . ' </td>
-																			<td> ' . $unix_date . ' </td>
+																			<td> ' . $log_type . ' </td>
+																			<td> ' . $page . ' </td>
+																			<td> ' . $log_details . ' </td>
+																			<td> ' . $create_date . ' </td>
 																		<tr>';
 																}
 
@@ -475,9 +388,9 @@ $logTypes = $db->getDataFromLogsField('log_type');
 						}
 					}
 				}
-			}).on('change', 'input[name="start_date3"], input[name="end_date3"]', function(e) {
-				var from = $('#activity_log1').find('[name="start_date3"]').val(),
-					to = $('#activity_log1').find('[name="end_date3"]').val();
+			}).on('change', 'input[name="start_date"], input[name="end_date"]', function(e) {
+				var from = $('#activity_log1').find('[name="start_date"]').val(),
+					to = $('#activity_log1').find('[name="end_date"]').val();
 
 				// Set the dob field value
 				$('#activity_log1').find('[name="date3"]').val(from === '' || to === '' ? '' : [from, to].join('.'));
@@ -493,8 +406,8 @@ $logTypes = $db->getDataFromLogsField('log_type');
 	<script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			var from = $('#activity_log1').find('[name="start_date3"]').val();
-			var to = $('#activity_log1').find('[name="end_date3"]').val();
+			var from = $('#activity_log1').find('[name="start_date"]').val();
+			var to = $('#activity_log1').find('[name="end_date"]').val();
 			$('#activity_log1').find('[name="date3"]').val(from === '' || to === '' ? '' : [from, to].join('.'));
 
 			$("#create_product_submit").easyconfirm({
@@ -638,37 +551,37 @@ $logTypes = $db->getDataFromLogsField('log_type');
 	</script>
 
 	<script type="text/javascript">
-		$('#start_date3').on('change', function() {
+		$('#start_date').on('change', function() {
 			$(function() {
-				$("#end_date3").datepicker("option", "minDate", $("#start_date3").datepicker("getDate"));
-				$("#start_date3").datepicker("option", "maxDate", $("#end_date3").datepicker("getDate"));
+				$("#end_date").datepicker("option", "minDate", $("#start_date").datepicker("getDate"));
+				$("#start_date").datepicker("option", "maxDate", $("#end_date").datepicker("getDate"));
 				$('#activity_log1').formValidation('revalidateField', 'date3');
 
 			});
 		});
 
-		$('#end_date3').on('change', function() {
+		$('#end_date').on('change', function() {
 			$(function() {
-				$("#end_date3").datepicker("option", "minDate", $("#start_date3").datepicker("getDate"));
-				$("#start_date3").datepicker("option", "maxDate", $("#end_date3").datepicker("getDate"));
+				$("#end_date").datepicker("option", "minDate", $("#start_date").datepicker("getDate"));
+				$("#start_date").datepicker("option", "maxDate", $("#end_date").datepicker("getDate"));
 				$('#activity_log1').formValidation('revalidateField', 'date3');
 
 			});
 		});
 
-		$('#start_date36').on('change', function() {
+		$('#start_date6').on('change', function() {
 			$(function() {
-				$("#end_date36").datepicker("option", "minDate", $("#start_date36").datepicker("getDate"));
-				$("#start_date36").datepicker("option", "maxDate", $("#end_date36").datepicker("getDate"));
+				$("#end_date6").datepicker("option", "minDate", $("#start_date6").datepicker("getDate"));
+				$("#start_date6").datepicker("option", "maxDate", $("#end_date6").datepicker("getDate"));
 				$('#prepaid_activity_logs_form').formValidation('revalidateField', 'date36');
 
 			});
 		});
 
-		$('#end_date36').on('change', function() {
+		$('#end_date6').on('change', function() {
 			$(function() {
-				$("#end_date36").datepicker("option", "minDate", $("#start_date36").datepicker("getDate"));
-				$("#start_date36").datepicker("option", "maxDate", $("#end_date36").datepicker("getDate"));
+				$("#end_date6").datepicker("option", "minDate", $("#start_date6").datepicker("getDate"));
+				$("#start_date6").datepicker("option", "maxDate", $("#end_date6").datepicker("getDate"));
 				$('#prepaid_activity_logs_form').formValidation('revalidateField', 'date36');
 
 			});
@@ -695,13 +608,13 @@ $logTypes = $db->getDataFromLogsField('log_type');
 
 	<script>
 		$(function() {
-			$("#start_date3").datepicker({
+			$("#start_date").datepicker({
 				dateFormat: "mm/dd/yy",
 				dayNamesMin: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
 				maxDate: '0',
 				minDate: new Date(1990, 1 - 1, 1)
 			});
-			$("#start_date36").datepicker({
+			$("#start_date6").datepicker({
 				dateFormat: "mm/dd/yy",
 				dayNamesMin: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
 				maxDate: '0',
@@ -714,20 +627,20 @@ $logTypes = $db->getDataFromLogsField('log_type');
 				minDate: new Date(1990, 1 - 1, 1)
 			});
 		});
-		$("#start_date3").attr("autocomplete", "off");
-		$("#start_date36").attr("autocomplete", "off");
+		$("#start_date").attr("autocomplete", "off");
+		$("#start_date6").attr("autocomplete", "off");
 		$("#start_date24").attr("autocomplete", "off");
 	</script>
 
 	<script>
 		$(function() {
-			$("#end_date3").datepicker({
+			$("#end_date").datepicker({
 				dateFormat: "mm/dd/yy",
 				dayNamesMin: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
 				maxDate: '0',
 				minDate: new Date(1990, 1 - 1, 1)
 			});
-			$("#end_date36").datepicker({
+			$("#end_date6").datepicker({
 				dateFormat: "mm/dd/yy",
 				dayNamesMin: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
 				maxDate: '0',
@@ -740,8 +653,8 @@ $logTypes = $db->getDataFromLogsField('log_type');
 				minDate: new Date(1990, 1 - 1, 1)
 			});
 		});
-		$("#end_date3").attr("autocomplete", "off");
-		$("#end_date36").attr("autocomplete", "off");
+		$("#end_date").attr("autocomplete", "off");
+		$("#end_date6").attr("autocomplete", "off");
 		$("#end_date24").attr("autocomplete", "off");
 	</script>
 
@@ -797,12 +710,12 @@ $logTypes = $db->getDataFromLogsField('log_type');
 <script>
 
 $( function() {
-    $( "#start_date3" ).datepicker({
+    $( "#start_date" ).datepicker({
         dateFormat: "mm/dd/yyyy",
         dayNamesMin: [ "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" ]
     });
 
-     $("#start_date3").on('change', function(){
+     $("#start_date").on('change', function(){
     	    var date = Date.parse($(this).val());
 
          if (date > Date.now()){
@@ -810,7 +723,7 @@ $( function() {
              $(this).val('');
          }
 
-          $('#activity_log1').formValidation('revalidateField', 'end_date3');
+          $('#activity_log1').formValidation('revalidateField', 'end_date');
     });
 } );
 </script>
@@ -818,12 +731,12 @@ $( function() {
 <script>
 
 $( function() {
-    $( "#end_date3" ).datepicker({
+    $( "#end_date" ).datepicker({
         dateFormat: "mm/dd/yyyy",
         dayNamesMin: [ "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" ]
     });
 
-    $("#end_date3").on('change', function(){
+    $("#end_date").on('change', function(){
     	    var date = Date.parse($(this).val());
 
          if (date > Date.now()){
@@ -831,7 +744,7 @@ $( function() {
              $(this).val('');
          }
 
-          $('#activity_log1').formValidation('revalidateField', 'end_date3');
+          $('#activity_log1').formValidation('revalidateField', 'end_date');
     });
 } );
 </script> -->

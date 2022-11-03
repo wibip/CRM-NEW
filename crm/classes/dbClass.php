@@ -262,6 +262,27 @@ class db_functions extends dbTasks
 		
 	}
 
+	public function getLogsByFilters($start_date,$end_date,$limit=10,$userName = null,$logType=null,$page=null) {
+		$sql = "SELECT user_name,log_type,page,log_details,create_date FROM crm_user_logs 
+				WHERE create_date BETWEEN '".$start_date."' AND '".$end_date."'";
+
+		if($userName != null) {
+			$sql.=" AND user_name='".$userName."'";
+		}
+		if($logType != null) {
+			$sql.=" AND log_type='".$logType."'";
+		}
+		if($page != null) {
+			$sql.=" AND page='".$page."'";
+		}
+		$sql.=" ORDER BY id DESC";
+        $sql.=" LIMIT ".$limit;
+// echo $sql;
+		$data = $this->selectDB($sql);
+
+		return $data['data'];
+	}
+
 	private static function recurse_copy($src, $dst)
 	{
 		$dir = opendir($src);
