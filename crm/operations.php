@@ -54,7 +54,7 @@ require_once 'classes/CommonFunctions.php';
 
 <?php
 include 'header.php';
-
+$page = 'operations';
 // TAB Organization
 if (isset($_GET['t'])) {
     $variable_tab = 'tab' . $_GET['t'];
@@ -114,7 +114,6 @@ if (isset($_POST['submit_mno_form'])) { //6
         
             $mno_system_package = $mno_sys_package;
 
-            if ($user_type != 'SALES') { //advanced_menu
                     //$mno_customer_type = trim($_POST['mno_customer_type']);
                     $mno_first_name = $db->escapeDB(trim($_POST['mno_first_name']));
                     $mno_last_name = $db->escapeDB(trim($_POST['mno_last_name']));
@@ -579,10 +578,15 @@ if (isset($_POST['submit_mno_form'])) { //6
                                 $ex6 = $db->execDB($query7_1);
                             }
 
-                            $_SESSION['msg7'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_update_success') . "</strong></div>";
+
+							$message_response = $message_functions->showMessage('operator_update_success') ;
+							$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Modify Operation',$edit_mno_id,'3001',$message_response);
+                            $_SESSION['msg7'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
                         } else {
-                            $db->userErrorLog('2001', $user_name, 'script - ' . $script);
-                            $_SESSION['msg7'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_update_failed', '2001') . "</strong></div>";
+							$message_response = $message_functions->showMessage('operator_update_failed', '2001');
+							$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify Operation',$edit_mno_id,'2001',$message_response);
+                            // $db->userErrorLog('2001', $user_name, 'script - ' . $script);
+                            $_SESSION['msg7'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response. "</strong></div>";
                         }
 
                     } else {
@@ -634,7 +638,8 @@ if (isset($_POST['submit_mno_form'])) { //6
                                         VALUES ('$mno_sys_package','$mno_id', '$mno_account_name', '$mno_zip_code', '$camphaign_id', '$mnoAccType','0','$login_user_name', NOW())";
                         }
                         $ex0 = $db->execDB($query0);
-
+                        $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+                        
                         if ($ex0 === true) {
                             $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
                                         VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$mno_user_type', '$mno_id', '$mno_full_name', '$mno_email', '$mno_mobile_1', '$mno_time_zone', '2','$login_user_name', NOW(), '$user_type')";
@@ -770,26 +775,31 @@ if (isset($_POST['submit_mno_form'])) { //6
                             }
 
                             ///////////////////////////////////////////////
-                            $db->userLog($user_name, $script, 'Create Operator', '');
-                            $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_success') . "</strong></div>";
+                            $message_response = $message_functions->showMessage('operator_create_success') ;
+							$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create Operatorn',$idContAutoInc,'3001',$message_response);
+                            // $db->userLog($user_name, $script, 'Create Operator', '');
+                            $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
                         } else {
-                            $db->userErrorLog('2001', $user_name, 'script - ' . $script);
-                            $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_failed', '2001') . "</strong></div>";
+							$message_response = $message_functions->showMessage('operator_create_failed', '2001');
+							$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Operatorn',$idContAutoInc,'2001',$message_response);
+                            // $db->userErrorLog('2001', $user_name, 'script - ' . $script);
+                            $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
                         }
                     }
                 } //1
 
                 else { //1
-                    $db->userErrorLog('2009', $user_name, 'script - ' . $script);
-                    $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_failed', '2009') . "</strong></div>";
+                    $message_response = $message_functions->showMessage('operator_create_failed', '2009');
+                    $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Operatorn',0,'2009',$message_response);
+                    // $db->userErrorLog('2009', $user_name, 'script - ' . $script);
+                    $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
                 } //1
-            } else {
-                $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_create_success') . "</strong></div>";
-            }
         } //key validation
         else {
-            $db->userErrorLog('2004', $user_name, 'script - ' . $script);
-            $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
+            $message_response = $message_functions->showMessage('transection_fail', '2004');
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Operatorn',$idContAutoInc,'2004',$message_response);
+            // $db->userErrorLog('2004', $user_name, 'script - ' . $script);
+            $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
             header('Location: operations.php');
         }
     }
@@ -882,8 +892,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                 $get_favicon_name = end($get_favicon_name);
             }
 
-            //}
-            if ($user_type != 'SALES') {
                 $get_edit_mno_details_q = "SELECT `full_name`,`email`,`user_type`,`mobile` FROM `admin_users` WHERE `user_distributor`='$edit_mno_id' AND `access_role`='admin' LIMIT 1";
                 $mno_data = $db->select1DB($get_edit_mno_details_q);
                 //while($mno_data=mysql_fetch_assoc($get_edit_mno_details)){
@@ -921,14 +929,11 @@ if (isset($_POST['submit_mno_form'])) { //6
                 }
                 //$edit_wag_prof_string;
                 $mno_edit = 1;
-            } else {
-            }
         // } //key validation
     } //edit_mno
     elseif (isset($_GET['remove_mno_id'])) {
         // if ($_SESSION['FORM_SECRET'] == $_GET['token10']) {
             $remove_mno_id = $_GET['remove_mno_id'];
-            if ($user_type != 'SALES') {
                 //archive
                 //*********************
                 $archive_q = "INSERT INTO `exp_mno_archive` (
@@ -1016,28 +1021,18 @@ if (isset($_POST['submit_mno_form'])) { //6
                     $delete2_1 = $db->execDB("DELETE FROM `exp_camphaign_ads` WHERE `ad_id` = '$default_campaign_id'");
 
                     if ($delete === true) {
+                        $message_response = $message_functions->showNameMessage('operator_remove_success', $remove_mno_id, '3001');
+			            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Remove Operator',$remove_mno_id,'3001',$message_response);
                         $db->userErrorLog('2004', $user_name, 'script - ' . $script);
-                        $db->userLog($user_name, $script, 'Remove Operator', $rm_unique);
-                        $create_log->save('3001', $message_functions->showNameMessage('operator_remove_success', $remove_mno_id, '3001'), '');
-                        $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('operator_remove_success', $remove_mno_id) . "</strong></div>";
+                        // $db->userLog($user_name, $script, 'Remove Operator', $rm_unique);
+                        $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
                     } else {
+                        $message_response = $message_functions->showMessage('operator_remove_failed', '2001');
+                        $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Remove Operator',$remove_mno_id,'2001',$message_response);
                         $db->userErrorLog('2001', $user_name, 'script - ' . $script);
-                        $create_log->save('2001', $message_functions->showMessage('operator_remove_failed', '2001'), '');
-                        $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('operator_remove_failed', '2001') . "</strong></div>";
+                        $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
                     }
                 
-            } else {
-                $create_log->save('3001', $message_functions->showNameMessage('operator_remove_success', $remove_mno_id, '3001'), '');
-                $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showNameMessage('operator_remove_success', $remove_mno_id) . "</strong></div>";
-            }
-        // } //key validation
-        // else {
-        //     $db->userErrorLog('2004', $user_name, 'script - ' . $script);
-        //     $create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
-
-        //     $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_functions->showMessage('transection_fail', '2004') . "</strong></div>";
-        //     //header('Location: location.php?t=1');
-        // }
     } //remove_mno_id
 
 ?>

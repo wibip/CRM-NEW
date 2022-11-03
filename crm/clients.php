@@ -759,11 +759,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 						if ($edit_result) {
 							$message_response = str_replace("user","client",$message_functions->showNameMessage('role_edit_success', $edit_user_name));
-							$create_log->save('3001', $message_response, '');
+							$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Modify Client',$id,'3001',$message_response);
+							// $create_log->save('3001', $message_response, '');
 							$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
-
-							//Activity log
-							$db->addLogs($user_name, 'SUCCESS',$user_type,$page, 'Modify Client',$id,'3001',$message_response);
 						} else {
 							// $db->userErrorLog('2002', $user_name, 'script - ' . $script);
 							$message_response = str_replace("user","client",$message_functions->showMessage('role_edit_failed', '2002'));
