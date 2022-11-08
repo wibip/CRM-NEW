@@ -4,6 +4,7 @@ session_start();
 $session_id = session_id();
 header("Cache-Control: no-cache, must-revalidate");
 
+$page = "General configurations";
 $user_name = $_SESSION['user_name'];
 // var_dup($user_name);
 include_once '../classes/systemPackageClass.php';
@@ -85,13 +86,17 @@ if($type == 'system'){
     
 	
 	if($ex212===true && $ex4===true && $ex6===true && $ex7===true ){
-		$msg=$message_functions->showMessage('config_general_update_success');
-		$create_log->save('3001',$msg,'');
-		$_SESSION['msgy'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$msg."</strong></div>";
+		$message_response = $message_functions->showMessage('config_general_update_success');
+		$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Modify General configurations',0,'3001',$message_response);
+		// $msg=$message_functions->showMessage('config_general_update_success');
+		// $create_log->save('3001',$msg,'');
+		$_SESSION['msgy'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 	}else{
-		$msg=$message_functions->showMessage('config_general_update_failed','2001');
-		$create_log->save('2001',$msg,'');
-		$_SESSION['msgy']= "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$msg."</strong></div>";
+		$message_response = $message_functions->showMessage('config_general_update_failed', '2001');
+		$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify General configurations',0,'2001',$message_response);
+		// $msg=$message_functions->showMessage('config_general_update_failed','2001');
+		// $create_log->save('2001',$msg,'');
+		$_SESSION['msgy']= "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 	}
 }
 

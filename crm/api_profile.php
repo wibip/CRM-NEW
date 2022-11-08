@@ -15,6 +15,7 @@ header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 require_once 'classes/dbClass.php';
 $db = new db_functions();
 require_once 'classes/CommonFunctions.php';
+$page = "API profile";
 ?> 
 <head>
 <meta charset="utf-8">
@@ -92,20 +93,27 @@ if(isset($_POST['create_ap_controller'])){
 		$ex0 = $db->execDB($query0);
 
 		if ($ex0===true) {
-			$create_log->save('',$message_functions->showMessage('ap_controller_create_success'),'');
-			$_SESSION['msg2'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_create_success')."</strong></div>";
+			$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+			$message_response = $message_functions->showMessage('ap_controller_create_success') ;
+			$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create API profile',$idContAutoInc,'3001',$message_response);
+			// $create_log->save('',$message_functions->showMessage('ap_controller_create_success'),'');
+			$_SESSION['msg2'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 		} else {
+			$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
+			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create API profile',0,'2001',$message_response);
 			$db->userErrorLog('2001', $user_name, 'script - ' . $script);		
-			$create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
-			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_create_failed','2001')."</strong></div>";
+			// $create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
+			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 		}
 
 	}//key validation
 	else{
+		$message_response = $message_functions->showMessage('transection_fail', '2004');
+		$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create API profile',0,'2004',$message_response);
 		$db->userErrorLog('2004', $user_name, 'script - '.$script);
-		$create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
+		// $create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
 		
-		$_SESSION['msg2']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('transection_fail','2004')."</strong></div>";
+		$_SESSION['msg2']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 		header('Location: operator_config.php?t=2');
 	}	
 } else if(isset($_GET['remove_controller'])){
@@ -121,21 +129,27 @@ if(isset($_POST['create_ap_controller'])){
 		$arc_q_exe=$db->execDB($arc_q);
 		$query0 = "DELETE FROM `exp_locations_ap_controller` WHERE `id` = '$remove_controller'";
 		$ex0 = $db->execDB($query0);
-		if ($ex0===true) {		
-			$create_log->save('',$message_functions->showMessage('ap_controller_remove_success'),'');
-			$_SESSION['msg1'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_remove_success')."</strong></div>";
+		if ($ex0===true) {	
+			$message_response = $message_functions->showMessage('ap_controller_remove_success') ;
+			$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete API profile',$remove_controller,'',$message_response);	
+			// $create_log->save('',$message_functions->showMessage('ap_controller_remove_success'),'');
+			$_SESSION['msg1'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 		} else {
+			$message_response = $message_functions->showMessage('ap_controller_remove_failed','2001');
+			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete API profile',$remove_controller,'2001',$message_response);
 			$db->userErrorLog('2001', $user_name, 'script - ' . $script);	
-			$create_log->save('2001',$message_functions->showMessage('ap_controller_remove_failed','2001'),'');
-			$_SESSION['msg1'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_remove_failed','2001')."</strong></div>";
+			// $create_log->save('2001',$message_functions->showMessage('ap_controller_remove_failed','2001'),'');
+			$_SESSION['msg1'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 		}
 
 	}//key validation
 	else{
+		$message_response = $message_functions->showMessage('transection_fail','2004');
+		$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete API profile',$remove_controller,'2001',$message_response);
 		$db->userErrorLog('2004', $user_name, 'script - '.$script);
 		$create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
 			
-		$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('transection_fail','2004')."</strong></div>";
+		$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 		header('Location: operator_config.php?t=1');
 			
 	}
@@ -154,9 +168,11 @@ if(isset($_POST['create_ap_controller'])){
 		$edit_wag=2;
 	}//key validation
 	else{
+		$message_response = $message_functions->showMessage('transection_fail','2004');
+		$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify API profile',$edit_controller,'2001',$message_response);
 		$db->userErrorLog('2004', $user_name, 'script - '.$script);
-		$create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
-		$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('transection_fail','2004')."</strong></div>";
+		// $create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
+		$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 		header('Location: operator_config.php?t=1');
 
 	}
@@ -200,16 +216,22 @@ if(isset($_POST['api_update'])){
 			WHERE `controller_name`='$update_wag_name'");
 			
 			if($update_wag===true){
-				$create_log->save('3001',$message_functions->showMessage('ap_controller_update_success'),'');
-				$_SESSION['msg1']="<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_update_success')."</strong></div>";
+				$message_response = $message_functions->showMessage('ap_controller_update_success') ;
+				$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Modify API profile',$update_wag_name,'',$message_response);	
+				// $create_log->save('3001',$message_functions->showMessage('ap_controller_update_success'),'');
+				$_SESSION['msg1']="<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 			}else{
-				$create_log->save('2001',$message_functions->showMessage('ap_controller_update_failed','2001'),'');
-				$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('ap_controller_update_failed','2001')."</strong></div>";
+				$message_response = $message_functions->showMessage('ap_controller_update_failed','2001');
+				$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify API profile',$update_wag_name,'2001',$message_response);
+				// $create_log->save('2001',$message_functions->showMessage('ap_controller_update_failed','2001'),'');
+				$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 			}
 		}else{
+			$message_response = $message_functions->showMessage('transection_fail','2004');
+			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify API profile',$edit_controller,'2004',$message_response);
 			$db->userErrorLog('2004', $user_name, 'script - '.$script);
-			$create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
-			$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_functions->showMessage('transection_fail','2004')."</strong></div>";
+			// $create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
+			$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 			header('Location: operator_config.php?t=1');
 		}
 	}
