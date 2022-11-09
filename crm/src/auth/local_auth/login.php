@@ -49,9 +49,9 @@ if (isset($username)) {
 
 	$suspended = false;
 	if($user_type=="MNO"){
-	$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
+		$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	}elseif($user_type=="MVNO" || $user_type=="MVNE" || $user_type=="MVNA"){
-	$q=$dbT->select1DB("SELECT `system_package`,`is_enable`,`wired` FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
+		$q=$dbT->select1DB("SELECT `system_package`,`is_enable`,`wired` FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 		$system_package = $q['system_package'];
 		$dis_is_enable = $q['is_enable'];
 		$property_wired = $q['wired'];
@@ -61,7 +61,7 @@ if (isset($username)) {
 		}
 
 	}elseif($user_type=='MVNO_ADMIN'){
-	$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
+		$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
 	}
 	else{
 		$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
@@ -141,8 +141,9 @@ if (isset($username)) {
 			}
 			else{
 				$user_query = "SELECT module_name FROM admin_access_roles_modules WHERE access_role = '$access_role'";
-		
 			}
+
+			echo $user_query;
 
 			$query_results=$dbT->selectDB($user_query);
 
@@ -168,7 +169,8 @@ if (isset($username)) {
 				header( "Location: $redirect_url");
 			}else{
 				$m_n = json_decode($package_functions->getOptions('ALLOWED_PAGE',$system_package));
-				
+				var_dump($query_results['data'] );
+				var_dump($m_n);
 				foreach($query_results['data'] AS $row){
 					$module_name = $row[module_name];	
 					if(in_array($module_name,$m_n)){

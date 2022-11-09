@@ -4,7 +4,7 @@
 	<?php
 	if($MMFailed == '0'){
 		echo '<div class="alert alert-success">
-		Login successful. Redirecting....
+		Login successful. Redirecting 23....
 		</div>';
 	}
 	else{

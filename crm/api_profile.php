@@ -55,11 +55,8 @@ if (isset($_GET['t'])) {
 	$tab1 = "set";
 }
 $ap_control_var = $db->setVal('ap_controller', 'ADMIN');
-// if($ap_control_var=='SINGLE'){
-// 	$tab17="set";
-// 	$tab1=NULL;
-// }
-// Create product submit
+
+
 if(isset($_POST['create_ap_controller'])){
 	if($_SESSION['FORM_SECRET']==$_POST['form_secret']) {//refresh validate
 		$ap_con_name = trim($_POST['ap_con_name']);

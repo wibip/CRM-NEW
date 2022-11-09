@@ -137,12 +137,14 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 		$password  = CommonFunctions::randomPassword();
 
 		$access_role = $_POST['access_role_1'];
-		$user_type = $_POST['user_type'];
+		$user_type = ($access_role == "SADMIN001") ? "SADMIN" : $_POST['user_type'];
 		$loation = $_POST['loation'];
 		$email = $_POST['email_1'];
 		$language = $_POST['language_1'];
 		$timezone = $_POST['timezone_1'];
 		$mobile = $_POST['mobile_1'];
+
+		$user_distributor = $db->getValueAsf("SELECT u.distributor AS f FROM admin_access_roles u WHERE u.access_role='$access_role' LIMIT 1");
 
 		$pw_query = "SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1(\"$password\"))))) AS f";
 		$updated_pw='';
@@ -154,9 +156,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 		$query = "INSERT INTO admin_users
 				(user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`, mobile, is_enable, create_date,create_user)
 				VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$user_distributor','$full_name','$email', '$language' ,'$timezone', '$mobile','1',now(),'$user_name')";
+		// echo $query;
 		$ex =$db->execDB($query);
-
-		if ($ex===true) {
+// echo $ex;die;
+		if ($ex ==true) {
 			$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 			if ($user_type == 'ADMIN') {
 				$dist = 'ADMIN';
@@ -808,7 +811,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														echo '<input type="hidden" name="loation" id="loation1" value="' . $user_distributor . '">';
 														?>
 														<div class="control-group">
-															<label class="control-label" for="access_role_1">Access Role <?=$user_type?><sup><font color="#FF0000"></font></sup></label>
+															<label class="control-label" for="access_role_1">Access Role<sup><font color="#FF0000"></font></sup></label>
 
 															<div class="controls col-lg-5 form-group">
 																<select class="span4 form-control" name="access_role_1" id="access_role_1">
@@ -822,7 +825,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	} else {
 																		$key_query = "SELECT `access_role` ,description
 																						FROM `admin_access_roles`
-																						WHERE `distributor` ='$user_distributor' ORDER BY description";
+																						WHERE `distributor` ='$user_distributor' OR `distributor` ='SADMIN' ORDER BY description";
 																	}
 
 																	$query_results=$db->selectDB($key_query);
@@ -1243,7 +1246,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																		echo '<option value="Master Admin Peer" '.$a_selected.'>Master Admin Peer</option>
 																		<option value="Master Support Admin" '.$b_selected.'>Master Support Admin</option>';
 																	}
-																	$key_query = "SELECT access_role,description FROM admin_access_roles WHERE distributor = '$user_distributor' ORDER BY description";
+																	$key_query = "SELECT access_role,description FROM admin_access_roles WHERE distributor = '$user_distributor' OR `distributor` ='SADMIN' ORDER BY description";
 																	$query_results=$db->selectDB($key_query);
 																	foreach($query_results['data'] AS $row){
 																		$access_role = $row[access_role];

@@ -350,7 +350,7 @@ class userMainModel
             $q = "SELECT au.id,au.user_name,au.full_name, au.access_role, au.user_type, au.user_distributor, au.email,au.is_enable,au.create_user
                             ,IF(!ISNULL(aar.description),aar.description,IF(au.access_role='admin','Admin','')) AS description
                             FROM admin_users au LEFT JOIN admin_access_roles aar ON au.access_role = aar.access_role
-                            WHERE user_type = '$user_type' AND user_name<>'admin'";
+                            WHERE (user_type = '$user_type' OR user_type = 'SADMIN') AND user_name<>'admin'";
         } elseif ($user_type == 'SUPPORT' || $user_type == 'MNO') {
             $user_distributor = $data->user_distributor;
 
