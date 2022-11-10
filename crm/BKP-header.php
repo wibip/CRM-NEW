@@ -25,6 +25,7 @@ if (!$fileOut || $out) {
 	echo "<h2> This product is not activate or not correctly installed... </h2>";
 	exit();
 }
+
 ?>
 
 <!-- <script type="text/javascript" src="fancybox/jquery.fancybox.js?v=2.1.5"></script>
@@ -137,12 +138,36 @@ if (!$fileOut || $out) {
 		display: block !important;
 		width: 300px;
 	}
+
+	.topnav {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		text-transform: uppercase;
+		/*background-color: #333;*/
+	}
+
+	.topnav > li {
+		float: left;
+	}
+
+	.topnav > li a {
+		display: block;
+		/*color: white;*/
+		text-align: center;
+		padding: 14px 16px;
+		text-decoration: none;
+	}
+
+	.topnav > li a:hover {
+		/*background-color: #111;*/
+	}
 </style>
 
 <?php
 // GET PAGE SCRIPT
 $script = basename($_SERVER['PHP_SELF'], ".php");
-
 // classes
 $db_class1 = new db_functions();
 $extension = trim($db_class1->setVal('extentions', 'ADMIN'));
@@ -181,7 +206,7 @@ if ($_GET['s_token']) {
 		session_destroy();
 	}
 }
-
+$user_distributor = $db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$s_uname' LIMIT 1");
 
 if ($_GET['back_sup'] == 'true') {
 	parse_str($_SESSION['s_detail']);
@@ -203,7 +228,7 @@ if ($_GET['back_sup'] == 'true') {
 
 	//$user_name = $_SESSION['user_name'];
 
-	$user_distributor = $db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$s_uname' LIMIT 1");
+	
 
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT', $system_package);
@@ -291,7 +316,6 @@ if ($_GET['back_master_logout'] == 'true') {
 	header("Location: " . $redirect_url);
 	exit();
 }
-
 
 if ($_GET['log_other'] == '1') {
 
@@ -404,7 +428,7 @@ if ($_GET['log_other'] == '2') {
 		$exec_cmd = 'php -f' . __DIR__ . '/ajax/syncAP.php ' . $user_distributor . ' > /dev/null &';
 		exec($exec_cmd);
 		
-		if ($user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN") {
+		if ($user_type == "SADMIN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN") {
 			$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 		} else if ($user_type == "MVNO_ADMIN") {
 			$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
@@ -510,6 +534,7 @@ if ($user_type == 'MVNO_ADMIN') {
 	// general User
 }
 
+
 $query_results = $db_class1->select1DB($key_query);
 //while($row=mysql_fetch_array($query_results)){
 $access_role = $query_results[access_role];
@@ -553,7 +578,7 @@ if ($_SESSION['login'] == 'yes') {
 }
 
 //////// System Packages and features
-if ($user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
+if ($user_type == "SADMIN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	if ($user_type == "MNO" || $user_type == "RESELLER_ADMIN" || $user_type == "SUPPORT") {
 		$fearuresjson = $db_class1->getValueAsf("SELECT features as f FROM `exp_mno` WHERE mno_id='$user_distributor'");
@@ -668,8 +693,16 @@ function isModuleAccess($access_role, $module, $db_function)
 }
 
 // Menu Design
+$originalUserType = $user_type;
+$originalAccessRole = $access_role;
+$originalSystemPackage = $system_package;
+
+$user_type = ($user_type == 'SADMIN') ? 'ADMIN' : $user_type;
+$access_role = ($user_type == 'SADMIN') ? 'admin' : $user_type;
+$system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
+
 foreach ($query_results_drop1['data'] as $row) {
 	if ($row[menu_item] == 3) {
 		$x_non_admin[] = $row[module_name]; // Non Admin Roles
@@ -708,6 +741,7 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 
 $allowed_pages = $x;
 //echo $system_package;
+
 $module_ids = join('", "', $x);
 $suspended = false;
 if ($user_type == 'MVNO') {
@@ -740,7 +774,6 @@ if ($_GET['location_parent_id']) {
 		$edit_location_old = true;
 	}
 }
-
 // var_dump($camp_layout);
 require_once 'layout/' . $camp_layout . '/config.php';
 
@@ -764,7 +797,6 @@ foreach ($query_results_mod['data'] as $row1) {
 	$order = $row1[order];
 	$name_group = $row1[name_group];
 	$is_enable = $row1[is_enable];
-
 	//===========Remove Content Filter
 	if ($module_name == 'content_filter') {
 
@@ -894,7 +926,6 @@ foreach ($query_results_mod['data'] as $row1) {
 	menu item = 6 => User Guide
 
 	*/
-
 
 	//if($_SESSION['s_token']){
 
@@ -1122,9 +1153,9 @@ foreach ($query_results_mod['data'] as $row1) {
 //print_r($main_mod_array);
 ksort($main_mod_array);
 
-
 //print_r(json_encode($main_mod_array));
 //print_r($access_modules_list);
+
 
 
 /////////////////////////////////////////////////////////
@@ -1152,13 +1183,17 @@ if ($suspended) {
 		//else{
 		//echo $script;
 		$db_class1->userLog($user_name, $script, 'Browse', 'N/A');
+		
+		$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
+		// $db->addLogs($user_name, 'ERROR',$user_type, 'login', 'Browse',0,'2001','');
 		// $log_query = "INSERT INTO admin_user_logs (`user_name`,`module`,`create_date`,`unixtimestamp`)
 		//(SELECT '$user_name',`module`,now(),UNIX_TIMESTAMP() FROM `admin_main_modules` WHERE `module_name` = '$script')";
 		//}
 		//$query_ex_log=mysql_query($log_query);
 
 	} else {
-		$redirect_url = $global_base_url; //index".$extension;
+		$redirect_url = $global_base_url; //index".$extension;$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
+		// $db->addLogs($user_name, 'ERROR',$user_type,'login', 'Browse',0,'2000',$redirect_url);
 		$db_class1->userErrorLog('2000', $user_name, 'script - ' . $script);
 
 		header('Location: ' . $redirect_url);
@@ -1167,6 +1202,7 @@ if ($suspended) {
 <?php
 		exit();
 	}
+	
 }
 /////////////////////////////////////////////////////////
 // End SECURITY POINT -- Verify the customer is correct
@@ -1180,11 +1216,12 @@ if ($suspended) {
 
 $camp_theme_color = '#00ba8b'; // Default Color
 
-if ($user_type == 'ADMIN') {
-	$dist_name = 'ADMIN';
+if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
+	// $dist_name = 'ADMIN';
+	$dist_name = $user_type;
 	$camp_theme_color = '#00ba8b';
 
-	$abc_q = "SELECT * FROM `exp_mno` WHERE `mno_id` = 'ADMIN'";
+	$abc_q = "SELECT * FROM `exp_mno` WHERE `mno_id` = '".$dist_name."'";
 	$row = $db_class1->select1DB($abc_q);
 	//while($row = mysql_fetch_array($def_r)){
 
@@ -1929,8 +1966,6 @@ else{
 
 		<div class="navbar navbar-fixed-top" <?php if ($top_menu == 'bottom') { ?> style="display: none;" <?php } ?>>
 			<div class="navbar-inner">
-
-
 				<div id="container_id" class="container">
 
 					<?php
@@ -1944,70 +1979,34 @@ else{
 						<span class="icon-bar show"></span>
 						<span class="icon-bar show"></span>
 					</a>
-
 					<?php
-
-					/// PAGE TITLE IS HERE 
-					?>
-
-					<?php
-
-
-
-
 					if ($top_menu != "bottom") {
 
 						echo $log_img;
 						echo $logo_title;
 					}
-
+					if($originalUserType == 'SADMIN') {
 					?>
-
-
-
-					<?php /// END PAGE TITLE 
-					?>
-
-
-
-
-
-
-
-
-					<?php /// MENU STARTING 
-					?>
-
-
+					<div>
+						<ul class="topnav">
+							<li><a href="./change_portal?section=ADMIN">Admin</a></li>
+							<li><a href="./change_portal?section=MNO">Operations</a></li>
+							<li><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
+						</ul>
+					</div>
+					<?php } ?>
 					<div class="nav-collapse">
-
 						<ul class="nav pull-right">
-
 							<?php
-
 							$menutype = $db_class1->setVal('menu_type', 'ADMIN'); //echo NOW ONLY HAVE SUB MENU ;
-							?>
-
-
-
-
-							<?php
-
-
+						
 							if ($menutype == "SUB_MENU") {
-
-
-
 								foreach ($main_mod_array as $keym => $valuem) {
-
 									if ($main_menu_clickble == "NO") {
 
 										$main_menu_name2 = $valuem['name'];
 										$modarray = $valuem['module'];
-
 										ksort($modarray);
-
-
 										foreach ($modarray as $keyZ => $valueZ) {
 
 											if (strlen($link_main_m_multy) == 0)
@@ -2015,18 +2014,16 @@ else{
 											$sub_menu_new_link =  $valueZ['nw_link'];
 										}
 
-
 										if (strlen($page_names_arr[$main_menu_name2]) > 0) {
 											$main_menu_name2 = $page_names_arr[$main_menu_name2];
 										}
 
-
 										if ($sub_menu_new_link == 1) {
 											echo '<li id="sysmenu' . $keym . '" class="dropdown sysmenu1" style="display: none;">
-            		<a href="' . $link_main_m_multy . '" class="dropdown-toggle" data-toggle="dropdown"> ' . $main_menu_name2 . '<b class="caret"></b></a>';
+            								<a href="' . $link_main_m_multy . '" class="dropdown-toggle" data-toggle="dropdown"> ' . $main_menu_name2 . '<b class="caret"></b></a>';
 										} else {
 											echo '<li id="sysmenu' . $keym . '" class="dropdown sysmenu1" style="display: none;">
-            		<a href="' . $link_main_m_multy . $extension . '" class="dropdown-toggle" data-toggle="dropdown"> ' . $main_menu_name2 . '<b class="caret"></b></a>';
+											<a href="' . $link_main_m_multy . $extension . '" class="dropdown-toggle" data-toggle="dropdown"> ' . $main_menu_name2 . '<b class="caret"></b></a>';
 										}
 
 										echo '<ul class="dropdown-menu">';
@@ -2067,7 +2064,7 @@ else{
 											}
 
 											echo '<li id="sysmenu' . $keym . '" class="dropdown sysmenu1" style="display: none;">
-          				<a href="' . $link_main_m . $extension . '" class="dropdown-toggle" > ' . $main_menu_name . '</a></li>';
+          									<a href="' . $link_main_m . $extension . '" class="dropdown-toggle" > ' . $main_menu_name . '</a></li>';
 										}
 
 										/// Multy Item
@@ -2092,7 +2089,7 @@ else{
 
 
 											echo '<li id="sysmenu' . $keym . '" class="dropdown sysmenu1" style="display: none;">
-            		<a href="' . $link_main_m_multy . $extension . '" class="dropdown-toggle" data-toggle="dropdown"> ' . $main_menu_name2 . '<b class="caret"></b></a>';
+            								<a href="' . $link_main_m_multy . $extension . '" class="dropdown-toggle" data-toggle="dropdown"> ' . $main_menu_name2 . '<b class="caret"></b></a>';
 
 
 											echo '<ul class="dropdown-menu">';
@@ -2122,15 +2119,7 @@ else{
 								}
 							}
 
-
-
-
-
 							?>
-
-
-
-
 
 							<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									<i class="icon-user"></i> <?php echo $full_name; ?> <b class="caret"></b></a>
@@ -2209,11 +2198,9 @@ else{
 		//if verification
 
 
-		if ($script != 'verification') {
+		if ($script != 'verification' && !isset($_GET['section'])) {
 
 		?>
-
-
 			<!-- /navbar -->
 			<div class="subnavbar" id="subnavbar_id">
 				<div class="subnavbar-inner">
@@ -2246,11 +2233,11 @@ else{
 								//$width_li = intval(99)/intval(sizeof($main_mod_array));
 
 								/* 	if($user_type=="MNO" || $user_type=="ADMIN"){
-		$width_li = "19.8%";
-	}
-	else{
-		$width_li = "16.5%";
-	} */
+										$width_li = "19.8%";
+									}
+									else{
+										$width_li = "16.5%";
+									} */
 
 
 								if ($style_type != 'light')
@@ -2286,8 +2273,8 @@ else{
 										}
 
 										echo '<li id="sami_' . $keym . '" onmouseover="mOver(this)" onmouseout="mOut(this)" style="width: ' . $width_li . ';' . $css_right . '" ' . $scrpt_active_status . '>
-            <a id="hot_a" style="cursor: default">
-			<span style="font-size: 16px;max-width: 126px;display: -ms-inline-flexbox;display: inline-flex;-ms-flex-align: center;height: 100%;align-items: center;line-height: 24px;">' . $main_menu_name2 . '</span> </a>';
+											<a id="hot_a" style="cursor: default">
+											<span style="font-size: 16px;max-width: 126px;display: -ms-inline-flexbox;display: inline-flex;-ms-flex-align: center;height: 100%;align-items: center;line-height: 24px;">' . $main_menu_name2 . '</span> </a>';
 
 										if (sizeof($valuem['module']) == 1) {
 											$style_tag1 = "min-width: 100%;width: auto";
@@ -2312,10 +2299,10 @@ else{
 
 											if ($sub_menu_new_link == 1) {
 												echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px;' . $style_tag1 . '">
-            		<a href="' . $sub_menu_link . '"  target="_blank"  class="new ' . $add_class . '" style="padding:5px;' . $style_tag2 . '">' . $sub_menu_name . '</a></li>';
+            									<a href="' . $sub_menu_link . '"  target="_blank"  class="new ' . $add_class . '" style="padding:5px;' . $style_tag2 . '">' . $sub_menu_name . '</a></li>';
 											} else {
 												echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px;' . $style_tag1 . '">
-            		<a href="' . $sub_menu_link . $extension . '" class="new ' . $add_class . '" style="padding:5px;' . $style_tag2 . '">' . $sub_menu_name . '</a></li>';
+            								<a href="' . $sub_menu_link . $extension . '" class="new ' . $add_class . '" style="padding:5px;' . $style_tag2 . '">' . $sub_menu_name . '</a></li>';
 											}
 										}
 
@@ -2344,8 +2331,8 @@ else{
 											}
 
 											echo '<li style="width: ' . $width_li . ';' . $css_right . '" ' . $scrpt_active_status . '>
-				<a id="dash_' . $keym . '" href="' . $link_main_m . $extension . '">
-				<span style="font-size: 16px;max-width: 120px;display: -ms-inline-flexbox;display: inline-flex;-ms-flex-align: center;height: 100%;align-items: center;line-height: 24px;">' . $main_menu_name . '</span> </a></li>';
+											<a id="dash_' . $keym . '" href="' . $link_main_m . $extension . '">
+											<span style="font-size: 16px;max-width: 120px;display: -ms-inline-flexbox;display: inline-flex;-ms-flex-align: center;height: 100%;align-items: center;line-height: 24px;">' . $main_menu_name . '</span> </a></li>';
 										}
 
 										/// Multy Item
@@ -2367,8 +2354,8 @@ else{
 
 
 											echo '<li id="sami_' . $keym . '" onmouseover="mOver(this)" onmouseout="mOut(this)" style="width: ' . $width_li . ';' . $css_right . '" ' . $scrpt_active_status . '>
-            <a id="hot_a" href="' . $link_main_m_multy . $extension . '">
-			<span style="font-size: 16px;max-width: 126px;display: -ms-inline-flexbox;display: inline-flex;-ms-flex-align: center;height: 100%;align-items: center;line-height: 24px;">' . $main_menu_name2 . '</span> </a>';
+												<a id="hot_a" href="' . $link_main_m_multy . $extension . '">
+												<span style="font-size: 16px;max-width: 126px;display: -ms-inline-flexbox;display: inline-flex;-ms-flex-align: center;height: 100%;align-items: center;line-height: 24px;">' . $main_menu_name2 . '</span> </a>';
 
 
 											echo '<ul id="sami_' . $keym . 'a" style="display: none;list-style-type: none;position: absolute; background-color: ' . $camp_theme_color . ';height: 30px; margin-left: -1.5px;border-width: 1px; border-style: solid; border-color: rgb(217, 217, 217);">';
@@ -2386,10 +2373,10 @@ else{
 
 												if ($sub_menu_new_link == 1) {
 													echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
-            		<a href="' . $sub_menu_link . '"  target="_blank"  class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
+            									<a href="' . $sub_menu_link . '"  target="_blank"  class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
 												} else {
 													echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
-            		<a href="' . $sub_menu_link . $extension . '" class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
+            									<a href="' . $sub_menu_link . $extension . '" class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
 												}
 											}
 
@@ -2415,11 +2402,6 @@ else{
 
 										$full_name1 = substr_replace($full_name, "<br>", 13, 0);
 									}
-
-
-
-
-
 									$li_style = "float: right; ";
 									$a_style = "text-align: left;padding-right: 0px !important;margin-top: 10px";
 									$b_style = "margin-top: -2px;margin-left: 8px;";
@@ -2430,12 +2412,8 @@ else{
 									$b_style = "margin-top: 28px;margin-left: 8px;";
 								}
 							?>
-
-
-
 								<li class="dropdown" style="<?php echo $li_style; ?>"><a style="<?php echo $a_style; ?>" href="#" class="dropdown-toggle" data-toggle="dropdown">
 										<i class="icon-user"></i> <?php echo $full_name1; ?> <b style="<?php echo $b_style; ?>" class="caret"></b></a>
-
 									<ul class="dropdown-menu" style="left: -70px">
 										<?php
 
@@ -2505,6 +2483,8 @@ else{
 				</div>
 
 			</div>
+
+			
 	<?php }
 	}
 

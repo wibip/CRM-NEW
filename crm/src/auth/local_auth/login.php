@@ -169,8 +169,8 @@ if (isset($username)) {
 				header( "Location: $redirect_url");
 			}else{
 				$m_n = json_decode($package_functions->getOptions('ALLOWED_PAGE',$system_package));
-				var_dump($query_results['data'] );
-				var_dump($m_n);
+				// var_dump($query_results['data'] );
+				// var_dump($m_n);
 				foreach($query_results['data'] AS $row){
 					$module_name = $row[module_name];	
 					if(in_array($module_name,$m_n)){

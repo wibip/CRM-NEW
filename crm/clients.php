@@ -873,12 +873,12 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 		}
 	}
 	 elseif (isset($_POST['edit-submita-pass'])) {
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { //refresh validate
-			if ($user_type != "SALES") {
+		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
 				$id = $_POST['id'];
 				$passwd = $_POST['passwd'];
 				$passwd_2 = $_POST['passwd_2'];
 				if ($passwd == $passwd_2) {
+					$user_id = $db->getValueAsf("SELECT u.user_id AS f FROM crm_clients u WHERE u.id='$id' LIMIT 1");
 					$user_full_name = $db->getValueAsf("SELECT u.full_name AS f FROM crm_clients u WHERE u.id='$id' LIMIT 1");
 					//update log//
 					$ex_log = userUpdateLog($id, 'RESET_PASSWORD', $user_name,$db);
@@ -891,10 +891,15 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 							$updated_pw = strtoupper($row['f']);
 						}
 
-						$edit_query = "UPDATE `crm_clients`
+						$edit_query = "UPDATE `admin_users`
+										SET `password` = '$updated_pw'
+										WHERE `id` = '$user_id'";
+						$edit_result = $db->execDB($edit_query);
+
+						$edit_client_query = "UPDATE `crm_clients`
 										SET `password` = '$updated_pw'
 										WHERE `id` = '$id'";
-						$edit_result = $db->execDB($edit_query);
+						$edit_client_result = $db->execDB($edit_client_query);
 
 						if ($edit_result===true) {
 							$message_response = str_replace("user","client",$message_functions->showNameMessage('role_password_edit_success', $user_full_name));
@@ -923,12 +928,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 					//Password confirmation failed
 				}
-			} else {
-				$message_response =  str_replace("user","client",$message_functions->showNameMessage('role_password_edit_success', $user_full_name));
-				$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Client Password Reset',$id,'3001',$message_response);
-				$create_log->save('3001', $message_response , '');
-				$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response  . "</strong></div>";
-			}
 		} else {
 			$message_response =  str_replace("user","client",$message_functions->showMessage('transection_fail', '2004'));
 			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Client Password Reset',$id,'2004',$message_response);
@@ -1538,6 +1537,50 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														window.location = "?";
 													}
 												</script>
+												<?php if(isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ) { ?>
+												<form onkeyup="footer_submitfn1();" onchange="footer_submitfn1();" autocomplete="off" id="edit-user-password" action="?t=1" method="post" class="form-horizontal">
+													<?php
+													echo '<input type="hidden" name="form_secret" id="form_secret2" value="' . $_SESSION['FORM_SECRET'] . '" />';
+													?>
+													<fieldset>
+														<legend>Reset Password</legend>
+														<?php
+														echo '<input type="hidden" name="user_type" id="user_type3" value="' . $user_type . '">';
+														echo '<input type="hidden" name="loation" id="loation3" value="' . $user_distributor . '">';
+														echo '<input type="hidden" name="id" id="id1" value="' . $id . '">';
+														?>
+														<div class="control-group">
+															<label class="control-label" for="full_name_2" _1>Password<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls col-lg-5">
+																<input class="span4" id="passwd" name="passwd" type="password" required>
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="control-group">
+															<label class="control-label" for="email_2">Confirm Password<sup><font color="#FF0000"></font></sup></label>
+															<div class="controls col-lg-5">
+																<input class="span4" id="passwd_2" name="passwd_2" type="password" required="required">
+															</div>
+															<!-- /controls -->
+														</div>
+														<!-- /control-group -->
+														<div class="form-actions">
+															<button type="submit" name="edit-submita-pass" id="edit-submita-pass" class="btn btn-primary" disabled="disabled">Save</button>&nbsp; <strong>
+																<font color="#FF0000"></font><small></small>
+															</strong>
+															<button type="button" onclick="goto('?t=1')" class="btn btn-danger">Cancel</button>&nbsp;
+														</div>
+														<!-- /form-actions -->
+													</fieldset>
+												</form>
+
+												<script>
+													function footer_submitfn1() {
+														$("#edit-submita-pass").prop('disabled', false);
+													}
+												</script>
+												<?php } ?>
 											</div>
 										</div>
 									</div>
