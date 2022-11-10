@@ -713,7 +713,7 @@ foreach ($query_results_drop1['data'] as $row) {
 	}
 }
 
-// var_dump($x);
+var_dump($x);
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
@@ -731,7 +731,7 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-// var_dump($x);
+var_dump($x);
 /// Non Admin Modules
 foreach ($x_non_admin as $keyXn => $valueXn) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -742,7 +742,7 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-var_dump($x);
+// var_dump($x);
 $allowed_pages = $x;
 //echo $system_package;
 
@@ -784,9 +784,9 @@ require_once 'layout/' . $camp_layout . '/config.php';
 $query_modules = "SELECT * FROM `admin_access_modules`
 WHERE `module_name` IN (\"$module_ids\")
 AND `user_type` = '$user_type'";
-// echo $query_modules;
-// var_dump($module_ids);
-// var_dump($user_type);
+echo $query_modules;
+var_dump($module_ids);
+var_dump($user_type);
 $query_results_mod = $db_class1->selectDB($query_modules);
 
 //$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
@@ -1160,8 +1160,8 @@ foreach ($query_results_mod['data'] as $row1) {
 ksort($main_mod_array);
 
 //print_r(json_encode($main_mod_array));
-// var_dump($access_modules_list);
-// die
+var_dump($access_modules_list);
+die;
 
 
 
