@@ -23,17 +23,17 @@ class SystemPackageOne
 
     public function getPageFeature($page, $package_code)
     {
-echo 'wwwwwwwwwwwwwwwwwwwwww<br/>';
+
         if ($package_code == "N/A" || $package_code == "") {
             return '1';
         } else {
 
             $q1 = "SELECT `options` AS f FROM `admin_product_controls` WHERE 
                    `product_code`='$package_code' AND `feature_code` ='ALLOWED_PAGE'";
-
+echo '<br/>'.$q1;
             $page_ar = $this->dbT->getValueAsf($q1);
             $page_re = json_decode($page_ar, true);
-
+var_dump($page_ar);
             if (in_array($page, $page_re)) {
                 return '1';
             } else {

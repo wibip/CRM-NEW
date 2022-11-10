@@ -702,7 +702,7 @@ $user_type = ($user_type == 'SADMIN') ? 'ADMIN' : $user_type;
 $access_role = ($user_type == 'SADMIN') ? 'admin' : $access_role;
 $system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
-echo $dropdown_query1;
+
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
 // var_dump($system_package);
 foreach ($query_results_drop1['data'] as $row) {
@@ -712,8 +712,7 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row[module_name]; // Retuns base access
 	}
 }
-echo '------------<br/>';
-var_dump($x);
+echo '------------<br/>';;
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
@@ -723,7 +722,7 @@ foreach ($x as $keyX => $valueX) {
 			}
 		}
 	}
-	if ($package_functions->getPageFeature($valueX, $system_package) == '0') {  echo ',,,,,,,,,,,,,,,,<br/>';
+	if ($package_functions->getPageFeature($valueX, $system_package) == '0') { 
 		try {
 			unset($x[$keyX]);
 		} catch (Exception $e) {

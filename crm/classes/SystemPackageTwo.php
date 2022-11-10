@@ -47,7 +47,7 @@ class SystemPackageTwo
 
     public function getPageFeature($page, $package_code)
     {
-echo 'bbbbbbbbbbbbbbbb<br/>';
+
         if ($package_code == "N/A" || $package_code == "") {
             return '1';
         } else {
