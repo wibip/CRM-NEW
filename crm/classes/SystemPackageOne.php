@@ -30,11 +30,10 @@ class SystemPackageOne
 
             $q1 = "SELECT `options` AS f FROM `admin_product_controls` WHERE 
                    `product_code`='$package_code' AND `feature_code` ='ALLOWED_PAGE'";
-var_dump($page);
-echo '<br/>'.$q1;
+
             $page_ar = $this->dbT->getValueAsf($q1);
             $page_re = json_decode($page_ar, true);
-var_dump($page_ar);
+
             if (in_array($page, $page_re)) {
                 return '1';
             } else {
