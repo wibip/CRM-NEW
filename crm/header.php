@@ -591,8 +591,7 @@ if ($user_type == "SADMIN" || $user_type == "MNO" || $user_type == "ADMIN" || $u
 
 	$advanced_features = $db_class1->getValueAsf("SELECT `advanced_features` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 }
-var_dump($advanced_features);
-var_dump($system_package);
+
 if ($system_package == "N/A" || $system_package == "") {
 	$package_features = "all";
 	$system_package = "N/A";
@@ -703,7 +702,7 @@ $user_type = ($user_type == 'SADMIN') ? 'ADMIN' : $user_type;
 $access_role = ($user_type == 'SADMIN') ? 'admin' : $access_role;
 $system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
-// echo $dropdown_query1;
+echo $dropdown_query1;
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
 // var_dump($system_package);
 foreach ($query_results_drop1['data'] as $row) {
@@ -714,7 +713,7 @@ foreach ($query_results_drop1['data'] as $row) {
 	}
 }
 
-// var_dump($x);
+var_dump($x);
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
@@ -732,7 +731,7 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-// var_dump($x);
+var_dump($x);
 /// Non Admin Modules
 foreach ($x_non_admin as $keyXn => $valueXn) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -743,7 +742,7 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-// var_dump($x);
+var_dump($x);
 $allowed_pages = $x;
 //echo $system_package;
 
