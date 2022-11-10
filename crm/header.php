@@ -723,7 +723,7 @@ foreach ($x as $keyX => $valueX) {
 			}
 		}
 	}
-	if ($package_functions->getPageFeature($valueX, $system_package) == '0') {
+	if ($package_functions->getPageFeature($valueX, $system_package) == '0') {  echo ',,,,,,,,,,,,,,,,<br/>';
 		try {
 			unset($x[$keyX]);
 		} catch (Exception $e) {
