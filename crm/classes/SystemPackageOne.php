@@ -23,7 +23,7 @@ class SystemPackageOne
 
     public function getPageFeature($page, $package_code)
     {
-
+echo 'wwwwwwwwwwwwwwwwwwwwww<br/>';
         if ($package_code == "N/A" || $package_code == "") {
             return '1';
         } else {
