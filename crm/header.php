@@ -682,7 +682,7 @@ if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 function isModuleAccess($access_role, $module, $db_function)
 {
 	$sql1 = "SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role` = '$access_role' AND `module_name` = '$module' LIMIT 1";
-	var_dump($sql1);
+	// var_dump($sql1);
 	$result = $db_function->selectDB($sql1);
 	// print_r($result);
 	//$row_count = mysql_num_rows($result);
@@ -713,7 +713,7 @@ foreach ($query_results_drop1['data'] as $row) {
 	}
 }
 
-var_dump($x);
+// var_dump($x);
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
@@ -731,7 +731,7 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-var_dump($x);
+// var_dump($x);
 /// Non Admin Modules
 foreach ($x_non_admin as $keyXn => $valueXn) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -784,9 +784,9 @@ require_once 'layout/' . $camp_layout . '/config.php';
 $query_modules = "SELECT * FROM `admin_access_modules`
 WHERE `module_name` IN (\"$module_ids\")
 AND `user_type` = '$user_type'";
-echo $query_modules;
-var_dump($module_ids);
-var_dump($user_type);
+// echo $query_modules;
+// var_dump($module_ids);
+// var_dump($user_type);
 $query_results_mod = $db_class1->selectDB($query_modules);
 
 //$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
@@ -1160,8 +1160,8 @@ foreach ($query_results_mod['data'] as $row1) {
 ksort($main_mod_array);
 
 //print_r(json_encode($main_mod_array));
-var_dump($access_modules_list);
-die;
+// var_dump($access_modules_list);
+// die;
 
 
 
