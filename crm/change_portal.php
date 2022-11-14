@@ -28,7 +28,7 @@ if(isset($_POST['select_profile']) || $_GET['section'] == 'ADMIN'){
 		$userId = $_POST['user_id'];
 	}
 
-	header("Location: http://local.nvisioncrm.test/crm/generic/login?auto_login&user_id=".$userId);
+	header("Location: ./generic/login?auto_login&user_id=".$userId);
 	exit();
 }
 
