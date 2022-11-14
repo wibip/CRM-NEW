@@ -3,9 +3,7 @@
 <html lang="en">
 <?php
 session_start();
-/*ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_WARNING);*/
+error_reporting(E_WARNING);
 include 'header_top.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -17,10 +15,21 @@ require_once 'classes/dbClass.php';
 $db = new db_functions();
 
 $users = [];
-if(isset($_GET['section'])){
-    $userSql = "SELECT id,full_name FROM admin_users WHERE user_type='".$_GET['section']."'";
+if(isset($_GET['section']) && $_GET['section'] != 'ADMIN'){
+    $userSql = "SELECT id,full_name FROM admin_users WHERE user_type='MNO'";
     $userResults =$db->selectDB($userSql);
     $users = $userResults['data'];
+}
+
+if(isset($_POST['select_profile']) || $_GET['section'] == 'ADMIN'){
+	if($_GET['section'] == 'ADMIN') {
+		$userId = 1;
+	} else {
+		$userId = $_POST['user_id'];
+	}
+
+	header("Location: http://local.nvisioncrm.test/crm/generic/login?auto_login&user_id=".$userId);
+	exit();
 }
 
 ?>
@@ -63,9 +72,10 @@ if(isset($_GET['section'])){
 	<!--table colimn show hide-->
 	<script type="text/javascript" src="js/tablesaw.js"></script>
 	<script type="text/javascript" src="js/tablesaw-init.js"></script>
-
 	<?php
-	include 'header.php';
+
+	include 'header.php';	
+
 	?>
 		<div class="main">
 			<div class="custom-tabs"></div>
@@ -73,10 +83,12 @@ if(isset($_GET['section'])){
 				<div class="container">
 					<div class="row">
 						<div class="span12">
-                            <?php if(isset($_GET['section'])) { ?>
-                            <div>
-                                <select>
-                                    <option value='0'>Select <?=$_GET['section']?> Account</option>
+                            <?php if(isset($_GET['section']) && $_GET['section'] != 'ADMIN') { ?>
+							<form autocomplete="off" id="assign_roles_submit" name="assign_roles_submit" method="post" class="form-horizontal">
+                            <div class="control-group">
+								<label>Operation Account</label>
+                                <select id="<?=($_GET['section'] == 'MNO' ? "user_id" : "operator_id")?>" name="<?=($_GET['section'] == 'MNO' ? "user_id" : "operator_id")?>">
+                                    <option value='0'>Select Operation Account</option>
                                     <?php 
                                         if(!empty($users)) {
                                             foreach($users as $user) {
@@ -88,6 +100,18 @@ if(isset($_GET['section'])){
                                     ?>
                                 </select>
                             </div>
+							<?php if($_GET['section'] == 'PROVISIONING') { ?>
+							 <div class="control-group">
+								<label>Client Account</label>
+                                <select id="user_id" name="user_id">
+                                    <option value='0'></option>
+                                </select>
+                            </div>
+							<?php } ?>
+							<div class="form-actions">
+								<button disabled type="submit" name="select_profile" id="select_profile" class="btn btn-primary">Select Profile</button>
+							</div>
+							</form>
                             <?php } ?>
                         </div>
 						<!-- /span12 -->
@@ -99,6 +123,37 @@ if(isset($_GET['section'])){
 			<!-- /main-inner -->
 		</div>
 		<!-- /main -->	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			/*select user*/
+			$('#user_id').on('change', function() {
+				var userId = $(this).val();
+				if(userId != 0) {
+					$('#select_profile').prop("disabled", false);
+				} else {
+					alert('Please select proper account');
+					$('#select_profile').prop("disabled", true);
+				}
+			});
+
+			/*Load clients*/
+			$('#operator_id').on('change', function() {
+				var operatorId = $(this).val();
+				if(operatorId != 0) {
+					$.post('ajax/load_provision.php', {operatorId:operatorId}, function(response){ 
+						console.log(response);
+						// alert("success");
+						// $("#mypar").html(response.amount);
+						if(response != ''){
+							$('#user_id').html(response);
+						}
+					});
+				} else {
+					alert('Please select operation account');
+				}
+			});
+		});
+	</script>
 	<?php
 	include 'footer.php';
 	?>

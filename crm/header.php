@@ -6,7 +6,7 @@ header("Pragma: no-cache"); // HTTP 1.0.
 header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 
 $load_login_design = $_SESSION['logout_design'];
-
+// echo '------>>>';die;
 ////////////////////////////
 
 /*ini_set('display_errors', 1);
@@ -584,13 +584,14 @@ if ($user_type == "SADMIN" || $user_type == "MNO" || $user_type == "ADMIN" || $u
 		$fearuresjson = $db_class1->getValueAsf("SELECT features as f FROM `exp_mno` WHERE mno_id='$user_distributor'");
 		$mno_feature = json_decode($fearuresjson);
 	}
-} else if ($user_type == "MVNO_ADMIN") {
-	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
-} else if ($user_type == "MVNO" || $user_type == "MVNE" || $user_type == "MVNA") {
-	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
+} 
+// else if ($user_type == "MVNO_ADMIN") {
+// 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
+// } else if ($user_type == "MVNO" || $user_type == "MVNE" || $user_type == "MVNA") {
+// 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 
-	$advanced_features = $db_class1->getValueAsf("SELECT `advanced_features` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-}
+// 	$advanced_features = $db_class1->getValueAsf("SELECT `advanced_features` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
+// }
 
 if ($system_package == "N/A" || $system_package == "") {
 	$package_features = "all";
@@ -699,12 +700,12 @@ $originalAccessRole = $access_role;
 $originalSystemPackage = $system_package;
 
 $user_type = ($user_type == 'SADMIN') ? 'ADMIN' : $user_type;
-$access_role = ($user_type == 'SADMIN') ? 'admin' : $access_role;
+$access_role = ($user_type == 'SADMIN') ? 'ADMIN' : $access_role;
 $system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
 
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
-// var_dump($system_package);
+// var_dump($query_results_drop1);
 foreach ($query_results_drop1['data'] as $row) {
 	if ($row[menu_item] == 3) {
 		$x_non_admin[] = $row[module_name]; // Non Admin Roles
@@ -712,7 +713,9 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row[module_name]; // Retuns base access
 	}
 }
+
 // echo '------------<br/>';
+// var_dump($x);
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
@@ -722,14 +725,17 @@ foreach ($x as $keyX => $valueX) {
 			}
 		}
 	}
-	if ($package_functions->getPageFeature($valueX, $system_package) == '0') { 
+	if ($package_functions->getPageFeature($valueX, $system_package) == '0') {
 		try {
 			unset($x[$keyX]);
 		} catch (Exception $e) {
-		}
+		}	
 	}
+	// var_dump($x);
 }
 // echo '------------<br/>';
+
+array_push($x,"change_portal");
 // var_dump($x);
 /// Non Admin Modules
 foreach ($x_non_admin as $keyXn => $valueXn) {
@@ -744,7 +750,6 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 // echo '------------<br/>';
 // var_dump($x);
 $allowed_pages = $x;
-//echo $system_package;
 
 $module_ids = join('", "', $x);
 $suspended = false;
@@ -868,6 +873,7 @@ foreach ($query_results_mod['data'] as $row1) {
 	if ($module_name == 'service_area' && !$hospitality_feature) {
 		continue;
 	}
+
 
 	//===================================
 	//Distributor Network type - Private or guest
@@ -1199,6 +1205,7 @@ if ($suspended) {
 		//$query_ex_log=mysql_query($log_query);
 
 	} else {
+		var_dump($system_package); die;
 		$redirect_url = $global_base_url; //index".$extension;$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
 		// $db->addLogs($user_name, 'ERROR',$user_type,'login', 'Browse',0,'2000',$redirect_url);
 		$db_class1->userErrorLog('2000', $user_name, 'script - ' . $script);
@@ -1992,14 +1999,16 @@ else{
 						echo $log_img;
 						echo $logo_title;
 					}
-					if($originalUserType == 'SADMIN') {
+
+					
+					if($_SESSION['SADMIN'] == 'SADMIN') {
 						//./change_portal
 					?>
 					<div>
 						<ul class="topnav">
-							<li><a href="?section=ADMIN">Admin</a></li>
-							<li><a href="?section=MNO">Operations</a></li>
-							<li><a href="?section=PROVISIONING">Provisioning</a></li>
+							<li><a href="./change_portal?section=ADMIN">Admin</a></li>
+							<li><a href="./change_portal?section=MNO">Operations</a></li>
+							<li><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
 						</ul>
 					</div>
 					<?php } ?>

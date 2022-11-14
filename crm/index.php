@@ -62,7 +62,10 @@ if(isset($_REQUEST['acs'])){
 	$_SESSION['login'] = 'no';
 }
 
-if($_SESSION['login'] == 'yes'){
+// var_dump($_SESSION['login']);
+// echo '=<<<<>>>>-';die;
+
+if($_SESSION['login'] == 'yes' && !isset($_GET['auto_login'])){
 
 
 	$user_name = $_SESSION['user_name'];

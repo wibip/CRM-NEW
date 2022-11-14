@@ -33,7 +33,6 @@ class SystemPackageOne
 
             $page_ar = $this->dbT->getValueAsf($q1);
             $page_re = json_decode($page_ar, true);
-
             if (in_array($page, $page_re)) {
                 return '1';
             } else {

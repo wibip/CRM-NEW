@@ -31,6 +31,8 @@ $user_name = $_SESSION['user_name'];
   unset($_SESSION['full_name_old']);
   unset($_SESSION['remote']);
   unset($_SESSION['ori_user_uname']);
+
+  unset($_SESSION['SADMIN']);
 	setcookie('timeout', '', 0, '/'); 
 	session_write_close();
 	setcookie(session_name(),'',0,'/');
