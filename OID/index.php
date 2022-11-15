@@ -3,7 +3,7 @@ error_log('-3');
 error_log(json_encode($_REQUEST));
 require 'vendor/autoload.php';
 require 'cred.php';
-// ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 // ini_set('display_startup_errors', 1);
 // error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 
