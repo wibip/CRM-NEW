@@ -35,6 +35,11 @@ require_once 'classes/CommonFunctions.php';
 <!--    <link rel="stylesheet" href="css/bootstrapValidator.css"/> -->
 <link rel="stylesheet" type="text/css" href="css/formValidation.css">
 <link rel="stylesheet" href="css/tablesaw.css?v1.0">
+<style>
+.table_row {
+    vertical-align: top !important;
+}
+</style>
 <!-- Add jQuery library -->
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
@@ -62,6 +67,15 @@ if (isset($_GET['t'])) {
 } else {
     $tab8 = "set";
 }
+
+	$priority_zone_array = array(
+									"America/New_York",
+									"America/Chicago",
+									"America/Denver",
+									"America/Los_Angeles",
+									"America/Anchorage",
+									"Pacific/Honolulu",
+								);
 
 require_once './classes/systemPackageClass.php';
 $package_functions = new package_functions();
@@ -123,8 +137,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                     $mno_address_2 = $db->escapeDB(trim($_POST['mno_address_2']));
                     $mno_address_3 = $db->escapeDB(trim($_POST['mno_address_3']));
                     $mno_mobile_1 = $db->escapeDB(trim($_POST['mno_mobile_1']));
-                    $mno_mobile_2 = $db->escapeDB(trim($_POST['mno_mobile_2']));
-                    $mno_mobile_3 = $db->escapeDB(trim($_POST['mno_mobile_3']));
                     $mno_country = trim($_POST['mno_country']);
                     $mno_state = $db->escapeDB(trim($_POST['mno_state']));
                     $mno_zip_code = trim($_POST['mno_zip_code']);
@@ -201,8 +213,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                         `state_region`='$mno_state',
                                         `zip`='$mno_zip_code',
                                         `phone1`='$mno_mobile_1',
-                                        `phone2`='$mno_mobile_2',
-                                        `phone3`='$mno_mobile_3',
                                         `timezones`='$mno_time_zone',
                                         `aaa_data`='$aaa_data_op'
                                         WHERE `mno_id`='$edit_mno_id'";
@@ -603,8 +613,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                 `state_region`,
                                 `zip`,
                                 `phone1`,
-                                `phone2`,
-                                `phone3`,
                                 `timezones`,
                                 `is_enable`,
                                 `create_date`,
@@ -624,8 +632,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                     '$mno_state',
                                     '$mno_zip_code',
                                     '$mno_mobile_1',
-                                    '$mno_mobile_2',
-                                    '$mno_mobile_3',
                                     '$mno_time_zone',
                                     '2',
                                     NOW(),
@@ -1674,15 +1680,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                         <!-- /controls -->
                                                     </div>
                                                     <!-- /control-group -->
-                                                    <!-- /control-group -->
-                                                    <div class="control-group">
-                                                        <label class="control-label" for="mno_account_name">BI System Name<font color="#FF0000"></font></sup></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                                <input class="span4 form-control form-control" id="mno_account_name" placeholder="Frontier DMZ" name="mno_account_name" type="text" value="<?php echo$get_edit_mno_description;?>">
-                                                        </div>
-                                                        <!-- /controls -->
-                                                    </div>
-                                                    <!-- /control-group -->
                                                     
                                                     <?php
                                                     $mno_operator_check="SELECT p.product_code,p.`product_name`,c.options
@@ -1892,101 +1889,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                             });
                                                         });
                                                         </script>
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="mno_mobile">Phone Number 2<sup><font color="#FF0000"></font></sup></label>
-                                                            <div class="controls col-lg-5 form-group">
-
-                                                                <input class="span4 form-control" id="mno_mobile_2" name="mno_mobile_2" type="text" placeholder="xxx-xxx-xxxx" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_phone2?>" autocomplete="off" >
-                                                            </div>
-                                                        </div>
-
-                                                        <script type="text/javascript">
-
-                                                            $(document).ready(function() {
-                                                                $('#mno_mobile_2').focus(function(){
-                                                                    $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
-                                                                });
-                                                                $('#mno_mobile_2').keyup(function(){
-                                                                    $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
-                                                                });
-                                                                $("#mno_mobile_2").keydown(function (e) {
-                                                                    var mac = $('#mno_mobile_2').val();
-                                                                    var len = mac.length + 1;
-                                                                    if((e.keyCode == 8 && len == 8) ||(e.keyCode == 8 && len == 4)){
-                                                                        mac1 = mac.replace(/[^0-9]/g, '');
-                                                                    }
-                                                                    else{
-                                                                        return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3) + '-' + $(this).val().substr(7,4);
-                                                                    }
-                                                                    // Allow: backspace, delete, tab, escape, enter, '-' and .
-                                                                    if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                                                                                // Allow: Ctrl+A, Command+A
-                                                                            (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                // Allow: Ctrl+C, Command+C
-                                                                            (e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                // Allow: Ctrl+x, Command+x
-                                                                            (e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                // Allow: Ctrl+V, Command+V
-                                                                            (e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                // Allow: home, end, left, right, down, up
-                                                                            (e.keyCode >= 35 && e.keyCode <= 40)) {
-                                                                        // let it happen, don't do anything
-                                                                        return;
-                                                                    }
-                                                                    // Ensure that it is a number and stop the keypress
-                                                                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                                                                        e.preventDefault();
-                                                                    }
-                                                                });
-                                                            });
-                                                            </script>
-                                                            <div class="control-group">
-                                                                <label class="control-label" for="mno_mobile">Phone Number 3<sup><font color="#FF0000"></font></sup></label>
-                                                                <div class="controls col-lg-5 form-group">
-                                                                    <input class="span4 form-control" id="mno_mobile_3" name="mno_mobile_3" type="text" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_phone3?>" autocomplete="off">
-                                                                </div>
-                                                            </div>
-
-                                                            <script type="text/javascript">
-                                                                $(document).ready(function() {
-                                                                    $('#mno_mobile_3').focus(function(){
-                                                                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
-                                                                    });
-                                                                    $('#mno_mobile_3').keyup(function(){
-                                                                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'))
-                                                                    });
-                                                                    $("#mno_mobile_3").keydown(function (e) {
-                                                                        var mac = $('#mno_mobile_3').val();
-                                                                        var len = mac.length + 1;
-                                                                        if((e.keyCode == 8 && len == 8) ||(e.keyCode == 8 && len == 4)){
-                                                                            mac1 = mac.replace(/[^0-9]/g, '');
-                                                                        }
-                                                                        else{
-                                                                            return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3) + '-' + $(this).val().substr(7,4);
-                                                                            }
-                                                                        // Allow: backspace, delete, tab, escape, enter, '-' and .
-                                                                        if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                                                                                    // Allow: Ctrl+A, Command+A
-                                                                                (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                    // Allow: Ctrl+C, Command+C
-                                                                                (e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                    // Allow: Ctrl+x, Command+x
-                                                                                (e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                    // Allow: Ctrl+V, Command+V
-                                                                                (e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-                                                                                    // Allow: home, end, left, right, down, up
-                                                                                (e.keyCode >= 35 && e.keyCode <= 40)) {
-                                                                            // let it happen, don't do anything
-                                                                            return;
-                                                                        }
-                                                                        // Ensure that it is a number and stop the keypress
-                                                                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                                                                            e.preventDefault();
-                                                                        }
-                                                                    });
-                                                                });
-                                                            </script>
-
                                                             <div class="control-group">
                                                                 <label class="control-label" for="mno_timezone">Time Zone<sup><font color="#FF0000"></font></sup></label>
                                                                 <div class="controls col-lg-5 form-group">
@@ -2071,24 +1973,31 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                    $key_query = "SELECT m.mno_description,m.mno_id,u.full_name, u.email , u.verification_number
+                                                                    $key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email , u.verification_number
                                                                                     FROM exp_mno m, admin_users u
                                                                                     WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='admin'
                                                                                     GROUP BY m.mno_id
                                                                                     ORDER BY mno_description ";
                                                                     $query_results = $db->selectDB($key_query);
+                                                                    // var_dump($query_results);
                                                                     foreach ($query_results['data'] as $row) {
                                                                         $mno_description = $row[mno_description];
                                                                         $mno_id = $row[mno_id];
                                                                         $full_name = $row[full_name];
                                                                         $email = $row[email];
-                                                                        $s= $row[s];
-                                                                        $is_enable= $row[is_enable];
-                                                                        $icomm_num=$row[verification_number];
+                                                                        // $s= $row[s];
+                                                                        // $is_enable= $row[is_enable];
+                                                                        // $icomm_num=$row[verification_number];
+                                                                        $api_profiles = json_decode($row['features']);
+                                                                        $show_profile = "";
+                                                                        foreach($api_profiles as $api_profile) {
+                                                                            $profile = $db->getValueAsf("SELECT `api_profile` as f FROM `exp_locations_ap_controller` WHERE `id`=".$api_profile);
+                                                                            $show_profile .= $profile."<br/>";
+                                                                        }
                                                                         echo '<tr>
-                                                                        <td> '.$mno_description.' </td>
-                                                                        <td> '.trim($ap_c, ",").' </td>	';
-                                                                        echo '<td> '.
+                                                                        <td class="table_row"> '.$mno_description.' </td>
+                                                                        <td> '.$show_profile.' </td>';
+                                                                        echo '<td class="table_row"> '.
 
                                                                             //******************************** Edit ************************************
                                                                             '<a href="javascript:void();" id="EDITMNOACC_'.$mno_id.'"  class="btn btn-small btn-info">
@@ -2113,7 +2022,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                             // if($count_records_exi == 0){
 
                                                                             //*********************************** Remove  *****************************************
-                                                                            echo '<td><a href="javascript:void();" id="REMMNOACC_'.$mno_id.'"  class="btn btn-small btn-danger">
+                                                                            echo '<td class="table_row"><a href="javascript:void();" id="REMMNOACC_'.$mno_id.'"  class="btn btn-small btn-danger">
 
                                                                             <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
 

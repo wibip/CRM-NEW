@@ -120,6 +120,15 @@ if ($wag_ap_name != 'NO_PROFILE') {
 		} 
 	}
 
+		$priority_zone_array = array(
+									"America/New_York",
+									"America/Chicago",
+									"America/Denver",
+									"America/Los_Angeles",
+									"America/Anchorage",
+									"Pacific/Honolulu",
+								);
+
 	$base_portal_folder = trim($db->setVal('portal_base_folder', 'ADMIN'), "/");
 	$base_url = trim($db->setVal('portal_base_url', 'ADMIN'), "/");
 	$sf_apidata = json_decode($db->setVal('snapforce', $user_distributor), true);

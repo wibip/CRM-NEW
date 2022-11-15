@@ -1409,3 +1409,7 @@ table.fc-border-separate {
     background-position: 0px -489px !important;
     background-size: 550px !important;
 }
+
+.table_row {
+    vertical-align: top !important;
+}

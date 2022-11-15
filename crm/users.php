@@ -75,13 +75,13 @@ $page = 'User';
 	}
 
 	$priority_zone_array = array(
-    "America/New_York",
-    "America/Chicago",
-    "America/Denver",
-    "America/Los_Angeles",
-    "America/Anchorage",
-    "Pacific/Honolulu",
-);
+									"America/New_York",
+									"America/Chicago",
+									"America/Denver",
+									"America/Los_Angeles",
+									"America/Anchorage",
+									"Pacific/Honolulu",
+								);
 
 function userUpdateLog($user_id, $action_type, $action_by,$db)
 {
