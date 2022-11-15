@@ -1610,7 +1610,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                     <?php
                                     
                                      if($user_type == 'ADMIN'){ ?>
-                                        <li <?php if(isset($tab8)){?>class="active" <?php }?>><a href="#active_operations" data-toggle="tab">Active Operations</a></li>
+                                        <li <?php if(isset($tab8)){?>class="active" <?php }?>><a href="#active_operations" data-toggle="tab">Manage Operations</a></li>
                                     <?php }
 										if($user_type == 'ADMIN'){
 									?>

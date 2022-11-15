@@ -1093,7 +1093,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 								<div class="widget-content">
 									<div class="tabbable">
 										<ul class="nav nav-tabs newTabs">
-											<li <?php if (isset($tab1) ) { ?>class="active" <?php } ?>><a href="#show_clients" data-toggle="tab">Active Clients</a></li>
+											<li <?php if (isset($tab1) ) { ?>class="active" <?php } ?>><a href="#show_clients" data-toggle="tab">Manage Clients</a></li>
 											<li <?php if (isset($tab2) || isset($tab3)) { ?>class="active" <?php } ?>><a href="#create_clients" data-toggle="tab"> <?=(isset($tab3) ? "Update" : "Create")?> Clients</a></li>
 										</ul>
 										<br>

@@ -252,8 +252,8 @@ $_SESSION['FORM_SECRET'] = $secret;
 							<div class="widget-content">
 								<div class="tabbable">
 									<ul class="nav nav-tabs">
-										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Active Profiles</a></li>
-										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Add Profiles</a></li>	
+										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Manage Profiles</a></li>
+										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Create Profiles</a></li>	
 									</ul>
 									<br>
 									<div class="tab-content">
@@ -295,10 +295,8 @@ $_SESSION['FORM_SECRET'] = $secret;
 													<div class="controls col-lg-5 form-group">
 															<select class="span4 form-control" name="edit_ap_controller_name" id="version" required="required">
 																<option value="">Select Version</option>
-																<option value="APV1" <?=($edit_ap_control_name == "APV1" ? "selected" : "")?>>BI API v1</option>
-																<option value="APV2" <?=($edit_ap_control_name == "APV2" ? "selected" : "")?>>BI API v2</option>
-																<option value="APV3" <?=($edit_ap_control_name == "APV3" ? "selected" : "")?>>BI API v3</option>
-																<option value="APV4" <?=($edit_ap_control_name == "APV4" ? "selected" : "")?>>BI API v4</option>
+																<option value="APV1" <?=($edit_ap_control_name == "APV1" ? "selected" : "")?>>API v1</option>
+																<option value="APV2" <?=($edit_ap_control_name == "APV2" ? "selected" : "")?>>API v2</option>
 																<?php
 															// 		$key_query = "SELECT brand FROM `exp_locations_ap_controller_model` ORDER BY brand";
 																
@@ -465,20 +463,8 @@ $_SESSION['FORM_SECRET'] = $secret;
                                                         <div class="controls col-lg-5 form-group">
                                      							<select class="span4 form-control" name="version" id="version" required="required">
                                                                     <option value="">Select Version</option>
-																	<option value="APV1">BI API v1</option>
-																	<option value="APV2">BI API v2</option>
-																	<option value="APV3">BI API v3</option>
-																	<option value="APV4">BI API v4</option>
-																	<?php
-																// 		$key_query = "SELECT brand FROM `exp_locations_ap_controller_model` ORDER BY brand";
-																	
-																// $query_results=$db->selectDB($key_query);
-																// foreach($query_results['data'] AS $row){
-																// 	$brand = $row['brand'];									
-									
-																// 	echo '<option value="'.$brand.'">'.$brand.'</option>';
-																// }
-																?>
+																	<option value="APV1">API v1</option>
+																	<option value="APV2">API v2</option>
 																</select>
                                                           </div>
                                                     </div>
