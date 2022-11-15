@@ -180,6 +180,7 @@ if(isset($_POST['api_update'])){
 		$edit_wag=2;
 		$wag_secret=$_POST['update_wag_secret'];
 		if($wag_secret==$_SESSION['FORM_SECRET']){
+			$profile_id = $_POST['profile_id'];
 			$update_wag_name=$_POST['edit_ap_controller_name'];
 			$edit_api_profile_name=$_POST['edit_api_profile'];
 			$update_wag_url=trim($_POST['edit_api_url']);
@@ -199,7 +200,7 @@ if(isset($_POST['api_update'])){
 															`api_url`='$update_wag_url',
 															`api_username`='$update_wag_uname',
 															`api_password`='$update_wag_pass'
-															WHERE `controller_name`='$update_wag_name'";
+															WHERE `id`='$profile_id'";
 
 			$update_wag=$db->execDB($update_wag_q);
 			$edit_ap_control_name = $update_wag_name;
@@ -280,6 +281,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 									?>
 										<form onkeyup="admin_updatefn();" onchange="admin_updatefn();" class="form-horizontal" method="post" action="?t=1">
 											<input type="hidden" name="t" value="1">
+											<input type="hidden" name="profile_id" id="profile_id" value="<?=$edit_controller?>" />
 											<?php
 											echo '<input type="hidden" name="update_wag_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
 											?>
@@ -294,7 +296,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 													<label class="control-label" for="mg_product_code_1">Version<font color="#FF0000"></font></label>
 													<div class="controls col-lg-5 form-group">
 															<select class="span4 form-control" name="edit_ap_controller_name" id="version" required="required">
-																<option value="">Select Version</option>
+																<option value="">Select Version2</option>
 																<option value="APV1" <?=($edit_ap_control_name == "APV1" ? "selected" : "")?>>API v1</option>
 																<option value="APV2" <?=($edit_ap_control_name == "APV2" ? "selected" : "")?>>API v2</option>
 																<?php
