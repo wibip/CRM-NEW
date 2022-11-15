@@ -12,10 +12,10 @@ $oidc = new Jumbojett\OpenIDConnectClient($issuer, $cid, $secret);
 error_log('0');
 // added by john - this is the scope that other apps are using, you need to send groups to receive them
 
-$oidc->addScope('email');
+$oidc->addScope('profile');
 $oidc->setRedirectURL("https://crm-pam.spwifi.arrisi.com/OID");
 $oidc->authenticate();
-$name = $oidc->requestUserInfo('email');
+$name = $oidc->requestUserInfo('profile');
 
 // $oidc->addScope($scope);
 var_dump($name);die;
