@@ -8,7 +8,7 @@ require 'cred.php';
 // error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 
 $oidc = new Jumbojett\OpenIDConnectClient($issuer, $cid, $secret);
-var_dump($oidc);die;
+
 error_log('0');
 // added by john - this is the scope that other apps are using, you need to send groups to receive them
 $oidc->addScope($scope);
@@ -17,7 +17,7 @@ $oidc->authenticate();
 error_log('2');
 $oidc->requestUserInfo('sub');
 error_log('3');
-
+var_dump($oidc);die;
 $session = array();
 error_log('4');
 foreach($oidc as $key=> $value) {
