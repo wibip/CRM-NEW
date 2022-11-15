@@ -14,10 +14,10 @@ error_log('0');
 $oidc->addScope($scope);
 error_log('1');
 $oidc->authenticate();
+var_dump($oidc);die;
 error_log('2');
 $oidc->requestUserInfo('sub');
 error_log('3');
-var_dump($oidc);die;
 $session = array();
 error_log('4');
 foreach($oidc as $key=> $value) {
