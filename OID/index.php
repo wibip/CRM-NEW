@@ -13,7 +13,7 @@ error_log('0');
 // added by john - this is the scope that other apps are using, you need to send groups to receive them
 
 $oidc->addScope('email');
-$oidc->setRedirectURL("https://crm-pam.spwifi.arrisi.com/OID/index.php");
+$oidc->setRedirectURL("https://crm-pam.spwifi.arrisi.com/OID");
 $oidc->authenticate();
 $name = $oidc->requestUserInfo('email');
 
