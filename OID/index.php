@@ -12,9 +12,10 @@ $oidc = new Jumbojett\OpenIDConnectClient($issuer, $cid, $secret);
 error_log('0');
 
 $oidc->addScope($scope);
-var_dump($oidc);die;
+
 error_log('1');
 $test = $oidc->authenticate();
+var_dump($test);die;
 error_log('2');
 $oidc->requestUserInfo('sub');
 error_log('3');
