@@ -9,6 +9,7 @@ $oidc = new Jumbojett\OpenIDConnectClient($issuer, $cid, $secret);
 error_log('0');
 // added by john - this is the scope that other apps are using, you need to send groups to receive them
 $oidc->addScope($scope);
+var_dump($oidc);die;
 error_log('1');
 $oidc->authenticate();
 error_log('2');

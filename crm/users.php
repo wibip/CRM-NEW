@@ -1478,6 +1478,12 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 															echo '<input type="hidden" name="form_secret" id="form_secret" value="' . $_SESSION['FORM_SECRET'] . '" />';
 															?>
 															<div class="control-group">
+																<label class="control-label" for="access_role_name">Role Type</label>
+																<div class="controls form-group col-lg-5">
+																	<input class="form-control span2" id="access_role_name" name="access_role_name" type="text">
+																</div>
+															</div>
+															<div class="control-group">
 																<label class="control-label" for="access_role_name">Access Role Name</label>
 																<div class="controls form-group col-lg-5">
 																	<input class="form-control span2" id="access_role_name" name="access_role_name" type="text">
@@ -1490,9 +1496,30 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	<select class="form-control span4" multiple="multiple" id="my_select" name="my_select[]">
 																		<option value="" disabled="disabled"> Choose Module(s)</option>
 																		<?php
-																		if ($user_type == 'SUPPORT') {
+																		// if ($user_type == 'SUPPORT') {
+																		// 	if ($system_package == 'N/A') {
+																		// 		$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1";
+																		// 		$modules1 = $db->selectDB($q1);
+																		// 		$modules = $modules1['data'];
+																		// 	} else {
+																		// 		$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`<>'profile' AND a.`module_name` <>'users' AND a.is_enable=1";
+																		// 		$modules1 = $db->selectDB($q11);
+																		// 		$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
+																		// 		$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
+																		// 		$modules2 = json_decode($allow_pages);
+																		// 		foreach ($modules1['data'] as $key => $value) {
+																		// 			if (!in_array($value['module_name'], $modules2)) {
+
+																		// 				unset($modules1['data'][$key]);
+																		// 			}
+																		// 		}
+																		// 		$modules = $modules1['data'];
+																		// 	}
+																		// } else {
+
 																			if ($system_package == 'N/A') {
 																				$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1";
+
 																				$modules1 = $db->selectDB($q1);
 																				$modules = $modules1['data'];
 																			} else {
@@ -1503,33 +1530,14 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																				$modules2 = json_decode($allow_pages);
 																				foreach ($modules1['data'] as $key => $value) {
 																					if (!in_array($value['module_name'], $modules2)) {
-
 																						unset($modules1['data'][$key]);
 																					}
 																				}
 																				$modules = $modules1['data'];
 																			}
-																		} else {
+																		// }
 
-																			if ($system_package == 'N/A') {
-																				$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1";
 
-																				$modules1 = $db->selectDB($q1);
-																				$modules = $modules1['data'];
-																			} else {
-																				$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`<>'profile' AND a.`module_name` <>'users' AND a.is_enable=1";
-																				$modules1 = $db->selectDB($q11);
-																				$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
-																				$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
-																				$modules2 = json_decode($allow_pages);
-																				foreach ($modules1['data'] as $key => $value) {
-																					if (!in_array($value['module_name'], $modules2)) {
-																						unset($modules1['data'][$key]);
-																					}
-																				}
-																				$modules = $modules1['data'];
-																			}
-																		}
 																		foreach ($modules as $row) {
 																			$module_name = $row[module_name];
 																			$module = $row[name_group];
