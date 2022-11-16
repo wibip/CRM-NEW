@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors', 1);
 error_log('-3');
 error_log(json_encode($_REQUEST));
 require 'vendor/autoload.php';
