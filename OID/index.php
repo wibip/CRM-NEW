@@ -13,7 +13,7 @@ $oidc->addScope($scope);
 
 error_log('1');
 $oidc->authenticate();
-var_dump($oidc);die;
+// var_dump($oidc);die;
 error_log('2');
 $oidc->requestUserInfo('sub');
 error_log('3');
