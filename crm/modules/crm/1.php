@@ -105,6 +105,12 @@ if (!empty($arrayo)) {
                 width: 100%;
                 padding-left: 20px;
             }
+            .form-horizontal .create_l .controls, .form-horizontal .create_le .controls, .form-horizontal .create_r .controls, .form-horizontal .create_re .controls, .fieldStep .controls {
+                margin-left: 0px !important;
+            }
+            .actions.clearfix{
+                width: 100%;
+            }
         </style>
         <div>
             <div class="content clearfix">
