@@ -53,6 +53,11 @@ $page = 'User';
 			color: #aaa;
 			cursor: text;
 		}
+		.fieldgroup{
+			float: left;
+			width: auto;
+			margin-right: 3em;
+		}
 	</style>
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
@@ -82,6 +87,12 @@ $page = 'User';
 									"America/Anchorage",
 									"Pacific/Honolulu",
 								);
+
+$role_edit_id  = 0;
+$role_array = [];
+$other_array = [];
+$account_array = [];
+$role_name = "";
 
 function userUpdateLog($user_id, $action_type, $action_by,$db)
 {
@@ -603,8 +614,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	//create and assign Roles
 	elseif (isset($_POST['assign_roles_submita'])) {
 		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { //refresh validate
+			if($role_edit_id == 0) {
 				$access_role_name = trim($_POST['access_role_name']);
-				//	$description = trim($_POST['description']);
+				$role_type = $_POST['role_type'];
+				$module_type = ($role_type== 'sadmin') ? 'other' : 'default';
 				$access_role_id = time() . $user_type . $user_distributor;
 				if (strtoupper($access_role_name) == "ADMIN") {
 					$message_response = $message_functions->showMessage('user_admin_not_allow');
@@ -612,21 +625,41 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 					// $msg = $message_functions->showMessage('user_admin_not_allow');
 					$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 				} else {
-					$query0 = "INSERT INTO `admin_access_roles` (`access_role`,`description`,`distributor`,`create_user`,`create_date`)
-				 VALUES ('$access_role_id', '$access_role_name', '$user_distributor', '$user_name',now())";
+					$query0 = "INSERT INTO `admin_access_roles` (`access_role`,`description`,`distributor`,`role_type` ,`create_user`,`create_date`)
+				 VALUES ('$access_role_id', '$access_role_name', '$user_distributor', '$role_type', '$user_name',now())";
 					foreach ($_POST['my_select'] as $selectedOption) {
 						$module_name = $selectedOption;
 						$query1 = "REPLACE INTO `admin_access_roles_modules`
-					(`access_role`, `module_name`, `distributor` , `create_user`, `create_date`)
-					VALUES ('$access_role_id', '$module_name', '$user_distributor', '$user_name', now())";
+					(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
+					VALUES ('$access_role_id', '$module_name', '$user_distributor', '$module_type', '$user_name', now())";
 						$result1 = $db->execDB($query1);
 					}
+
+					if($role_type == 'sadmin') {
+						foreach ($_POST['other_modules'] as $selectedOption) {
+							$other_name = $selectedOption;
+							$queryOther = "REPLACE INTO `admin_access_roles_modules`
+											(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
+											VALUES ('$access_role_id', '$other_name', '$user_distributor', '$module_type', '$user_name', now())";
+							$resultOther = $db->execDB($queryOther);
+						}
+
+						foreach ($_POST['operations'] as $selectedOperation) {
+							$operationId = $selectedOperation;
+							$queryOperation = "REPLACE INTO `admin_access_account`
+											(`access_role`, `operation_id`, `create_user`, `create_date`)
+											VALUES ('$access_role_id', '$operationId', '$user_name', now())";
+							$resultOperation = $db->execDB($queryOperation);
+						}
+					}
+					
+
 					if ($result1===true) {
 						$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 						$result0 =$db->execDB($query0);
 						$query12 = "INSERT INTO `admin_access_roles_modules`
-									(`access_role`, `module_name`, `distributor` , `create_user`, `create_date`)
-									VALUES ('$access_role_id', 'profile', '$user_distributor', '$user_name', now())";
+									(`access_role`, `module_name`, `distributor` ,`module_type`, `create_user`, `create_date`)
+									VALUES ('$access_role_id', 'profile', '$user_distributor', '$module_type', '$user_name', now())";
 						$result12 =$db->execDB($query12);
 					}
 
@@ -646,6 +679,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 					}
 				}
+			}else {
+
+			}
+				
 		} //key validation
 		else {
 			$message_response = $message_functions->showMessage('transection_fail', '2004');
@@ -726,10 +763,34 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	//Load edit role
 	elseif (isset($_GET['role_ID'])) {
 		if ($_SESSION['FORM_SECRET'] == $_GET['form_secreat']) {
+			$role_edit_id = $_GET['role_edit_id'];
 			$role_id = $_GET['role_ID'];
-			$role_array;
-			$i = 0;
-			$role_result = $db->selectDB("SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role`='$role_id'");
+			$i = $a = $o = 0;
+
+			//get role name and type
+			$roleData = $db->selectDB("SELECT `description`,role_type FROM `admin_access_roles` WHERE `id`='$role_edit_id'");
+			$role_name = $roleData['data'][0]['description'];
+			$roleType = $roleData['data'][0]['role_type'];
+
+			//check role type
+			if($roleType == "sadmin"){
+				//get selected other modules
+				$other_result = $db->selectDB("SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role`='$role_id' AND module_type='other'");
+				foreach($other_result['data'] AS $otherRole){
+					$other_array[$o] = $otherRole['module_name'];
+					$o++;
+				}
+
+				//get selected operation accounts
+				$account_result = $db->selectDB("SELECT `operation_id` FROM `admin_access_account` WHERE `access_role`='$role_id'");
+				foreach($account_result['data'] AS $account){
+					$account_array[$a] = $account['operation_id'];
+					$a++;
+				}
+			}
+
+			//get selected default modules
+			$role_result = $db->selectDB("SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role`='$role_id' AND module_type='default'");
 			foreach($role_result['data'] AS $role){
 				$role_array[$i] = $role['module_name'];
 				$i++;
@@ -1466,64 +1527,114 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														}
 													}
 												?>
-
-												<?php
-												if (!(isset($_GET['role_edit_id']))) {
-													?>
-
 													<form autocomplete="off" id="assign_roles_submit" name="assign_roles_submit" method="post" class="form-horizontal" action="?t=3">
 														<fieldset>
 															<div id="response_d3"></div>
 															<?php
-															echo '<input type="hidden" name="form_secret" id="form_secret" value="' . $_SESSION['FORM_SECRET'] . '" />';
+															echo '<input type="hidden" name="form_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'] .'" />';
+															echo '<input type="hidden" name="role_edit_id" id="role_edit_id" value="'.$role_edit_id.'" />';
 															?>
 															<div class="control-group">
-																<label class="control-label" for="access_role_name">Role Type</label>
+																<label class="control-label" for="role_type">Role Type</label>
 																<div class="controls form-group col-lg-5">
-																	<input class="form-control span2" id="access_role_name" name="access_role_name" type="text">
+																	<fieldset id="role_types">
+																		<div class="fieldgroup">
+																			<input type="radio" name="role_type" id="role_type" value="sadmin" <?=($roleType == 'sadmin' ? 'checked' : '')?>><label for= "sadmin">Super Admin</label>
+																		</div>
+																		<div class="fieldgroup">
+																			<input type="radio" name="role_type" id="role_type" value="nadmin" <?=($roleType == 'nadmin' ? 'checked' : '')?>><label for= "nadmin">Admin</label>
+																		</div>
+																	</fieldset>	
 																</div>
 															</div>
 															<div class="control-group">
 																<label class="control-label" for="access_role_name">Access Role Name</label>
 																<div class="controls form-group col-lg-5">
-																	<input class="form-control span2" id="access_role_name" name="access_role_name" type="text">
+																	<input class="form-control span2" id="access_role_name" name="access_role_name" type="text" value="<?=$role_name?>" <?=($role_edit_id != 0 ? "disabled" : "")?>>
 																</div>
 															</div>
 															<div class="control-group">
-																<label class="control-label" for="my_select">Modules</label>
+																<label class="control-label" for="my_select"><?=($_SESSION['SADMIN'] == 'SADMIN' ? "Admin " : "")?>Modules</label>
 
 																<div class="controls form-group col-lg-5">
 																	<select class="form-control span4" multiple="multiple" id="my_select" name="my_select[]">
 																		<option value="" disabled="disabled"> Choose Module(s)</option>
 																		<?php
-																		// if ($user_type == 'SUPPORT') {
-																		// 	if ($system_package == 'N/A') {
-																		// 		$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1";
-																		// 		$modules1 = $db->selectDB($q1);
-																		// 		$modules = $modules1['data'];
-																		// 	} else {
-																		// 		$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`<>'profile' AND a.`module_name` <>'users' AND a.is_enable=1";
-																		// 		$modules1 = $db->selectDB($q11);
-																		// 		$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
-																		// 		$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
-																		// 		$modules2 = json_decode($allow_pages);
-																		// 		foreach ($modules1['data'] as $key => $value) {
-																		// 			if (!in_array($value['module_name'], $modules2)) {
-
-																		// 				unset($modules1['data'][$key]);
-																		// 			}
-																		// 		}
-																		// 		$modules = $modules1['data'];
-																		// 	}
-																		// } else {
-
 																			if ($system_package == 'N/A') {
-																				$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1";
+																				$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`  NOT IN ('users','profile','change_portal') AND is_enable=1  ORDER BY module_name";
 
 																				$modules1 = $db->selectDB($q1);
 																				$modules = $modules1['data'];
 																			} else {
-																				$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`<>'profile' AND a.`module_name` <>'users' AND a.is_enable=1";
+																				$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`  NOT IN ('users','profile','change_portal') AND a.is_enable=1 ORDER BY module_name";
+																				$modules1 = $db->selectDB($q11);
+																				$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
+																				$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
+																				$modules2 = json_decode($allow_pages);
+																				foreach ($modules1['data'] as $key => $value) {
+																					if (!in_array($value['module_name'], $modules2)) {
+																						unset($modules1['data'][$key]);
+																					}
+																				}
+																				$modules = $modules1['data'];
+																			}
+																		// }
+
+																		foreach ($modules as $key => $row) {
+																			$module_name = $row[module_name];
+																			$module = $row[name_group];
+																			$selected = "";
+																			if (in_array($module_name, $role_array)) {
+																				$selected = "selected";
+																			} 
+																			echo "<option " . $selected . " value='" . $module_name . "'>" . $module . "</option>";
+																		}
+																		?>
+																	</select>
+																</div>
+																<!-- /controls -->
+															</div>
+															<!-- /control-group -->
+															
+															<div class="control-group" id="sadmin_operations">
+																<label class="control-label" for="my_select">Operations</label>
+
+																<div class="controls form-group col-lg-5">
+																	<select class="form-control span4" multiple="multiple" id="operations" name="operations[]">
+																		<option value="" disabled="disabled"> Choose Operation(s)</option>
+																		<?php
+																			$q12 = "SELECT id,full_name FROM admin_users WHERE user_type='MNO'";
+																			$operations = $db->selectDB($q12);
+																			foreach ($operations['data'] as $row) {
+																				$operation_id = $row['id'];
+																				$operation_name = $row['full_name'];
+																				$selected = "";
+																				if (in_array($operation_id, $account_array )) {
+																					$selected = "selected";
+																				} 
+																				echo "<option " . $selected . " value='" . $operation_id . "'>" . $operation_name . "</option>";
+																			}
+																		?>
+																	</select>
+																</div>
+																<!-- /controls -->
+															</div>
+															<!-- /control-group -->
+
+															<div class="control-group" id="sadmin-omodules">
+																<label class="control-label" for="my_select">Other Modules</label>
+
+																<div class="controls form-group col-lg-5">
+																	<select class="form-control span4" multiple="multiple" id="other_modules" name="other_modules[]">
+																		<option value="" disabled="disabled"> Choose Module(s)</option>
+																		<?php
+																			if ($system_package == 'N/A') {
+																				$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE (`user_type` = 'MNO' || `user_type` = 'PROVISIONING') AND `module_name`  NOT IN ('users','profile','change_portal') AND is_enable=1 ORDER BY module_name";
+
+																				$modules1 = $db->selectDB($q1);
+																				$modules = $modules1['data'];
+																			} else {
+																				$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE (a.`user_type` = 'MNO' || a.`user_type` = 'PROVISIONING') AND a.`module_name` NOT IN ('users','profile','change_portal') AND a.is_enable=1  ORDER BY module_name";
 																				$modules1 = $db->selectDB($q11);
 																				$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
 																				$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
@@ -1541,139 +1652,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																		foreach ($modules as $row) {
 																			$module_name = $row[module_name];
 																			$module = $row[name_group];
-																			if ($module_name == 'support' && $user_type == 'SUPPORT') {
-																				echo "<option value='" . $module_name . "' selected class='disabled'>" . $module . "</option>";
-																			} else {
-																				echo "<option value='" . $module_name . "'>" . $module . "</option>";
-																			}
-																		}
-																		?>
-																	</select>
-																</div>
-																<!-- /controls -->
-															</div>
-															<!-- /control-group -->
-															<div class="form-actions">
-																<button type="submit" name="assign_roles_submita" id="assign_roles_submita" class="btn btn-primary">Save</button>
-															</div>
-														</fieldset>
-													</form>
-
-													<script type="text/javascript">
-														$(document).ready(function() {
-															document.getElementById("assign_roles_submita").disabled = true;
-														});
-													</script>
-												<?php
-												}
-												if (isset($_GET['role_edit_id'])) {
-													?>
-													<form autocomplete="off" id="assign_roles_form" name="assign_roles_form" method="post" class="form-horizontal" action="?t=3">
-														<fieldset>
-															<div id="response_d3">
-															</div>
-															<?php
-															echo '<input type="hidden" name="form_secret" value="' . $_SESSION['FORM_SECRET'] . '" />';
-															?>
-															<script type="text/javascript">
-																function get_roles(role_ID) {
-																	window.location.href = "users.php?t=3&role_ID=" + role_ID + "&form_secreat=" + '<?php echo $secret; ?>' + "";
-																}
-															</script>
-															<div class="control-group">
-																<label class="control-label" for="access_role_field">Roles</label>
-																<div class="controls col-lg-5 form-group">
-																	<input type="hidden" name="access_role_field" id="access_role_field11" value="<?php echo $_GET['role_ID']; ?>">
-																	<select class="span4 form-control" name="access_role_field11" id="access_role_field" disabled="disabled" onchange="get_roles(this.value)">
-																		<option value="">Select Role</option>
-																		<?php
-																		if ($user_type == 'SUPPORT') {
-																			$key_query = "SELECT a.`access_role` ,a.description
-																			FROM `admin_access_roles` a , `admin_access_roles_modules` b
-																			WHERE a.`distributor` ='$user_distributor' AND a.`distributor`=b.`distributor` AND b.`module_name`='support' AND a.`access_role`=b.`access_role`
-																			GROUP BY a.`access_role`";
-																		} else {
-																			$key_query = "SELECT `access_role` ,description
-																					FROM `admin_access_roles`
-																					WHERE `distributor` ='$user_distributor'";
-																		}
-
-																		echo $key_query;
-																		$query_results=$db->selectDB($key_query);
-																		var_dump($query_results);
-  																		foreach($query_results['data'] AS $row){
-																			$tag_name = $row['access_role'];
-																			$description1 = $row[description];
-																			if ($role_id == $tag_name) {
-																				$selected = 'selected';
-																			} else {
-																				$selected = '';
-																			}
-																			echo '<option ' . $selected . ' value="' . $tag_name . '">' . $description1 . '</option>';
-																		}
-																		?>
-																	</select>
-																</div>
-															</div>
-
-															<div class="control-group">
-																<label class="control-label" for="my_select_roles">Modules</label>
-																<div class="controls col-lg-5 form-group">
-																	<select class="span4 form-control" multiple="multiple" id="my_select_roles" name="my_select_roles[]">
-																		<option value="" disabled="disabled"> Choose Module(s)</option>
-																		<?php
-																		if ($user_type == 'SUPPORT') {
-																			if ($system_package == 'N/A') {
-																				$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1";
-																				$modules1 = $db->selectDB($q1);
-																				$modules = $modules1['data'];
-																			} else {
-																				$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`<>'profile' AND a.`module_name` <>'users' AND a.is_enable=1";
-																				$modules1 = $db->selectDB($q11);
-																				$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
-																				$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
-																				$modules2 = json_decode($allow_pages);
-																				foreach ($modules1['data'] as $key => $value) {
-																					if (!in_array($value['module_name'], $modules2)) {
-																						unset($modules1['data'][$key]);
-																					}
-																				}
-																				$modules = $modules1['data'];
-																			}
-																		} else {
-																			if ($system_package == 'N/A') {
-																				$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`<>'profile' AND `module_name` <>'users' AND is_enable=1";
-
-																				$modules1 = $db->selectDB($q1);
-																				$modules = $modules1['data'];
-																			} else {
-																				$q1 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`<>'profile' AND a.`module_name` <>'users' AND a.is_enable=1";
-																				$modules1 = $db->selectDB($q1);
-																				$q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
-																				$allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
-
-																				$modules2 = json_decode($allow_pages);
-																				foreach ($modules1['data'] as $key => $value) {
-																					if (!in_array($value['module_name'], $modules2)) {
-																						unset($modules1['data'][$key]);
-																					}
-																				}
-																				$modules = $modules1['data'];
-																			}
-																		}
-																		foreach ($modules as $key => $row) {
-																			$module_name = $row[module_name];
-																			$module = $row[name_group];
-																			if (in_array($module_name, $role_array)) {
+																			$selected = "";
+																			if (in_array($module_name, $other_array)) {
 																				$selected = "selected";
-																				if ($module_name == 'support' && $user_type == 'SUPPORT') {
-																					$selected = "class='disabled' selected";
-																				}
-																			} else {
-																				$selected = "";
-																				if ($module_name == 'support' && $user_type == 'SUPPORT') {
-																					$selected = "class='disabled' selected";
-																				}
 																			}
 																			echo "<option " . $selected . " value='" . $module_name . "'>" . $module . "</option>";
 																		}
@@ -1685,25 +1666,18 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 															<!-- /control-group -->
 
 															<div class="form-actions">
-																<button type="submit" name="assign_rolesa" id="assign_rolesa" class="btn btn-primary" disabled="disabled">Save</button>
-																<button type="button" onclick="goto('?t=3')" class="btn btn-danger">Cancel</button>
-
+																<button type="submit" name="assign_roles_submita" id="assign_roles_submita" class="btn btn-primary">Save</button>
 															</div>
 														</fieldset>
 													</form>
 
 													<script type="text/javascript">
 														$(document).ready(function() {
-															var e = document.getElementById("access_role_field");
-															var manval = e.options[e.selectedIndex].value;
-															if (manval == '') {
-																document.getElementById("assign_rolesa").disabled = true;
-															} else {
-															}
+															document.getElementById("assign_roles_submita").disabled = true;
 														});
 													</script>
 
-												<?php } ?>
+
 												<div class="widget widget-table action-table">
 													<div class="widget-header">
 														<!-- <i class="icon-th-list"></i> -->
@@ -1932,6 +1906,16 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 							<?php echo $db -> validateField('list'); ?>
 						}
 					},
+					'operations[]': {
+						validators: {
+							<?php echo $db -> validateField('list'); ?>
+						}
+					},
+					'other_modules[]': {
+						validators: {
+							<?php echo $db -> validateField('list'); ?>
+						}
+					},
 					access_role_name: {
 						validators: {
 							<?php echo $db -> validateField('access_role_name'); ?> ,
@@ -1940,28 +1924,15 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 					}
 				}
 			}).on('status.field.bv', function(e, data) {
+				console.log(e);
+				// alert($('#assign_roles_submit').data('bootstrapValidator').isValid());
 				if ($('#assign_roles_submit').data('bootstrapValidator').isValid()) {
 					data.bv.disableSubmitButtons(false);
 				} else {
 					data.bv.disableSubmitButtons(true);
 				}
 			});
-			// Assign access Roles
-			$('#assign_roles_form').formValidation({
-				framework: 'bootstrap',
-				fields: {
-					access_role_field: {
-						validators: {
-							<?php echo $db -> validateField('dropdown'); ?>
-						}
-					},
-					'my_select_roles[]': {
-						validators: {
-							<?php echo $db -> validateField('multi_select'); ?>
-						}
-					}
-				}
-			});
+
 		});
 	</script>
 
@@ -2049,8 +2020,22 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	<script src="js/jquery.multi-select.js" type="text/javascript"></script>
 	<script>
 		$(document).ready(function() {
+			$('#sadmin_operations').hide();//sadmin_operations sadmin-omodules
+			$('#sadmin-omodules').hide();
 			$('#my_select').multiSelect(); 
 			$('#my_select_roles').multiSelect();
+			$('#other_modules').multiSelect(); 
+			$('#operations').multiSelect();
+
+			$('input[type=radio][name=role_type]').change(function() {
+				if($(this).val() == "sadmin"){
+					$('#sadmin_operations').show();
+					$('#sadmin-omodules').show();
+				} else {
+					$('#sadmin_operations').hide();
+					$('#sadmin-omodules').hide();
+				}
+			});
 		});
 	</script>
 

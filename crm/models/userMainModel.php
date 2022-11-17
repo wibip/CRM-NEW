@@ -350,21 +350,21 @@ class userMainModel
             $q = "SELECT au.id,au.user_name,au.full_name, au.access_role, au.user_type, au.user_distributor, au.email,au.is_enable,au.create_user
                             ,IF(!ISNULL(aar.description),aar.description,IF(au.access_role='admin','Admin','')) AS description
                             FROM admin_users au LEFT JOIN admin_access_roles aar ON au.access_role = aar.access_role
-                            WHERE (user_type = '$user_type' OR user_type = 'SADMIN') AND user_name<>'admin'";
+                            WHERE (user_type = '$user_type' OR user_type = 'SADMIN') AND user_name<>'admin' AND au.is_enable=1";
         } elseif ($user_type == 'SUPPORT' || $user_type == 'MNO') {
             $user_distributor = $data->user_distributor;
 
             $q = "SELECT a.id,a.user_name,a.full_name, a.access_role, a.user_type, a.user_distributor, a.email,a.is_enable ,a.create_user
               ,IF(!ISNULL(aar.description),aar.description,IF(a.access_role='admin','Admin','')) AS description
                 FROM admin_users a LEFT JOIN admin_access_roles aar ON a.access_role=aar.access_role, `admin_access_roles_modules` b
-                WHERE user_distributor = '$user_distributor' AND a.`access_role`=b.`access_role` AND b.`module_name`='support' OR user_distributor = '$user_distributor' AND a.`user_type`='SUPPORT' AND a.`access_role`<>'admin' AND user_name<>'$user_name'
+                WHERE user_distributor = '$user_distributor' AND a.`access_role`=b.`access_role` AND b.`module_name`='support' OR user_distributor = '$user_distributor' AND a.`user_type`='SUPPORT' AND a.`access_role`<>'admin' AND user_name<>'$user_name'  AND au.is_enable=1
                 GROUP BY `user_name`";
         } else {
             $user_distributor = $data->user_distributor;
 
             $q = "SELECT au.id,au.user_name,au.full_name, au.access_role, au.user_type, au.user_distributor, au.email,au.is_enable,au.create_user
             ,IF(!ISNULL(aar.description),aar.description,IF(au.access_role='admin','Admin','')) AS description
-            FROM admin_users au LEFT JOIN admin_access_roles aar ON au.access_role = aar.access_role where user_type IN ('$user_type','SUPPORT','TECH','PROVISIONING') AND user_distributor = '$user_distributor' AND user_name<>'$user_name'";
+            FROM admin_users au LEFT JOIN admin_access_roles aar ON au.access_role = aar.access_role where user_type IN ('$user_type','SUPPORT','TECH','PROVISIONING') AND user_distributor = '$user_distributor' AND user_name<>'$user_name'  AND au.is_enable=1";
         }
 
 
