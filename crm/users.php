@@ -678,7 +678,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						// $create_log->save('2001', $message_functions->showMessage('role_role_create_failed', '2001'), '');
 						$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 					}
-				}
+				} 
 			}else {
 
 			}
@@ -1673,7 +1673,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 													<script type="text/javascript">
 														$(document).ready(function() {
-															document.getElementById("assign_roles_submita").disabled = true;
+															// document.getElementById("assign_roles_submita").disabled = true;
 														});
 													</script>
 
@@ -1898,40 +1898,40 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			});
 
 			// Create access Roles
-			$('#assign_roles_submit').bootstrapValidator({
-				framework: 'bootstrap',
-				fields: {
-					'my_select[]': {
-						validators: {
-							<?php echo $db -> validateField('list'); ?>
-						}
-					},
-					'operations[]': {
-						validators: {
-							<?php echo $db -> validateField('list'); ?>
-						}
-					},
-					'other_modules[]': {
-						validators: {
-							<?php echo $db -> validateField('list'); ?>
-						}
-					},
-					access_role_name: {
-						validators: {
-							<?php echo $db -> validateField('access_role_name'); ?> ,
-							<?php echo $db -> validateField('not_require_special_character'); ?>
-						}
-					}
-				}
-			}).on('status.field.bv', function(e, data) {
-				console.log(e);
-				// alert($('#assign_roles_submit').data('bootstrapValidator').isValid());
-				if ($('#assign_roles_submit').data('bootstrapValidator').isValid()) {
-					data.bv.disableSubmitButtons(false);
-				} else {
-					data.bv.disableSubmitButtons(true);
-				}
-			});
+			// $('#assign_roles_submit').bootstrapValidator({
+			// 	framework: 'bootstrap',
+			// 	fields: {
+			// 		'my_select[]': {
+			// 			validators: {
+			// 				<?php echo $db -> validateField('list'); ?>
+			// 			}
+			// 		},
+			// 		'operations[]': {
+			// 			validators: {
+			// 				<?php echo $db -> validateField('list'); ?>
+			// 			}
+			// 		},
+			// 		'other_modules[]': {
+			// 			validators: {
+			// 				<?php echo $db -> validateField('list'); ?>
+			// 			}
+			// 		},
+			// 		access_role_name: {
+			// 			validators: {
+			// 				<?php echo $db -> validateField('access_role_name'); ?> ,
+			// 				<?php echo $db -> validateField('not_require_special_character'); ?>
+			// 			}
+			// 		}
+			// 	}
+			// }).on('status.field.bv', function(e, data) {
+			// 	console.log(e);
+			// 	// alert($('#assign_roles_submit').data('bootstrapValidator').isValid());
+			// 	if ($('#assign_roles_submit').data('bootstrapValidator').isValid()) {
+			// 		data.bv.disableSubmitButtons(false);
+			// 	} else {
+			// 		data.bv.disableSubmitButtons(true);
+			// 	}
+			// });
 
 		});
 	</script>
@@ -2020,8 +2020,19 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	<script src="js/jquery.multi-select.js" type="text/javascript"></script>
 	<script>
 		$(document).ready(function() {
-			$('#sadmin_operations').hide();//sadmin_operations sadmin-omodules
-			$('#sadmin-omodules').hide();
+			//sadmin_operations sadmin-omodules
+			<?php if($role_edit_id != 0 && $roleType == 'sadmin') { ?>
+					$('#sadmin_operations').show();
+					$('#sadmin-omodules').show();
+			<?php
+				} else {
+			?>
+					$('#sadmin_operations').hide();
+					$('#sadmin-omodules').hide();
+			<?php
+				}
+			?>
+			
 			$('#my_select').multiSelect(); 
 			$('#my_select_roles').multiSelect();
 			$('#other_modules').multiSelect(); 
