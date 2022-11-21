@@ -60,13 +60,17 @@ class CommonFunctions{
 
     }
 
-    public static function httpPost($url,$data)
+    public static function httpPost($url,$data,$json=false)
     {
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL,$url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        if($json==true) {
+            curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        }
+        
 
         // Receive server response ...
         //$header_parameters = "Content-Type: application/json;charset=UTF-8";

@@ -6,7 +6,8 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 if($url != '' && $username != '' && $password != ''){
     $data = json_encode(['username'=>$username, 'password'=>$password]);
-    $apiReturn = json_decode($CommonFunctions->httpPost($url,$data) , true);
+    // $payload = json_encode( array( "customer"=> $data ) );
+    $apiReturn = json_decode($CommonFunctions->httpPost($url,$data,true) , true);
     // var_dump($apiReturn);die;
     if($apiReturn['status'] == 'success'){
         echo 'true';
