@@ -636,7 +636,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						$query1 = "REPLACE INTO `admin_access_roles_modules`
 									(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
 									VALUES ('$access_role_id', '$module_name', '$user_distributor', 'default', '$user_name', now())";
-						var_dump($query1);
 						$result1 = $db->execDB($query1);
 					}
 
