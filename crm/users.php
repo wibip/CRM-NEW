@@ -1951,23 +1951,23 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			// 	fields: {
 			// 		'my_select[]': {
 			// 			validators: {
-			// 				<?php echo $db -> validateField('list'); ?>
+			// 				< ?php echo $db -> validateField('list'); ?>
 			// 			}
 			// 		},
 			// 		'operations[]': {
 			// 			validators: {
-			// 				<?php echo $db -> validateField('list'); ?>
+			// 				< ?php echo $db -> validateField('list'); ?>
 			// 			}
 			// 		},
 			// 		'other_modules[]': {
 			// 			validators: {
-			// 				<?php echo $db -> validateField('list'); ?>
+			// 				< ?php echo $db -> validateField('list'); ?>
 			// 			}
 			// 		},
 			// 		access_role_name: {
 			// 			validators: {
-			// 				<?php echo $db -> validateField('access_role_name'); ?> ,
-			// 				<?php echo $db -> validateField('not_require_special_character'); ?>
+			// 				< ?php echo $db -> validateField('access_role_name'); ?> ,
+			// 				< ?php echo $db -> validateField('not_require_special_character'); ?>
 			// 			}
 			// 		}
 			// 	}

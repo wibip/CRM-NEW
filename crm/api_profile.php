@@ -14,7 +14,8 @@ header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 /*classes & libraries*/
 require_once 'classes/dbClass.php';
 $db = new db_functions();
-require_once 'classes/CommonFunctions.php';
+// require_once 'classes/CommonFunctions.php';
+// $CommonFunctions = new CommonFunctions();
 $page = "API profile";
 ?> 
 <head>
@@ -33,6 +34,7 @@ $page = "API profile";
 <!--    <link rel="stylesheet" href="css/bootstrapValidator.css"/> -->
 <link rel="stylesheet" type="text/css" href="css/formValidation.css">
 <link rel="stylesheet" href="css/tablesaw.css?v1.0">
+<link rel="stylesheet" href="css/jquery-msgpopup.css" type="text/css" />
 <!-- Add jQuery library -->
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
@@ -492,7 +494,7 @@ $_SESSION['FORM_SECRET'] = $secret;
                                                     </div>													
 													<div class="form-actions">
 														<button disabled type="submit" name="create_ap_controller" id="create_ap_controller" class="btn btn-primary">Save</button>
-														<a style="display: inline-block;margin-left: 20px" onclick="getGREProfiles($('#wag_ap_controller').val());" class="btn btn-primary wag_link inline-btn"><i class="btn-icon-only icon-refresh"></i> Test</a>																		
+														<a style="display: inline-block;margin-left: 20px" id="test_api" class="btn btn-primary wag_link inline-btn"><i class="btn-icon-only icon-refresh"></i> Test</a>																		
 														<script>
 															function create_ap_controllerfn() {
 																$("#create_ap_controller").prop('disabled', false);
@@ -529,6 +531,7 @@ include 'footer.php';
 <!-- Alert messages js-->
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
+<script type="text/javascript" src="js/jquery-msgpopup.js"></script>
 
 
 <!-- 	<script src="js/bootstrap.js"></script>  -->
@@ -547,6 +550,49 @@ include 'footer.php';
 	});
 	$("#create_ap_controller").click(function() {
 	});
+
+	$('#test_api').on('click', function(){
+		var url = $('#api_server_url').val();
+		var username = $('#api_username').val();
+		var password = $('#api_password').val();
+		console.log(url);
+		console.log(username);
+		console.log(password);
+		if(url != '' && username != '' && password != ''){
+			$.post('ajax/crm_test_post_api.php', {url:url,username:username,password:password}, function(response){ 
+				console.log(response);
+				if(response == 'true') {
+					$().msgpopup({
+						text: 'Api has been successfully connected!',
+						type: 'success', // or success, error, alert and normal
+						time: 10000, // or false
+						x: true, // or false
+					});
+				} else if(response == 'empty') {
+					$().msgpopup({
+						text: 'Please fill all API details',
+						type: 'alert', // or success, error, alert and normal
+						time: 10000, // or false
+						x: true, // or false
+					});
+				} else {
+					$().msgpopup({
+						text: response,
+						type: 'error', // or success, error, alert and normal
+						time: 15000, // or false
+						x: true, // or false
+					});
+				}  
+			});
+		} else {
+			$().msgpopup({
+				text: 'One or more parameter is empty!',
+				type: 'alert', // or success, error, alert and normal
+				time: 5000, // or false
+				x: true, // or false
+			});
+		}
+	})
   
   });
 
