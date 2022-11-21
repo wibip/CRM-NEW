@@ -614,10 +614,12 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	//create and assign Roles
 	elseif (isset($_POST['assign_roles_submita'])) {
 		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { //refresh validate
+			$access_role_id = isset($_POST['access_role_id']) ? $_POST['access_role_id'] : 0;
+			$role_edit_id = isset($_POST['role_edit_id']) ? $_POST['role_edit_id'] : 0;
+			$access_role_name = trim($_POST['access_role_name']);
+			$role_type = $_POST['role_type'];
+
 			if($role_edit_id == 0) {
-				$access_role_name = trim($_POST['access_role_name']);
-				$role_type = $_POST['role_type'];
-				$module_type = ($role_type== 'sadmin') ? 'other' : 'default';
 				$access_role_id = time() . $user_type . $user_distributor;
 				if (strtoupper($access_role_name) == "ADMIN") {
 					$message_response = $message_functions->showMessage('user_admin_not_allow');
@@ -626,12 +628,15 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 					$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 				} else {
 					$query0 = "INSERT INTO `admin_access_roles` (`access_role`,`description`,`distributor`,`role_type` ,`create_user`,`create_date`)
-				 VALUES ('$access_role_id', '$access_role_name', '$user_distributor', '$role_type', '$user_name',now())";
+				 				VALUES ('$access_role_id', '$access_role_name', '$user_distributor', '$role_type', '$user_name',now())";
+					$result0 =$db->execDB($query0);
+
 					foreach ($_POST['my_select'] as $selectedOption) {
 						$module_name = $selectedOption;
 						$query1 = "REPLACE INTO `admin_access_roles_modules`
-					(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
-					VALUES ('$access_role_id', '$module_name', '$user_distributor', '$module_type', '$user_name', now())";
+									(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
+									VALUES ('$access_role_id', '$module_name', '$user_distributor', 'default', '$user_name', now())";
+						var_dump($query1);
 						$result1 = $db->execDB($query1);
 					}
 
@@ -640,7 +645,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 							$other_name = $selectedOption;
 							$queryOther = "REPLACE INTO `admin_access_roles_modules`
 											(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
-											VALUES ('$access_role_id', '$other_name', '$user_distributor', '$module_type', '$user_name', now())";
+											VALUES ('$access_role_id', '$other_name', '$user_distributor', 'other', '$user_name', now())";
 							$resultOther = $db->execDB($queryOther);
 						}
 
@@ -656,7 +661,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 					if ($result1===true) {
 						$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
-						$result0 =$db->execDB($query0);
+						
 						$query12 = "INSERT INTO `admin_access_roles_modules`
 									(`access_role`, `module_name`, `distributor` ,`module_type`, `create_user`, `create_date`)
 									VALUES ('$access_role_id', 'profile', '$user_distributor', '$module_type', '$user_name', now())";
@@ -669,8 +674,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						// $create_log->save('3001', $message_functions->showNameMessage('role_role_create_success', $access_role_name), '');
 						$_SESSION['msg2'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 
-						//Activity log
-						// $db->userLog($user_name, $script, 'Create Access Role', $access_role_name);
 					} else {
 						$message_response = $message_functions->showMessage('role_role_create_failed', '2001');
 						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Access Role',$idContAutoInc,'2001',$message_response);
@@ -680,7 +683,48 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 					}
 				} 
 			}else {
+				$getModRol_q = "SELECT * FROM `admin_access_roles_modules` WHERE `access_role`='$access_role_id'";
+				$getModRol_r=$db->selectDB($getModRol_q);
 
+				foreach($getModRol_r['data'] AS $row){
+					$qq1 = "INSERT INTO `admin_access_roles_modules_archive`
+					(`access_role`, `module_name`, `distributor`, `create_user`, `archive_by`, `archive_date`)
+					(SELECT  `access_role`, `module_name`, `distributor`, `create_user`, '$user_name', NOW()
+					FROM `admin_access_roles_modules` WHERE `id`='".$row["id"]."' LIMIT 1)";
+					$rr1=$db->execDB($qq1);
+
+					$sqlRecordDelete = "DELETE FROM `admin_access_roles_modules` WHERE `id`='".$row["id"]."'";
+					$resultRecordDelete=$db->execDB($sqlRecordDelete);
+				}
+
+				$sqlAccountDelete = "DELETE FROM `admin_access_account` WHERE `access_role`='".$access_role_id."'";
+				$resultAccountDelete=$db->execDB($sqlAccountDelete);
+
+				foreach ($_POST['my_select'] as $selectedOption) {
+					$module_name = $selectedOption;
+					$query1 = "REPLACE INTO `admin_access_roles_modules`
+								(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
+								VALUES ('$access_role_id', '$module_name', '$user_distributor', 'default', '$user_name', now())";
+					$result1 = $db->execDB($query1);
+				}
+
+				if($role_type == 'sadmin') {
+					foreach ($_POST['other_modules'] as $selectedOption) {
+						$other_name = $selectedOption;
+						$queryOther = "REPLACE INTO `admin_access_roles_modules`
+										(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
+										VALUES ('$access_role_id', '$other_name', '$user_distributor', 'other', '$user_name', now())";
+						$resultOther = $db->execDB($queryOther);
+					}
+
+					foreach ($_POST['operations'] as $selectedOperation) {
+						$operationId = $selectedOperation;
+						$queryOperation = "REPLACE INTO `admin_access_account`
+										(`access_role`, `operation_id`, `create_user`, `create_date`)
+										VALUES ('$access_role_id', '$operationId', '$user_name', now())";
+						$resultOperation = $db->execDB($queryOperation);
+					}
+				}
 			}
 				
 		} //key validation
@@ -764,7 +808,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	elseif (isset($_GET['role_ID'])) {
 		if ($_SESSION['FORM_SECRET'] == $_GET['form_secreat']) {
 			$role_edit_id = $_GET['role_edit_id'];
-			$role_id = $_GET['role_ID'];
+			$access_role_id = $_GET['role_ID'];
 			$i = $a = $o = 0;
 
 			//get role name and type
@@ -775,14 +819,14 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			//check role type
 			if($roleType == "sadmin"){
 				//get selected other modules
-				$other_result = $db->selectDB("SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role`='$role_id' AND module_type='other'");
+				$other_result = $db->selectDB("SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role`='$access_role_id' AND module_type='other'");
 				foreach($other_result['data'] AS $otherRole){
 					$other_array[$o] = $otherRole['module_name'];
 					$o++;
 				}
 
 				//get selected operation accounts
-				$account_result = $db->selectDB("SELECT `operation_id` FROM `admin_access_account` WHERE `access_role`='$role_id'");
+				$account_result = $db->selectDB("SELECT `operation_id` FROM `admin_access_account` WHERE `access_role`='$access_role_id'");
 				foreach($account_result['data'] AS $account){
 					$account_array[$a] = $account['operation_id'];
 					$a++;
@@ -790,7 +834,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			}
 
 			//get selected default modules
-			$role_result = $db->selectDB("SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role`='$role_id' AND module_type='default'");
+			$role_result = $db->selectDB("SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role`='$access_role_id' AND module_type='default'");
 			foreach($role_result['data'] AS $role){
 				$role_array[$i] = $role['module_name'];
 				$i++;
@@ -1533,16 +1577,21 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 															<?php
 															echo '<input type="hidden" name="form_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'] .'" />';
 															echo '<input type="hidden" name="role_edit_id" id="role_edit_id" value="'.$role_edit_id.'" />';
+															echo '<input type="hidden" name="access_role_id" id="access_role_id" value="'.$access_role_id.'" />';
+															if($role_edit_id != 0) {
+																echo '<input type="hidden" name="role_type" id="role_type" value="'.$roleType.'" />';
+															}
+															
 															?>
 															<div class="control-group">
 																<label class="control-label" for="role_type">Role Type</label>
 																<div class="controls form-group col-lg-5">
 																	<fieldset id="role_types">
 																		<div class="fieldgroup">
-																			<input type="radio" name="role_type" id="role_type" value="sadmin" <?=($roleType == 'sadmin' ? 'checked' : '')?>><label for= "sadmin">Super Admin</label>
+																			<input type="radio" name="role_type" id="role_type" value="sadmin" <?=($roleType == 'sadmin' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "sadmin">Super Admin</label>
 																		</div>
 																		<div class="fieldgroup">
-																			<input type="radio" name="role_type" id="role_type" value="nadmin" <?=($roleType == 'nadmin' ? 'checked' : '')?>><label for= "nadmin">Admin</label>
+																			<input type="radio" name="role_type" id="role_type" value="nadmin" <?=($roleType == 'nadmin' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Admin</label>
 																		</div>
 																	</fieldset>	
 																</div>

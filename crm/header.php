@@ -715,7 +715,7 @@ foreach ($query_results_drop1['data'] as $row) {
 }
 
 // echo '------------<br/>';
-// var_dump($x);
+// var_dump($system_package);
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
@@ -731,7 +731,6 @@ foreach ($x as $keyX => $valueX) {
 		} catch (Exception $e) {
 		}	
 	}
-	// var_dump($x);
 }
 // echo '------------<br/>';
 
@@ -2274,6 +2273,12 @@ else{
 									}
 
 
+									foreach($valuem['module'] as $key=>$checkVal){
+										if(in_array( "Portal Change" ,$checkVal)){
+											unset($valuem['module'][$key]);
+										}
+									}
+
 									if ($main_menu_clickble == "NO") {
 
 										$main_menu_name2 = $valuem['name'];
@@ -2392,8 +2397,11 @@ else{
 													echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
             									<a href="' . $sub_menu_link . '"  target="_blank"  class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
 												} else {
-													echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
-            									<a href="' . $sub_menu_link . $extension . '" class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
+													if($sub_menu_name != 'Portal Change'){
+														echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
+            												<a href="' . $sub_menu_link . $extension . '" class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
+													}
+													
 												}
 											}
 

@@ -6,7 +6,7 @@ header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 
 foreach ($_POST as $key => $value) {
     //echo $key;
-    var_dump($value);
+    // var_dump($value);
     if(strpos($value,'<script') !== false && !is_array($value)){
         //echo $key;
         $_POST[$key] = strip_tags($value);
