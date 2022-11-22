@@ -2224,7 +2224,7 @@ else{
 						<ul class="mainnav">
 
 							<?php
-
+var_dump($main_mod_array);
 							if ($menutype == "SUB_MENU") {
 
 								if ($top_menu == "bottom") {
