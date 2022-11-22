@@ -735,7 +735,7 @@ foreach ($x as $keyX => $valueX) {
 // echo '------------<br/>';
 
 array_push($x,"change_portal");
-var_dump($x);
+// var_dump($x);
 /// Non Admin Modules
 foreach ($x_non_admin as $keyXn => $valueXn) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -1998,7 +1998,7 @@ else{
 						echo $log_img;
 						echo $logo_title;
 					}
-
+var_dump($main_mod_array);
 					
 					if($_SESSION['SADMIN'] == 'SADMIN') {
 						//./change_portal
