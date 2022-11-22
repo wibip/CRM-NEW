@@ -735,7 +735,7 @@ foreach ($x as $keyX => $valueX) {
 // echo '------------<br/>';
 
 array_push($x,"change_portal");
-// var_dump($x);
+var_dump($x);
 /// Non Admin Modules
 foreach ($x_non_admin as $keyXn => $valueXn) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -788,9 +788,9 @@ require_once 'layout/' . $camp_layout . '/config.php';
 $query_modules = "SELECT * FROM `admin_access_modules`
 WHERE `module_name` IN (\"$module_ids\")
 AND `user_type` = '$user_type'";
-echo $query_modules;
-var_dump($module_ids);
-var_dump($user_type);
+// echo $query_modules;
+// var_dump($module_ids);
+// var_dump($user_type);
 $query_results_mod = $db_class1->selectDB($query_modules);
 
 //$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
@@ -1204,7 +1204,7 @@ if ($suspended) {
 		//$query_ex_log=mysql_query($log_query);
 
 	} else {
-		var_dump($system_package); die;
+		// var_dump($system_package); die;
 		$redirect_url = $global_base_url; //index".$extension;$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
 		// $db->addLogs($user_name, 'ERROR',$user_type,'login', 'Browse',0,'2000',$redirect_url);
 		$db_class1->userErrorLog('2000', $user_name, 'script - ' . $script);
