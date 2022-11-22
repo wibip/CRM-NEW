@@ -788,7 +788,7 @@ require_once 'layout/' . $camp_layout . '/config.php';
 $query_modules = "SELECT * FROM `admin_access_modules`
 WHERE `module_name` IN (\"$module_ids\")
 AND `user_type` = '$user_type'";
-// echo $query_modules;
+echo $query_modules;
 // var_dump($module_ids);
 // var_dump($user_type);
 $query_results_mod = $db_class1->selectDB($query_modules);
