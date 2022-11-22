@@ -941,6 +941,8 @@ foreach ($query_results_mod['data'] as $row1) {
 	//if($_SESSION['s_token']){
 var_dump($main_mod_array);
 echo '**********************************<br/>';
+var_dump($menu_item_row);
+echo '**********************************<br/>';
 	if ($is_enable == 1) {
 		if ($menu_item_row == '1') {
 			//	echo "<br>".$main_module." "."1";
