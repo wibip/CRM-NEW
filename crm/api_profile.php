@@ -572,10 +572,11 @@ include 'footer.php';
 		var username = $('#api_username').val();
 		var password = $('#api_password').val();
 		var varsion = $('#version').val();
-		var api_test_url = url+'/api/'+varsion+'/token';
-		if(url != '' && username != '' && password != ''){
+		
+		if(url != '' && username != '' && password != '' && varsion != ''){
+			var api_test_url = url+'/api/'+varsion+'/token';
 			$.post('ajax/crm_test_post_api.php', {url:api_test_url,username:username,password:password}, function(response){ 
-				// console.log(response);
+				console.log(response);
 				if(response == 'true') {
 					$().msgpopup({
 						text: 'Api has been successfully connected!',
