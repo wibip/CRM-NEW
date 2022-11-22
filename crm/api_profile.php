@@ -14,8 +14,8 @@ header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 /*classes & libraries*/
 require_once 'classes/dbClass.php';
 $db = new db_functions();
-// require_once 'classes/CommonFunctions.php';
-// $CommonFunctions = new CommonFunctions();
+require_once 'classes/CommonFunctions.php';
+$CommonFunctions = new CommonFunctions();
 $page = "API profile";
 ?> 
 <head>
@@ -87,23 +87,37 @@ if(isset($_POST['create_ap_controller'])){
 		$controller_description['api_key'] = $api_key_se;
 		$controller_description_json= json_encode($controller_description);
 
-		$query0 = "INSERT INTO  `exp_locations_ap_controller` (`time_zone`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_name`, `brand`, `model`, `description`, `ip_address`, `create_date`, `create_user`, `type`,`controller_description`)
-		VALUES ('$time_zone','$api_profile','$api_url','$api_url_se','$api_uname','$api_pass','$api_version', '$brand', '$model', '$desc', '$ip_address', NOW(), '$user_name', '$type', '$controller_description_json')";
-		$ex0 = $db->execDB($query0);
+		$api_test_url = $api_url.'/api/'.$api_version.'/token';
+		$data = json_encode(['username'=>$api_uname, 'password'=>$api_pass]);
+		$apiReturn = json_decode($CommonFunctions->httpPost($api_test_url,$data,true) , true);
+		// var_dump($apiReturn);die;
+		if($apiReturn['status'] == 'success'){
+			$query0 = "INSERT INTO  `exp_locations_ap_controller` (`time_zone`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_name`, `brand`, `model`, `description`, `ip_address`, `create_date`, `create_user`, `type`,`controller_description`)
+			VALUES ('$time_zone','$api_profile','$api_url','$api_url_se','$api_uname','$api_pass','$api_version', '$brand', '$model', '$desc', '$ip_address', NOW(), '$user_name', '$type', '$controller_description_json')";
+			$ex0 = $db->execDB($query0);
 
-		if ($ex0===true) {
-			$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
-			$message_response = $message_functions->showMessage('ap_controller_create_success') ;
-			$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create API profile',$idContAutoInc,'3001',$message_response);
-			// $create_log->save('',$message_functions->showMessage('ap_controller_create_success'),'');
-			$_SESSION['msg2'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
+			if ($ex0===true) {
+				$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+				$message_response = $message_functions->showMessage('ap_controller_create_success') ;
+				$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create API profile',$idContAutoInc,'3001',$message_response);
+				// $create_log->save('',$message_functions->showMessage('ap_controller_create_success'),'');
+				$_SESSION['msg2'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
+			} else {
+				$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
+				$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create API profile',0,'2001',$message_response);
+				$db->userErrorLog('2001', $user_name, 'script - ' . $script);		
+				// $create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
+				$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
+			}
 		} else {
-			$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
+			$message_response = $apiReturn['data']['message'];
 			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create API profile',0,'2001',$message_response);
 			$db->userErrorLog('2001', $user_name, 'script - ' . $script);		
 			// $create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
 			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 		}
+
+		
 
 	}//key validation
 	else{
@@ -183,48 +197,62 @@ if(isset($_POST['api_update'])){
 		$wag_secret=$_POST['update_wag_secret'];
 		if($wag_secret==$_SESSION['FORM_SECRET']){
 			$profile_id = $_POST['profile_id'];
-			$update_wag_name=$_POST['edit_ap_controller_name'];
+			$update_wag_version=$_POST['edit_api_version'];
 			$edit_api_profile_name=$_POST['edit_api_profile'];
 			$update_wag_url=trim($_POST['edit_api_url']);
 			$update_wag_uname=$_POST['edit_api_uname'];
 			$update_wag_pass=$_POST['edit_api_pass'];
 
-			$archive_q="INSERT INTO `exp_locations_ap_controller_archive`
-						(`controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,`archive_by`,`status`)
-						SELECT `controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,'$user_name','Update'
-						FROM `exp_locations_ap_controller`
-						WHERE `controller_name`='$update_wag_name'";
-			$archive_exe=$db->execDB($archive_q);
-	
-			
-			$update_wag_q="UPDATE `exp_locations_ap_controller` SET 
-															`api_profile`='$edit_api_profile_name',
-															`api_url`='$update_wag_url',
-															`api_username`='$update_wag_uname',
-															`api_password`='$update_wag_pass'
-															WHERE `id`='$profile_id'";
+			$api_url = $update_wag_url.'/api/'.$update_wag_version.'/token';
+			$data = json_encode(['username'=>$update_wag_uname, 'password'=>$update_wag_pass]);
+			$apiReturn = json_decode($CommonFunctions->httpPost($api_url,$data,true) , true);
+			// var_dump($apiReturn);die;
+			if($apiReturn['status'] == 'success'){
 
-			$update_wag=$db->execDB($update_wag_q);
-			$edit_ap_control_name = $update_wag_name;
-			$edit_api_profile = $edit_api_profile_name;
-			$edit_wag_url=$update_wag_url;
-			$edit_wag_uname=$update_wag_uname;
-			$edit_wag_pass=$update_wag_pass;
+				$archive_q="INSERT INTO `exp_locations_ap_controller_archive`
+							(`controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,`archive_by`,`status`)
+							SELECT `controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,'$user_name','Update'
+							FROM `exp_locations_ap_controller`
+							WHERE `controller_name`='$update_wag_name'";
+				$archive_exe=$db->execDB($archive_q);
+		
+				
+				$update_wag_q="UPDATE `exp_locations_ap_controller` SET 
+																`api_profile`='$edit_api_profile_name',
+																`api_url`='$update_wag_url',
+																`api_username`='$update_wag_uname',
+																`api_password`='$update_wag_pass',
+																`controller_name` = $update_wag_version 
+																WHERE `id`='$profile_id'";
 
-			$edit_wag_type=$db->getValueAsf("SELECT `type` as f
-			FROM `exp_locations_ap_controller`
-			WHERE `controller_name`='$update_wag_name'");
-			
-			if($update_wag===true){
-				$message_response = $message_functions->showMessage('ap_controller_update_success') ;
-				$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Modify API profile',$update_wag_name,'',$message_response);	
-				// $create_log->save('3001',$message_functions->showMessage('ap_controller_update_success'),'');
-				$_SESSION['msg1']="<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
-			}else{
-				$message_response = $message_functions->showMessage('ap_controller_update_failed','2001');
-				$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify API profile',$update_wag_name,'2001',$message_response);
-				// $create_log->save('2001',$message_functions->showMessage('ap_controller_update_failed','2001'),'');
-				$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
+				$update_wag=$db->execDB($update_wag_q);
+				$edit_ap_control_name = $update_wag_name;
+				$edit_api_profile = $edit_api_profile_name;
+				$edit_wag_url=$update_wag_url;
+				$edit_wag_uname=$update_wag_uname;
+				$edit_wag_pass=$update_wag_pass;
+
+				$edit_wag_type=$db->getValueAsf("SELECT `type` as f
+				FROM `exp_locations_ap_controller`
+				WHERE `controller_name`='$update_wag_name'");
+				
+				if($update_wag===true){
+					$message_response = $message_functions->showMessage('ap_controller_update_success') ;
+					$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Modify API profile',$update_wag_name,'',$message_response);	
+					// $create_log->save('3001',$message_functions->showMessage('ap_controller_update_success'),'');
+					$_SESSION['msg1']="<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
+				}else{
+					$message_response = $message_functions->showMessage('ap_controller_update_failed','2001');
+					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify API profile',$update_wag_name,'2001',$message_response);
+					// $create_log->save('2001',$message_functions->showMessage('ap_controller_update_failed','2001'),'');
+					$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
+				}
+			} else {
+				$message_response = $apiReturn['data']['message'];
+				$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create API profile',0,'2001',$message_response);
+				$db->userErrorLog('2001', $user_name, 'script - ' . $script);		
+				// $create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
+				$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 			}
 		}else{
 			$message_response = $message_functions->showMessage('transection_fail','2004');
@@ -297,20 +325,10 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<div class="control-group">
 													<label class="control-label" for="mg_product_code_1">Version<font color="#FF0000"></font></label>
 													<div class="controls col-lg-5 form-group">
-															<select class="span4 form-control" name="edit_ap_controller_name" id="version" required="required">
-																<option value="">Select Version2</option>
-																<option value="APV1" <?=($edit_ap_control_name == "APV1" ? "selected" : "")?>>API v1</option>
-																<option value="APV2" <?=($edit_ap_control_name == "APV2" ? "selected" : "")?>>API v2</option>
-																<?php
-															// 		$key_query = "SELECT brand FROM `exp_locations_ap_controller_model` ORDER BY brand";
-																
-															// $query_results=$db->selectDB($key_query);
-															// foreach($query_results['data'] AS $row){
-															// 	$brand = $row['brand'];									
-								
-															// 	echo '<option value="'.$brand.'">'.$brand.'</option>';
-															// }
-															?>
+															<select class="span4 form-control" name="edit_api_version" id="version" required="required">
+																<option value="">Select Version</option>
+																<option value="v1_0" <?=($edit_ap_control_name == "v1_0" ? "selected" : "")?>>API v1</option>
+																<option value="v2_0" <?=($edit_ap_control_name == "v2_0" ? "selected" : "")?>>API v2</option>
 															</select>
 														</div>
 												</div>
@@ -344,16 +362,14 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<button disabled type="submit" name="api_update" id="admin_update" class="btn btn-primary">Update</button>
 												<button type="button" class="btn btn-info inline-btn"  onclick="goto1();" class="btn btn-danger">Cancel</button> 
 													<script>
-															function admin_updatefn() {
-																$("#admin_update").prop('disabled', false);
-															}
-															
-															function goto1(url){              
-																window.location = "?";              
-															}
-																									
-																
-                                                        </script>
+														function admin_updatefn() {
+															$("#admin_update").prop('disabled', false);
+														}
+														
+														function goto1(url){              
+															window.location = "?";              
+														}	
+													</script>
 											</div>
 										</form>
 										<?php
@@ -467,8 +483,8 @@ $_SESSION['FORM_SECRET'] = $secret;
                                                         <div class="controls col-lg-5 form-group">
                                      							<select class="span4 form-control" name="version" id="version" required="required">
                                                                     <option value="">Select Version</option>
-																	<option value="APV1">API v1</option>
-																	<option value="APV2">API v2</option>
+																	<option value="v1_0">API v1</option>
+																	<option value="v2_0">API v2</option>
 																</select>
                                                           </div>
                                                     </div>
@@ -555,12 +571,11 @@ include 'footer.php';
 		var url = $('#api_server_url').val();
 		var username = $('#api_username').val();
 		var password = $('#api_password').val();
-		console.log(url);
-		console.log(username);
-		console.log(password);
+		var varsion = $('#version').val();
+		var api_test_url = url+'/api/'+varsion+'/token';
 		if(url != '' && username != '' && password != ''){
-			$.post('ajax/crm_test_post_api.php', {url:url,username:username,password:password}, function(response){ 
-				console.log(response);
+			$.post('ajax/crm_test_post_api.php', {url:api_test_url,username:username,password:password}, function(response){ 
+				// console.log(response);
 				if(response == 'true') {
 					$().msgpopup({
 						text: 'Api has been successfully connected!',
