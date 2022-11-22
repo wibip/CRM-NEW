@@ -788,9 +788,9 @@ require_once 'layout/' . $camp_layout . '/config.php';
 $query_modules = "SELECT * FROM `admin_access_modules`
 WHERE `module_name` IN (\"$module_ids\")
 AND `user_type` = '$user_type'";
-// echo $query_modules;
-// var_dump($module_ids);
-// var_dump($user_type);
+echo $query_modules;
+var_dump($module_ids);
+var_dump($user_type);
 $query_results_mod = $db_class1->selectDB($query_modules);
 
 //$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
@@ -2224,7 +2224,6 @@ else{
 						<ul class="mainnav">
 
 							<?php
-var_dump($main_mod_array);
 							if ($menutype == "SUB_MENU") {
 
 								if ($top_menu == "bottom") {
