@@ -939,8 +939,7 @@ foreach ($query_results_mod['data'] as $row1) {
 	*/
 
 	//if($_SESSION['s_token']){
-var_dump($main_mod_array);
-echo "********************<br/>";
+
 	if ($is_enable == 1) {
 		if ($menu_item_row == '1') {
 			//	echo "<br>".$main_module." "."1";
@@ -1166,7 +1165,7 @@ echo "********************<br/>";
 ksort($main_mod_array);
 
 //print_r(json_encode($main_mod_array));
-// var_dump($access_modules_list);
+var_dump($main_mod_array);
 // die;
 
 
@@ -1205,7 +1204,7 @@ if ($suspended) {
 		//$query_ex_log=mysql_query($log_query);
 
 	} else {
-		// var_dump($system_package); die;
+		var_dump($system_package); die;
 		$redirect_url = $global_base_url; //index".$extension;$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
 		// $db->addLogs($user_name, 'ERROR',$user_type,'login', 'Browse',0,'2000',$redirect_url);
 		$db_class1->userErrorLog('2000', $user_name, 'script - ' . $script);
@@ -1999,7 +1998,7 @@ else{
 						echo $log_img;
 						echo $logo_title;
 					}
-// var_dump($main_mod_array);
+
 					
 					if($_SESSION['SADMIN'] == 'SADMIN') {
 						//./change_portal
@@ -2225,6 +2224,7 @@ else{
 						<ul class="mainnav">
 
 							<?php
+
 							if ($menutype == "SUB_MENU") {
 
 								if ($top_menu == "bottom") {
