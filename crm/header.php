@@ -972,7 +972,7 @@ echo '**********************************<br/>';
 			$main_mod_array[$main_module_order]['module'][$order]['link'] = $module_name;
 			$main_mod_array[$main_module_order]['module'][$order]['name'] = $name_group;
 			$main_mod_array[$main_module_order]['module'][$order]['menu_item'] = $menu_item_row;
-			//	print_r($main_mod_array);
+				print_r($main_mod_array);
 		} else if ($menu_item_row == '2') {
 
 			//echo "<br>".$main_module." "."2";
