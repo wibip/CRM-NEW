@@ -488,19 +488,19 @@ if (!empty($arrayo)) {
                 }
 
 
-                $(document).ready(function(e) {
-                    var stepListFull = '<div class="steps clearfix" style="margin-top:20px"><ul role="tablist">';
-                    var stepCount = 0;
-                    $('#crm_form fieldset').each(function(index, element) {
-                        $(this).addClass('step' + (index + 1)).addClass('fieldStep');
-                        stepListFull += stepList_crm((index + 1), $(this).attr('data-name'));
-                        stepCount++;
-                    });
-                    stepListFull += '</ul></div>';
+                // $(document).ready(function(e) {
+                //     var stepListFull = '<div class="steps clearfix" style="margin-top:20px"><ul role="tablist">';
+                //     var stepCount = 0;
+                //     $('#crm_form fieldset').each(function(index, element) {
+                //         $(this).addClass('step' + (index + 1)).addClass('fieldStep');
+                //         stepListFull += stepList_crm((index + 1), $(this).attr('data-name'));
+                //         stepCount++;
+                //     });
+                //     stepListFull += '</ul></div>';
 
-                    setSteps_crm(1, stepCount, 'ready', stepListFull);
+                //     setSteps_crm(1, stepCount, 'ready', stepListFull);
 
-                });
+                // });
 
             var previousn_crm;
             $('.actions.clearfix').find('button[data-type="previous"]').bind('click', function(e) {
