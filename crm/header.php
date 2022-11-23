@@ -733,7 +733,7 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-echo '------------<br/>';
+
 
 array_push($x,"change_portal");
 
@@ -941,9 +941,6 @@ foreach ($query_results_mod['data'] as $row1) {
 
 	*/
 
-// echo '**********************************<br/>';
-// var_dump($main_mod_array);
-// echo '**********************************<br/>';
 	if ($is_enable == 1) {
 		if ($menu_item_row == '1') {
 			$access_modules_list[] = $module_name;
