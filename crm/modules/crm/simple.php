@@ -342,17 +342,12 @@ if (!empty($arrayo)) {
                 </style>
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
-                        <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-disabled="true"><button href="javascript:void(0)" data-type="previous" class="btn btn-primary" role="menuitem">Previous</button></li>
-                        <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-hidden="false" aria-disabled="true"><button tabindex="119" href="javascript:void(0)" data-type="next" class="btn btn-primary" role="menuitem">Next</button></li>
-                        <li class="finishStepone" style="display: none; margin-left: 5px;" aria-hidden="true"><a tabindex="120" href="#steponesubmit" class="btn btn-primary" name="location_submit_one" id="location_submit_one" role="menuitem">Update Account Info</a></li>
-                        <li class="finishSteptwo" style="display: none; margin-left: 5px;" aria-hidden="true"><a href="#steptwosubmit" class="btn btn-primary" name="location_submit_two" id="location_submit_two" role="menuitem">Update Controller Info</a></li>
                         <li class="finishParent" style="display: none; margin-left: 5px;" aria-hidden="true">
-                            <!-- <a href="#finish" class="btn btn-primary" name="create_location_submit" id="create_location_submit" role="menuitem" >Finish</a></li> -->
                             <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
-                            <li class="cancelform" style="display: none; margin-left: 5px;" aria-hidden="true"><a href="?token7=<?php echo $secret; ?>&t=edit_parent" class="btn btn-primary" role="menuitem">Cancel</a></li>
-                        </ul>
-                    </div>
-                    </div>
+                        <li class="cancelform" style="display: none; margin-left: 5px;" aria-hidden="true"><a href="?token7=<?php echo $secret; ?>&t=edit_parent" class="btn btn-primary" role="menuitem">Cancel</a></li>
+                    </ul>
+                </div>
+            </div>
                     </div>
                 </form>
             </div>
