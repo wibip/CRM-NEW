@@ -733,11 +733,10 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-var_dump($x);
 echo '------------<br/>';
 
 array_push($x,"change_portal");
-var_dump($x);
+
 /// Non Admin Modules
 foreach ($x_non_admin as $keyXn => $valueXn) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -790,7 +789,7 @@ require_once 'layout/' . $camp_layout . '/config.php';
 $query_modules = "SELECT * FROM `admin_access_modules`
 WHERE `module_name` IN (\"$module_ids\")
 AND `user_type` = '$user_type'";
-echo $query_modules;
+// echo $query_modules;
 // var_dump($module_ids);
 // var_dump($user_type);
 $query_results_mod = $db_class1->selectDB($query_modules);
@@ -803,9 +802,6 @@ $tmp_0 = '';
 $main_mod_array = array();
 foreach ($query_results_mod['data'] as $row1) {
 	
-// echo '**********************************<br/>';
-// var_dump($row1);
-// echo '**********************************<br/>';
 	$menu_item_row = $row1[menu_item]; // Retuns base access.
 	$main_module_order = $row1[main_module_order];
 	$main_module = $row1[main_module];
@@ -813,12 +809,6 @@ foreach ($query_results_mod['data'] as $row1) {
 	$order = $row1[order];
 	$name_group = $row1[name_group];
 	$is_enable = $row1[is_enable];
-
-echo '**********************************<br/>';
-var_dump($row1[main_module]);
-echo '--';
-var_dump($row1[module_name]);
-echo '**********************************<br/>';
 
 	//===========Remove Content Filter
 	if ($module_name == 'content_filter') {
@@ -956,26 +946,15 @@ echo '**********************************<br/>';
 // echo '**********************************<br/>';
 	if ($is_enable == 1) {
 		if ($menu_item_row == '1') {
-			//	echo "<br>".$main_module." "."1";
-			//	echo " <br>". $menu_item_row."-".$name_group."-".$module_name."--$main_module";
-			echo '<br/>';
-			echo '*******************IN ARRAY***************<br/>';
-			var_dump($main_module);
-
 			$access_modules_list[] = $module_name;
 			$main_mod_array[$main_module_order]['name'] = $main_module;
 			if ($script == $module_name) {
 				$main_mod_array[$main_module_order]['active'] = $module_name; // Return Active Module
 			}
-			echo '<--->';
-			var_dump($module_name);
-			echo '<br/>';
-			echo '********************PRINT**************<br/>';
 			$main_mod_array[$main_module_order]['module'][$order]['link'] = $module_name;
 			$main_mod_array[$main_module_order]['module'][$order]['name'] = $name_group;
 			$main_mod_array[$main_module_order]['module'][$order]['menu_item'] = $menu_item_row;
-				print_r($main_mod_array);
-			echo '<br/>';
+
 		} else if ($menu_item_row == '2') {
 
 			//echo "<br>".$main_module." "."2";
@@ -1184,14 +1163,7 @@ echo '**********************************<br/>';
 		}
 	}
 }
-echo '<br/>';
-echo '******************Before****************<br/>';
 ksort($main_mod_array);
-
-//print_r(json_encode($main_mod_array));
-echo '******************Final****************<br/>';
-var_dump($main_mod_array);
-// die;
 
 
 
