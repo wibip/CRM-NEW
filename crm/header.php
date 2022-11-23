@@ -732,10 +732,12 @@ foreach ($x as $keyX => $valueX) {
 		}	
 	}
 }
-// echo '------------<br/>';
+
+var_dump($x);
+echo '------------<br/>';
 
 array_push($x,"change_portal");
-// var_dump($x);
+var_dump($x);
 /// Non Admin Modules
 foreach ($x_non_admin as $keyXn => $valueXn) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -1210,7 +1212,7 @@ if ($suspended) {
 		//$query_ex_log=mysql_query($log_query);
 
 	} else {
-		var_dump($system_package); die;
+		// var_dump($system_package); die;
 		$redirect_url = $global_base_url; //index".$extension;$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
 		// $db->addLogs($user_name, 'ERROR',$user_type,'login', 'Browse',0,'2000',$redirect_url);
 		$db_class1->userErrorLog('2000', $user_name, 'script - ' . $script);
@@ -2007,7 +2009,6 @@ else{
 
 					
 					if($_SESSION['SADMIN'] == 'SADMIN') {
-						//./change_portal
 					?>
 					<div>
 						<ul class="topnav">
