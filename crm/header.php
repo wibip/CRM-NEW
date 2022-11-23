@@ -958,7 +958,8 @@ echo '**********************************<br/>';
 		if ($menu_item_row == '1') {
 			//	echo "<br>".$main_module." "."1";
 			//	echo " <br>". $menu_item_row."-".$name_group."-".$module_name."--$main_module";
-			echo '**********************************<br/>';
+			echo '<br/>';
+			echo '*******************IN ARRAY***************<br/>';
 			var_dump($main_module);
 
 			$access_modules_list[] = $module_name;
@@ -968,11 +969,13 @@ echo '**********************************<br/>';
 			}
 			echo '<--->';
 			var_dump($module_name);
-			echo '**********************************<br/>';
+			echo '<br/>';
+			echo '********************PRINT**************<br/>';
 			$main_mod_array[$main_module_order]['module'][$order]['link'] = $module_name;
 			$main_mod_array[$main_module_order]['module'][$order]['name'] = $name_group;
 			$main_mod_array[$main_module_order]['module'][$order]['menu_item'] = $menu_item_row;
 				print_r($main_mod_array);
+			echo '<br/>';
 		} else if ($menu_item_row == '2') {
 
 			//echo "<br>".$main_module." "."2";
