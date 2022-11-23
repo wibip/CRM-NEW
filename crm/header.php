@@ -800,6 +800,10 @@ $restricted_pages = $package_functions->getOptions("RESTRICTED_PAGES", $system_p
 $tmp_0 = '';
 $main_mod_array = array();
 foreach ($query_results_mod['data'] as $row1) {
+	
+echo '**********************************<br/>';
+var_dump($row1);
+echo '**********************************<br/>';
 	$menu_item_row = $row1[menu_item]; // Retuns base access.
 	$main_module_order = $row1[main_module_order];
 	$main_module = $row1[main_module];
@@ -938,11 +942,9 @@ foreach ($query_results_mod['data'] as $row1) {
 
 	*/
 
-	//if($_SESSION['s_token']){
-var_dump($main_mod_array);
-echo '**********************************<br/>';
-var_dump($menu_item_row);
-echo '**********************************<br/>';
+// echo '**********************************<br/>';
+// var_dump($main_mod_array);
+// echo '**********************************<br/>';
 	if ($is_enable == 1) {
 		if ($menu_item_row == '1') {
 			//	echo "<br>".$main_module." "."1";
