@@ -153,12 +153,11 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Address</label>
+                                    <label for="radiobtns">City</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="street" id="street" class="span4 form-control" value="<?php echo $edit===true?$get_street:''?>">
+                                        <input type="text" name="city" id="city" class="span4 form-control" value="<?php echo $edit===true?$get_city:''?>">
                                     </div>
                                 </div>
                             </div>
@@ -332,11 +331,12 @@ if (!empty($arrayo)) {
                                     });
                                 });
                             </script>
+
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">City</label>
+                                    <label for="radiobtns">Address</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="city" id="city" class="span4 form-control" value="<?php echo $edit===true?$get_city:''?>">
+                                        <input type="text" name="street" id="street" class="span4 form-control" value="<?php echo $edit===true?$get_street:''?>">
                                     </div>
                                 </div>
                             </div>
