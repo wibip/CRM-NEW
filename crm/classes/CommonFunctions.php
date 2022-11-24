@@ -375,7 +375,7 @@ class CommonFunctions{
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
         curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
         $output=curl_exec($ch);
-
+var_dump($output);echo '<br/>';
         curl_close($ch);
         return $output;
     }
