@@ -170,34 +170,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">State</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="state" id="state" class="span4 form-control">
-                                        <option value="">Select State</option>
-                                        <?php
-                                        $get_regions = $db->selectDB("SELECT
-                                    `states_code`,
-                                    `description`
-                                    FROM
-                                    `exp_country_states` ORDER BY description ASC");
-
-
-                                        foreach ($get_regions['data'] as $state) {
-                                            if (($edit===true?$get_state:'') == $state['states_code']) {
-                                                echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                            } else {
-
-                                                echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                            }
-                                        }
-                                        //echo '<option value="other">Other</option>';
-                                        ?>
-                                    </select>
-                                    </div>
-                                </div>
-                            </div>
+                            
 
                         </div>
                         <!-- RIGHT -->
@@ -344,24 +317,6 @@ if (!empty($arrayo)) {
                                     <label for="radiobtns">City</label>
                                     <div class="controls col-lg-5 form-group">
                                         <input type="text" name="city" id="city" class="span4 form-control" value="<?php echo $edit===true?$get_city:''?>">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Contact</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="contact" id="contact" class="span4 form-control" value="<?php echo $edit===true?$get_contact_name:''?>">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Order Number</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="order_number" id="order_number" class="span4 form-control" value="<?php echo $edit===true?$get_order_number:''?>">
                                     </div>
                                 </div>
                             </div>
