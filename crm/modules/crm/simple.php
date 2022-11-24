@@ -344,7 +344,7 @@ if (!empty($arrayo)) {
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
                         <li class="finishParent" style="margin-left: 5px;" aria-hidden="true">
                             <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
-                        <li class="cancelform" style="margin-left: 5px;" aria-hidden="true"><a href="?token7=<?php echo $secret; ?>&t=edit_parent" class="btn btn-primary" role="menuitem">Cancel</a></li>
+                        </li>
                     </ul>
                 </div>
             </div>
