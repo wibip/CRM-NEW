@@ -77,6 +77,15 @@ include_once 'classes/cryptojs-aes.php';
     $edit = false;
     $get_opt_code = 'FRT';//$db->getValueAsf("SELECT api_prefix as f FROM exp_mno WHERE mno_id = '$user_distributor'");
 
+    $priority_zone_array = array(
+                                "America/New_York",
+                                "America/Chicago",
+                                "America/Denver",
+                                "America/Los_Angeles",
+                                "America/Anchorage",
+                                "Pacific/Honolulu",
+                            );
+
     if(isset($_GET['edit'])){
         $edit = true;
         $id = $_GET['id'];
