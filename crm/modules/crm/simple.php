@@ -14,7 +14,7 @@
 </style>
 
 <?php 
-$getServiceTypes = null;
+$serviceTypes = null;
 $baseUrl = 'http://bi-development.arrisi.com/api/v1_0';
 //generating api call to get Token
 $apiUsername = 'dev_hosted_api_user';
@@ -30,10 +30,10 @@ if($tokenReturn['status'] == 'success') {
     var_dump($serviceTypesReturn['data']);
     echo '<br/>';
     if($serviceTypesReturn['status'] == 'success') {
-        $getServiceTypes = $serviceTypesReturn['data'];
+        $serviceTypes = $serviceTypesReturn['data'];
     }
 }
-var_dump($getServiceTypes);
+var_dump($serviceTypes);
     echo '<br/>';
     $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
         FROM exp_products
@@ -212,10 +212,10 @@ if (!empty($arrayo)) {
                                     <label for="radiobtns">Service Type</label>
                                     <div class="controls col-lg-5 form-group">
                                         <select name="service_type" id="service_type" class="span4 form-control">
-                                            <?php if($getServiceTypes != null){ ?>
+                                            <?php if($serviceTypes != null){ ?>
                                             <option value="0">Please select service type</option>
-                                            <?php   foreach($getServiceTypes as $serviceTypes){ ?>
-                                                <option value="<?=$serviceTypes['id']?>"><?=$serviceTypes['service_type']?></option>
+                                            <?php   foreach($serviceTypes as $serviceType){ ?>
+                                                <option value="<?=$serviceType['id']?>"><?=$serviceType['service_type']?></option>
                                             <?php
                                                 }
                                             } else { ?>
