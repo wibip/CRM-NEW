@@ -14,8 +14,6 @@
 </style>
 
 <?php 
-require_once '../../classes/CommonFunctions.php';
-$CommonFunctions = new CommonFunctions();
 $getServiceTypes = $CommonFunctions->getServiceTypes();
 
     $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
