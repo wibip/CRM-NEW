@@ -14,7 +14,26 @@
 </style>
 
 <?php 
-$getServiceTypes = $CommonFunctions->getServiceTypes();
+$getServiceTypes = [];
+$baseUrl = 'http://bi-development.arrisi.com/api/v1_0';
+$apiUsername = 'dev_hosted_api_user';
+$apiPassword = 'development@123!';
+$tokenReturn = json_decode( $CommonFunctions->getServiceTypes($url.'/token?username='.$apiUsername.'&password='.$apiPassword),true);
+if($tokenReturn['status'] == 'success') {
+    $token = $tokenReturn['data']['token'];
+    var_dump($token);
+    echo '<br/>';
+    $serviceTypesReturn = $CommonFunctions->getServiceTypes($url.'/service-types',$token);
+    var_dump($serviceTypesReturn);
+    echo '<br/>';
+    if($serviceTypesReturn['status'] == 'success') {
+        $getServiceTypes = $serviceTypesReturn['data'];
+        var_dump($getServiceTypes);
+        echo '<br/>';
+    }
+}
+echo '<br/>end';
+die;
 
     $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
         FROM exp_products
@@ -142,9 +161,9 @@ if (!empty($arrayo)) {
 
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Account Number</label>
+                                    <label for="radiobtns">Address</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="account_number" id="account_number" class="span4 form-control" value="<?php echo $edit===true?$get_account_number:''?>">
+                                        <input type="text" name="address" id="address" class="span4 form-control" value="<?php echo $edit===true?$address:''?>">
                                     </div>
                                 </div>
                             </div>
@@ -219,108 +238,112 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-
                             <script type="text/javascript">
-                            $(document).ready(function() {
+                                $(document).ready(function() {
+                                    $('.mobile3_vali').focus(function() {
+                                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+                                        $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
+                                    });
 
-                                $('.mobile3_vali').focus(function() {
-                                    $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                                    $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
-                                });
+                                    $('.mobile3_vali').keyup(function() {
+                                    var phone_1 = $(this).val().replace(/[^\d]/g, "");
+                                    if (phone_1.length > 9) {
+                                        //$('#customer_form').bootstrapValidator().enableFieldValidators('phone', false);
+                                        var phone2 = phone_1.length;
+                                        if (phone_1.length > 10) {
+                                        var phone2 = phone_1.length;
+                                        $('#crm_form')
+                                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', false);
+                                        var phone_1 = phone_1.slice(0,10);
 
-                                $('.mobile3_vali').keyup(function() {
-                                  var phone_1 = $(this).val().replace(/[^\d]/g, "");
-                                  if (phone_1.length > 9) {
-                                    //$('#customer_form').bootstrapValidator().enableFieldValidators('phone', false);
-                                    var phone2 = phone_1.length;
-                                    if (phone_1.length > 10) {
-                                      var phone2 = phone_1.length;
-                                      $('#crm_form')
-                                                .bootstrapValidator('enableFieldValidators', 'contact_Phone', false);
-                                      var phone_1 = phone_1.slice(0,10);
+                                                    }
+                                                $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
+                                                //console.log(phone_1+'sss');
+                                                if (phone2 == 10) {
+                                                    $('#crm_form')
+                                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', true);
+                                                }
 
                                                 }
-                                              $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
-                                              //console.log(phone_1+'sss');
-                                              if (phone2 == 10) {
-                                                  $('#crm_form')
-                                                .bootstrapValidator('enableFieldValidators', 'contact_Phone', true);
-                                            }
-
-                                              }
-                                              else{
-                                  $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                                  $('#crm_form')
-                                                .bootstrapValidator('enableFieldValidators', 'contact_Phone', true)
-                                  }
-
-                                $('#crm_form').bootstrapValidator('revalidateField', 'contact_Phone');
-                              });
-
-                                //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
-
-
-                                $(".mobile3_vali").keydown(function(e) {
-
-
-                                    var mac = $('.mobile3_vali').val();
-                                    var len = mac.length + 1;
-                                    //console.log(e.keyCode);
-                                    //console.log('len '+ len);
-
-                                    if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
-                                        mac1 = mac.replace(/[^0-9]/g, '');
-
-
-                                        //var valu = mac1.substr(0, 3) + '-' + mac1.substr(3,3) + '-' + mac1.substr(6,4);
-
-                                        //console.log(valu);
-                                        //$('#phone_num_val').val(valu);
-
-                                    } else {
-
-                                        if (len == 4) {
-                                            $('.mobile3_vali').val(function() {
-                                                return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
-                                                //console.log('mac1 ' + mac);
-
-                                            });
-                                        } else if (len == 8) {
-                                            $('.mobile3_vali').val(function() {
-                                                return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
-                                                //console.log('mac2 ' + mac);
-
-                                            });
-                                        }
+                                                else{
+                                    $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+                                    $('#crm_form')
+                                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', true)
                                     }
 
-
-                                    // Allow: backspace, delete, tab, escape, enter, '-' and .
-                                    if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                                        // Allow: Ctrl+A, Command+A
-                                        (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: Ctrl+C, Command+C
-                                        (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: Ctrl+x, Command+x
-                                        (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: Ctrl+V, Command+V
-                                        (e.keyCode == 86 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: home, end, left, right, down, up
-                                        (e.keyCode >= 35 && e.keyCode <= 40)) {
-                                        // let it happen, don't do anything
-                                        return;
-                                    }
-                                    // Ensure that it is a number and stop the keypress
-                                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                                        e.preventDefault();
-
-                                    }
-                                    $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
+                                    $('#crm_form').bootstrapValidator('revalidateField', 'contact_Phone');
                                 });
 
+                                    //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
 
-                            });
-                        </script>
+
+                                    $(".mobile3_vali").keydown(function(e) {
+
+
+                                        var mac = $('.mobile3_vali').val();
+                                        var len = mac.length + 1;
+                                        //console.log(e.keyCode);
+                                        //console.log('len '+ len);
+
+                                        if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
+                                            mac1 = mac.replace(/[^0-9]/g, '');
+
+
+                                            //var valu = mac1.substr(0, 3) + '-' + mac1.substr(3,3) + '-' + mac1.substr(6,4);
+
+                                            //console.log(valu);
+                                            //$('#phone_num_val').val(valu);
+
+                                        } else {
+
+                                            if (len == 4) {
+                                                $('.mobile3_vali').val(function() {
+                                                    return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
+                                                    //console.log('mac1 ' + mac);
+
+                                                });
+                                            } else if (len == 8) {
+                                                $('.mobile3_vali').val(function() {
+                                                    return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
+                                                    //console.log('mac2 ' + mac);
+
+                                                });
+                                            }
+                                        }
+
+
+                                        // Allow: backspace, delete, tab, escape, enter, '-' and .
+                                        if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
+                                            // Allow: Ctrl+A, Command+A
+                                            (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                            // Allow: Ctrl+C, Command+C
+                                            (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                            // Allow: Ctrl+x, Command+x
+                                            (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                            // Allow: Ctrl+V, Command+V
+                                            (e.keyCode == 86 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                            // Allow: home, end, left, right, down, up
+                                            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                                            // let it happen, don't do anything
+                                            return;
+                                        }
+                                        // Ensure that it is a number and stop the keypress
+                                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                                            e.preventDefault();
+
+                                        }
+                                        $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
+                                    });
+                                });
+                            </script>
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">City</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <input type="text" name="city" id="city" class="span4 form-control" value="<?php echo $edit===true?$get_city:''?>">
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
@@ -336,14 +359,6 @@ if (!empty($arrayo)) {
                                     <label for="radiobtns">Order Number</label>
                                     <div class="controls col-lg-5 form-group">
                                         <input type="text" name="order_number" id="order_number" class="span4 form-control" value="<?php echo $edit===true?$get_order_number:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">City</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="city" id="city" class="span4 form-control" value="<?php echo $edit===true?$get_city:''?>">
                                     </div>
                                 </div>
                             </div>

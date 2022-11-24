@@ -363,12 +363,13 @@ class CommonFunctions{
         }
     }
 
-    public static function getServiceTypes(){
-        $url = "http://bi-development.arrisi.com/api/v1_0/service-types";
+    public static function getServiceTypes($url,$token){
+        // $url = "http://bi-development.arrisi.com/api/v1_0/service-types";
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL,$url);
+        $authorization = "Authorization: Bearer ".$token; // Prepare the authorisation token
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization )); // Inject the token into the header
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-        //  curl_setopt($ch,CURLOPT_HEADER, false);
 
         $output=curl_exec($ch);
 
