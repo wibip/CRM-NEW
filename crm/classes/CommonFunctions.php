@@ -76,7 +76,7 @@ class CommonFunctions{
         //$header_parameters = "Content-Type: application/json;charset=UTF-8";
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         //curl_setopt($ch, CURLOPT_HTTPHEADER, array($header_parameters));
-
+var_dump($ch);
         $server_output = curl_exec($ch);
         //echo $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         //$header = substr($server_output, 0, $header_size);
