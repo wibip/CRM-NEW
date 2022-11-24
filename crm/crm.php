@@ -23,7 +23,7 @@ $db = new db_functions();
 require_once 'classes/systemPackageClass.php';
 $package_functions = new package_functions();
 
-require_once '../../classes/CommonFunctions.php';
+require_once './classes/CommonFunctions.php';
 $CommonFunctions = new CommonFunctions();
 /*Encryption script*/
 include_once 'classes/cryptojs-aes.php';
