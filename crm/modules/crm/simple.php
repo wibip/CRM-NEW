@@ -18,16 +18,14 @@ $getServiceTypes = [];
 $baseUrl = 'http://bi-development.arrisi.com/api/v1_0';
 $apiUsername = 'dev_hosted_api_user';
 $apiPassword = 'development@123!';
-var_dump($url.'/token?username='.$apiUsername.'&password='.$apiPassword);
-echo '<br/>';
-$tokenReturn = json_decode( $CommonFunctions->httpGet($url.'/token?username='.$apiUsername.'&password='.$apiPassword),true);
+$tokenReturn = json_decode( $CommonFunctions->httpGet($baseUrlurl.'/token?username='.$apiUsername.'&password='.$apiPassword),true);
 var_dump($tokenReturn);
 echo '<br/>';
 if($tokenReturn['status'] == 'success') {
     $token = $tokenReturn['data']['token'];
     var_dump($token);
     echo '<br/>';
-    $serviceTypesReturn = $CommonFunctions->getServiceTypes($url.'/service-types',$token);
+    $serviceTypesReturn = $CommonFunctions->getServiceTypes($baseUrl.'/service-types',$token);
     var_dump($serviceTypesReturn);
     echo '<br/>';
     if($serviceTypesReturn['status'] == 'success') {
