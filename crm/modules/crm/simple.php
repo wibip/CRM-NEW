@@ -24,7 +24,7 @@ $tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,t
 //generating api call to get Service Types
 if($tokenReturn['status'] == 'success') {
     $token = $tokenReturn['data']['token'];
-    $serviceTypesReturn = $CommonFunctions->getServiceTypes($baseUrl.'/service-types',$token);
+    $serviceTypesReturn = json_decode($CommonFunctions->getServiceTypes($baseUrl.'/service-types',$token),true);
     var_dump($serviceTypesReturn);
     echo '<br/>';
     var_dump($serviceTypesReturn['data']);
