@@ -362,4 +362,17 @@ class CommonFunctions{
             return $percentageChange . $suffix_bandwidth[$f_base];
         }
     }
+
+    public static function getServiceTypes(){
+        $url = "http://bi-development.arrisi.com/api/v1_0/service-types";
+        $ch = curl_init();
+        curl_setopt($ch,CURLOPT_URL,$url);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        //  curl_setopt($ch,CURLOPT_HEADER, false);
+
+        $output=curl_exec($ch);
+
+        curl_close($ch);
+        return $output;
+    }
 }
