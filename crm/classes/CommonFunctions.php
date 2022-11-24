@@ -76,12 +76,12 @@ class CommonFunctions{
         //$header_parameters = "Content-Type: application/json;charset=UTF-8";
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         //curl_setopt($ch, CURLOPT_HTTPHEADER, array($header_parameters));
-var_dump($ch);echo 'in func';die;
+
         $server_output = curl_exec($ch);
         //echo $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         //$header = substr($server_output, 0, $header_size);
         //$message = substr($server_output, $header_size);
-
+var_dump($server_output);echo 'in func';die;
         return $server_output;
         curl_close ($ch);
 
