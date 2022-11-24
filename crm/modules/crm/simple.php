@@ -110,25 +110,13 @@ if (!empty($arrayo)) {
             <div class="content clearfix">
                 <fieldset id="customer_info" data-name="Customer Information ">
                     <div class="flex">
+                        <!-- LEFT -->
                         <div class="create_le">
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Business Name</label>
                                     <div class="controls col-lg-5 form-group">
                                         <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?php echo $edit===true?$get_business_name:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Service Type</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="service_type" id="service_type" class="span4 form-control">
-                                            <option value="ENT-SMB-NON-AP-VYOS">ENT-SMB-NON-AP-VYOS</option>
-                                            <option value="ENT-SMB-NON-AP-FORTIGATE">ENT-SMB-NON-AP-FORTIGATE</option>
-                                            <option value="ENT-SMB-NON-AP-MERAKI">ENT-SMB-NON-AP-MERAKI</option>
-                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -291,7 +279,20 @@ if (!empty($arrayo)) {
                             </div>
 
                         </div>
-                        <div class="create_re">
+                        <!-- RIGHT -->
+                        <div class="create_re">                            
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">Service Type</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <select name="service_type" id="service_type" class="span4 form-control">
+                                            <option value="ENT-SMB-NON-AP-VYOS">ENT-SMB-NON-AP-VYOS</option>
+                                            <option value="ENT-SMB-NON-AP-FORTIGATE">ENT-SMB-NON-AP-FORTIGATE</option>
+                                            <option value="ENT-SMB-NON-AP-MERAKI">ENT-SMB-NON-AP-MERAKI</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Contact</label>
