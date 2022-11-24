@@ -19,9 +19,9 @@ $baseUrl = 'http://bi-development.arrisi.com/api/v1_0';
 $apiUsername = 'dev_hosted_api_user';
 $apiPassword = 'development@123!';
 $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
-var_dump($CommonFunctions->httpPost($baseUrlurl.'/token',$data, true));
+var_dump($CommonFunctions->httpPost($baseUrlurl.'/token',$data));
 echo '<br/>';
-$tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrlurl.'/token',$data, true),true);
+$tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrlurl.'/token',$data),true);
 var_dump($tokenReturn);
 echo '<br/>';
 if($tokenReturn['status'] == 'success') {
