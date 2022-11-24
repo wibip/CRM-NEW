@@ -25,11 +25,14 @@ $tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,t
 if($tokenReturn['status'] == 'success') {
     $token = $tokenReturn['data']['token'];
     $serviceTypesReturn = $CommonFunctions->getServiceTypes($baseUrl.'/service-types',$token);
+    var_dump($serviceTypesReturn);
+    echo '<br/>';
     if($serviceTypesReturn['status'] == 'success') {
         $getServiceTypes = $serviceTypesReturn['data'];
     }
 }
-
+var_dump($getServiceTypes);
+    echo '<br/>';
     $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
         FROM exp_products
         WHERE (network_type='GUEST' || network_type='PRIVATE' || network_type='VTENANT') AND mno_id='$user_distributor' AND (default_value='1' || default_value IS NULL)";
