@@ -30,45 +30,45 @@ if($tokenReturn['status'] == 'success') {
     }
 }
 
-    $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
-        FROM exp_products
-        WHERE (network_type='GUEST' || network_type='PRIVATE' || network_type='VTENANT') AND mno_id='$user_distributor' AND (default_value='1' || default_value IS NULL)";
-    $query_results = $db->selectDB($q1);
-    $arraym = array();
-    $arrayk = array();
-    $arrayo = array();
-    $guest_product_arr = array();
-    $pvt_product_arr = array();
-    $vt_product_arr = array();
+$q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
+    FROM exp_products
+    WHERE (network_type='GUEST' || network_type='PRIVATE' || network_type='VTENANT') AND mno_id='$user_distributor' AND (default_value='1' || default_value IS NULL)";
+$query_results = $db->selectDB($q1);
+$arraym = array();
+$arrayk = array();
+$arrayo = array();
+$guest_product_arr = array();
+$pvt_product_arr = array();
+$vt_product_arr = array();
 
     foreach ($query_results['data'] as $row) {
-    $dis_code = $row[product_code];
-    $QOS = $row[QOS];
-    $QOSLast = strtolower(substr($QOS, -1));
-    $product_name_new = str_replace('_', '-', $row[product_code]);
-    $name_ar = explode('-', $product_name_new);
-    $duration = explode('-', str_replace(' ', '-', CommonFunctions::split_from_num($name_ar[3])));
-    $duration_val = $duration[0];
-    $qosvalarr = explode('*', $name_ar[2]);
-    $ab = substr($name_ar[2], 0, 2);
-    if (!is_numeric($ab)) {
-        $ab = substr($name_ar[2], 0, 1);
+        $dis_code = $row[product_code];
+        $QOS = $row[QOS];
+        $QOSLast = strtolower(substr($QOS, -1));
+        $product_name_new = str_replace('_', '-', $row[product_code]);
+        $name_ar = explode('-', $product_name_new);
+        $duration = explode('-', str_replace(' ', '-', CommonFunctions::split_from_num($name_ar[3])));
+        $duration_val = $duration[0];
+        $qosvalarr = explode('*', $name_ar[2]);
+        $ab = substr($name_ar[2], 0, 2);
+        if (!is_numeric($ab)) {
+            $ab = substr($name_ar[2], 0, 1);
+        }
+        $bb = substr($name_ar[2], -2);
+        if (!is_numeric($bb)) {
+            $bb = substr($name_ar[2], -1);
+        }
+        $row['duration'] = $duration_val;
+        $row['qosval'] = $ab;
+        $row['qosval2'] = $bb;
+        if ($QOSLast == 'k') {
+            array_push($arrayk, $row);
+        } else if ($QOSLast == 'm') {
+            array_push($arraym, $row);
+        } else {
+            array_push($arrayo, $row);
+        }
     }
-    $bb = substr($name_ar[2], -2);
-    if (!is_numeric($bb)) {
-        $bb = substr($name_ar[2], -1);
-    }
-    $row['duration'] = $duration_val;
-    $row['qosval'] = $ab;
-    $row['qosval2'] = $bb;
-    if ($QOSLast == 'k') {
-        array_push($arrayk, $row);
-    } else if ($QOSLast == 'm') {
-        array_push($arraym, $row);
-    } else {
-        array_push($arrayo, $row);
-    }
-}
 
 CommonFunctions::aaasort($arrayk, 'qosval', 'qosval2', 'duration');
 CommonFunctions::aaasort($arraym, 'qosval', 'qosval2', 'duration');
@@ -164,14 +164,30 @@ if (!empty($arrayo)) {
                             </div>
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Street</label>
+                                    <label for="radiobtns">State</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="street" id="street" class="span4 form-control" value="<?php echo $edit===true?$get_street:''?>">
+                                        <select name="wifi_state" id="wifi_state" class="span4 form-control">
+                                            <option value="">Select State</option>
+                                            <?php
+                                                $get_regions = $db->selectDB("SELECT
+                                                                            `states_code`,
+                                                                            `description`
+                                                                            FROM
+                                                                            `exp_country_states` ORDER BY description ASC");
+
+                                                foreach ($get_regions['data'] as $state) {
+                                                    if (($edit===true?$get_state:'') == $state['states_code']) {
+                                                        echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                    } else {
+
+                                                        echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                    }
+                                                }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            
-
                         </div>
                         <!-- RIGHT -->
                         <div class="create_re">                            
