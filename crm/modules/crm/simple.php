@@ -23,6 +23,11 @@ var_dump($CommonFunctions->httpPost($baseUrlurl.'/token',$data));
 echo '<br/>';
 $tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrlurl.'/token',$data),true);
 var_dump($tokenReturn);
+echo '<br/>apiReturn = ';
+$api_test_url = $baseUrl.'/api/v1_0/token';
+$data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
+$apiReturn = json_decode($CommonFunctions->httpPost($api_test_url,$data,true) , true);
+var_dump($apiReturn);
 echo '<br/>';
 if($tokenReturn['status'] == 'success') {
     $token = $tokenReturn['data']['token'];
