@@ -13,7 +13,11 @@
     }
 </style>
 
-<?php
+<?php 
+require_once '../../classes/CommonFunctions.php';
+$CommonFunctions = new CommonFunctions();
+$getServiceTypes = $CommonFunctions->getServiceTypes();
+
     $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
         FROM exp_products
         WHERE (network_type='GUEST' || network_type='PRIVATE' || network_type='VTENANT') AND mno_id='$user_distributor' AND (default_value='1' || default_value IS NULL)";
@@ -120,10 +124,97 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">Admin First Name</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <input type="text" name="first_name" id="first_name" class="span4 form-control" value="<?php echo $edit===true?$first_name:''?>">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">Admin Email</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <input type="text" name="contact_email" id="contact_email" class="span4 form-control" value="<?php echo $edit===true?$get_contact_email:''?>">
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Contact Phone</label>
+                                    <label for="radiobtns">Account Number</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <input type="text" name="account_number" id="account_number" class="span4 form-control" value="<?php echo $edit===true?$get_account_number:''?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">Street</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <input type="text" name="street" id="street" class="span4 form-control" value="<?php echo $edit===true?$get_street:''?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">State</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <select name="state" id="state" class="span4 form-control">
+                                        <option value="">Select State</option>
+                                        <?php
+                                        $get_regions = $db->selectDB("SELECT
+                                    `states_code`,
+                                    `description`
+                                    FROM
+                                    `exp_country_states` ORDER BY description ASC");
+
+
+                                        foreach ($get_regions['data'] as $state) {
+                                            if (($edit===true?$get_state:'') == $state['states_code']) {
+                                                echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                            } else {
+
+                                                echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                            }
+                                        }
+                                        //echo '<option value="other">Other</option>';
+                                        ?>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- RIGHT -->
+                        <div class="create_re">                            
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">Service Type</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <select name="service_type" id="service_type" class="span4 form-control">
+                                            <option value="ENT-SMB-NON-AP-VYOS">ENT-SMB-NON-AP-VYOS</option>
+                                            <option value="ENT-SMB-NON-AP-FORTIGATE">ENT-SMB-NON-AP-FORTIGATE</option>
+                                            <option value="ENT-SMB-NON-AP-MERAKI">ENT-SMB-NON-AP-MERAKI</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">Admin Last Name</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <input type="text" name="last_name" id="last_name" class="span4 form-control" value="<?php echo $edit===true?$last_name:''?>">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">Admin Phone</label>
                                     <div class="controls col-lg-5 form-group">
                                         <input placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="14" class="mobile3_vali" type="text" name="contact_Phone" id="contact_Phone" class="span4 form-control"
                                         value="<?php echo $edit===true?$get_contact_phone:''?>">
@@ -235,77 +326,9 @@ if (!empty($arrayo)) {
 
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Account Number</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="account_number" id="account_number" class="span4 form-control" value="<?php echo $edit===true?$get_account_number:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Street</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="street" id="street" class="span4 form-control" value="<?php echo $edit===true?$get_street:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">State</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="state" id="state" class="span4 form-control">
-                                        <option value="">Select State</option>
-                                        <?php
-                                        $get_regions = $db->selectDB("SELECT
-                                    `states_code`,
-                                    `description`
-                                    FROM
-                                    `exp_country_states` ORDER BY description ASC");
-
-
-                                        foreach ($get_regions['data'] as $state) {
-                                            if (($edit===true?$get_state:'') == $state['states_code']) {
-                                                echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                            } else {
-
-                                                echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                            }
-                                        }
-                                        //echo '<option value="other">Other</option>';
-                                        ?>
-                                    </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- RIGHT -->
-                        <div class="create_re">                            
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Service Type</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="service_type" id="service_type" class="span4 form-control">
-                                            <option value="ENT-SMB-NON-AP-VYOS">ENT-SMB-NON-AP-VYOS</option>
-                                            <option value="ENT-SMB-NON-AP-FORTIGATE">ENT-SMB-NON-AP-FORTIGATE</option>
-                                            <option value="ENT-SMB-NON-AP-MERAKI">ENT-SMB-NON-AP-MERAKI</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Contact</label>
                                     <div class="controls col-lg-5 form-group">
                                         <input type="text" name="contact" id="contact" class="span4 form-control" value="<?php echo $edit===true?$get_contact_name:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Contact Email</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="contact_email" id="contact_email" class="span4 form-control" value="<?php echo $edit===true?$get_contact_email:''?>">
                                     </div>
                                 </div>
                             </div>
