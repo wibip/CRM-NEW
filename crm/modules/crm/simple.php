@@ -14,34 +14,21 @@
 </style>
 
 <?php 
-$getServiceTypes = [];
+$getServiceTypes = null;
 $baseUrl = 'http://bi-development.arrisi.com/api/v1_0';
 //generating api call to get Token
 $apiUsername = 'dev_hosted_api_user';
 $apiPassword = 'development@123!';
 $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
 $tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
-// $api_test_url = $baseUrl.'/token';
-// $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
-// $apiReturn = json_decode($CommonFunctions->httpPost($api_test_url,$data,true) , true);
-var_dump($tokenReturn);
-echo '<br/>';
 //generating api call to get Service Types
 if($tokenReturn['status'] == 'success') {
     $token = $tokenReturn['data']['token'];
-    var_dump($token);
-    echo '<br/>';
     $serviceTypesReturn = $CommonFunctions->getServiceTypes($baseUrl.'/service-types',$token);
-    var_dump($serviceTypesReturn);
-    echo '<br/>';
     if($serviceTypesReturn['status'] == 'success') {
         $getServiceTypes = $serviceTypesReturn['data'];
-        var_dump($getServiceTypes);
-        echo '<br/>';
     }
 }
-echo '<br/>endnew';
-die;
 
     $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
         FROM exp_products
@@ -220,9 +207,17 @@ if (!empty($arrayo)) {
                                     <label for="radiobtns">Service Type</label>
                                     <div class="controls col-lg-5 form-group">
                                         <select name="service_type" id="service_type" class="span4 form-control">
-                                            <option value="ENT-SMB-NON-AP-VYOS">ENT-SMB-NON-AP-VYOS</option>
-                                            <option value="ENT-SMB-NON-AP-FORTIGATE">ENT-SMB-NON-AP-FORTIGATE</option>
-                                            <option value="ENT-SMB-NON-AP-MERAKI">ENT-SMB-NON-AP-MERAKI</option>
+                                            <?php if($getServiceTypes != null){ ?>
+                                            <option value="0">Please select service type</option>
+                                            <?php   foreach($getServiceTypes as $serviceTypes){ ?>
+                                                <option value="<?=$serviceTypes['id']?>"><?=$serviceTypes['service_type']?></option>
+                                            <?php
+                                                }
+                                            } else { ?>
+                                            <option value="0">Service type not found</option>
+                                            <?php
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
