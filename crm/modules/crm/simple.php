@@ -138,16 +138,16 @@ if (!empty($arrayo)) {
                             </div>
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Admin First Name</label>
+                                    <label for="radiobtns">Contact Name</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="first_name" id="first_name" class="span4 form-control" value="<?php echo $edit===true?$first_name:''?>">
+                                        <input type="text" name="contact_name" id="contact_name" class="span4 form-control" value="<?php echo $edit===true?$get_contact_name:''?>">
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Admin Email</label>
+                                    <label for="radiobtns">Cotact Email</label>
                                     <div class="controls col-lg-5 form-group">
                                         <input type="text" name="contact_email" id="contact_email" class="span4 form-control" value="<?php echo $edit===true?$get_contact_email:''?>">
                                     </div>
@@ -158,7 +158,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Address</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="address" id="address" class="span4 form-control" value="<?php echo $edit===true?$address:''?>">
+                                        <input type="text" name="street" id="street" class="span4 form-control" value="<?php echo $edit===true?$get_street:''?>">
                                     </div>
                                 </div>
                             </div>
@@ -166,7 +166,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">State</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <select name="wifi_state" id="wifi_state" class="span4 form-control">
+                                        <select name="state" id="state" class="span4 form-control">
                                             <option value="">Select State</option>
                                             <?php
                                                 $get_regions = $db->selectDB("SELECT
@@ -198,9 +198,13 @@ if (!empty($arrayo)) {
                                         <select name="service_type" id="service_type" class="span4 form-control">
                                             <?php if($serviceTypes != null){ ?>
                                             <option value="0">Please select service type</option>
-                                            <?php   foreach($serviceTypes as $serviceType){ ?>
-                                                <option value="<?=$serviceType['id']?>"><?=$serviceType['service_type']?></option>
-                                            <?php
+                                            <?php foreach($serviceTypes as $serviceType){ 
+                                                   if (($edit===true? $get_service_type:'') == $serviceType['id']) {
+                                                        echo '<option selected value="' . $serviceType['id'] . '">' . $serviceType['service_type'] . '</option>';
+                                                    } else {
+
+                                                        echo '<option value="' . $serviceType['id'] . '">' . $serviceType['service_type'] . '</option>';
+                                                    }
                                                 }
                                             } else { ?>
                                             <option value="0">Service type not found</option>
@@ -212,20 +216,20 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                             
-                            <div class="control-group">
+                            <!--<div class="control-group">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Admin Last Name</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="last_name" id="last_name" class="span4 form-control" value="<?php echo $edit===true?$last_name:''?>">
+                                        <input type="text" name="last_name" id="last_name" class="span4 form-control" value="< ?php echo $edit===true?$last_name:''?>">
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
 
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Admin Phone</label>
+                                    <label for="radiobtns">Contact Number</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="14" class="mobile3_vali" type="text" name="contact_Phone" id="contact_Phone" class="span4 form-control"
+                                        <input placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="14" class="mobile3_vali" type="text" name="contact_number" id="contact_number" class="span4 form-control"
                                         value="<?php echo $edit===true?$get_contact_phone:''?>">
                                     </div>
                                 </div>
@@ -234,7 +238,7 @@ if (!empty($arrayo)) {
                                 $(document).ready(function() {
                                     $('.mobile3_vali').focus(function() {
                                         $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                                        $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
+                                        $('#crm_form').data('bootstrapValidator').updateStatus('contact_number', 'NOT_VALIDATED').validateField('contact_number');
                                     });
 
                                     $('.mobile3_vali').keyup(function() {
@@ -245,7 +249,7 @@ if (!empty($arrayo)) {
                                         if (phone_1.length > 10) {
                                         var phone2 = phone_1.length;
                                         $('#crm_form')
-                                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', false);
+                                                    .bootstrapValidator('enableFieldValidators', 'contact_number', false);
                                         var phone_1 = phone_1.slice(0,10);
 
                                                     }
@@ -253,17 +257,17 @@ if (!empty($arrayo)) {
                                                 //console.log(phone_1+'sss');
                                                 if (phone2 == 10) {
                                                     $('#crm_form')
-                                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', true);
+                                                    .bootstrapValidator('enableFieldValidators', 'contact_number', true);
                                                 }
 
                                                 }
                                                 else{
                                     $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
                                     $('#crm_form')
-                                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', true)
+                                                    .bootstrapValidator('enableFieldValidators', 'contact_number', true)
                                     }
 
-                                    $('#crm_form').bootstrapValidator('revalidateField', 'contact_Phone');
+                                    $('#crm_form').bootstrapValidator('revalidateField', 'contact_number');
                                 });
 
                                     //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
@@ -324,7 +328,7 @@ if (!empty($arrayo)) {
                                             e.preventDefault();
 
                                         }
-                                        $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
+                                        $('#crm_form').data('bootstrapValidator').updateStatus('contact_number', 'NOT_VALIDATED').validateField('contact_number');
                                     });
                                 });
                             </script>
@@ -341,6 +345,50 @@ if (!empty($arrayo)) {
                                     <label for="radiobtns">Zip</label>
                                     <div class="controls col-lg-5 form-group">
                                         <input type="text" name="zip" id="zip" class="span4 form-control" value="<?php echo $edit===true?$get_zip:''?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls col-lg-5 form-group">
+                                    <label for="radiobtns">Timezone</label>
+                                    <div class="controls col-lg-5 form-group">
+                                        <select class="span4 form-control" id="timezone" name="timezone" autocomplete="off">
+                                            <option value="">Select Time Zone</option>
+                                            <?php
+                                            $utc = new DateTimeZone('UTC');
+                                            $dt = new DateTime('now', $utc);
+                                            foreach ($priority_zone_array as $tz){
+                                                $current_tz = new DateTimeZone($tz);
+                                                $offset =  $current_tz->getOffset($dt);
+                                                $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                $abbr = $transition[0]['abbr'];
+                                                if($get_timezone==$tz){
+                                                    $select="selected";
+                                                }else{
+                                                    $select="";
+                                                }
+                                                echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                            }
+
+                                            foreach(DateTimeZone::listIdentifiers() as $tz) {
+                                                //Skip
+                                                if(in_array($tz,$priority_zone_array))
+                                                    continue;
+
+                                                $current_tz = new DateTimeZone($tz);
+                                                $offset =  $current_tz->getOffset($dt);
+                                                $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                                                $abbr = $transition[0]['abbr'];
+                                                
+                                                if($get_timezone==$tz){
+                                                    $select="selected";
+                                                }else{
+                                                    $select="";
+                                                }
+                                                echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
