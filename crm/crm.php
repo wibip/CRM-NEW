@@ -163,6 +163,7 @@ include_once 'classes/cryptojs-aes.php';
              $order_number = isset($_POST['order_number']) ? $_POST['order_number'] : '';
              $city = $_POST['city'];
              $zip = $_POST['zip'];
+             $timezone = $_POST['timezone'];
              $account_number = isset($_POST['account_number']) ? $_POST['account_number'] : '';
              $street = $_POST['street'];
              $state = $_POST['state'];
@@ -274,6 +275,7 @@ include_once 'classes/cryptojs-aes.php';
                  `city`,
                  `state`,
                  `zip`,
+                 `timezone`,
                  `wifi_information`,
                  `property_id`,
                  `product_information`,
@@ -294,6 +296,7 @@ include_once 'classes/cryptojs-aes.php';
                  '$city',
                  '$state',
                  '$zip',
+                 '$timezone',
                  '$wifi_information',
                  '$wifi_unique',
                  '$product_information',
@@ -304,9 +307,9 @@ include_once 'classes/cryptojs-aes.php';
                  'now()',
                  'now()'
                 )";
-var_dump($query);
+// var_dump($query);
                 $ex = $db->execDB($query);
-                var_dump($ex);die;
+                // var_dump($ex);die;
                 $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 
                 $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' > /dev/null 2>&1 & echo $!; ';
