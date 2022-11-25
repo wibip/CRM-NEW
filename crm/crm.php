@@ -160,14 +160,14 @@ include_once 'classes/cryptojs-aes.php';
              $contact_name = $_POST['contact'];
              $contact_phone = $_POST['contact_Phone'];
              $contact_email = $_POST['contact_email'];
-             $order_number = $_POST['order_number'];
+             $order_number = isset($_POST['order_number']) ? $_POST['order_number'] : '';
              $city = $_POST['city'];
              $zip = $_POST['zip'];
-             $account_number = $_POST['account_number'];
+             $account_number = isset($_POST['account_number']) ? $_POST['account_number'] : '';
              $street = $_POST['street'];
              $state = $_POST['state'];
              $service_type = $_POST['service_type'];
-             $wifi_unique_key = $_POST['wifi_unique'];
+             $wifi_unique_key = isset($_POST['wifi_unique']) ? $_POST['wifi_unique'] : '';
              $wifi_unique = $get_opt_code.$wifi_unique_key;
 
              $more_than_one_sites = $_POST['more_than_one_sites'];
