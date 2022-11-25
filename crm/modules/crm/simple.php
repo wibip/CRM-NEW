@@ -196,7 +196,7 @@ if (!empty($arrayo)) {
                                     <div class="controls col-lg-5 form-group">
                                         <select name="service_type" id="service_type" class="span4 form-control">
                                             <?php if($serviceTypes != null){ ?>
-                                            <option value="0">Please select service type</option>
+                                            <option value="">Please select service type</option>
                                             <?php foreach($serviceTypes as $serviceType){ 
                                                    if (($edit===true? $get_service_type:'') == $serviceType['id']) {
                                                         echo '<option selected value="' . $serviceType['id'] . '">' . $serviceType['service_type'] . '</option>';
