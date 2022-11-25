@@ -140,7 +140,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Contact Name</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="contact_name" id="contact_name" class="span4 form-control" value="<?php echo $edit===true?$get_contact_name:''?>">
+                                        <input type="text" name="contact" id="contact" class="span4 form-control" value="<?php echo $edit===true?$get_contact_name:''?>">
                                     </div>
                                 </div>
                             </div>
@@ -228,7 +228,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Contact Number</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="14" class="mobile3_vali" type="text" name="contact_number" id="contact_number" class="span4 form-control"
+                                        <input placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="14" class="mobile3_vali" type="text" name="contact_Phone" id="contact_Phone" class="span4 form-control"
                                         value="<?php echo $edit===true?$get_contact_phone:''?>">
                                     </div>
                                 </div>
