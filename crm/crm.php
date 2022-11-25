@@ -163,7 +163,7 @@ include_once 'classes/cryptojs-aes.php';
              $order_number = isset($_POST['order_number']) ? $_POST['order_number'] : '';
              $city = $_POST['city'];
              $zip = $_POST['zip'];
-             $timezone = $_POST['timezone'];
+             $timezone = $_POST['time_zone'];
              $account_number = isset($_POST['account_number']) ? $_POST['account_number'] : '';
              $street = $_POST['street'];
              $state = $_POST['state'];

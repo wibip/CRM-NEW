@@ -352,7 +352,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Timezone</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <select class="span4 form-control" id="timezone" name="timezone" autocomplete="off">
+                                        <select class="span4 form-control" id="time_zone" name="time_zone" autocomplete="off">
                                             <option value="">Select Time Zone</option>
                                             <?php
                                             $utc = new DateTimeZone('UTC');
