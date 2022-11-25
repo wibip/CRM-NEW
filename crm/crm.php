@@ -304,12 +304,13 @@ include_once 'classes/cryptojs-aes.php';
                  'now()',
                  'now()'
                 )";
-
+var_dump($query);
                 $ex = $db->execDB($query);
+                var_dump($ex);die;
                 $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 
                 $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' > /dev/null 2>&1 & echo $!; ';
-            $pid = exec($exec_cmd , $output);
+                $pid = exec($exec_cmd , $output);
 
             if($ex===true){
                 $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
