@@ -307,9 +307,9 @@ include_once 'classes/cryptojs-aes.php';
                  'now()',
                  'now()'
                 )";
-// var_dump($query);
+var_dump($query);
                 $ex = $db->execDB($query);
-                // var_dump($ex);die;
+                var_dump($ex);die;
                 $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 
                 $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' > /dev/null 2>&1 & echo $!; ';
