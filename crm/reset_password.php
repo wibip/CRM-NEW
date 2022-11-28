@@ -687,8 +687,8 @@ if($login_title_position=="body_top_center"){
                        <?php if($reset_method=="icomms"){ ?>
 
                        <div class="field form-group">
-                           <label for="username">Customer Account #, Business ID, Email, User ID or Unique Property ID</label>
-                           <input type="text" id="icomms" name="icomms" value="" autocomplete="off" placeholder="Customer Account #, Business ID, Email, User ID or Unique Property ID"
+                           <label for="username">Customer Email</label>
+                           <input type="text" id="icomms" name="icomms" value="" autocomplete="off" placeholder="Customer Email"
                                   class="login username-field form-controls"/>
 
                            <script type="text/javascript">
@@ -1166,7 +1166,7 @@ $(document).ready(function() {
                         <?php echo $db->validateField('notEmpty'); ?>,
                         regexp: {
                             regexp: '^[a-zA-Z0-9]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,15})$|^[0-9]{12}$|^[a-zA-Z0-9_-]{1,30}$|^[a-zA-Z]{3}[0-9]{7}$',
-                            message: '<p>Incorrect Customer Account #, Business ID, Email, User ID or Unique Property ID</p>'
+                            message: '<p>Incorrect Email</p>'
                         }
                     }
                 },
