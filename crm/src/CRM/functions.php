@@ -21,12 +21,16 @@ class crm
     }
 
     public function getAllConfig($crm_profile){
-    if (!isset($crm_profile)) {
-        $crm_profile = 'CRM_HOSTED';
-    }
-    $q = "SELECT `api_url`,`api_password`,`api_user_name` FROM `exp_other_profile` WHERE distributor='ADMIN' AND type='CRM' AND `profile_name` = '$crm_profile'";
-    $data = $this->db->select1DB($q);
-    return $data;
+        // if (!isset($crm_profile)) {
+        //     $crm_profile = 'CRM_HOSTED';
+        // }
+        // $q = "SELECT `api_url`,`api_password`,`api_user_name` FROM `exp_other_profile` WHERE distributor='ADMIN' AND type='CRM' AND `profile_name` = '$crm_profile'";
+        // $data = $this->db->select1DB($q);
+        $q = "SELECT `api_url`,`api_password`,`api_user_name`,`controller_name`
+            FROM `exp_locations_ap_controller` 
+            WHERE `id` = '$crm_profile'";
+        $data = $this->db->select1DB($q);
+        return $data;
     }
 
     public function getOtherConfig($field)
@@ -39,7 +43,7 @@ class crm
 
     public function getToken(){
     //API Url
-    $url = $this->getOtherConfig('api_url').'/token';
+    $url = $this->getOtherConfig('api_url').'api/'.$this->getOtherConfig('controller_name').'/token';
     //Initiate cURL.
     $ch = curl_init($url);
     
@@ -84,7 +88,7 @@ class crm
 
         $access_token = $this->getToken();
         //API Url
-        $url2 = $this->getOtherConfig('api_url').'/accounts';
+        $url2 = $this->getOtherConfig('api_url').'api/'.$this->getOtherConfig('controller_name').'/accounts';
         //echo $url2;
 
         $ch = curl_init($url2);
