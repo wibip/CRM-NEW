@@ -1,8 +1,7 @@
 <?php 
 
 
-include_once( str_replace('//','/',dirname(__FILE__).'/') .'../classes/systemPackageClass.php');
-
+include_once( '../../../../classes/systemPackageClass.php');
 
 
 class email

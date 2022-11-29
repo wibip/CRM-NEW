@@ -9,12 +9,6 @@ session_start();?>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-
-
-
-
-
-
 <?php
 
 /*classes & libraries*/
@@ -43,37 +37,6 @@ function check_string($string){
         return "username";
     }
 }
-
-/*if (!function_exists("GetSQLValueString")) {
-    function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "")
-    {
-        if (PHP_VERSION < 6) {
-            $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-        }
-
-        $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
-
-        switch ($theType) {
-            case "text":
-                $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-                break;
-            case "long":
-            case "int":
-                $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-                break;
-            case "double":
-                $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-                break;
-            case "date":
-                $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-                break;
-            case "defined":
-                $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-                break;
-        }
-        return $theValue;
-    }
-}*/
 
 $form_step = "step1";
 $db = new db_functions(); 
@@ -126,17 +89,6 @@ if(isset($_POST['reset'])){
         if(strlen($username_sel) > 0){
             $icomms = $username_sel;
         }
-
-        /*$check_prop_id = sprintf("SELECT `verification_number` FROM `exp_mno_distributor` WHERE property_id=%s LIMIT 1",GetSQLValueString($icomms, "text"));
-
-        $q_prop_id = mysql_query($check_prop_id);
-
-        if(mysql_num_rows($q_prop_id) > 0){
-
-            $r_prop_id = mysql_fetch_assoc($q_prop_id);
-
-            $icomms = $r_prop_id['verification_number'];
-        }*/
 
         $string_type = check_string($icomms);
 
@@ -615,7 +567,7 @@ if(isset($_POST['reset_password'])){
         $key_result = $db->selectDB($key_query);
         
         foreach ($key_result['data'] AS $row) {
-            $camp_theme_color = $row[settings_value];
+            $camp_theme_color = $row['settings_value'];
         }
         ?>
   
@@ -630,7 +582,7 @@ $key_query = "SELECT settings_value FROM exp_settings WHERE settings_code = 'LOG
 $key_result = $db->selectDB($key_query);
 
 foreach ($key_result['data'] AS $row) {
-    $logo2 = $row[settings_value];
+    $logo2 = $row['settings_value'];
 }
 
 
@@ -744,6 +696,7 @@ if($login_title_position=="body_top_center"){
                                            type: "GET",
                                            data: formData,
                                            success: function (data) {
+                                               console.log(data);
                                                var data_ar = data.split(',');
                                                if(data_ar.length>1){
 
@@ -833,14 +786,14 @@ if($login_title_position=="body_top_center"){
                    <!-- /login-fields -->
 
                        <?php
-                           if ($MMFailed == '1') {
-                               echo '<div style="display: inline-block;" class="error-wrapper left-pad bubble-pointer mbubble-pointer submit-error"><p>' . $MMFailedMassage . '</p></div>';
-                           }
+                        //    if ($MMFailed == '1') {
+                        //        echo '<div style="display: inline-block;" class="error-wrapper left-pad bubble-pointer mbubble-pointer submit-error"><p>' . $MMFailedMassage . '</p></div>';
+                        //    }
                        ?>
                        <?php
-                           if ($MMFailed == '2') {
-                               echo '<font size="small" class="left-pad" color="#0679CA">' . $MMFailedMassage . '</font>';
-                           }
+                        //    if ($MMFailed == '2') {
+                        //        echo '<font size="small" class="left-pad" color="#0679CA">' . $MMFailedMassage . '</font>';
+                        //    }
                        ?>
 
                        <div class="login-actions">

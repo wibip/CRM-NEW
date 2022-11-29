@@ -957,26 +957,29 @@ public function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $t
     public function getEmailTemplate($text_code,$product,$type,$distributor=NULL)
     {
         $count = 0;
-        if(isset($distributor)){
-            $query = "SELECT title, text_details FROM exp_texts WHERE text_code = '$text_code' AND distributor = '$distributor'";
+        // if(isset($distributor)){
+            $query = "SELECT title, text_details FROM exp_texts WHERE text_code = '$text_code' ";
             //$query_results=mysql_query($query);
+			// var_dump($query);die;
             $query_results=$this->dbCon->query($query);
-           $count = $this->dbCon->num_rows($query);//mysql_num_rows($query_results);
-        }
-        if($count==0){
-            $query = "SELECT title, text_details FROM exp_texts WHERE text_code = '$text_code' AND distributor = '$product'";
-            $query_results=$this->dbCon->query($query);
+			return $query_results;
+			// var_dump($query_results);die;
+        //    $count = $this->dbCon->num_rows($query);//mysql_num_rows($query_results);
+        // }
+        // if($count==0){
+        //     $query = "SELECT title, text_details FROM exp_texts WHERE text_code = '$text_code' AND distributor = '$product'";
+        //     $query_results=$this->dbCon->query($query);
 
-           if($this->dbCon->num_rows($query)==0){
-                $query = "SELECT title, text_details FROM exp_texts WHERE text_code = '$text_code' AND distributor = '$type'";
-                $query_results=$this->dbCon->query($query);
-            }
-        }
+        //    if($this->dbCon->num_rows($query)==0){
+        //         $query = "SELECT title, text_details FROM exp_texts WHERE text_code = '$text_code' AND distributor = '$type'";
+        //         $query_results=$this->dbCon->query($query);
+        //     }
+        // }
 
-       foreach ($query_results as $row){
-            $result[] = $row;
-        }
-        return $result;
+    //    foreach ($query_results as $row){
+    //         $result[] = $row;
+    //     }
+    //     return $result;
     }
 
     public function getEmailTemplateVertical($text_code,$product,$type,$vertical,$distributor=NULL)

@@ -15,14 +15,15 @@ $package_functions=new package_functions();
 
 $email = $_POST['email'];
 $login = $_GET['login'];
-
+$emailuser = "";
 
 $email = htmlentities( urldecode($email), ENT_QUOTES, 'utf-8' );
 $login = htmlentities( urldecode($login), ENT_QUOTES, 'utf-8' );
-
+// var_dump($login);
+// var_dump($email);
 $list_of_packages = $package_functions->getOptions('LOGIN_RESTRICTION', $login);
 
-
+// var_dump($list_of_packages);
 $output="<label for=\"username\">Select Username</label><div class=\"controls\">";
 $email_count=0;
 
@@ -38,42 +39,27 @@ AND email ='%s'", $email);
 
 	
 $result = $db->selectDB($sql);
-
- 
-
+// var_dump($result);
 $row_count=0;
 foreach($result['data'] AS $row){
-	
 	$sys_pcg = $row['system_package'];
-	
-	if(in_array($sys_pcg,explode(',',$list_of_packages))){
-   // if(strtolower($email)==strtolower($row['email'])){
-		
-		
-    $row_count++;
+	// var_dump($sys_pcg);
+	// if(in_array($sys_pcg,explode(',',$list_of_packages))){
+        $row_count++;
 
-    //$output.='<option value="'.$row['user_name'].'">'.$row['user_name'].'</option>';
-	if($row_count==1){
-        $output.='<input checked type="radio" name="username" value="'.$row['user_name'].'"><label style="display: inline-block !important;" ></label> &nbsp;&nbsp;&nbsp;'.$row['user_name'].'</br>';
-    }else{
-        $output.='<input type="radio" name="username" value="'.$row['user_name'].'"><label style="display: inline-block !important;" ></label> &nbsp;&nbsp;&nbsp;'.$row['user_name'].'</br>';
-
-    }
-
-	$emailuser='<input type="hidden" name="username" value="'.$row['user_name'].'">';
-	
-	$email_count++;
-	
-}
-		
+        if($row_count==1){
+            $output.='<input checked type="radio" name="username" value="'.$row['user_name'].'"><label style="display: inline-block !important;" ></label> &nbsp;&nbsp;&nbsp;'.$row['user_name'].'</br>';
+        }else{
+            $output.='<input type="radio" name="username" value="'.$row['user_name'].'"><label style="display: inline-block !important;" ></label> &nbsp;&nbsp;&nbsp;'.$row['user_name'].'</br>';
+        }
+        $emailuser='<input type="hidden" name="username" value="'.$row['user_name'].'">';
+        $email_count++;  
+    // }	
 }
 
 if($email_count>1){
-	
 	echo $output.'</div>';
-	
 }else{
-	
 	echo $emailuser;
 }
 

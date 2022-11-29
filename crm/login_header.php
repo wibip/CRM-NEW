@@ -50,9 +50,9 @@ foreach ($login_profile as $key => $value){
 }
 $login_profile_count = count($login_profile);
 
-if(isset( $_REQUEST[login])){
+if(isset( $_REQUEST['login'])){
 	
-	$admin_system_package = $_REQUEST[login];
+	$admin_system_package = $_REQUEST['login'];
 
 	//security validation
 	if(preg_match("/^[a-zA-Z]+$/", $admin_system_package) == 1) {

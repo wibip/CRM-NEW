@@ -59,7 +59,7 @@ require_once 'classes/CommonFunctions.php';
 
 <?php
 include 'header.php';
-$page = 'operations';
+$page = 'Operations';
 // TAB Organization
 if (isset($_GET['t'])) {
     $variable_tab = 'tab' . $_GET['t'];

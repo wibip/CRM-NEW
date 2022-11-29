@@ -65,7 +65,9 @@ class SystemPackageOne
             AND c.`feature_code`='$feature_code'
             AND c.`type` ='option'";
         $method = $this->dbT->select1DB($q);
-        return $method['access_method'];
+        // var_dump($method);die;
+        $access_method = isset($method['access_method']) ? $method['access_method'] : null;
+        return $access_method;
     }
 
     public function getSectionTypeBranding($feature_code, $system_package)
@@ -79,7 +81,7 @@ class SystemPackageOne
         $q = "SELECT c.`access_method` FROM `admin_product_controls` c
             WHERE c.`product_code`='$system_package'
             AND c.`feature_code`='$feature_code'
-            AND c.`type` ='captive'";
+            AND c.`type` ='ADMIN'";
 
         $method = $this->dbT->select1DB($q);
         return $method['access_method'];

@@ -26,8 +26,8 @@
 	</div> <!-- .actions -->
 	<!--<a href="< ?php echo $veri_login; ?>">First Time User? Click here to Activate your Account</a>
 	<br>-->
-	<a href="<?php echo $reset_main_url; ?>" class="">
-		Forgot User ID or Password?
+	<a href="<?php echo $reset_admin_main_url; ?>" class="">
+		Forgot Password?
 	</a>
 	<!--<br>
 	<a href="< ?php echo $reset_admin_main_url; ?>" class="">

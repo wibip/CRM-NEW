@@ -132,11 +132,10 @@ else{
 			
 			$q2 = sprintf("SELECT u.user_distributor AS verification_number, u.user_distributor,m.system_package 
 			FROM admin_users u, `mno_distributor_parent` m 
-			WHERE m.parent_id = u.user_distributor and 
-			u.email = '%s' AND u.user_type IN ('MVNO_ADMIN') AND u.is_enable=1",$email);
+			WHERE u.email = '%s' AND u.user_type IN ('MVNO_ADMIN') AND u.is_enable=1",$email);
 
             $r2 = $db->selectDB($q2);
-
+var_dump($r2);
             //$usernames = array();
             foreach ($r2['data'] as $row2) {
 				
