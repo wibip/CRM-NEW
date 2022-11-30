@@ -304,19 +304,31 @@ if (isset($_SESSION['msg_crm_manage'])) {
                                         var tr = "";
                                         const element = table[index];
                                         
-                                        tr = tr + "<tr><td>" + element[0] + "</td><td class='tablesaw-priority-2'>" + element[1] + "</td><td class='tablesaw-priority-3'>" + element[2] + "</td><td><a id='EDITACC_" + element[3] + "'  class='btn btn-small btn-primary'><i class='btn-icon-only icon-wrench'></i>&nbsp;Edit</a></td><td class='tablesaw-priority-5'><a id='REMOVEACC_" + element[3] + "'  class='btn btn-small btn-primary'><i class='btn-icon-only icon-trash'></i>&nbsp;Remove</a></td></tr>";
+                                        tr = tr + "<tr><td>" + element[0] + "</td><td class='tablesaw-priority-2'>" + element[1] + "</td><td class='tablesaw-priority-3'>" + element[2] + "</td><td><a id='VIEWACC_" + element[3] + "'  class='btn btn-small btn-primary'><i class='btn-icon-only icon-wrench'></i>&nbsp;View</a></td><td class='tablesaw-priority-5'><a id='REMOVEACC_" + element[3] + "'  class='btn btn-small btn-primary'><i class='btn-icon-only icon-trash'></i>&nbsp;Remove</a></td></tr>";
                                         
                                         $('#activeLocationsTable tbody').append(tr);
 
-                                        $('#EDITACC_' + element[3]).easyconfirm({
+                                        // $('#EDITACC_' + element[3]).easyconfirm({
+                                        //     locale: {
+                                        //         title: 'Account Edit',
+                                        //         text: 'Are you sure you want to edit this Account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                                        //         button: ['Cancel', ' Confirm'],
+                                        //         closeText: 'close'
+                                        //     }
+                                        // });
+                                        // $('#EDITACC_' + element[3]).click(function () {
+                                        //     window.location = "?t=crm_create&token=<?php echo $secret; ?>&edit&id=" + element[3];
+                                        // });
+
+                                        $('#VIEWACC_' + element[3]).easyconfirm({
                                             locale: {
-                                                title: 'Account Edit',
-                                                text: 'Are you sure you want to edit this Account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                                                title: 'Account View',
+                                                text: 'Are you sure you want to view this Account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
                                                 button: ['Cancel', ' Confirm'],
                                                 closeText: 'close'
                                             }
                                         });
-                                        $('#EDITACC_' + element[3]).click(function () {
+                                        $('#VIEWACC_' + element[3]).click(function () {
                                             window.location = "?t=crm_create&token=<?php echo $secret; ?>&edit&id=" + element[3];
                                         });
 
