@@ -44,13 +44,34 @@ if ($script != 'verification') {
 	.sidebar.hover li span {
 		display: inline-block;
 	}
-	.sidebar ul{
+	.sidebar ul:not(.scnd){
 		list-style-type: none;
 		margin: 0;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
+
+	.sidebar ul.scnd{
+		margin: 0;
+		margin-left: 73px;
+		display: none;
+	}
+
+	.sidebar ul.scnd li{
+		padding: 0;
+		color: #fff;
+		margin-bottom: 5px;
+	}
+
+	.sidebar ul.scnd li a{
+		font-size: 14px;
+	}
+
+	.sidebar.hover ul.scnd {
+		display: block;
+	}
+
 	.sidebar a{
 		color: #fff;
 	}
@@ -58,6 +79,9 @@ if ($script != 'verification') {
     width: 100%;
 			padding: 3px 15px;
 			box-sizing: border-box;
+			white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 	}
 	.sidebar ul li div{
 		display: -webkit-box;
@@ -82,13 +106,13 @@ if ($script != 'verification') {
         -ms-flex-align: center;
             align-items: center;
 	}
-	.sidebar ul li:nth-child(1){
+	.sidebar ul:not(.scnd)>li:nth-child(1){
 		box-shadow: rgb(0 0 0 / 17%) 0px 0px 8px 0px;
 		height: 71px;
     	margin-bottom: 20px;
 		padding: 10px;
 	}
-	.sidebar ul li:nth-child(1) span{
+	.sidebar ul:not(.scnd)>li:nth-child(1) span{
 		font-family: 'Montserrat-Bold';
 	}
 	.sidebar ul li i {
