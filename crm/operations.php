@@ -1627,7 +1627,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                         <!--<li < ?php if(isset($tab11)){?>class="active" < ?php }?>><a href="#saved_mno" data-toggle="tab">Pending Account Activation Operations</a></li>-->
                                     <?php } ?>
 									</ul>
-									<br>
+									
 									<div class="tab-content">
 
                                         <?php if (isset($_SESSION['msg6'])) {
@@ -1636,7 +1636,8 @@ if (isset($_POST['submit_mno_form'])) { //6
                                         } ?>
                                         <!-- **************Create Operations Account********************** -->
                                         <div <?php if(isset($tab6)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="operation_account">
-                                            <form onkeyup="submit_mno_formfn();" onchange="submit_mno_formfn();" id="mno_form" name="mno_form" class="form-horizontal" method="POST" action="operations.php?<?php if($mno_edit==1){echo "t=8&mno_edit=1&mno_edit_id=$edit_mno_id";}else{echo "t=6";}?>" >
+                                        <h1 class="head">Create Operations Account</h1>    
+                                        <form onkeyup="submit_mno_formfn();" onchange="submit_mno_formfn();" id="mno_form" name="mno_form" class="form-horizontal" method="POST" action="operations.php?<?php if($mno_edit==1){echo "t=8&mno_edit=1&mno_edit_id=$edit_mno_id";}else{echo "t=6";}?>" >
                                                 <?php
                                                 echo '<input type="hidden" name="form_secret6" id="form_secret6" value="'.$_SESSION['FORM_SECRET'].'" />';
                                                 echo '<input type="hidden" name="form_secret5" id="form_secret5" value="'.$_SESSION['FORM_SECRET'].'" />';
@@ -1954,7 +1955,8 @@ if (isset($_POST['submit_mno_form'])) { //6
                                         
                                         <!-- ***************Activate Accounts List******************* -->
                                         <div <?php if(isset($tab8)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="active_operations">
-											<div id="response_d1"></div>
+										<h1 class="head">Manage Operations</h1>	
+                                        <div id="response_d1"></div>
 											<div class="widget widget-table action-table">
 												<div class="widget-header">
 													<h3>Active Operations</h3>

@@ -874,8 +874,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 										<div class="tab-content">
 											<!-- +++++++++++++++++++++++++++++ create users ++++++++++++++++++++++++++++++++ -->
 											<div <?php if (isset($tab1)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_users">
-												<div class="users_head_visible" style="display:none;"><div class="header_hr"></div><div class="header_f1" style="width: 100%">Users</div>
-												<br class="hide-sm"><br class="hide-sm"><div class="header_f2" style="width: fit-content;"> </div></div>
+												<h1 class="head">Users</h1>
 												<div id="response_d3"></div>
 
 												<?php
@@ -1267,12 +1266,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 											
 											<!-- +++++++++++++++++++++++++++++ Edit users ++++++++++++++++++++++++++++++++ -->
 											<div <?php if (isset($tab5) && $tab5 == "set") { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="edit_users">
-												<div class="support_head_visible" style="display:none;">
-													<div class="header_hr"></div>
-													<div class="header_f1" style="width: 100%;">Edit Profile</div>
-													<br class="hide-sm"><br class="hide-sm">
-													<div class="header_f2" style="width: 100%;"></div>
-												</div>
+												<h1 class="head">
+												Edit Profile
+												</h1>
 												<form autocomplete="off" id="edit-user-profile" action="?t=1" method="post" class="form-horizontal">
 												<?php
 													if(isset($tab5)){
@@ -1538,9 +1534,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 											<!-- +++++++++++++++++++++++++++++ create Roles ++++++++++++++++++++++++++++++++ -->
 											<div <?php if (isset($tab3)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_roles">
 
-												<div class="users_head_visible" style="display:none;"><div class="header_hr"></div><div class="header_f1" style="width: 100%">
-													Roles</div>
-												<br class="hide-sm"><br class="hide-sm"><div class="header_f2" style="width: fit-content;"> </div></div>
+												<h1 class="head">Roles</h1>
 												<?php
 													if(isset($tab3)){
 														if (isset($_SESSION['msg5'])) {

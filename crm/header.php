@@ -1964,9 +1964,9 @@ else{
 		$page_intro = 'YES';
 	}
 
-	$navbar = 'layout/' . $camp_layout . '/views/header_navbar.php';
+	$navbar = 'layout/ARRIS/views/header_navbar.php';
 
-	if (($new_design == 'yes' || $SUBMENU_VERTICALE == 'yes') && file_exists($navbar)) {
+	if (file_exists($navbar)) {
 		include_once $navbar;
 	} else {
 	?>
@@ -2515,18 +2515,6 @@ else{
 		echo '<input type="hidden" value="p_token" id="logout_type">';
 	}
 
-
-	if ($new_design == 'yes') {
-
-		if ($page_intro == "YES" && ($introMnoPage != 'NO')) {
-
-			$page_intro_url = 'layout/' . $camp_layout . '/views/intro_page.php';
-
-			if (file_exists($page_intro_url)) {
-				include_once 'layout/' . $camp_layout . '/views/intro_page.php';
-			}
-		}
-	}
 
 	//print_r($page_names);
 

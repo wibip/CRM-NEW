@@ -173,13 +173,7 @@ $logTypes = $db->getDataFromLogsField('log_type');
 									<div class="tab-content">
 										<!-- /* +++++++++++++++++++++++++++++++++++++ User Activity Logs +++++++++++++++++++++++++++++++++++++ */ -->
 										<div <?php if (isset($tab3)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="user_activity_logs">
-											<div class="logs_head_visible" style="display:none;">
-												<div class="header_hr"></div>
-												<div class="header_f1" style="width: 100%">
-													User Activity Logs</div>
-												<br class="hide-sm"><br class="hide-sm">
-												<div class="header_f2" style="width: fit-content;"> </div>
-											</div>
+											<h1 class="head">User Activity Logs</h1>
 
 											<!-- <br> -->
 											<form id="activity_log1" name="activity_log" method="post" class="form-horizontal" action="?t=3">
