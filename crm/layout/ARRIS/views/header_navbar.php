@@ -3,8 +3,11 @@ $icon_arr = [
 	'Configuration'=> 'icon-cogs',
 	'Operations'=> 'icon-cog',
 	'Roles'=> 'icon-user',
-	'Logs'=> 'icon-cogs',
-	'CRM'=> 'icon-group'
+	'Users'=> 'icon-user',
+	'Logs'=> 'icon-file-text-alt',
+	'CRM'=> 'icon-group',
+	'OPSaaS'=> 'icon-group',
+	'Clients'=> 'icon-group'
 ];
 if ($script != 'verification') {
 
@@ -220,13 +223,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 			}
 
 
-			echo '<li id="sami_' . $keym . '" onmouseover="mOver(this)" onmouseout="mOut(this)" style="width: ' . $width_li . ';' . $css_right . '" ' . $scrpt_active_status . '>
-				<a id="hot_a" href="' . $link_main_m_multy . $extension . '">
-				<span style="font-size: 16px;max-width: 126px;display: -ms-inline-flexbox;display: inline-flex;-ms-flex-align: center;height: 100%;align-items: center;line-height: 24px;">' . $main_menu_name2 . '</span> </a>';
-
-
-			echo '<ul id="sami_' . $keym . 'a" style="display: none;list-style-type: none;position: absolute; background-color: ' . $camp_theme_color . ';height: 30px; margin-left: -1.5px;border-width: 1px; border-style: solid; border-color: rgb(217, 217, 217);">';
-			$link_main_m_multy = '';
+			echo '<li><div><i class="'.$icon_arr[$main_menu_name].' show"></i><span><a>'.$main_menu_name.'&nbsp;&nbsp;</a></span></div><ul class="scnd">';
 
 			foreach ($modarray as $keyY => $valueY) {
 				$sub_menu_link = $valueY['link'];
@@ -238,15 +235,8 @@ foreach ($main_mod_array as $keym => $valuem) {
 					$sub_menu_name = $page_names_arr[$sub_menu_name];
 				}
 
-				if ($sub_menu_new_link == 1) {
-					echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
-				<a href="' . $sub_menu_link . '"  target="_blank"  class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
-				} else {
-					if($sub_menu_name != 'Portal Change'){
-						echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
-							<a href="' . $sub_menu_link . $extension . '" class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
-					}
-					
+				if($sub_menu_name != 'Portal Change'){
+					echo '<li><a href="' . $sub_menu_link . $extension . '">' . $sub_menu_name . '</a></li>';
 				}
 			}
 
