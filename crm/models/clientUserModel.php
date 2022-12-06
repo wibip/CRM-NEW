@@ -67,7 +67,6 @@ class clientUserModel
     public function getClient($id, $column = 'id')
     {
         $q = sprintf("SELECT * FROM crm_clients WHERE ".$column." =%s",  $this->connection->GetSQLValueString($id, "text"));
-        echo $q;
         $query_results = $this->connection->selectDB($q);
         if(isset($query_results['rowCount']) && $query_results['rowCount'] > 0) {
             return $query_results['data'];
