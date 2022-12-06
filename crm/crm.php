@@ -29,7 +29,7 @@ $CommonFunctions = new CommonFunctions();
 include_once 'classes/cryptojs-aes.php';
 require_once dirname(__FILE__) . '/models/clientUserModel.php';
 echo 'Username= ';
-var_dump($username);
+var_dump($_SESSION['user_id']);
 // $client_model = new clientUserModel();
 // $client_data = $client_model->getClient($client_id,'user_id');
 

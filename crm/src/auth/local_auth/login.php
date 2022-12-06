@@ -45,11 +45,12 @@ if (isset($username)) {
 
 	///////////////////////////////////////////////////////
 	
-	$key_query0 = sprintf("SELECT  `access_role`, user_type, user_distributor 
+	$key_query0 = sprintf("SELECT  id,`access_role`, user_type, user_distributor 
 	FROM  admin_users WHERE user_name = %s LIMIT 1",$dbT->GetSQLValueString($user_name, "text"));
 	
 	$query_results=$dbT->selectDB($key_query0);
 	foreach($query_results['data'] AS $row){
+		$_SESSION['user_id']  = $row['id'];
 		$access_role = $row['access_role'];
 		$user_type = $row['user_type'];
 		$user_distributor = $row['user_distributor'];
