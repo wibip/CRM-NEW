@@ -28,7 +28,7 @@ $CommonFunctions = new CommonFunctions();
 /*Encryption script*/
 include_once 'classes/cryptojs-aes.php';
 require_once dirname(__FILE__) . '/models/clientUserModel.php';
-
+echo 'Username= ';
 var_dump($username);
 // $client_model = new clientUserModel();
 // $client_data = $client_model->getClient($client_id,'user_id');
