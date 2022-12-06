@@ -320,6 +320,9 @@ $api_details = $CommonFunctions->getApiDetails($api_id);
 
                 $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' > /dev/null 2>&1 & echo $!; ';
                 $pid = exec($exec_cmd , $output);
+            var_dump($output);
+
+            var_dump($pid);
 
             if($ex===true){
                 $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
