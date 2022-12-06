@@ -197,22 +197,24 @@ if (isset($_SESSION['msg_crm_manage'])) {
 
                             .perpage {
                                 position: absolute;
-                                top: -37px;
-                                right: 170px;
-                                z-index: 2;
+                                top: auto;
+                                bottom: 100%;
+                                right: 145px;
+                                z-index: 1;
                             }
 
                             .perpage select {
-                                margin-bottom: 0px
+                                margin-bottom: 0px;
+                                width: 75px !important;
                             }
 							
 							@media (max-width:480px){
-								.perpage {
-									top: -55px;
-								}
-
+                                .perpage {
+                                    right: auto;
+                                }
 								.perpage select {
-									width: 120px;
+									width: 75px;
+                                    display: block;
 								}
 							}
                         </style>

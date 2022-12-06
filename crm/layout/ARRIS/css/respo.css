@@ -57,6 +57,31 @@
 .tablesaw-bar{
     width: auto !important;
     right: 0;
+    bottom: 100%;
+    top: auto !important;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn{
+    border: 2px solid #F0F0F3;
+    height: 37px;
+    margin: 0;
+    border-radius: 10px;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn{
+    box-shadow: none !important;
+    padding-left: 15px;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before{
+    bottom: 15px !important;
+    border-top: 5px solid #8b9eff !important;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.up:before{
+    bottom: 15px !important;
+    border-bottom: 5px solid #8b9eff !important;
+}
+.tablesaw-columntoggle-btnwrap.visible .tablesaw-columntoggle-popup{
+    border: 2px solid #F0F0F3 !important;
+    border-radius: 10px !important;
+    box-shadow: 0px 0px 6px #cccccc9c !important;
 }
 .nav-tabs {
     font-family: 'Montserrat-Medium';
@@ -1775,10 +1800,6 @@ div[id^=style_img] {
     .navbar .nav.pull-right {
         float: none;
     }
-    body{
-        padding-left: 20px;
-        padding-right: 20px;
-    }
     .main {
         margin-top: 55px
     }
@@ -2038,6 +2059,10 @@ div[id^=style_img] {
 }
 
 @media screen and (max-width:767px) {
+    body {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
     .datepicker-modal-component {
         position: absolute!important;
         z-index: 2002!important;
