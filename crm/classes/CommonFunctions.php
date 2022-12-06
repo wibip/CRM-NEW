@@ -402,7 +402,7 @@ class CommonFunctions{
     }
 
     public function getApiDetails($api_id){
-        $sql = "SELECT api_url,api_username,api_password FROM exp_locations_ap_controller WHERE id=".$api_id;
+        $sql = "SELECT controller_name,api_url,api_username,api_password FROM exp_locations_ap_controller WHERE id=".$api_id;
         $result =  $this->db->selectDB($sql);
         return $result;
     }
