@@ -3,6 +3,7 @@ require_once dirname(__FILE__).'/../../classes/dbClass.php';
 require_once dirname(__FILE__).'/../../classes/systemPackageClass.php';
 // echo 'Username= ';
 // var_dump($_SESSION['user_id']);
+require_once dirname(__FILE__) . '/../../models/clientUserModel.php';
 $client_model = new clientUserModel();
 $client_data = $client_model->getClient($_SESSION['user_id'],'user_id');
 $api_id = $client_data[0]['api_profile'];

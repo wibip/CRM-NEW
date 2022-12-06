@@ -32,8 +32,6 @@ require_once dirname(__FILE__) . '/models/clientUserModel.php';
 // var_dump($_SESSION['user_id']);
 $client_model = new clientUserModel();
 $client_data = $client_model->getClient($_SESSION['user_id'],'user_id');
-// var_dump($client_data);
-// die;
 $api_id = $client_data[0]['api_profile'];
 $api_details = $CommonFunctions->getApiDetails($api_id);
 

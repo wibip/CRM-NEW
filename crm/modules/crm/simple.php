@@ -13,7 +13,8 @@
     }
 </style>
 
-<?php 
+<?php
+var_dump($api_details);
 $serviceTypes = null;
 $baseUrl = 'http://bi-development.arrisi.com/api/v1_0';
 //generating api call to get Token
