@@ -102,6 +102,7 @@ class crm
 
         //Execute the request
         $result = curl_exec($ch);
+        var_dump($result);
             
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -109,12 +110,14 @@ class crm
         curl_close($ch);
         $header = substr($result, 0, $header_size);
         $body = substr($result, $header_size);
+        var_dump($body);
         $decoded = json_decode($body, true);
         
         $req = $url2.'->'.$this->db->escapeDB($jsonData);
         // echo $body;
         $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
         VALUES('createProperty','Create CRM Property','$req','$result','$httpcode','',NOW())";
+        echo $q;
         $this->db->execDB($q);
 
         return $decoded; 
