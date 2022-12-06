@@ -50,10 +50,10 @@ if (isset($username)) {
 	
 	$query_results=$dbT->selectDB($key_query0);
 	foreach($query_results['data'] AS $row){
-		$access_role = $row[access_role];
-		$user_type = $row[user_type];
-		$user_distributor = $row[user_distributor];
-
+		$access_role = $row['access_role'];
+		$user_type = $row['user_type'];
+		$user_distributor = $row['user_distributor'];
+		$_SESSION['user_distributor']  = $row['user_distributor'];
 		$access_role=strtolower($access_role);
 	}
 

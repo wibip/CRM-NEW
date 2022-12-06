@@ -367,10 +367,6 @@ WHERE u.`user_name`='%s' limit 1";
     }
 }
 
-
-
-
-
 //http://localhost/campaign_portal/campaign_portal/reset_password.php?reset=pwd&reset_key=elVhbEV6NmRockV0REwzZjRHMTdVSnora1VFRzM3K1VzTjM1c05WaWRZdmJSRURmMmhCMkYxaHZRVVVVczd5QQ==
 if(isset($_GET['reset']) && $_GET['reset']== 'pwd'){
 

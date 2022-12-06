@@ -1,5 +1,11 @@
 <?php
+
+require_once __DIR__.'/dbClass.php';
 class CommonFunctions{
+    private $db;
+	public function  __construct(){
+		$this->db = new db_functions();
+	}
     public static function timeGapToString($value){
         $gap = '';
         try {
@@ -377,5 +383,21 @@ class CommonFunctions{
         
         return $output;
         curl_close($ch);
+    }
+
+    public function getSelectedApis($mno_id){
+        $sql = "SELECT features FROM exp_mno WHERE mno_id ='".$mno_id."'";
+        $result =  $this->db->selectDB($sql);
+        return json_decode($result['data'][0]['features'], true);
+    }
+
+    public function getApiProfiles($api_ids){
+        $result = null;
+        if(!empty($api_ids)) {
+            $ids = implode(",", $api_ids);
+            $sql = "SELECT id,api_profile FROM exp_locations_ap_controller WHERE id IN (".$ids.")";
+            $result =  $this->db->selectDB($sql);
+        }
+        return $result;
     }
 }

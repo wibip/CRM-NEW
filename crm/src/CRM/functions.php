@@ -1,7 +1,5 @@
 <?php 
 header("Cache-Control: no-cache, must-revalidate");
-
-
 include_once(__DIR__.'/../../classes/dbClass.php');
 include_once(__DIR__ .'/../../classes/systemPackageClass.php');
 ini_set('display_errors', 1);
@@ -9,10 +7,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 class crm
 {
-
-    public function __construct($crm_profile,$system_package)
-    {
-
+    public function __construct($crm_profile,$system_package) {
         $this->package_functions = new package_functions();
         $this->db = new db_functions();
         $this->crm_profile = $crm_profile;
@@ -21,11 +16,6 @@ class crm
     }
 
     public function getAllConfig($crm_profile){
-        // if (!isset($crm_profile)) {
-        //     $crm_profile = 'CRM_HOSTED';
-        // }
-        // $q = "SELECT `api_url`,`api_password`,`api_user_name` FROM `exp_other_profile` WHERE distributor='ADMIN' AND type='CRM' AND `profile_name` = '$crm_profile'";
-        // $data = $this->db->select1DB($q);
         $q = "SELECT `api_url`,`api_password`,`api_user_name`,`controller_name`
             FROM `exp_locations_ap_controller` 
             WHERE `id` = '$crm_profile'";
@@ -33,9 +23,7 @@ class crm
         return $data;
     }
 
-    public function getOtherConfig($field)
-
-    {
+    public function getOtherConfig($field) {
         $networkArr = $this->networkArr;
         return $networkArr[$field];
 
@@ -78,18 +66,15 @@ class crm
         // print_r($sus);
 
         $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
-        VALUES('createToken','Create CRM Token','$jsondata','$result','$httpcode','',NOW())";
+              VALUES('createToken','Create CRM Token','$jsondata','$result','$httpcode','',NOW())";
         $this->db->execDB($q);
         return $sus['token'];
-
     }
 
     public function createParent($jsonData){
-
         $access_token = $this->getToken();
         //API Url
         $url2 = $this->getOtherConfig('api_url').'api/'.$this->getOtherConfig('controller_name').'/accounts';
-        //echo $url2;
 
         $ch = curl_init($url2);
         $header_parameters = "Content-Type: application/json;charset=UTF-8";

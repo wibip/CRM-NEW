@@ -15,14 +15,20 @@ header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 
 /*classes & libraries*/
 require_once 'classes/dbClass.php';
-require_once 'classes/CommonFunctions.php';
+require_once './classes/CommonFunctions.php';
 $db = new db_functions();
 require_once dirname(__FILE__) . '/models/userMainModel.php';
 $user_model = new userMainModel();
 require_once dirname(__FILE__) . '/models/clientUserModel.php';
 $client_model = new clientUserModel();
 $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
-
+$CommonFunctions = new CommonFunctions();
+/*Get selected API profiles*/
+$apiIds = $CommonFunctions->getSelectedApis($_SESSION['user_distributor']);
+$api_profiles = null;
+if (!empty($apiIds)) {
+	$api_profiles = $CommonFunctions->getApiProfiles($apiIds);
+}
 $is_edit = false;
 //load countries
 $country_sql="SELECT * FROM (SELECT `country_code` AS a,`country_name` AS b FROM `exp_mno_country` WHERE `default_select`=1 ORDER BY `country_name` ASC) AS a
@@ -1285,6 +1291,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														$state_region = (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['state_region'] : "");
 														$zip = (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['zip'] : "");
 														$mobile = (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['mobile'] : ""); 
+														$selected_profile = (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['api_profile'] : ""); 
 
 													echo '<input type="hidden" name="form_secret" id="form_secret1" value="' . $_SESSION['FORM_SECRET'] . '" />';
 												?>
@@ -1297,6 +1304,27 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														echo '<input type="hidden" name="user_type" id="user_type1" value="' . $user_type . '">';
 														echo '<input type="hidden" name="loation" id="loation1" value="' . $user_distributor . '">';
 														?>
+														<!-- /control-group -->
+														<div class="control-group">
+															<label class="control-label" for="language_1">API profile</label>
+															<div class="controls form-group col-lg-5">
+																<select class="form-control span4" name="api_profile" id="api_profile">
+																	<option value="">Select API profile</option>
+																	<?php
+																	foreach($api_profiles['data'] AS $row){
+																		$apiId = $row['id'];
+																		$profile = $row['api_profile'];
+																		if ($apiId == $selected_profile) {
+																			echo '<option value="'.$apiId.'" selected>' . $profile . '</option>';
+																		} else {
+																			echo '<option value="'.$apiId.'">' . $profile . '</option>';
+																		}
+																	}
+																	?>
+																</select>
+															</div>
+															<!-- /controls -->
+														</div>
 														<!-- /control-group -->
 														<div class="control-group">
 															<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
