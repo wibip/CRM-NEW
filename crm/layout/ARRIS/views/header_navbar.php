@@ -27,7 +27,7 @@ if ($script != 'verification') {
 		bottom: 0;
 		width: 80px;
 		background: #525e6e;
-		z-index: 1;
+		z-index: 2;
 		overflow: hidden;
 		transition: transform .25s ease-in-out,inline-size .25s ease-in-out,box-shadow .25s ease-in-out;
 	}
@@ -54,18 +54,19 @@ if ($script != 'verification') {
 
 	.sidebar ul.scnd{
 		margin: 0;
-		margin-left: 73px;
+		margin-left: 65px;
 		display: none;
 	}
 
 	.sidebar ul.scnd li{
 		padding: 0;
 		color: #fff;
-		margin-bottom: 5px;
+		margin: 10px;
 	}
 
 	.sidebar ul.scnd li a{
 		font-size: 14px;
+		color: #cccccc;
 	}
 
 	.sidebar.hover ul.scnd {
@@ -80,7 +81,6 @@ if ($script != 'verification') {
 			padding: 3px 15px;
 			box-sizing: border-box;
 			white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
 	}
 	.sidebar ul li div{
@@ -95,8 +95,8 @@ if ($script != 'verification') {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
 	}
-	.sidebar ul li div:hover{
-    	background: rgb(165 165 165 / 8%);
+	.sidebar ul li div:hover, .sidebar.hover ul li.active div{
+    	background: rgb(2 2 2 / 16%);
 	}
 	.flex-center{
 		display: -webkit-box;
@@ -108,7 +108,7 @@ if ($script != 'verification') {
 	}
 	.sidebar ul:not(.scnd)>li:nth-child(1){
 		box-shadow: rgb(0 0 0 / 17%) 0px 0px 8px 0px;
-		height: 71px;
+		height: 77px;
     	margin-bottom: 20px;
 		padding: 10px;
 	}
@@ -124,10 +124,10 @@ if ($script != 'verification') {
 		text-align: center;
 	}
 	.sidebar ul li.active i{
-		background: rgb(165 165 165 / 8%);
+		background: #E57200;
     	border-radius: 6px;
 	}
-	.sidebar ul li.active div:hover i{
+	.sidebar.hover ul li.active div i{
 		background: transparent;
 	}
 	.top-bar{
@@ -140,11 +140,13 @@ if ($script != 'verification') {
 		top: 0;
 		color: #ffffff;
 		backdrop-filter: blur(8px);
-		padding: 17px;
+		padding: 20px;
 		box-shadow: rgb(20 21 33 / 42%) 0px 4px 8px -4px;
 		-webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
+			position: relative;
+    	z-index: 1;
 	}
 	.top-bar svg{
 		width: 20px;
@@ -161,6 +163,16 @@ if ($script != 'verification') {
 	.top-bar .title{
 		font-size: 16px;
     line-height: 28px;
+	display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+	}
+	.top-bar .title i{
+		margin-right: 16px;
+    	font-size: 25px;
 	}
 	.footer{
 		position: absolute;
@@ -179,6 +191,26 @@ if ($script != 'verification') {
 	}
 	.top-bar .dropdown.open .dropdown-toggle{
 		background: none;
+	}
+	.top-bar .title i{
+		display: none;
+	}
+	@media screen and (max-width:767px) {
+		.top-bar .title i{
+			display: block;
+		}
+		.top-bar{
+			margin-left: 0;
+		}
+		.sidebar:not(.hover){
+			width: 0;
+		}
+		.container, .navbar-fixed-bottom .container, .navbar-fixed-top .container{
+			margin-left: 20px;
+		}
+		.main {
+			margin-top: 0;
+		}
 	}
 </style>
 <div class="sidebar">
@@ -272,7 +304,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 	<span class="footer"></span>
 </div>
 <div class="top-bar">
-	<div class="title"><?php echo $active_title; ?></div>
+	<div class="title"><i class="icon-reorder show"></i><?php echo $active_title; ?></div>
 	<li class="dropdown" style="<?php echo $li_style; ?>"><a style="<?php echo $a_style; ?>" href="#" class="dropdown-toggle" data-toggle="dropdown">
            <?php echo $full_name1; ?> <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" tag="i" class="v-icon notranslate v-theme--dark v-icon--size-default iconify iconify--tabler" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="7" r="4"></circle><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path></g></svg></a>
 
@@ -334,6 +366,18 @@ foreach ($main_mod_array as $keym => $valuem) {
 				$(this).removeClass('hover');
 			}
 		);
+		$('.title i').click(function (e) { 
+			e.preventDefault();
+			$('.sidebar').addClass('hover');
+		});
+	});
+	$(document).mouseup(function(e){
+		var container = $(".sidebar");
+	
+		// If the target of the click isn't the container
+		if(!container.is(e.target) && container.has(e.target).length === 0){
+			container.removeClass('hover');
+		}
 	});
 </script>
 

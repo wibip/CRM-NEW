@@ -88,7 +88,8 @@ if (!empty($arrayo)) {
 
 }?>
 <div <?php if (isset($tab_crm_create)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="crm_create">
-    <div id="crm-create-progress"></div>
+    <h1 class="head">Create</h1>    
+<div id="crm-create-progress"></div>
     <div id="msg27"></div>
     <?php
     if (isset($_SESSION['msg_crm_create'])) {
