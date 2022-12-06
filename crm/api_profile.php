@@ -286,7 +286,6 @@ $_SESSION['FORM_SECRET'] = $secret;
 										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Manage Profiles</a></li>
 										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Create Profiles</a></li>	
 									</ul>
-									<br>
 									<div class="tab-content">
 									<?php
 											if(isset($_SESSION['msg17'])){
