@@ -18,7 +18,7 @@
 $api = $api_details['data'][0];
 var_dump($api);
 $serviceTypes = null;
-$baseUrl = $api['api_url']. '/api/' . $api['controller_name'];//'http://bi-development.arrisi.com/api/v1_0';
+$baseUrl = $api['api_url'] . '/api/v1_0';//'http://bi-development.arrisi.com/api/v1_0';
 //generating api call to get Token
 $apiUsername = $api['api_username'];//'dev_hosted_api_user';
 $apiPassword = $api['api_password'];//'development@123!';
