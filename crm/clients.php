@@ -710,7 +710,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			if($_POST['is_edit'] == true) {
 					$id = $_POST['id'];
 					//$user_type = $_POST['user_type'];
-					//$loation = $_POST['loation'];
+					$api_profile = $_POST['api_profile'];
 					$full_name = $_POST['full_name_1'];
 					$email = htmlspecialchars($_POST['email_1']);
 					$language = $_POST['language_1'];
@@ -744,7 +744,8 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 										`bussiness_address2` = "'.$address_2.'",
 										`country` = "'.$country.'",
 										`state_region` = "'.$state.'",
-										`zip` = "'.$zip_code.'" 
+										`zip` = "'.$zip_code.'",
+										`api_profile` = "'.$api_profile.'" 
 										WHERE `id` = '.$id;
 										
 						$edit_result = $db->execDB($edit_query);
@@ -803,6 +804,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 				$access_role = 'client';
 				$user_type = 'PROVISIONING';
+				$api_profile = $_POST['api_profile'];
 				$email = htmlspecialchars($_POST['email_1']);
 				$language = $_POST['language_1'];
 				$timezone = $_POST['timezone_1'];
@@ -828,8 +830,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				if ($ex===true) {
 					$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 					$query_clients = 'INSERT INTO crm_clients
-							(user_id,user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`,`bussiness_address1`,`bussiness_address2`,`country`,`state_region`,`zip`, mobile, is_enable, create_date,create_user)
+							(user_id,`api_profile`,user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`,`bussiness_address1`,`bussiness_address2`,`country`,`state_region`,`zip`, mobile, is_enable, create_date,create_user)
 							VALUES ('.$idContAutoInc.',
+									"'.$api_profile.'",
 									"'.$new_user_name.'",
 									"'.$updated_pw.'",
 									"'.$access_role.'",
