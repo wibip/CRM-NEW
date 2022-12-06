@@ -36,7 +36,7 @@ $client_data = $client_model->getClient($_SESSION['user_id'],'user_id');
 // die;
 $api_id = $client_data[0]['api_profile'];
 $api_details = $CommonFunctions->getApiDetails($api_id);
-var_dump($api_details);
+
 ?>
 
 <head>

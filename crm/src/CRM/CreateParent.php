@@ -1,6 +1,13 @@
 <?php 
 require_once dirname(__FILE__).'/../../classes/dbClass.php';
 require_once dirname(__FILE__).'/../../classes/systemPackageClass.php';
+// echo 'Username= ';
+// var_dump($_SESSION['user_id']);
+$client_model = new clientUserModel();
+$client_data = $client_model->getClient($_SESSION['user_id'],'user_id');
+$api_id = $client_data[0]['api_profile'];
+
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
@@ -42,8 +49,8 @@ $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Processing' WHERE id = '$id'")
 require_once 'functions.php';
 $jsondata = json_encode($data);
 
-$crm_profile = 'CRM_HOSTED';
-$crm = new crm($crm_profile, $system_package);
+// $crm_profile = 'CRM_HOSTED';
+$crm = new crm($api_id, $system_package);
 
 $response = $crm->createParent($jsondata);
 if ($response['status'] == 'success') {
