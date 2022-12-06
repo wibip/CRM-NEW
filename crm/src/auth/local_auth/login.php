@@ -186,7 +186,7 @@ if (isset($username)) {
 				// var_dump($query_results['data'] );
 				// var_dump($m_n);
 				foreach($query_results['data'] AS $row){
-					$module_name = $row[module_name];	
+					$module_name = $row['module_name'];	
 					if(in_array($module_name,$m_n)){
 						$redirect_url = $global_base_url.'/'.$module_name.$extension;
 						setcookie("system_package", $system_package, time() + (86400 * 30), "/");
