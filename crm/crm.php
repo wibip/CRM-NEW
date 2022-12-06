@@ -28,11 +28,12 @@ $CommonFunctions = new CommonFunctions();
 /*Encryption script*/
 include_once 'classes/cryptojs-aes.php';
 require_once dirname(__FILE__) . '/models/clientUserModel.php';
-echo 'Username= ';
-var_dump($_SESSION['user_id']);
-// $client_model = new clientUserModel();
-// $client_data = $client_model->getClient($client_id,'user_id');
-
+// echo 'Username= ';
+// var_dump($_SESSION['user_id']);
+$client_model = new clientUserModel();
+$client_data = $client_model->getClient($client_id,'user_id');
+var_dump($client_data);
+die;
 // $api_id = $client_data;
 // $api_details = $CommonFunctions->getApiDetails($api_id);
 ?>
