@@ -54,18 +54,19 @@ if ($script != 'verification') {
 
 	.sidebar ul.scnd{
 		margin: 0;
-		margin-left: 73px;
+		margin-left: 65px;
 		display: none;
 	}
 
 	.sidebar ul.scnd li{
 		padding: 0;
 		color: #fff;
-		margin-bottom: 5px;
+		margin: 10px;
 	}
 
 	.sidebar ul.scnd li a{
 		font-size: 14px;
+		color: #cccccc;
 	}
 
 	.sidebar.hover ul.scnd {
@@ -80,7 +81,6 @@ if ($script != 'verification') {
 			padding: 3px 15px;
 			box-sizing: border-box;
 			white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
 	}
 	.sidebar ul li div{

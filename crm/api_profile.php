@@ -305,7 +305,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 									?>
 										<!-- create_product tab -->
 										<div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="viewap">      	      			
-													      
+											<h1 class="head">Manage</h1>		      
 									<?php
 										if($edit_wag==2){
 									?>
@@ -464,7 +464,8 @@ $_SESSION['FORM_SECRET'] = $secret;
 
                                         <!-- assign_product tab -->
 										<div <?php if(isset($tab2)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="addap">
-											<form autocomplete="off" onkeyup="create_ap_controllerfn();" onchange="create_ap_controllerfn();"  id="create_ap_controller_form" name="create_ap_controller_form" method="post" class="form-horizontal" action="?t=2">
+										<h1 class="head">Create</h1>		
+										<form autocomplete="off" onkeyup="create_ap_controllerfn();" onchange="create_ap_controllerfn();"  id="create_ap_controller_form" name="create_ap_controller_form" method="post" class="form-horizontal" action="?t=2">
 												<fieldset>
 													<div id="response_d3"></div>
 													<?php 
