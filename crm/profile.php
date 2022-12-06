@@ -479,21 +479,6 @@ if(isset($_POST['new_password'])){
 
 					<div class="widget ">
 
-
-								<?php 
-
-								$profile_mid = 'layout/'.$camp_layout.'/views/profile_mid.php';
-
-                                if(($new_design=='yes') && file_exists($profile_mid)){ 
-
-                                    include_once $profile_mid;
-
-                                }
-                                else{
-
-								 ?>
-
-
                         <div class="widget-header">
                             <i class="icon-book"></i>
                             <h3>Update My Profile</h3>
@@ -510,9 +495,6 @@ if(isset($_POST['new_password'])){
 
 								</ul>
 
-								<br>
-
-
 
 								<div class="tab-content">
 
@@ -526,7 +508,7 @@ if(isset($_POST['new_password'])){
 										?>
 
 									<div class="tab-pane active" id="live_camp">
-									
+									<h1 class="head">My Profile</h1>
 									
 										<div id="response_d3">
 												<?php
@@ -1027,7 +1009,6 @@ function ck_topval2(){
 							
 </div>
                         </div>
-							<?php } ?>
 							
 					</div>
 					<!-- /widget -->

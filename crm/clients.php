@@ -1106,7 +1106,8 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 										<div class="tab-content">
 											<!-- +++++++++++++++++++++++++++++ client list ++++++++++++++++++++++++++++++++ -->
 											<div <?php if (isset($tab1)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="show_clients">
-												<div id="response_d3"></div>
+											<h1 class="head">Manage Clients</h1>	
+											<div id="response_d3"></div>
 												<?php
 													if(isset($tab1)){
 														if (isset($_SESSION['msg5'])) {
@@ -1248,8 +1249,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 											<!-- +++++++++++++++++++++++++++++ create clients ++++++++++++++++++++++++++++++++ -->
 											<div <?php if (isset($tab2)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_clients">
-												<div class="users_head_visible" style="display:none;"><div class="header_hr"></div><div class="header_f1" style="width: 100%">Clients</div>
-												<br class="hide-sm"><br class="hide-sm"><div class="header_f2" style="width: fit-content;"> </div></div>
+												<h1 class="head"> Create Clients</h1>
 												<div id="response_d3"></div>
 												<?php
 													if(isset($tab2)){

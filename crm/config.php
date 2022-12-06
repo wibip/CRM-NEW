@@ -272,6 +272,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 										$tab1_field_ar = json_decode($package_functions->getOptions('CONFIG_GENARAL_FIELDS', $system_package), true);
 										?>
 										<div id="system_response"></div>
+										<h1 class="head">General Config</h1>
 										<form onkeyup="edit_profilefn();" onchange="edit_profilefn();" id="edit_profile_c" class="form-horizontal">
 											<?php
 											echo '<input type="hidden" name="form_secret" id="form_secret" value="' . $_SESSION['FORM_SECRET'] . '" />';

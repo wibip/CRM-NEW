@@ -1,5 +1,5 @@
 <div <?php if (isset($tab_crm_manage)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="crm_manage">
-
+<h1 class="head">Manage</h1>
 <?php
 
 if (isset($_SESSION['msg_crm_manage'])) {
