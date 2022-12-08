@@ -4,7 +4,6 @@
 <html lang="en">
 
 <?php
-phpinfo();
 session_start();
 include 'header_top.php';
 
