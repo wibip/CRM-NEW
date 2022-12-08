@@ -14,6 +14,14 @@ if ($script != 'verification') {
 ?>
 
 <style>
+	.dropdown-menu{
+		display: block !important;
+		opacity: 0;
+		transition: all 0.25s;
+	}
+	.dropdown.open .dropdown-menu{
+		opacity: 1;
+	}
 	body{
 		transition: all .25s ease-in-out;
 	}
@@ -27,22 +35,26 @@ if ($script != 'verification') {
 		bottom: 0;
 		width: 80px;
 		background: #525e6e;
-		z-index: 2;
+		z-index: 5;
 		overflow: hidden;
-		transition: transform .25s ease-in-out,inline-size .25s ease-in-out,box-shadow .25s ease-in-out;
+		transition: all 0.5s;
 	}
 	.sidebar.hover{
 		width: 250px;
 	}
 	.sidebar li span {
-		display: none;
 		color: #fff;
 		font-size: 16px;
-		margin-left: 10px;
+		opacity: 0;
+		transition: all 0.25s;
+		overflow: hidden;
+		position: relative;
+		left: -40px;
 	}
 
 	.sidebar.hover li span {
-		display: inline-block;
+		opacity: 1;
+		left: 0;
 	}
 	.sidebar ul:not(.scnd){
 		list-style-type: none;
@@ -95,8 +107,11 @@ if ($script != 'verification') {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
 	}
-	.sidebar ul li div:hover, .sidebar.hover ul li.active div{
-    	background: rgb(2 2 2 / 16%);
+	.sidebar.hover ul li.active div{
+    	background: #E57200;
+	}
+	.sidebar ul li div:hover {
+		background: rgb(2 2 2 / 16%);
 	}
 	.flex-center{
 		display: -webkit-box;
@@ -107,9 +122,6 @@ if ($script != 'verification') {
             align-items: center;
 	}
 	.sidebar ul:not(.scnd)>li:nth-child(1){
-		box-shadow: rgb(0 0 0 / 17%) 0px 0px 8px 0px;
-		height: 77px;
-    	margin-bottom: 20px;
 		padding: 10px;
 	}
 	.sidebar ul:not(.scnd)>li:nth-child(1) span{
