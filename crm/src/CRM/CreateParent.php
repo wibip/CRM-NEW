@@ -16,7 +16,7 @@ error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 $db = new db_functions();
 $id=$argv[1];
 if (strlen($id)<1) {
-	$id = $_GET[id];
+	$id = $_GET['id'];
 }
 $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
 
