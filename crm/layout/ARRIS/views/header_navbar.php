@@ -14,6 +14,14 @@ if ($script != 'verification') {
 ?>
 
 <style>
+	.dropdown-menu{
+		display: block !important;
+		opacity: 0;
+		transition: all 0.25s;
+	}
+	.dropdown.open .dropdown-menu{
+		opacity: 1;
+	}
 	body{
 		transition: all .25s ease-in-out;
 	}
@@ -99,8 +107,11 @@ if ($script != 'verification') {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
 	}
-	.sidebar ul li div:hover, .sidebar.hover ul li.active div{
+	.sidebar.hover ul li.active div{
     	background: #E57200;
+	}
+	.sidebar ul li div:hover {
+		background: rgb(2 2 2 / 16%);
 	}
 	.flex-center{
 		display: -webkit-box;
