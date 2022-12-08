@@ -250,6 +250,23 @@ class db_functions extends dbTasks
 		return 1;
 	}
 
+	public function addApiLogs($name,$description, $log_type, $section, $url,$request, $response, $status_code, $create_user=null){
+		$data = [
+			'name' => $name,
+			'section' => $section,
+			'log_type' => $log_type,
+			'description' => $description,
+			'url' => $url,
+			'request' => $request,
+			'response' => $response,
+			'status_code' => $status_code,
+			'create_user' =>$create_user,
+			'create_date' => ['SQL' => 'NOW()'],
+		];
+		$re1 = $this->insertData('crm_api_logs', $data);
+		return 1;
+	}
+
 	public function getDataFromLogsField($field){
 		$sql = "SELECT DISTINCT ".$field." FROM crm_user_logs";
 		$result = $this->selectDB($sql);

@@ -7,6 +7,12 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 class crm
 {
+    private $package_functions;
+    private $db;
+    private $crm_profile;
+    private $system_package;
+    private $networkArr;
+
     public function __construct($crm_profile,$system_package) {
         $this->package_functions = new package_functions();
         $this->db = new db_functions();
@@ -30,45 +36,52 @@ class crm
     }
 
     public function getToken(){
-    //API Url
-    $url = $this->getOtherConfig('api_url').'api/'.$this->getOtherConfig('controller_name').'/token';
-    //Initiate cURL.
-    $ch = curl_init($url);
-    
-    //The JSON data.
-    $data = array(
-            'username'   => $this->getOtherConfig('api_user_name'),
-            'password'   => $this->getOtherConfig('api_password')
-    );
-    $jsondata = json_encode($data);
-    $ch = curl_init();
+        //API Url
+        $url = $this->getOtherConfig('api_url').'api/'.$this->getOtherConfig('controller_name').'/token';
+        
+        //The JSON data.
+        $data = array(
+                'username'   => $this->getOtherConfig('api_user_name'),
+                'password'   => $this->getOtherConfig('api_password')
+        );
+        $jsondata = json_encode($data);
 
-        curl_setopt($ch, CURLOPT_URL,$url);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsondata);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        try {
+            //Initiate cURL.
+            $ch = curl_init($url);
+            $ch = curl_init();
 
-        // Receive server response ...
-        $header_parameters = "Content-Type: application/json";
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array($header_parameters));
+            curl_setopt($ch, CURLOPT_URL,$url);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsondata);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_VERBOSE, 1);
 
-        $result = curl_exec($ch);
-        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $header = substr($result, 0, $header_size);
-        $body = substr($result, $header_size);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $sus=json_decode($body,true);
-        // print_r($sus);
+            // Receive server response ...
+            $header_parameters = "Content-Type: application/json";
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array($header_parameters));
 
-        $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
-              VALUES('createToken','Create CRM Token','$jsondata','$result','$httpcode','',NOW())";
-        $this->db->execDB($q);
-        return $sus['token'];
+            $result = curl_exec($ch);
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $header = substr($result, 0, $header_size);
+            $body = substr($result, $header_size);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $sus=json_decode($body,true);
+
+            // $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
+            //     VALUES('createToken','Create CRM Token','$jsondata','$result','$httpcode','',NOW())";
+            // $this->db->execDB($q);
+
+            $this->db->addApiLogs('createToken', 'Create CRM Token', 'SUCCESS', 'crm token generation', $url, $jsondata, $result, $httpcode, $_SESSION['user_id']);
+            return $sus['token'];
+        } catch(Exception $e) {
+            $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url, $jsondata, $e->getMessage(), 0, $_SESSION['user_id']);
+        }
+        
     }
 
     public function createParent($jsonData){
@@ -76,51 +89,53 @@ class crm
         //API Url
         $url2 = $this->getOtherConfig('api_url').'api/'.$this->getOtherConfig('controller_name').'/accounts';
 
-        $ch = curl_init($url2);
-        $header_parameters = "Content-Type: application/json;charset=UTF-8";
-        $header_parameters = array(
-            'Authorization: Bearer '.$access_token.'',
-            'Content-Type: application/json');
-        // print_r($header_parameters);
-        //curl_setopt($ch, CURLOPT_POST, 1);
-        //Attach our encoded JSON string to the POST fields.
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        //echo $this->session() ;
-        
-        //Set the content type to application/json
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header_parameters);
-
-        curl_setopt ($ch, CURLOPT_SSLVERSION, 6);
-        curl_setopt ($ch, CURLOPT_SSLVERSION, 'CURL_SSLVERSION_TLSv1_2');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-        //Execute the request
-        $result = curl_exec($ch);
-        var_dump($result);
+        try{
+            $ch = curl_init($url2);
+            $header_parameters = "Content-Type: application/json;charset=UTF-8";
+            $header_parameters = array(
+                'Authorization: Bearer '.$access_token.'',
+                'Content-Type: application/json');
+            //Attach our encoded JSON string to the POST fields.
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_VERBOSE, 1);
             
-        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            //Set the content type to application/json
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header_parameters);
 
-        curl_close($ch);
-        $header = substr($result, 0, $header_size);
-        $body = substr($result, $header_size);
-        var_dump($body);
-        $decoded = json_decode($body, true);
+            curl_setopt ($ch, CURLOPT_SSLVERSION, 6);
+            curl_setopt ($ch, CURLOPT_SSLVERSION, 'CURL_SSLVERSION_TLSv1_2');
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+            //Execute the request
+            $result = curl_exec($ch);
+                
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            curl_close($ch);
+            $header = substr($result, 0, $header_size);
+            $body = substr($result, $header_size);
+            $decoded = json_decode($body, true);
+            
+            $req = $url2.'->'.$this->db->escapeDB($jsonData);
+            // echo $body;
+            $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
+            VALUES('createProperty','Create CRM Property','$req','$result','$httpcode','',NOW())";
+
+            $this->db->execDB($q);
+
+            $this->db->addApiLogs('createClient', 'Create CRM Client', 'SUCCESS', 'crm client generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+
+            return $decoded; 
+        } catch(Exception $e) {
+            $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, $jsonData, $e->getMessage(), 0, $_SESSION['user_id']);
+        }
         
-        $req = $url2.'->'.$this->db->escapeDB($jsonData);
-        // echo $body;
-        $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
-        VALUES('createProperty','Create CRM Property','$req','$result','$httpcode','',NOW())";
-        echo $q;
-        $this->db->execDB($q);
-
-        return $decoded; 
     }
 }
 ?>
