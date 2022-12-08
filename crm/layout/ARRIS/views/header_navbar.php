@@ -307,7 +307,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 			}
 
 
-			echo '<li><div><i class="'.$icon_arr[$main_menu_name].' show"></i><span><a>'.$main_menu_name.'&nbsp;&nbsp;</a></span></div><ul class="scnd">';
+			echo '<li><div><i class="'.$icon_arr[$main_menu_name2].' show"></i><span><a>'.$main_menu_name2.'&nbsp;&nbsp;</a></span></div><ul class="scnd">';
 
 			foreach ($modarray as $keyY => $valueY) {
 				$sub_menu_link = $valueY['link'];
