@@ -1964,7 +1964,7 @@ else{
 		$page_intro = 'YES';
 	}
 
-	$navbar = 'layout/ARRIS_RS/views/header_navbar.php';
+	$navbar = 'layout/ARRIS/views/header_navbar.php';
 
 	if (file_exists($navbar)) {
 		include_once $navbar;

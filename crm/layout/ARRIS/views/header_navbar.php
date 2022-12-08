@@ -21,6 +21,7 @@ if ($script != 'verification') {
 	}
 	.dropdown.open .dropdown-menu{
 		opacity: 1;
+		z-index: 9999;
 	}
 	body{
 		transition: all .25s ease-in-out;
@@ -207,6 +208,21 @@ if ($script != 'verification') {
 	.top-bar .title i{
 		display: none;
 	}
+
+	.top-bar .nav-right{
+		display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+	}
+	.dropdown-menu li>a{
+		padding: 6px 15px;
+	}
+	.top-bar .icon-signin{
+		font-size: 28px;
+	}
 	@media screen and (max-width:767px) {
 		.top-bar .title i{
 			display: block;
@@ -233,7 +249,7 @@ if ($script != 'verification') {
 
 $numItems = count($main_mod_array);
 $i = 0;
-$active_title = "Profile";
+$active_title = "Portal Change";
 foreach ($main_mod_array as $keym => $valuem) {
 	if (strlen($valuem['active'])) {
 		$scrpt_active_status = ' class="active"';
@@ -317,6 +333,18 @@ foreach ($main_mod_array as $keym => $valuem) {
 </div>
 <div class="top-bar">
 	<div class="title"><i class="icon-reorder show"></i><?php echo $active_title; ?></div>
+	<div class="nav-right">
+	<?php if($_SESSION['SADMIN'] == 'SADMIN') {
+				?>
+		<li class="dropdown" style="margin-right: 20px;">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-signin show"></i> </a>
+			<ul class="dropdown-menu">
+					<li><a href="./change_portal?section=ADMIN">Admin</a></li>
+					<li><a href="./change_portal?section=MNO">Operations</a></li>
+					<li><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
+			</ul>
+		</li>
+	<?php } ?>
 	<li class="dropdown" style="<?php echo $li_style; ?>"><a style="<?php echo $a_style; ?>" href="#" class="dropdown-toggle" data-toggle="dropdown">
            <?php echo $full_name1; ?> <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" tag="i" class="v-icon notranslate v-theme--dark v-icon--size-default iconify iconify--tabler" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="7" r="4"></circle><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path></g></svg></a>
 
@@ -368,6 +396,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 
 
           </li>
+	</div>
 </div>
 
 <script>
