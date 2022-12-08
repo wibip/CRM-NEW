@@ -54,10 +54,12 @@ $jsondata = json_encode($data);
 $crm = new crm($api_id, $system_package);
 
 $response = $crm->createParent($jsondata);
+
 if ($response['status'] == 'success') {
 	$ex = $db->execDB("UPDATE exp_crm SET `status` = 'Completed' WHERE id = '$id'");
 }else{
 	$ex = $db->execDB("UPDATE exp_crm SET `status` = 'Failed' WHERE id = '$id'");
 }
 
+echo json_encode($response);
 ?>

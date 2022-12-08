@@ -80,6 +80,7 @@ class crm
             return $sus['token'];
         } catch(Exception $e) {
             $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url, $jsondata, $e->getMessage(), 0, $_SESSION['user_id']);
+            return 'Error';
         }
         
     }
@@ -124,8 +125,8 @@ class crm
             
             $req = $url2.'->'.$this->db->escapeDB($jsonData);
             // echo $body;
-            $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
-            VALUES('createProperty','Create CRM Property','$req','$result','$httpcode','',NOW())";
+            // $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
+            // VALUES('createProperty','Create CRM Property','$req','$result','$httpcode','',NOW())";
 
             $this->db->execDB($q);
 
@@ -134,6 +135,7 @@ class crm
             return $decoded; 
         } catch(Exception $e) {
             $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, $jsonData, $e->getMessage(), 0, $_SESSION['user_id']);
+            return 'Error';
         }
         
     }
