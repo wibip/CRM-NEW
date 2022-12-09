@@ -940,9 +940,9 @@ foreach ($query_results_mod['data'] as $row1) {
 	menu item = 6 => User Guide
 
 	*/
-	echo 'Before: ';
-	var_dump($main_mod_array);
-	echo '<br/>';
+	// echo 'Before: ';
+	// var_dump($main_mod_array);
+	// echo '<br/>';
 	if ($is_enable == 1) {
 		if ($menu_item_row == '1') {
 			$access_modules_list[] = $module_name;
@@ -1163,9 +1163,9 @@ foreach ($query_results_mod['data'] as $row1) {
 	}
 }
 ksort($main_mod_array);
-echo 'After: ';
-	var_dump($main_mod_array);
-	echo '<br/>';
+// echo 'After: ';
+// 	var_dump($main_mod_array);
+// 	echo '<br/>';
 
 
 /////////////////////////////////////////////////////////
