@@ -14,7 +14,7 @@ if(isset($_POST['sign_in'])){
 	$auroResults = $dbT->selectDB($autoSql);  
 	$username = $auroResults['data'][0]['user_name'];
 	$password = 'pass@123';//$auroResults['data'][0]['password'];
-}
+} 
 
 if (isset($username)) {
 	$password_local = '';
@@ -26,7 +26,6 @@ if (isset($username)) {
 		}
 	}
 	
-
 	$user_query = sprintf("SELECT user_name, password, access_role, full_name,is_enable,user_distributor
 	FROM admin_users WHERE user_name =%s AND is_enable<>8", $dbT->GetSQLValueString($username, "text"));
 	
@@ -40,7 +39,6 @@ if (isset($username)) {
 		$user_distributor = $row['user_distributor'];
 
 		$access_role=strtolower($access_role);
-
 	}
 
 	///////////////////////////////////////////////////////
@@ -58,8 +56,9 @@ if (isset($username)) {
 		$access_role=strtolower($access_role);
 	}
 
-	if($user_type=="SADMIN"){
+	if($user_type=="SADMIN" && !isset($_GET['auto_login'])){
 		$_SESSION['SADMIN'] = true;
+		header( "Location: ".$global_base_url."/change_portal?section=ADMIN");	
 	}
 
 	$suspended = false;
