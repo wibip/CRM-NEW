@@ -248,6 +248,7 @@ if ($script != 'verification') {
 <?php 
 
 $numItems = count($main_mod_array);
+	
 $i = 0;
 $active_title = "Portal Change";
 foreach ($main_mod_array as $keym => $valuem) {

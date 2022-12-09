@@ -802,13 +802,13 @@ $tmp_0 = '';
 $main_mod_array = array();
 foreach ($query_results_mod['data'] as $row1) {
 	
-	$menu_item_row = $row1[menu_item]; // Retuns base access.
-	$main_module_order = $row1[main_module_order];
-	$main_module = $row1[main_module];
-	$module_name = $row1[module_name];
-	$order = $row1[order];
-	$name_group = $row1[name_group];
-	$is_enable = $row1[is_enable];
+	$menu_item_row = $row1['menu_item']; // Retuns base access.
+	$main_module_order = $row1['main_module_order'];
+	$main_module = $row1['main_module'];
+	$module_name = $row1['module_name'];
+	$order = $row1['order'];
+	$name_group = $row1['name_group'];
+	$is_enable = $row1['is_enable'];
 
 	//===========Remove Content Filter
 	if ($module_name == 'content_filter') {
@@ -940,7 +940,7 @@ foreach ($query_results_mod['data'] as $row1) {
 	menu item = 6 => User Guide
 
 	*/
-
+	var_dump($main_mod_array);
 	if ($is_enable == 1) {
 		if ($menu_item_row == '1') {
 			$access_modules_list[] = $module_name;
@@ -1161,7 +1161,7 @@ foreach ($query_results_mod['data'] as $row1) {
 	}
 }
 ksort($main_mod_array);
-
+var_dump($main_mod_array);
 
 
 /////////////////////////////////////////////////////////
