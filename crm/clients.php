@@ -657,13 +657,13 @@ $page = 'Client';
 	}
 
 	$priority_zone_array = array(
-    "America/New_York",
-    "America/Chicago",
-    "America/Denver",
-    "America/Los_Angeles",
-    "America/Anchorage",
-    "Pacific/Honolulu",
-);
+		"America/New_York",
+		"America/Chicago",
+		"America/Denver",
+		"America/Los_Angeles",
+		"America/Anchorage",
+		"Pacific/Honolulu",
+	);
 
 function userUpdateLog($user_id, $action_type, $action_by,$db)
 {
@@ -829,6 +829,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 				if ($ex===true) {
 					$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+
 					$query_clients = 'INSERT INTO crm_clients
 							(user_id,`api_profile`,user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`,`bussiness_address1`,`bussiness_address2`,`country`,`state_region`,`zip`, mobile, is_enable, create_date,create_user)
 							VALUES ('.$idContAutoInc.',
@@ -852,7 +853,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 									now(),
 									"'.$user_name.'")';
 					$result_clients =$db->execDB($query_clients);
-
 					$message_response = str_replace("user","client",$message_functions->showNameMessage('user_create_success', $new_user_name));
 					$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $message_response . '</strong></div>';
 					//Activity log
@@ -1377,6 +1377,19 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
                                                                      <?php
                                                                      $utc = new DateTimeZone('UTC');
                                                                      $dt = new DateTime('now', $utc);
+
+																	 foreach ($priority_zone_array as $tz){
+																		$current_tz = new DateTimeZone($tz);
+																		$offset =  $current_tz->getOffset($dt);
+																		$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+																		$abbr = $transition[0]['abbr'];
+																		if($timezone_set==$tz){
+																			$select="selected";
+																		}else{
+																			$select="";
+																		}
+																		echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+																	}
                                                                      foreach(DateTimeZone::listIdentifiers() as $tz) {
                                                                          //Skip
                                                                          if(in_array($tz,$priority_zone_array))
