@@ -157,7 +157,7 @@ if (isset($username)) {
 				}
 
 				echo $user_query;
-
+				die();
 				$query_results=$dbT->selectDB($user_query);
 
 				$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT',$system_package);
