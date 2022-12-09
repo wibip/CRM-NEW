@@ -826,10 +826,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						(user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`,mobile, is_enable, create_date,create_user)
 						VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$user_distributor','$full_name','$email', '$language' ,'$timezone', '$mobile','1',now(),'$user_name')";
 				$ex =$db->execDB($query);
-
+var_dump($ex);
 				if ($ex===true) {
 					$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
-
+			    var_dump($idContAutoInc);
 					$query_clients = 'INSERT INTO crm_clients
 							(user_id,`api_profile`,user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`,`bussiness_address1`,`bussiness_address2`,`country`,`state_region`,`zip`, mobile, is_enable, create_date,create_user)
 							VALUES ('.$idContAutoInc.',
@@ -852,7 +852,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 									2,
 									now(),
 									"'.$user_name.'")';
+			    echo $query_clients;
 					$result_clients =$db->execDB($query_clients);
+			    var_dump($result_clients);
 					$message_response = str_replace("user","client",$message_functions->showNameMessage('user_create_success', $new_user_name));
 					$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $message_response . '</strong></div>';
 					//Activity log
