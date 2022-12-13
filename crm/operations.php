@@ -1655,7 +1655,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                 <font color="#FF0000"></font>
                                                             </sup></label>
                                                         <div class="controls col-lg-5 form-group" readonly>
-                                                            <select onchange="add_module(this)" multiple="multiple" name="api_profile[]" id="api_profile" class="span4 form-control">
+                                                            <select onchange="add_module(this)" multiple="multiple" name="api_profile[]" id="api_profile" class="span4 form-control" required>
                                                                     <?php
                                                                     $key_query="SELECT c.controller_name,c.description,c.brand,c.api_profile,c.id FROM `exp_locations_ap_controller` c ";
                                                                     $query_results=$db->selectDB($key_query);
@@ -1676,7 +1676,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                     <div class="control-group">
                                                         <label class="control-label" for="mno_account_name">Operations Name<sup><font color="#FF0000"></font></sup></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control form-control" id="mno_account_name" placeholder="Frontier" name="mno_account_name" type="text" value="<?php echo $get_edit_mno_description;?>">
+                                                            <input class="span4 form-control form-control" id="mno_account_name" placeholder="Frontier" name="mno_account_name" type="text" value="<?php echo $get_edit_mno_description;?>" required>
                                                         </div>
                                                         <!-- /controls -->
                                                     </div>
@@ -1694,7 +1694,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                         <div class="control-group">
                                                             <label class="control-label" for="mno_sys_package">Operations Type<sup><font color="#FF0000"></font></sup></label>
                                                             <div class="controls col-lg-5 form-group">
-                                                                <select name="mno_sys_package" id="mno_sys_package"  class="span4 form-control form-control" <?php if($mno_edit==1) echo "readonly";?>>
+                                                                <select name="mno_sys_package" id="mno_sys_package"  class="span4 form-control form-control" <?php if($mno_edit==1) echo "readonly";?> required>
                                                                     <option value="">Select Type of Operator</option>
                                                                     <?php
                                                                         if($user_type == 'ADMIN'){
@@ -1720,37 +1720,37 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                     <div class="control-group">
                                                         <label class="control-label" for="mno_first_name">Admin First Name<sup><font color="#FF0000"></font></sup></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_first_name" maxlength="12" placeholder="First Name" name="mno_first_name" type="text" value="<?php echo$get_edit_mno_first_name;?>" autocomplete="off">
+                                                            <input class="span4 form-control" id="mno_first_name" maxlength="12" placeholder="First Name" name="mno_first_name" type="text" value="<?php echo$get_edit_mno_first_name;?>" autocomplete="off" required>
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
                                                         <label class="control-label" for="mno_last_name">Admin Last Name<sup><font color="#FF0000"></font></sup></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_last_name" maxlength="12" placeholder="Last Name" name="mno_last_name" type="text" value="<?php echo$get_edit_mno_last_name;?>" autocomplete="off">
+                                                            <input class="span4 form-control" id="mno_last_name" maxlength="12" placeholder="Last Name" name="mno_last_name" type="text" value="<?php echo$get_edit_mno_last_name;?>" autocomplete="off" required>
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
                                                         <label class="control-label" for="mno_email">Admin Email<sup><font color="#FF0000"></font></sup></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_email" name="mno_email" type="text" placeholder="wifi@company.com" value="<?php echo$get_edit_mno_email;?>" autocomplete="off">
+                                                            <input class="span4 form-control" id="mno_email" name="mno_email" type="text" placeholder="wifi@company.com" value="<?php echo$get_edit_mno_email;?>" autocomplete="off" required>
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
                                                         <label class="control-label" for="mno_address_1">Address<sup><font color="#FF0000"></font></sup></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_address_1" placeholder="Address" name="mno_address_1" type="text" value="<?php echo$get_edit_mno_ad1;?>" autocomplete="off">
+                                                            <input class="span4 form-control" id="mno_address_1" placeholder="Address" name="mno_address_1" type="text" value="<?php echo$get_edit_mno_ad1;?>" autocomplete="off" required>
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
                                                         <label class="control-label" for="mno_address_2">City<sup><font color="#FF0000"></font></sup></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_address_2" placeholder="City" name="mno_address_2" type="text" value="<?php echo $get_edit_mno_ad2;?>" autocomplete="off">
+                                                            <input class="span4 form-control" id="mno_address_2" placeholder="City" name="mno_address_2" type="text" value="<?php echo $get_edit_mno_ad2;?>" autocomplete="off" required>
                                                         </div>
                                                     </div>
                                                     <div class="control-group">
                                                         <label class="control-label" for="mno_country" >Country<font color="#FF0000"></font></sup></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <select name="mno_country" id="mno_country" class="span4 form-control" autocomplete="off">
+                                                            <select name="mno_country" id="mno_country" class="span4 form-control" autocomplete="off" required>
                                                                 <option value="">Select Country</option>
                                                                 <?php
                                                                 
@@ -1795,7 +1795,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                     <div class="control-group">
                                                         <label class="control-label" for="mno_region">ZIP Code<sup><font color="#FF0000"></font></sup></label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $get_edit_mno_zip?>" autocomplete="off">
+                                                            <input class="span4 form-control" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $get_edit_mno_zip?>" autocomplete="off" required>
                                                         </div>
                                                     </div>
                                                     <script type="text/javascript">
@@ -1827,9 +1827,9 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                     </script>
 
                                                     <div class="control-group">
-                                                            <label class="control-label" for="mno_mobile">Phone Number 1<sup><font color="#FF0000"></font></sup></label>
+                                                            <label class="control-label" for="mno_mobile">Phone Number<sup><font color="#FF0000"></font></sup></label>
                                                             <div class="controls col-lg-5 form-group">
-                                                                <input class="span4 form-control" id="mno_mobile_1" name="mno_mobile_1" type="text" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_mobile?>" autocomplete="off">
+                                                                <input class="span4 form-control" id="mno_mobile_1" name="mno_mobile_1" type="text" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_mobile?>" autocomplete="off" required>
                                                             </div>
                                                     </div>
 
@@ -1893,7 +1893,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                             <div class="control-group">
                                                                 <label class="control-label" for="mno_timezone">Time Zone<sup><font color="#FF0000"></font></sup></label>
                                                                 <div class="controls col-lg-5 form-group">
-                                                                    <select class="span4 form-control" id="mno_time_zone" name="mno_time_zone" autocomplete="off">
+                                                                    <select class="span4 form-control" id="mno_time_zone" name="mno_time_zone" autocomplete="off" required>
                                                                         <option value="">Select Time Zone</option>
                                                                         <?php
                                                                         foreach ($priority_zone_array as $tz){
