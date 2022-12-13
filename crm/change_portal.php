@@ -27,7 +27,7 @@ if (isset($_POST['select_profile']) || $_GET['section'] == 'ADMIN') {
 	} else {
 		$userId = $_POST['user_id'];
 	}
-
+	$_SESSION['previous_profile'] = isset($_SESSION['current_profile']) ? $_SESSION['current_profile'] : null;
 	header("Location: ./generic/login?auto_login&user_id=" . $userId);
 	exit();
 }
