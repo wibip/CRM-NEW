@@ -125,6 +125,24 @@ if (!empty($arrayo)) {
             .actions.clearfix{
                 width: 100%;
             }
+            .control-group.mask .controls{
+                position: relative;
+                overflow: hidden;
+            }
+            .control-group.mask span{
+                position: absolute;
+                left: 0;
+                height: 100%;
+                background: #e4e4e4;
+                border-radius: 10px;
+                padding: 8px;
+                box-sizing: border-box;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+            .control-group.mask input{
+                padding-left: 50px;
+            }
         </style>
         <div>
             <div class="content clearfix">
@@ -151,7 +169,7 @@ if (!empty($arrayo)) {
                             
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Cotact Email</label>
+                                    <label for="radiobtns">Contact Email</label>
                                     <div class="controls col-lg-5 form-group">
                                         <input type="text" name="contact_email" id="contact_email" class="span4 form-control" value="<?php echo $edit===true?$get_contact_email:''?>">
                                     </div>
@@ -193,40 +211,16 @@ if (!empty($arrayo)) {
                             </div>
                         </div>
                         <!-- RIGHT -->
-                        <div class="create_re">                            
-                            <div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Service Type</label>
+                        <div class="create_re">   
+                            <input type="hidden" name="method" value="simple">
+                            <div class="control-group mask">
+                                    <label for="radiobtns">Property ID</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <select name="service_type" id="service_type" class="span4 form-control">
-                                            <?php if($serviceTypes != null){ ?>
-                                            <option value="">Please select service type</option>
-                                            <?php foreach($serviceTypes as $serviceType){ 
-                                                   if (($edit===true? $get_service_type:'') == $serviceType['id']) {
-                                                        echo '<option selected value="' . $serviceType['id'] . '">' . $serviceType['service_type'] . '</option>';
-                                                    } else {
-
-                                                        echo '<option value="' . $serviceType['id'] . '">' . $serviceType['service_type'] . '</option>';
-                                                    }
-                                                }
-                                            } else { ?>
-                                            <option value="0">Service type not found</option>
-                                            <?php
-                                            }
-                                            ?>
-                                        </select>
+                                        <span><?php echo $get_opt_code; ?></span>
+                                        <input class="wifi_unique" type="text" name="wifi_unique" class="span4 form-control"
+                                        value="<?php echo $edit===true?$get_wifi_unique:''?>">
                                     </div>
-                                </div>
                             </div>
-                            
-                            <!--<div class="control-group">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Admin Last Name</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="last_name" id="last_name" class="span4 form-control" value="< ?php echo $edit===true?$last_name:''?>">
-                                    </div>
-                                </div>
-                            </div>-->
 
                             <div class="control-group">
                                 <div class="controls col-lg-5 form-group">
@@ -407,7 +401,7 @@ if (!empty($arrayo)) {
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
                         <li class="finishParent" style="margin-left: 5px;" aria-hidden="true">
-                            <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
+                            <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'create_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
                         </li>
                     </ul>
                 </div>
