@@ -15,6 +15,7 @@ require_once 'classes/dbClass.php';
 $db = new db_functions();
 
 $users = [];
+$_SESSION['section'] = $_GET['section'];
 if (isset($_GET['section']) && $_GET['section'] != 'ADMIN') {
 	$userSql = "SELECT id,full_name FROM admin_users WHERE user_type='MNO' AND is_enable=1";
 	$userResults = $db->selectDB($userSql);

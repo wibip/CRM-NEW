@@ -328,6 +328,11 @@ foreach ($main_mod_array as $keym => $valuem) {
 			echo '</ul> </li>';
 		}
 }
+
+if($_SESSION['SADMIN'] == true && isset($_SESSION['section']) && $_SESSION['section'] != 'ADMIN') {
+	echo '<li><a href="./change_portal?section='.$_SESSION["section"].'">Change portal</a></li>';
+}
+
 ?>
 	</ul>
 	<span class="footer"></span>
@@ -335,7 +340,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 <div class="top-bar">
 	<div class="title"><i class="icon-reorder show"></i><?php echo $active_title; ?></div>
 	<div class="nav-right">
-	<?php if($_SESSION['SADMIN'] == 'SADMIN') { ?>
+	<?php if($_SESSION['SADMIN'] == true) { ?>
 		<li class="dropdown" style="margin-right: 20px;">
 			<?=(isset($_SESSION['previous_profile']) ? "You are changed the profile from ".$_SESSION['previous_profile']." to ".$_SESSION['current_profile'] : "You are logged as ".$_SESSION['current_profile'])?></li>
 		<li class="dropdown" style="margin-right: 20px;">
