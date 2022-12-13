@@ -943,6 +943,9 @@ foreach ($query_results_mod['data'] as $row1) {
 	echo 'Before: ';
 	var_dump($main_mod_array);
 	echo '<br/>';
+	var_dump($menu_item_row);
+	echo '<br/>';
+	echo '<br/>';
 	if ($is_enable == 1) {
 		if ($menu_item_row == '1') {
 			$access_modules_list[] = $module_name;
