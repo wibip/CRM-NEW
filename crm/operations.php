@@ -633,7 +633,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                     '$mno_zip_code',
                                     '$mno_mobile_1',
                                     '$mno_time_zone',
-                                    '2',
+                                    '1',
                                     NOW(),
                                     '$login_user_name'
                                     ,'$mno_system_package',
@@ -641,14 +641,14 @@ if (isset($_POST['submit_mno_form'])) { //6
                                     '$camphaign_id')";
                         } else {
                             $query0 = "INSERT INTO `exp_mno` (`system_package`,`mno_id`, `mno_description`, `zip`, `default_campaign_id`, `mno_type`, `is_enable`,create_user, `create_date`)
-                                        VALUES ('$mno_sys_package','$mno_id', '$mno_account_name', '$mno_zip_code', '$camphaign_id', '$mnoAccType','0','$login_user_name', NOW())";
+                                        VALUES ('$mno_sys_package','$mno_id', '$mno_account_name', '$mno_zip_code', '$camphaign_id', '$mnoAccType','1','$login_user_name', NOW())";
                         }
                         $ex0 = $db->execDB($query0);
                         $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
                         
                         if ($ex0 === true) {
                             $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
-                                        VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$mno_user_type', '$mno_id', '$mno_full_name', '$mno_email', '$mno_mobile_1', '$mno_time_zone', '2','$login_user_name', NOW(), '$user_type')";
+                                        VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$mno_user_type', '$mno_id', '$mno_full_name', '$mno_email', '$mno_mobile_1', '$mno_time_zone', '1','$login_user_name', NOW(), '$user_type')";
       
                             $ex0 = $db->execDB($query0);
                             if (isset($mno_sys_package)) {
