@@ -337,7 +337,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 	<div class="nav-right">
 	<?php if($_SESSION['SADMIN'] == 'SADMIN') { ?>
 		<li class="dropdown" style="margin-right: 20px;">
-			<?=(isset($_SESSION['previous_profile']) ? "You are changed profile from ".$_SESSION['previous_profile']." to ".$_SESSION['current_profile'] : "You are logged as ".$_SESSION['current_profile'])?></li>
+			<?=(isset($_SESSION['previous_profile']) ? "You are changed the profile from ".$_SESSION['previous_profile']." to ".$_SESSION['current_profile'] : "You are logged as ".$_SESSION['current_profile'])?></li>
 		<li class="dropdown" style="margin-right: 20px;">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-signin show"></i> </a>
 			<ul class="dropdown-menu">
