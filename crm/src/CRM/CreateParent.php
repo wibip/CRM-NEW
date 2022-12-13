@@ -1,12 +1,7 @@
 <?php 
+
 require_once dirname(__FILE__).'/../../classes/dbClass.php';
 require_once dirname(__FILE__).'/../../classes/systemPackageClass.php';
-// echo 'Username= ';
-// var_dump($_SESSION['user_id']);
-require_once dirname(__FILE__) . '/../../models/clientUserModel.php';
-$client_model = new clientUserModel();
-$client_data = $client_model->getClient($_SESSION['user_id'],'user_id');
-$api_id = $client_data[0]['api_profile'];
 
 
 ini_set('display_errors', 1);
@@ -18,11 +13,14 @@ $id=$argv[1];
 if (strlen($id)<1) {
 	$id = $_GET['id'];
 }
-$method=$argv[2];
+$api_id=$argv[2];
+if (strlen($api_id)<1) {
+	$api_id = $_GET['api_id'];
+}
+$method=$argv[3];
 if (strlen($method)<1) {
 	$method = 'all';
 }
-
 $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
 
 $mno_id = $result['mno_id'];
@@ -88,6 +86,7 @@ if ($response['status'] == 'success') {
 }else{
 	$ex = $db->execDB("UPDATE exp_crm SET `status` = 'Failed' WHERE id = '$id'");
 }
+
 
 echo json_encode($response);
 ?>
