@@ -18,9 +18,36 @@ $id=$argv[1];
 if (strlen($id)<1) {
 	$id = $_GET['id'];
 }
+$method=$argv[2];
+if (strlen($method)<1) {
+	$method = 'all';
+}
+
 $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
 
 $mno_id = $result['mno_id'];
+if($method=='simple'){
+	$data = [
+		'name' => $result['business_name'],
+		'contact' => [
+			'name' => $result['contact_name'], 
+			'email' => $result['contact_email'], 
+			'voice' => $result['contact_number']
+		],
+		'locations' => [
+			[
+				'id' => $result['property_id'], 
+				'name' => $result['contact_name'],
+				'address' => [
+					'street' => $result['street'],
+					'city' => $result['city'],
+					'state' => $result['state'],
+					'zip' => $result['zip'] 
+				]
+			]
+		]
+	];
+}else{
 $data = [
 	'name' => $result['business_name'],
 	'contact' => [
@@ -45,6 +72,7 @@ $data = [
 	"service-type"=>$result['service_type'],
 	"env"=>"hosted"
 ];
+}
 $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Processing' WHERE id = '$id'");
 
 require_once 'functions.php';

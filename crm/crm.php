@@ -82,7 +82,8 @@ $api_details = $CommonFunctions->getApiDetails($api_id);
 
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;
-    $get_opt_code = 'FRT';//$db->getValueAsf("SELECT api_prefix as f FROM exp_mno WHERE mno_id = '$user_distributor'");
+    $opt_q = $package_functions->getSectionType("OPT_CODE", $system_package);
+    $get_opt_code = (isset($opt_q))?$opt_q:'FRT';//$db->getValueAsf("SELECT api_prefix as f FROM exp_mno WHERE mno_id = '$user_distributor'");
 
     $priority_zone_array = array(
                                 "America/New_York",
@@ -174,6 +175,7 @@ $api_details = $CommonFunctions->getApiDetails($api_id);
              $account_number = isset($_POST['account_number']) ? $_POST['account_number'] : '';
              $street = $_POST['street'];
              $state = $_POST['state'];
+             $method = (isset($_POST['method']))?$_POST['method']:'all';
              $service_type = $_POST['service_type'];
              $wifi_unique_key = isset($_POST['wifi_unique']) ? $_POST['wifi_unique'] : '';
              $wifi_unique = $get_opt_code.$wifi_unique_key;
@@ -318,11 +320,11 @@ $api_details = $CommonFunctions->getApiDetails($api_id);
                 $ex = $db->execDB($query);
                 $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 
-                $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' > /dev/null 2>&1 & echo $!; ';
+                $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' '.$method.' > /dev/null 2>&1 & echo $!; ';
                 $pid = exec($exec_cmd , $output);
             var_dump($output);
 
-            var_dump($pid);
+            var_dump($exec_cmd);
 
             if($ex===true){
                 $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
