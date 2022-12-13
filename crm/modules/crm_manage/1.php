@@ -115,7 +115,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                         <tr>
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Property ID</th>
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Business Name</th>
-                            <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">status</th>
+                            <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Status</th>
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Edit</th>
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">Remove</th>                           
                         </tr>
