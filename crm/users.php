@@ -1735,7 +1735,7 @@ if ($system_package == 'N/A') {
 																	<tr>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Access Role</th>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Modules Assigned</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Create Date</th>
+																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Created Date</th>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Remove</th>
 																	</tr>
