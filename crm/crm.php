@@ -320,7 +320,8 @@ $api_details = $CommonFunctions->getApiDetails($api_id);
                 $ex = $db->execDB($query);
                 $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 
-                $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' '.$method.' > /dev/null 2>&1 & echo $!; ';
+                $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' '.$api_id.' '.$method.' > /dev/null 2>&1 & echo $!; ';
+                //$exec_cmd = "php -v";
                 $pid = exec($exec_cmd , $output);
             var_dump($output);
 
