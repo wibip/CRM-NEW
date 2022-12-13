@@ -138,7 +138,8 @@ if (isset($username)) {
 		$_SESSION['login'] = 'yes';
 		$_SESSION['user_name'] = $user_name;
 		$_SESSION['access_role'] = $access_role;
-		$_SESSION['full_name'] = $full_name;
+		$_SESSION['full_name'] = $full_name;		
+		$_SESSION['current_profile'] = $full_name;
 		$_SESSION['user_distributor'] = $user_distributor;
 
 		if(!$suspended){
