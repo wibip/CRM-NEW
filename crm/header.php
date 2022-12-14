@@ -2005,9 +2005,9 @@ else{
 					?>
 					<div>
 						<ul class="topnav">
-							<li><a href="./change_portal?section=ADMIN">Admin</a></li>
-							<li><a href="./change_portal?section=MNO">Operations</a></li>
-							<li><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
+							<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
+							<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./change_portal?section=MNO">Operations</a></li>
+							<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
 						</ul>
 					</div>
 					<?php } ?>
