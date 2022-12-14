@@ -291,7 +291,7 @@ $logTypes = $db->getDataFromLogsField('log_type');
 														<table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
 															<thead>
 																<tr>
-																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">User Name</th>
+																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Username</th>
 																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Log Type</th>
 																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Page</th>
 																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Details</th>
