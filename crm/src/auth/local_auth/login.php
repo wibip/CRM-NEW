@@ -218,7 +218,7 @@ if (isset($username)) {
 	}
 	else {
 		$MMFailed = '1';
-		$MMFailedMassage = 'Incorrect User ID or Password';
+		$MMFailedMassage = 'Incorrect Username or Password';
 	}
 }
 
