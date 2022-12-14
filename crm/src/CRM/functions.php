@@ -22,7 +22,7 @@ class crm
     }
 
     public function getAllConfig($crm_profile){
-        $q = "SELECT `api_url`,`api_password`,`api_user_name`,`controller_name`
+        $q = "SELECT `api_url`,`api_password`,`api_username`,`controller_name`
             FROM `exp_locations_ap_controller` 
             WHERE `id` = '$crm_profile'";
         $data = $this->db->select1DB($q);
@@ -37,11 +37,11 @@ class crm
 
     public function getToken(){
         //API Url
-        $url = $this->getOtherConfig('api_url').'api/'.$this->getOtherConfig('controller_name').'/token';
+        $url = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/token';
         
         //The JSON data.
         $data = array(
-                'username'   => $this->getOtherConfig('api_user_name'),
+                'username'   => $this->getOtherConfig('api_username'),
                 'password'   => $this->getOtherConfig('api_password')
         );
         $jsondata = json_encode($data);
@@ -71,13 +71,12 @@ class crm
             $body = substr($result, $header_size);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $sus=json_decode($body,true);
-
             // $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
             //     VALUES('createToken','Create CRM Token','$jsondata','$result','$httpcode','',NOW())";
             // $this->db->execDB($q);
 
             $this->db->addApiLogs('createToken', 'Create CRM Token', 'SUCCESS', 'crm token generation', $url, $jsondata, $result, $httpcode, $_SESSION['user_id']);
-            return $sus['token'];
+            return $sus['data']['token'];
         } catch(Exception $e) {
             $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url, $jsondata, $e->getMessage(), 0, $_SESSION['user_id']);
             return 'Error';
@@ -88,13 +87,14 @@ class crm
     public function createParent($jsonData){
         $access_token = $this->getToken();
         //API Url
-        $url2 = $this->getOtherConfig('api_url').'api/'.$this->getOtherConfig('controller_name').'/accounts';
-
+        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts';
+        
         try{
             $ch = curl_init($url2);
             $header_parameters = "Content-Type: application/json;charset=UTF-8";
             $header_parameters = array(
                 'Authorization: Bearer '.$access_token.'',
+                'Accept: application/json',
                 'Content-Type: application/json');
             //Attach our encoded JSON string to the POST fields.
             curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
@@ -124,7 +124,7 @@ class crm
             $decoded = json_decode($body, true);
             
             $req = $url2.'->'.$this->db->escapeDB($jsonData);
-            // echo $body;
+        
             // $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
             // VALUES('createProperty','Create CRM Property','$req','$result','$httpcode','',NOW())";
 

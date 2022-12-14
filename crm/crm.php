@@ -320,20 +320,73 @@ $api_details = $CommonFunctions->getApiDetails($api_id);
                 $ex = $db->execDB($query);
                 $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 
-                $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' '.$api_id.' '.$method.' > /dev/null 2>&1 & echo $!; ';
-                //$exec_cmd = "php -v";
-                $pid = exec($exec_cmd , $output);
-            var_dump($output);
+                $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$idContAutoInc'");
 
-            var_dump($exec_cmd);
+                $mno_id = $result['mno_id'];
+                if($method=='simple'){
+                    $data = [
+                        'name' => $result['business_name'],
+                        'contact' => [
+                            'name' => $result['contact_name'], 
+                            'email' => $result['contact_email'], 
+                            'voice' => $result['contact_number']
+                        ],
+                        'locations' => [
+                            [
+                                'id' => $result['property_id'], 
+                                'name' => $result['contact_name'],
+                                'address' => [
+                                    'street' => $result['street'],
+                                    'city' => $result['city'],
+                                    'state' => $result['state'],
+                                    'zip' => $result['zip'] 
+                                ]
+                            ]
+                        ]
+                    ];
+                }else{
+                $data = [
+                    'name' => $result['business_name'],
+                    'contact' => [
+                        'name' => $result['contact_name'], 
+                        'email' => $result['contact_email'], 
+                        'voice' => $result['contact_number']
+                    ],
+                    'locations' => [
+                        [
+                            'id' => $result['property_id'], 
+                            'name' => $result['contact_name'],
+                            'address' => [
+                                'street' => $result['street'],
+                                'city' => $result['city'],
+                                'state' => $result['state'],
+                                'zip' => $result['zip'] 
+                            ]
+                        ]
+                    ],
+                    "operator-code"=>"FRT",
+                    "sub-operator"=>"",
+                    "service-type"=>$result['service_type'],
+                    "env"=>"hosted"
+                ];
+                }
+                $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Processing' WHERE id = '$idContAutoInc'");
+                
+                require_once 'src/CRM/functions.php';
+                $jsondata = json_encode($data);
+                $crm = new crm($api_id, $system_package);
 
-            if($ex===true){
-                $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
-                $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
-            }else{
-                $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
-                $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
-            }
+                $response = $crm->createParent($jsondata);
+                
+                if ($response['status'] == 'success') {
+                    $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Completed' WHERE id = '$idContAutoInc'");
+                    $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
+                    $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
+                }else{
+                    $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Failed' WHERE id = '$idContAutoInc'");
+                    $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
+                    $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";    
+                }
         }
     }
 
