@@ -220,6 +220,10 @@ if ($script != 'verification') {
 	.dropdown-menu li>a{
 		padding: 6px 15px;
 	}
+	.dropdown-menu .active>a {
+		color: #fff !important;
+		background: #E57200 !important;
+	}
 	.top-bar .icon-signin{
 		font-size: 28px;
 	}

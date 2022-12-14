@@ -125,7 +125,7 @@ if (!empty($arrayo)) {
             .actions.clearfix{
                 width: 100%;
             }
-            .control-group.mask .controls{
+            .control-group.mask .controls div{
                 position: relative;
                 overflow: hidden;
             }
@@ -216,9 +216,11 @@ if (!empty($arrayo)) {
                             <div class="control-group mask">
                                     <label for="radiobtns">Property ID</label>
                                     <div class="controls col-lg-5 form-group">
+                                        <div>
                                         <span><?php echo $get_opt_code; ?></span>
                                         <input class="wifi_unique" type="text" name="wifi_unique" class="span4 form-control"
                                         value="<?php echo $edit===true?$get_wifi_unique:''?>">
+                                        </div>
                                     </div>
                             </div>
 
@@ -398,6 +400,7 @@ if (!empty($arrayo)) {
                         margin-bottom: 0;
                     }
                 </style>
+                <?php if (!isset($_GET['edit'])){ ?>
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
                         <li class="finishParent" style="margin-left: 5px;" aria-hidden="true">
@@ -405,6 +408,7 @@ if (!empty($arrayo)) {
                         </li>
                     </ul>
                 </div>
+                <?php } ?>
             </div>
                     </div>
                 </form>
