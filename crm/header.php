@@ -2001,7 +2001,7 @@ else{
 					}
 
 					
-					if($_SESSION['SADMIN'] == 'SADMIN') {
+					if($_SESSION['SADMIN'] == true) {
 					?>
 					<div>
 						<ul class="topnav">

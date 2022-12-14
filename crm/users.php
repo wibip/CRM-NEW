@@ -1618,7 +1618,7 @@ if ($system_package == 'N/A') {
 																</div>
 															</div>
 															<div class="control-group">
-																<label class="control-label" for="my_select"><?=($_SESSION['SADMIN'] == 'SADMIN' ? "Admin " : "")?>Modules</label>
+																<label class="control-label" for="my_select"><?=($_SESSION['SADMIN'] == true ? "Admin " : "")?>Modules</label>
 
 																<div class="controls form-group col-lg-5">
 																	<select class="form-control span4" multiple="multiple" id="my_select" name="my_select[]">
