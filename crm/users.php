@@ -1556,7 +1556,7 @@ if ($system_package == 'N/A') {
 											<!-- +++++++++++++++++++++++++++++ create Roles ++++++++++++++++++++++++++++++++ -->
 											<div <?php if (isset($tab3)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_roles">
 
-												<h1 class="head">Roles</h1>
+												<h1 class="head">Manage Roles</h1>
 												<?php
 													if(isset($tab3)){
 														if (isset($_SESSION['msg5'])) {
