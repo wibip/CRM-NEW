@@ -347,9 +347,9 @@ if($_SESSION['SADMIN'] == true && isset($_SESSION['section']) && $_SESSION['sect
 		<li class="dropdown" style="margin-right: 20px;">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-signin show"></i> </a>
 			<ul class="dropdown-menu">
-					<li><a href="./change_portal?section=ADMIN">Admin</a></li>
-					<li><a href="./change_portal?section=MNO">Operations</a></li>
-					<li><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
+					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
+					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./change_portal?section=MNO">Operations</a></li>
+					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
 			</ul>
 		</li>
 	<?php } ?>
