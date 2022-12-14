@@ -331,7 +331,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 
 if($_SESSION['SADMIN'] == true && isset($_SESSION['section']) && $_SESSION['section'] != 'ADMIN') {
 // 	echo '<li><a href="./change_portal?section='.$_SESSION["section"].'">Change portal</a></li>';
-	echo '<li><a href="./change_portal?section='.$_SESSION["section"].'"><div><i class="icon-cogs show"></i><span>Change portal&nbsp;&nbsp;</span></div></a></li>';
+	echo '<li><a href="./change_portal?section='.$_SESSION["section"].'"><div><i class="icon-signin show"></i><span>Change portal&nbsp;&nbsp;</span></div></a></li>';
 }
 
 ?>
