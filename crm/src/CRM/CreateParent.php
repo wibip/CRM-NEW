@@ -19,7 +19,7 @@ if (strlen($api_id)<1) {
 }
 $method=$argv[3];
 if (strlen($method)<1) {
-	$method = 'all';
+	$method = isset($_GET['method'])?$_GET['method']:'all';
 }
 $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
 
