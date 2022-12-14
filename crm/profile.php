@@ -563,7 +563,7 @@ if(isset($_POST['new_password'])){
 												</div>
 												<?php } ?>
 												<div class="control-group">
-													<label class="control-label" for="radiobtns">User Name</label>
+													<label class="control-label" for="radiobtns">Username</label>
 
 													<div class="controls form-group">
 														
