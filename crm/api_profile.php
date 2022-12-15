@@ -206,14 +206,13 @@ if(isset($_POST['api_update'])){
 			$api_url = $update_wag_url.'/api/'.$update_wag_version.'/token';
 			$data = json_encode(['username'=>$update_wag_uname, 'password'=>$update_wag_pass]);
 			$apiReturn = json_decode($CommonFunctions->httpPost($api_url,$data,true) , true);
-			// var_dump($apiReturn);die;
 			if($apiReturn['status'] == 'success'){
 
 				$archive_q="INSERT INTO `exp_locations_ap_controller_archive`
 							(`controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,`archive_by`,`status`)
 							SELECT `controller_name`,`brand`,`model`,`description`,`time_zone`,`ip_address`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_description`,`create_date`,`create_user`,`last_update`,'$user_name','Update'
 							FROM `exp_locations_ap_controller`
-							WHERE `controller_name`='$update_wag_name'";
+							WHERE `id`='$profile_id'";
 				$archive_exe=$db->execDB($archive_q);
 		
 				
@@ -222,7 +221,7 @@ if(isset($_POST['api_update'])){
 																`api_url`='$update_wag_url',
 																`api_username`='$update_wag_uname',
 																`api_password`='$update_wag_pass',
-																`controller_name` = $update_wag_version 
+																`controller_name` = '$update_wag_version' 
 																WHERE `id`='$profile_id'";
 
 				$update_wag=$db->execDB($update_wag_q);
@@ -310,7 +309,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 									?>
 										<form onkeyup="admin_updatefn();" onchange="admin_updatefn();" class="form-horizontal" method="post" action="?t=1">
 											<input type="hidden" name="t" value="1">
-											<input type="hidden" name="profile_id" id="profile_id" value="<?=$edit_controller?>" />
+											<input type="hidden" name="profile_id" id="profile_id" value="<?php echo $edit_controller;?>" />
 											<?php
 											echo '<input type="hidden" name="update_wag_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
 											?>
