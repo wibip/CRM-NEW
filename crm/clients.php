@@ -1161,7 +1161,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																</thead>
 																<tbody>
 																	<?php
-																	$query_results = $client_model->get_activeClients();
+																	$query_results = $client_model->get_activeClients($user_distributor);
 																	if(isset($query_results['rowCount']) && $query_results['rowCount'] > 0) {
 																		foreach ($query_results['data'] as $row) {
 																			$id = $row['id'];

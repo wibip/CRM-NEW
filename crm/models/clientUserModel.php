@@ -276,12 +276,12 @@ class clientUserModel
     }
 
     //get active useres(users.php)
-    function get_activeClients()
+    function get_activeClients($mno)
     {
         $data_array = [];
         try {
             $query = "SELECT au.id,au.user_name,au.full_name, au.access_role, au.user_type, au.user_distributor, au.email,au.is_enable,au.create_user
-                  FROM crm_clients au ";
+                  FROM crm_clients au WHERE au.user_distributor='$mno'";
             $data_array = $this->connection->selectDB($query);
             return $data_array;
         } catch(Exception $e) {
