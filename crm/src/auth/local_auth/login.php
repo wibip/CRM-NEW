@@ -58,7 +58,10 @@ if (isset($username)) {
 
 	if($user_type=="SADMIN" && !isset($_GET['auto_login'])){
 		$_SESSION['SADMIN'] = true;
-		header( "Location: ".$global_base_url."/change_portal?section=ADMIN");	
+		// header('Location: '.$_SERVER['PHP_SELF']);
+		header("Location: ".$_SERVER['PHP_SELF']."?auto_login&user_id=1");
+		// var_dump('##########STEP03######');
+		// die;
 	}
 
 	$suspended = false;
