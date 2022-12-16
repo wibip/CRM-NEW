@@ -1,0 +1,1 @@
+ALTER TABLE `exp_crm` CHANGE `property_id` `property_id` VARCHAR(64) CHARSET latin1 COLLATE latin1_swedish_ci NOT NULL; 
