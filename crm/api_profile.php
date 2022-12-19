@@ -127,7 +127,7 @@ if(isset($_POST['create_ap_controller'])){
 		// $create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
 		
 		$_SESSION['msg2']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
-		header('Location: operator_config.php?t=2');
+		header('Location: api_profile.php?t=2');
 	}	
 } else if(isset($_GET['remove_controller'])){
 	if($_SESSION['FORM_SECRET']==$_GET['token2']) {//refresh validate
@@ -163,7 +163,7 @@ if(isset($_POST['create_ap_controller'])){
 		$create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
 			
 		$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
-		header('Location: operator_config.php?t=1');
+		header('Location: api_profile.php?t=1');
 			
 	}
 } else if(isset($_GET['edit_controller'])){
@@ -186,7 +186,7 @@ if(isset($_POST['create_ap_controller'])){
 		$db->userErrorLog('2004', $user_name, 'script - '.$script);
 		// $create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
 		$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
-		header('Location: operator_config.php?t=1');
+		header('Location: api_profile.php?t=1');
 
 	}
 }//
@@ -259,7 +259,7 @@ if(isset($_POST['api_update'])){
 			$db->userErrorLog('2004', $user_name, 'script - '.$script);
 			// $create_log->save('2004',$message_functions->showMessage('transection_fail','2004'),'');
 			$_SESSION['msg1']="<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
-			header('Location: operator_config.php?t=1');
+			header('Location: api_profile.php?t=1');
 		}
 	}
 						

@@ -130,9 +130,14 @@ class crm
 
             //$this->db->execDB($q);
 
-            $this->db->addApiLogs('createClient', 'Create CRM Client', 'SUCCESS', 'crm client generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+            if($httpcode == 200) {
+                $this->db->addApiLogs('createClient', 'Create CRM Client', 'SUCCESS', 'crm client generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+            } else {
+                $this->db->addApiLogs('createClient', 'Create CRM Token', 'ERROR', 'crm client generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+            }
 
             return $decoded; 
+
         } catch(Exception $e) {
             $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, $jsonData, $e->getMessage(), 0, $_SESSION['user_id']);
             return 'Error';
