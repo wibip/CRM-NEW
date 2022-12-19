@@ -27,7 +27,7 @@ class mysqliDB implements DB
         mb_regex_encoding( 'UTF-8' );
         // mysqli_report( MYSQLI_REPORT_STRICT );
         try {
-            $this->link = new Mysql( DB_HOST, DB_USER, DB_PASS, DB_NAME );
+            $this->link = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
             $this->link->set_charset( "utf8" );
             //print('Connected to the databse using mysqli_connect()');
         } catch ( Exception $e ) {
