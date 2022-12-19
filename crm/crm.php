@@ -192,7 +192,6 @@ if(!empty($api_details['data'])) {
 
     $view_type = isset($_GET['t']) ? $_GET['t'] : null;
 
-    
     $formTitle = "Create";
     $activatePopup = false;
 
@@ -765,6 +764,92 @@ if(!empty($api_details['data'])) {
                                             include_once 'modules/' . $value['module'] . '.php';
                                         }
                                         //}
+                                        if (isset($_GET['edit'])) {
+                                        ?>
+                                        <div class="widget widget-table action-table" style="padding-top: 35px;">
+                                            <div class="widget-header">
+                                                <i class="icon-th-list"></i>
+                                                <h3>Active Profiles</h3>
+                                            </div>
+                                            <!-- /widget-header -->
+                                            <div class="widget-content table_response ">
+                                                <div style="overflow-x:auto;" >
+                                                    <table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Contact Name</th>
+                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">City</th>
+                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Zip</th>
+                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Status</th>
+                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th>
+                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Remove</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                                $key_query="SELECT * FROM crm_portal.crm_exp_mno_locations WHERE property_id='".$wifi_unique."'";
+                                                                $query_results = $db->selectDB($key_query);
+                                                                if($query_results['rowCount'] > 0) {
+                                                                    foreach($query_results['data'] AS $row){
+                                                                        $contact_name = $row['contact_name'];
+                                                                        $city = $row['city'];
+                                                                        $zip = $row['zip'];
+                                                                        $is_enable = ($row['is_enable'] == 1 ? "Active" : "Inactive");
+                                                                        $id = $row['id'];
+
+                                                                        echo '<tr>
+                                                                        <td> '.$contact_name.' </td>
+                                                                        <td> '.$city.' </td>
+                                                                        <td> '.$zip.' </td>
+                                                                        <td> '.$is_enable.' </td>';
+                                                                        echo '<td><a href="javascript:void();" id="AP_'.$id.'"  class="btn btn-small btn-info">
+                                                                            <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
+                                                                            $(document).ready(function() {
+                                                                            $(\'#AP_'.$id.'\').easyconfirm({locale: {
+                                                                                    title: \'API Profile\',
+                                                                                    text: \'Are you sure you want to edit this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                                    button: [\'Cancel\',\' Confirm\'],
+                                                                                    closeText: \'close\'
+                                                                                    }});
+                                                                                $(\'#AP_'.$id.'\').click(function() {
+                                                                                    window.location = "?token2='.$secret.'&t=1&edit_controller='.$id.'"
+                                                                                });
+                                                                                });
+                                                                            </script></td>';
+                                                                                                                                                        
+                                                                        echo '<td><a href="javascript:void();" id="AP_R_'.$id.'"  class="btn btn-small btn-danger">
+                                                                        <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
+                                                                            $(document).ready(function() {
+                                                                            $(\'#AP_R_'.$id.'\').easyconfirm({locale: {
+                                                                                    title: \'API Profile\',
+                                                                                    text: \'Are you sure you want to remove this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                                    button: [\'Cancel\',\' Confirm\'],
+                                                                                    closeText: \'close\'
+                                                                                    }});
+                                                                                $(\'#AP_R_'.$id.'\').click(function() {
+                                                                                    window.location = "?token2='.$secret.'&t=1&remove_controller='.$id.'"
+                                                                                });
+                                                                                });
+                                                                            </script></td>';
+                                                                        echo '</tr>';
+                                                                    }
+                                                                } else {
+                                                                ?>
+                                                                <tr>
+                                                                    <td colspan="6" style="text-align: center;">Locations not found</td>
+                                                                </tr>
+                                                                <?php
+                                                                }	
+                                                                
+                                                                ?>		
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+												<!-- /widget-content -->
+											</div>
+                                        <?php
+                                        }
                                         ?>
 
                                     </div>

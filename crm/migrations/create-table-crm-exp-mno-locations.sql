@@ -1,7 +1,7 @@
 CREATE TABLE `crm_exp_mno_locations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `crm_id` int(11) DEFAULT NULL,
-  `property_id` int(11) DEFAULT NULL,
+  `property_id` varchar(80) COLLATE utf8_unicode_ci DEFAULT NULL,
   `contact_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `street` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(120) COLLATE utf8_unicode_ci DEFAULT NULL,
