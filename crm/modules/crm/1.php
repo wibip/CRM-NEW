@@ -87,26 +87,6 @@ if (!empty($arrayo)) {
 
 }
 
-$formTitle = "Create";
-$activatePopup = false;
-
-switch($view_type) {
-    case 'crm_view' :
-        $formTitle = "View";
-        $tab_crm_create = 'set';
-        $activatePopup = true;
-    break;
-    case 'crm_create' :
-        $formTitle = "Create";
-    break;
-    case 'crm_edit' :
-        $formTitle = "Edit";
-    break;
-}
-
-
-// var_dump($tab_crm_create);
-// die;
 ?>
 <div <?php if (isset($tab_crm_create)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="crm_create">
 <h1 class="head"><?=$formTitle?></h1>    
@@ -970,7 +950,8 @@ switch($view_type) {
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
                         <?php if($activatePopup == true) {  ?>
-                            <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li>
+                            <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
+                            <button onmouseover="" name="" id="create_crm_submit" class="btn btn-primary pop-up-open">Add Location</button>
                         <?php } ?>
                         <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-disabled="true"><button href="javascript:void(0)" data-type="previous" class="btn btn-primary" role="menuitem">Previous</button></li>
                         <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-hidden="false" aria-disabled="true"><button tabindex="119" href="javascript:void(0)" data-type="next" class="btn btn-primary" role="menuitem">Next</button></li>
@@ -980,7 +961,7 @@ switch($view_type) {
                             <!-- <a href="#finish" class="btn btn-primary" name="create_location_submit" id="create_location_submit" role="menuitem" >Finish</a></li> -->
                             <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
                         </li>
-                        <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="?token7=<?php echo $secret; ?>&t=edit_parent" class="btn btn-primary" role="menuitem">Cancel</a></li>
+                        <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
                         </ul>
                     </div>
                     </div>
