@@ -319,7 +319,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                                         //     }
                                         // });
                                         // $('#EDITACC_' + element[3]).click(function () {
-                                        //     window.location = "?t=crm_create&token=<?php echo $secret; ?>&edit&id=" + element[3];
+                                        //     window.location = "?t=crm_create&token=< ?php echo $secret; ?>&edit&id=" + element[3];
                                         // });
 
                                         $('#VIEWACC_' + element[3]).easyconfirm({
@@ -331,7 +331,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                                             }
                                         });
                                         $('#VIEWACC_' + element[3]).click(function () {
-                                            window.location = "?t=crm_create&token=<?php echo $secret; ?>&edit&id=" + element[3];
+                                            window.location = "?t=crm_view&token=<?php echo $secret; ?>&edit&id=" + element[3];
                                         });
 
                                         $('#REMOVEACC_' + element[3]).easyconfirm({

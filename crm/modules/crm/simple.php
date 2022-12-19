@@ -1,18 +1,3 @@
-<style>
-    #crm-create-progress{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgb(102 102 102);
-        opacity: 0.75;
-        z-index: 100;
-        cursor: progress;
-        display: none;
-    }
-</style>
-
 <?php
 
 $api = $api_details['data'][0];
@@ -89,9 +74,11 @@ if (empty($arrayk)) {
 if (!empty($arrayo)) {
     $arrayfinal = array_merge($arrayfinal,$arrayo);
 
-}?>
+}
+
+?>
 <div <?php if (isset($tab_crm_create)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="crm_create">
-    <h1 class="head">Create</h1>    
+    <h1 class="head"><?=$formTitle?></h1>    
 <div id="crm-create-progress"></div>
     <div id="msg27"></div>
     <?php
@@ -400,16 +387,24 @@ if (!empty($arrayo)) {
                         margin-bottom: 0;
                     }
                 </style>
-                <?php if (!isset($_GET['edit'])){ ?>
+
+                
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
-                        <li class="finishParent" style="margin-left: 5px;" aria-hidden="true">
+                        <?php if($activatePopup == true) {  ?>
+                            <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
+                            <button onmouseover="" name="" id="create_crm_submit" class="btn btn-primary pop-up-open">Add Location</button>
+                        <?php } 
+                        if (!isset($_GET['edit'])){ ?>
+                        <li class="finishParent" style="display: inline-block;margin-left: 5px;" aria-hidden="true">
                             <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'create_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
                         </li>
+                        <?php } ?>
+                        <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
                     </ul>
                 </div>
-                <?php } ?>
             </div>
                     </div>
                 </form>
             </div>
+            

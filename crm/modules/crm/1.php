@@ -15,10 +15,9 @@
 
 <?php
 $serviceTypes = null;
-$baseUrl = 'http://bi-development.arrisi.com/api/v1_0';
+$baseUrl = $apiUrl.'/api/'.$apiVersion;
 //generating api call to get Token
-$apiUsername = 'dev_hosted_api_user';
-$apiPassword = 'development@123!';
+
 $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
 $tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
 //generating api call to get Service Types
@@ -34,18 +33,18 @@ $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
                                                         FROM exp_products
                                                         WHERE (network_type='GUEST' || network_type='PRIVATE' || network_type='VTENANT') AND mno_id='$user_distributor' AND (default_value='1' || default_value IS NULL)";
     $query_results = $db->selectDB($q1);
-   $arraym = array();
-   $arrayk = array();
-   $arrayo = array();
+    $arraym = array();
+    $arrayk = array();
+    $arrayo = array();
     $guest_product_arr = array();
     $pvt_product_arr = array();
     $vt_product_arr = array();
 
     foreach ($query_results['data'] as $row) {
-    $dis_code = $row[product_code];
-    $QOS = $row[QOS];
+    $dis_code = $row['product_code'];
+    $QOS = $row['QOS'];
     $QOSLast = strtolower(substr($QOS, -1));
-    $product_name_new = str_replace('_', '-', $row[product_code]);
+    $product_name_new = str_replace('_', '-', $row['product_code']);
     $name_ar = explode('-', $product_name_new);
     $duration = explode('-', str_replace(' ', '-', CommonFunctions::split_from_num($name_ar[3])));
     $duration_val = $duration[0];
@@ -86,9 +85,11 @@ if (empty($arrayk)) {
 if (!empty($arrayo)) {
     $arrayfinal = array_merge($arrayfinal,$arrayo);
 
-}?>
+}
+
+?>
 <div <?php if (isset($tab_crm_create)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="crm_create">
-<h1 class="head">Create</h1>    
+<h1 class="head"><?=$formTitle?></h1>    
 <div id="crm-create-progress"></div>
     <div id="msg27"></div>
     <?php
@@ -948,6 +949,10 @@ if (!empty($arrayo)) {
 
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
+                        <?php if($activatePopup == true) {  ?>
+                            <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
+                            <button onmouseover="" name="" id="create_crm_submit" class="btn btn-primary pop-up-open">Add Location</button>
+                        <?php } ?>
                         <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-disabled="true"><button href="javascript:void(0)" data-type="previous" class="btn btn-primary" role="menuitem">Previous</button></li>
                         <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-hidden="false" aria-disabled="true"><button tabindex="119" href="javascript:void(0)" data-type="next" class="btn btn-primary" role="menuitem">Next</button></li>
                         <li class="finishStepone" style="display: none; margin-left: 5px;" aria-hidden="true"><a tabindex="120" href="#steponesubmit" class="btn btn-primary" name="location_submit_one" id="location_submit_one" role="menuitem">Update Account Info</a></li>
@@ -955,7 +960,8 @@ if (!empty($arrayo)) {
                         <li class="finishParent" style="display: none; margin-left: 5px;" aria-hidden="true">
                             <!-- <a href="#finish" class="btn btn-primary" name="create_location_submit" id="create_location_submit" role="menuitem" >Finish</a></li> -->
                             <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
-                            <li class="cancelform" style="display: none; margin-left: 5px;" aria-hidden="true"><a href="?token7=<?php echo $secret; ?>&t=edit_parent" class="btn btn-primary" role="menuitem">Cancel</a></li>
+                        </li>
+                        <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
                         </ul>
                     </div>
                     </div>
