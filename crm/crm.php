@@ -35,6 +35,17 @@ $client_data = $client_model->getClient($_SESSION['user_id'], 'user_id');
 $api_id = $client_data[0]['api_profile'];
 $api_details = $CommonFunctions->getApiDetails($api_id);
 
+$apiVersion = 0;
+$apiUrl = '';
+$apiUsername = '';
+$apiPassword = '';
+
+if(!empty($api_details['data'])) {
+    $apiVersion = $api_details['data'][0]['controller_name'];
+    $apiUrl = $api_details['data'][0]['api_url'];
+    $apiUsername = $api_details['data'][0]['api_username'];
+    $apiPassword = $api_details['data'][0]['api_password'];
+}
 ?>
 
 <head>
@@ -93,6 +104,8 @@ $api_details = $CommonFunctions->getApiDetails($api_id);
         "America/Anchorage",
         "Pacific/Honolulu",
     );
+
+    $view_type = isset($_GET['t']) ? $_GET['t'] : null;
 
     if (isset($_GET['edit'])) {
         $edit = true;

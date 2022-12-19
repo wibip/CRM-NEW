@@ -89,9 +89,27 @@ if (empty($arrayk)) {
 if (!empty($arrayo)) {
     $arrayfinal = array_merge($arrayfinal,$arrayo);
 
-}?>
+}
+
+$formTitle = "Create";
+$activatePopup = false;
+
+switch($view_type) {
+    case 'crm_view' :
+        $formTitle = "View";
+        $tab_crm_create = 'set';
+        $activatePopup = true;
+    break;
+    case 'crm_create' :
+        $formTitle = "Create";
+    break;
+    case 'crm_edit' :
+        $formTitle = "Edit";
+    break;
+}
+?>
 <div <?php if (isset($tab_crm_create)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="crm_create">
-    <h1 class="head">Create</h1>    
+    <h1 class="head"><?=$formTitle?></h1>    
 <div id="crm-create-progress"></div>
     <div id="msg27"></div>
     <?php
@@ -400,15 +418,20 @@ if (!empty($arrayo)) {
                         margin-bottom: 0;
                     }
                 </style>
-                <?php if (!isset($_GET['edit'])){ ?>
+                
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
+                        <?php if($activatePopup == true) {  ?>
+                            <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li>
+                        <?php } 
+                        if (!isset($_GET['edit'])){ ?>
                         <li class="finishParent" style="margin-left: 5px;" aria-hidden="true">
                             <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'create_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
                         </li>
+                        <?php } ?>
+                        <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="?token7=<?php echo $secret; ?>&t=edit_parent" class="btn btn-primary" role="menuitem">Cancel</a></li>
                     </ul>
                 </div>
-                <?php } ?>
             </div>
                     </div>
                 </form>
