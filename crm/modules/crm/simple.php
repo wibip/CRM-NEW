@@ -11,6 +11,77 @@
         cursor: progress;
         display: none;
     }
+    .pop-up{
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: none;
+        z-index: 122;
+    }
+    .pop-up.show{
+        display: block;
+    }
+    .pop-up-bg{
+        background-color: rgba(76, 78, 100, 0.5);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+    }
+    .pop-up-main{
+        height: 100%;
+    overflow: auto;
+    text-align: center;
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    }
+    .pop-up-content{
+        background: #fff;
+    margin: auto;
+    box-shadow: rgb(76 78 100 / 20%) 0px 6px 6px -3px;
+    border-radius: 10px;
+    padding: 40px;
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+    }
+    .pop-up-content .form-double{
+        display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    }
+    .pop-up-content .form-double .control-group{
+        width: 50%;
+        text-align: left;
+    }
+    .pop-up-content .form-double .control-group input{
+        width: 90% !important;
+    }
+    .pop-up-content form{
+        margin-bottom: 0;
+    }
+    .pop-up-content form .actions{
+        text-align: right;
+    margin-top: 20px;
+    }
+    .pop-up-content form .actions button{
+        margin-left: 5px;
+    }
 </style>
 
 <?php
@@ -400,16 +471,90 @@ if (!empty($arrayo)) {
                         margin-bottom: 0;
                     }
                 </style>
-                <?php if (!isset($_GET['edit'])){ ?>
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
+                        <?php if (!isset($_GET['edit'])){ ?>
                         <li class="finishParent" style="margin-left: 5px;" aria-hidden="true">
                             <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'create_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
                         </li>
+                        <?php }else{ ?>
+                            <li class="finishParent" style="margin-left: 5px;" aria-hidden="true">
+                                <button onmouseover="" name="" id="create_crm_submit" class="btn btn-primary pop-up-open">Add Location</button>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </div>
-                <?php } ?>
             </div>
                     </div>
                 </form>
             </div>
+            <div class="pop-up">
+                    <div class="pop-up-bg"></div>
+                    <div class="pop-up-main">
+                        <div class="pop-up-content">
+                        <h1 class="head">Add a location</h1>
+                            <form action="">
+                                <div class="form-double">
+                                    <div class="control-group">
+                                        <div class="controls col-lg-5 form-group">
+                                            <label for="radiobtns">Business Name</label>
+                                            <div class="controls col-lg-5 form-group">
+                                                <input type="text" name="business_name" id="business_name" class="span4 form-control" value="" data-bv-field="business_name">                                       
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <div class="controls col-lg-5 form-group">
+                                            <label for="radiobtns">Business Name</label>
+                                            <div class="controls col-lg-5 form-group">
+                                                <input type="text" name="business_name" id="business_name" class="span4 form-control" value="" data-bv-field="business_name">                                       
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <div class="controls col-lg-5 form-group">
+                                            <label for="radiobtns">Business Name</label>
+                                            <div class="controls col-lg-5 form-group">
+                                                <input type="text" name="business_name" id="business_name" class="span4 form-control" value="" data-bv-field="business_name">                                       
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <div class="controls col-lg-5 form-group">
+                                            <label for="radiobtns">Business Name</label>
+                                            <div class="controls col-lg-5 form-group">
+                                                <input type="text" name="business_name" id="business_name" class="span4 form-control" value="" data-bv-field="business_name">                                       
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <div class="controls col-lg-5 form-group">
+                                            <label for="radiobtns">Business Name</label>
+                                            <div class="controls col-lg-5 form-group">
+                                                <input type="text" name="business_name" id="business_name" class="span4 form-control" value="" data-bv-field="business_name">                                       
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <button class="btn btn-secondary">Cancel</button>
+                                    <button class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $('.pop-up .actions button:nth-child(1)').click(function (e) { 
+                        e.preventDefault();
+                        $('.pop-up').removeClass('show');
+                        $('body').css('overflow','auto');
+                    });
+                    $('.pop-up-open').click(function (e) { 
+                        e.preventDefault();
+                        $('.pop-up').addClass('show');
+                        $('body').css('overflow','hidden');
+                    });
+                });
+            </script>
