@@ -112,24 +112,7 @@ if (!empty($arrayo)) {
             .actions.clearfix{
                 width: 100%;
             }
-            .control-group.mask .controls div{
-                position: relative;
-                overflow: hidden;
-            }
-            .control-group.mask span{
-                position: absolute;
-                left: 0;
-                height: 100%;
-                background: #e4e4e4;
-                border-radius: 10px;
-                padding: 8px;
-                box-sizing: border-box;
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-            .control-group.mask input{
-                padding-left: 50px;
-            }
+            
         </style>
         <div>
             <div class="content clearfix">

@@ -3,6 +3,7 @@ CREATE TABLE `crm_exp_mno_locations` (
   `crm_id` int(11) DEFAULT NULL,
   `property_id` varchar(80) COLLATE utf8_unicode_ci DEFAULT NULL,
   `property_name` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `location_unique` varchar(80) COLLATE utf8_unicode_ci DEFAULT NULL,
   `contact_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `contact_email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `street` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,

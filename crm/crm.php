@@ -163,7 +163,24 @@ if(!empty($api_details['data'])) {
         }
         .pop-up-content form .actions button{
             margin-left: 5px;
-        }
+        }.control-group.mask .controls div{
+                position: relative;
+                overflow: hidden;
+            }
+            .control-group.mask span{
+                position: absolute;
+                left: 0;
+                height: 100%;
+                background: #e4e4e4;
+                border-radius: 10px;
+                padding: 8px;
+                box-sizing: border-box;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+            .control-group.mask input{
+                padding-left: 50px;
+            }
     </style>
 
     <?php
@@ -275,6 +292,7 @@ if(!empty($api_details['data'])) {
         $crm_id = $_POST['crm_id'];        
         $property_id = $_POST['wifi_unique'];
         $property_name = $_POST['business_name'];
+        $location_unique = $_POST['location_unique'];
         $contact_name = $_POST['contact'];
         $contact_email = $_POST['contact_email'];
         $street = $_POST['street'];
@@ -283,12 +301,12 @@ if(!empty($api_details['data'])) {
         $zip = $_POST['zip'];
 
         /* Add location */
-        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
-                        VALUES($crm_id,'".$property_id."','".$property_name."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
+                        VALUES($crm_id,'".$property_id."','".$property_name."','".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
         $locationResult = $db->execDB($locationSql);
 
         $data = [
-                    'id' => $property_id ,
+                    'id' => $location_unique,
                     'name' => $property_name,
                     'address' => [
                         'street' => $street,
@@ -526,8 +544,8 @@ if(!empty($api_details['data'])) {
                 }
 
                 /* Add location */
-                $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
-                                VALUES($idContAutoInc,'".$property_id."','".$business_name."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+                $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
+                                VALUES($idContAutoInc,'".$property_id."','".$business_name."','".$property_id."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
                 $locationResult = $db->execDB($locationSql);
 
                 $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Processing' WHERE id = '$idContAutoInc'");
@@ -928,17 +946,17 @@ if(!empty($api_details['data'])) {
                     <div class="form-double">
                         <div class="control-group">
                             <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Unique Property ID</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="wifi_unique" id="wifi_unique" class="span4 form-control" value="<?=$wifi_unique?>" data-bv-field="wifi_unique" readonly>                                       
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">Business Name</label>
                                 <div class="controls col-lg-5 form-group">
                                     <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?=$get_business_name?>" data-bv-field="business_name" readonly>                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group mask">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">Unique Location ID</label>
+                                <div class="controls col-lg-5 form-group">
+                                <span><?php echo $get_opt_code; ?></span><input type="text" name="location_unique" id="location_unique" class="span4 form-control" value="" data-bv-field="location_unique">                                       
                                 </div>
                             </div>
                         </div>
