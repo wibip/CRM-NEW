@@ -29,12 +29,13 @@ $CommonFunctions = new CommonFunctions();
 include_once 'classes/cryptojs-aes.php';
 require_once dirname(__FILE__) . '/models/clientUserModel.php';
 // echo 'Username= ';
-// var_dump($_SESSION['user_id']);
+require_once 'src/CRM/functions.php';
 $client_model = new clientUserModel();
 $client_data = $client_model->getClient($_SESSION['user_id'], 'user_id');
 $api_id = $client_data[0]['api_profile'];
 $api_details = $CommonFunctions->getApiDetails($api_id);
 
+$page = "CRM";
 $apiVersion = 0;
 $apiUrl = '';
 $apiUsername = '';
@@ -49,7 +50,6 @@ if(!empty($api_details['data'])) {
 ?>
 
 <head>
-
     <meta charset="utf-8">
     <title>CRM</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -64,20 +64,14 @@ if(!empty($api_details['data'])) {
     <link rel="stylesheet" href="css/select2-bootstrap/select2-bootstrap.css" />
     <link href="css/bootstrap-colorpicker.css?v=19" rel="stylesheet">
     <link href="plugins/img_upload/assets/css/croppic.css" rel="stylesheet">
-
     <link rel="stylesheet" href="css/bootstrap-toggle.min.css" />
     <link rel="stylesheet" href="css/tablesaw.css?v1.2">
 
     <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
     <script src="js/locationpicker.jquery.js"></script>
-
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/bootstrap-toggle.min.js"></script>
-
-
     <!--Ajax File Uploading Function-->
-
-
     <!--table colimn show hide-->
     <script type="text/javascript" src="js/tablesawNew.js"></script>
     <!--Encryption -->
@@ -87,90 +81,90 @@ if(!empty($api_details['data'])) {
     <link rel="stylesheet" href="css/bootstrapValidator.css" />
 
     <style>
-    #crm-create-progress{
-        position: fixed;
-        top: 0;
-        left: 0;
+        #crm-create-progress{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(102 102 102);
+            opacity: 0.75;
+            z-index: 100;
+            cursor: progress;
+            display: none;
+        }
+        .pop-up{
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: none;
+            z-index: 122;
+        }
+        .pop-up.show{
+            display: block;
+        }
+        .pop-up-bg{
+            background-color: rgba(76, 78, 100, 0.5);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+        .pop-up-main{
+            height: 100%;
+        overflow: auto;
+        text-align: center;
         width: 100%;
-        height: 100%;
-        background-color: rgb(102 102 102);
-        opacity: 0.75;
-        z-index: 100;
-        cursor: progress;
-        display: none;
-    }
-    .pop-up{
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        display: none;
-        z-index: 122;
-    }
-    .pop-up.show{
-        display: block;
-    }
-    .pop-up-bg{
-        background-color: rgba(76, 78, 100, 0.5);
-        position: fixed;
-        width: 100%;
-        top: 0;
-        bottom: 0;
-        z-index: -1;
-    }
-    .pop-up-main{
-        height: 100%;
-    overflow: auto;
-    text-align: center;
-    width: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    }
-    .pop-up-content{
-        background: #fff;
-    margin: auto;
-    box-shadow: rgb(76 78 100 / 20%) 0px 6px 6px -3px;
-    border-radius: 10px;
-    padding: 40px;
-    max-width: 800px;
-    width: 100%;
-    box-sizing: border-box;
-    }
-    .pop-up-content .form-double{
         display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-flow: row wrap;
-            flex-flow: row wrap;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
-    }
-    .pop-up-content .form-double .control-group{
-        width: 50%;
-        text-align: left;
-    }
-    .pop-up-content .form-double .control-group input{
-        width: 90% !important;
-    }
-    .pop-up-content form{
-        margin-bottom: 0;
-    }
-    .pop-up-content form .actions{
-        text-align: right;
-    margin-top: 20px;
-    }
-    .pop-up-content form .actions button{
-        margin-left: 5px;
-    }
-</style>
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        }
+        .pop-up-content{
+            background: #fff;
+        margin: auto;
+        box-shadow: rgb(76 78 100 / 20%) 0px 6px 6px -3px;
+        border-radius: 10px;
+        padding: 40px;
+        max-width: 800px;
+        width: 100%;
+        box-sizing: border-box;
+        }
+        .pop-up-content .form-double{
+            display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-flow: row wrap;
+                flex-flow: row wrap;
+        -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+                justify-content: space-between;
+        }
+        .pop-up-content .form-double .control-group{
+            width: 50%;
+            text-align: left;
+        }
+        .pop-up-content .form-double .control-group input{
+            width: 90% !important;
+        }
+        .pop-up-content form{
+            margin-bottom: 0;
+        }
+        .pop-up-content form .actions{
+            text-align: right;
+        margin-top: 20px;
+        }
+        .pop-up-content form .actions button{
+            margin-left: 5px;
+        }
+    </style>
 
     <?php
     $data_secret = $db->setVal('data_secret', 'ADMIN');
@@ -275,6 +269,43 @@ if(!empty($api_details['data'])) {
         $get_qq_customizable_ui = $result_qq['qq_customizable_ui'];
         $get_qq_warehouse = $result_qq['qq_warehouse'];
         $get_qq_IoT_devices = $result_qq['qq-IoT-devices'];
+    }
+
+    if (isset($_POST['create_location_submit'])) {
+        $crm_id = $_POST['crm_id'];        
+        $property_id = $_POST['wifi_unique'];
+        $property_name = $_POST['business_name'];
+        $contact_name = $_POST['contact'];
+        $contact_email = $_POST['contact_email'];
+        $street = $_POST['street'];
+        $city = $_POST['city'];
+        $state = $_POST['state'];
+        $zip = $_POST['zip'];
+
+        /* Add location */
+        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
+                        VALUES($crm_id,'".$property_id."','".$property_name."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+        $locationResult = $db->execDB($locationSql);
+
+        $data = [
+                    'id' => $property_id ,
+                    'name' => $property_name,
+                    'address' => [
+                        'street' => $street,
+                        'city' => $city,
+                        'state' => $state,
+                        'zip' => $zip
+                    ],
+                    'contact' =>[
+                        'name' => $contact_name,
+                        'email' => $contact_email
+                    ]
+                ];
+        $jsondata = json_encode($data);
+        $crm = new crm($api_id, $system_package);
+
+        $response = $crm->createLocation($property_id,$jsondata,$idContAutoInc);
+ 
     }
 
     if (isset($_POST['create_crm_submit'])) {
@@ -441,11 +472,8 @@ if(!empty($api_details['data'])) {
             $ex = $db->execDB($query);
 
             if ($ex === true) {
-
                 $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
-
                 $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$idContAutoInc'");
-
                 $mno_id = $result['mno_id'];
                 if ($method == 'simple') {
                     $data = [
@@ -496,26 +524,34 @@ if(!empty($api_details['data'])) {
                         "env" => "hosted"
                     ];
                 }
+
+                /* Add location */
+                $locationSql = "INSERT INTO `exp_crm`(`crm_id`,`property_id`,`property_name`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
+                                VALUES($idContAutoInc,'".$property_id."','".$business_name."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+                $locationResult = $db->execDB($locationSql);
+
                 $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Processing' WHERE id = '$idContAutoInc'");
 
-                require_once 'src/CRM/functions.php';
                 $jsondata = json_encode($data);
                 $crm = new crm($api_id, $system_package);
 
-                $response = $crm->createParent($jsondata);
+                $response = $crm->createParent($jsondata,$idContAutoInc);
 
                 if ($response['status'] == 'success') {
                     $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Completed' WHERE id = '$idContAutoInc'");
                     $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
+                    $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM property',$idContAutoInc,'3001',$success_msg);
                     $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
                 } else {
                     $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Failed' WHERE id = '$idContAutoInc'");
                     $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
+                    $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create CRM property',$idContAutoInc,'2009',$success_msg);
                     $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
                 }
             } else {
                 syslog(LOG_NOTICE,'account create failed - insert to exp_crm failed');
                 $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
+                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create CRM property',0,'2009',$success_msg);
                 $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
             }
         }
@@ -683,23 +719,17 @@ if(!empty($api_details['data'])) {
                 $parent_properties_count = count($prop_details['property']);
                 $prop_details_new = $prop_details['property'][0];
                 $prop_service_type = $prop_details['location_info'][0]['service_type'];
-                /*Service type options*/
-                //                $q2 = "SELECT `setting` FROM exp_provisioning_setting WHERE id='$prop_service_type' AND `mno_id`='$user_distributor'";
-                //                $service_details = json_decode($db->select1DB($q2)['setting'],true);
-                //print_r($service_details);
                 $edit_acc_state = $data['status'];
             }
         }
     }
 
     if (isset($_GET['remove_id'])) {
-
         if ($_GET['token'] == $_SESSION['FORM_SECRET']) {
             $remove_id = $_GET['remove_id'];
             $delete = $db->execDB("DELETE FROM exp_crm WHERE id='$remove_id'");
             if ($delete === true) {
                 //delete form user
-
                 $_SESSION['msg20'] = '<div class="alert alert-success"> <strong>CRM Property is deleted successfully.</strong></div>';
             } else {
                 $_SESSION['msg20'] = '<div class="alert alert-danger"> <strong>CRM Property deleting is failed.</strong></div>';
@@ -794,7 +824,21 @@ if(!empty($api_details['data'])) {
                                                                         $contact_name = $row['contact_name'];
                                                                         $city = $row['city'];
                                                                         $zip = $row['zip'];
-                                                                        $is_enable = ($row['is_enable'] == 1 ? "Active" : "Inactive");
+
+                                                                        switch($row['is_enable'] ) {
+                                                                            case 0 :
+                                                                                $is_enable = "Inactive";
+                                                                            break;
+                                                                            case 1 :
+                                                                                $is_enable = "Active";
+                                                                            break;
+                                                                            case 2 :
+                                                                                $is_enable = "Processing";
+                                                                            break;
+                                                                            default :
+                                                                                $is_enable = "Inactive";
+                                                                        }
+                                                                        
                                                                         $id = $row['id'];
 
                                                                         echo '<tr>
@@ -874,12 +918,14 @@ if(!empty($api_details['data'])) {
         <div class="pop-up-main">
             <div class="pop-up-content">
             <h1 class="head">Add a location</h1>
-                <form action="">
+                <form method="post" action="">
+                    <input type="hidden" name="crm_id" id="crm_id" value="<?=$id?>" />
                     <input type="hidden" name="wifi_unique" id="wifi_unique" value="<?=$wifi_unique?>" />
+                    <input type="hidden" name="business_name" id="business_name" value="<?=$get_business_name?>" />
                     <div class="form-double">
                         <div class="control-group">
                             <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Property ID</label>
+                                <label for="radiobtns">Unique Property ID</label>
                                 <div class="controls col-lg-5 form-group">
                                     <input type="text" name="wifi_unique" id="wifi_unique" class="span4 form-control" value="<?=$wifi_unique?>" data-bv-field="wifi_unique" readonly>                                       
                                 </div>
@@ -897,7 +943,15 @@ if(!empty($api_details['data'])) {
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">Contact Name</label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="contact" id="contact" class="span4 form-control" value="" data-bv-field="contact">                                       
+                                    <input type="text" name="contact" id="contact" class="span4 form-control" value="" data-bv-field="contact" required>                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">Contact Email</label>
+                                <div class="controls col-lg-5 form-group">
+                                    <input type="text" name="contact_email" id="contact_email" class="span4 form-control" value="" data-bv-field="contact" required>                                       
                                 </div>
                             </div>
                         </div>
@@ -905,7 +959,7 @@ if(!empty($api_details['data'])) {
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">Address</label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="street" id="street" class="span4 form-control" value="" data-bv-field="street">                                       
+                                    <input type="text" name="street" id="street" class="span4 form-control" value="" data-bv-field="street" required>                                       
                                 </div>
                             </div>
                         </div>
@@ -913,7 +967,7 @@ if(!empty($api_details['data'])) {
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">City</label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="city" id="city" class="span4 form-control" value="" data-bv-field="city">                                       
+                                    <input type="text" name="city" id="city" class="span4 form-control" value="" data-bv-field="city" required>                                       
                                 </div>
                             </div>
                         </div>
@@ -921,7 +975,7 @@ if(!empty($api_details['data'])) {
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">State</label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="state" id="state" class="span4 form-control" value="" data-bv-field="state">                                       
+                                    <input type="text" name="state" id="state" class="span4 form-control" value="" data-bv-field="state" required>                                       
                                 </div>
                             </div>
                         </div>
@@ -929,14 +983,14 @@ if(!empty($api_details['data'])) {
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">Zip</label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="zip" id="zip" class="span4 form-control" value="" data-bv-field="zip">                                       
+                                    <input type="text" name="zip" id="zip" class="span4 form-control" value="" data-bv-field="zip" required>                                       
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="actions">
                         <button class="btn btn-secondary">Cancel</button>
-                        <button class="btn btn-primary">Save</button>
+                        <button class="btn btn-primary" type="submit" name="create_location_submit" id="create_location_submit">Save</button>
                     </div>
                 </form>
             </div>

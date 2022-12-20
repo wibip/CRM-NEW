@@ -30,10 +30,10 @@ $pvt_product_arr = array();
 $vt_product_arr = array();
 
 foreach ($query_results['data'] as $row) {
-    $dis_code = $row[product_code];
-    $QOS = $row[QOS];
+    $dis_code = $row['product_code'];
+    $QOS = $row['QOS'];
     $QOSLast = strtolower(substr($QOS, -1));
-    $product_name_new = str_replace('_', '-', $row[product_code]);
+    $product_name_new = str_replace('_', '-', $row['product_code']);
     $name_ar = explode('-', $product_name_new);
     $duration = explode('-', str_replace(' ', '-', CommonFunctions::split_from_num($name_ar[3])));
     $duration_val = $duration[0];
@@ -201,7 +201,7 @@ if (!empty($arrayo)) {
                         <div class="create_re">   
                             <input type="hidden" name="method" value="simple">
                             <div class="control-group mask">
-                                    <label for="radiobtns">Property ID</label>
+                                    <label for="radiobtns">Unique Property ID</label>
                                     <div class="controls col-lg-5 form-group">
                                         <div>
                                         <span><?php echo $get_opt_code; ?></span>
@@ -393,7 +393,7 @@ if (!empty($arrayo)) {
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
                         <?php if($activatePopup == true) {  ?>
                             <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
-                            <button onmouseover="" name="" id="create_crm_submit" class="btn btn-primary pop-up-open">Add Location</button>
+                            <button onmouseover="" class="btn btn-primary pop-up-open">Add Location</button>
                         <?php } 
                         if (!isset($_GET['edit'])){ ?>
                         <li class="finishParent" style="display: inline-block;margin-left: 5px;" aria-hidden="true">
