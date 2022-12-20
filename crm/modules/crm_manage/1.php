@@ -113,7 +113,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                            data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
                         <thead>
                         <tr>
-                            <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Property ID</th>
+                            <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Unique Property ID</th>
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Business Name</th>
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Status</th>
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Edit</th>
