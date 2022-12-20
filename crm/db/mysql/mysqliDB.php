@@ -25,11 +25,14 @@ class mysqliDB implements DB
     {
         mb_internal_encoding( 'UTF-8' );
         mb_regex_encoding( 'UTF-8' );
-        // mysqli_report( MYSQLI_REPORT_STRICT );
+        mysqli_report( MYSQLI_REPORT_STRICT );
         try {
+            // echo DB_HOST. DB_USER. DB_PASS. DB_NAME;
             $this->link = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
             $this->link->set_charset( "utf8" );
-            //print('Connected to the databse using mysqli_connect()');
+            // print('Connected to the databse using mysqli_connect()');
+            // $a = $this->link->query("SELECT NOW()");
+            // var_dump($a);
         } catch ( Exception $e ) {
             die( 'Unable to connect to database using mysqli_connect()' );
         }
@@ -108,8 +111,9 @@ class mysqliDB implements DB
         self::$counter++;
         //Overwrite the $row var to null
         $row = null;
-        
+        // echo $query = "select NOW()";
         $results = $this->link->query( $query );
+        // var_dump($results);
         if( $this->link->error )
         {
             return $this->link->error;
