@@ -526,7 +526,7 @@ if(!empty($api_details['data'])) {
                 }
 
                 /* Add location */
-                $locationSql = "INSERT INTO `exp_crm`(`crm_id`,`property_id`,`property_name`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
+                $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
                                 VALUES($idContAutoInc,'".$property_id."','".$business_name."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
                 $locationResult = $db->execDB($locationSql);
 
@@ -534,7 +534,6 @@ if(!empty($api_details['data'])) {
 
                 $jsondata = json_encode($data);
                 $crm = new crm($api_id, $system_package);
-
                 $response = $crm->createParent($jsondata,$idContAutoInc);
 
                 if ($response['status'] == 'success') {
@@ -838,7 +837,7 @@ if(!empty($api_details['data'])) {
                                                                             default :
                                                                                 $is_enable = "Inactive";
                                                                         }
-                                                                        
+
                                                                         $id = $row['id'];
 
                                                                         echo '<tr>
