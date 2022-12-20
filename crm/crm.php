@@ -810,8 +810,10 @@ if(!empty($api_details['data'])) {
                                                                 <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">City</th>
                                                                 <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Zip</th>
                                                                 <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Status</th>
-                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th>
+                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th> 
+                                                                <?php if($_SESSION['SADMIN'] == true) { ?>
                                                                 <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Remove</th>
+                                                                <?php } ?>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -859,21 +861,23 @@ if(!empty($api_details['data'])) {
                                                                                 });
                                                                                 });
                                                                             </script></td>';
-                                                                                                                                                        
-                                                                        echo '<td><a href="javascript:void();" id="AP_R_'.$id.'"  class="btn btn-small btn-danger">
-                                                                        <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
-                                                                            $(document).ready(function() {
-                                                                            $(\'#AP_R_'.$id.'\').easyconfirm({locale: {
-                                                                                    title: \'API Profile\',
-                                                                                    text: \'Are you sure you want to remove this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                                    button: [\'Cancel\',\' Confirm\'],
-                                                                                    closeText: \'close\'
-                                                                                    }});
-                                                                                $(\'#AP_R_'.$id.'\').click(function() {
-                                                                                    window.location = "?token2='.$secret.'&t=1&remove_controller='.$id.'"
-                                                                                });
-                                                                                });
-                                                                            </script></td>';
+                                                                        
+                                                                        if($_SESSION['SADMIN'] == true) {
+                                                                            echo '<td><a href="javascript:void();" id="AP_R_'.$id.'"  class="btn btn-small btn-danger">
+                                                                            <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
+                                                                                $(document).ready(function() {
+                                                                                $(\'#AP_R_'.$id.'\').easyconfirm({locale: {
+                                                                                        title: \'API Profile\',
+                                                                                        text: \'Are you sure you want to remove this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                                        button: [\'Cancel\',\' Confirm\'],
+                                                                                        closeText: \'close\'
+                                                                                        }});
+                                                                                    $(\'#AP_R_'.$id.'\').click(function() {
+                                                                                        window.location = "?token2='.$secret.'&t=1&remove_controller='.$id.'"
+                                                                                    });
+                                                                                    });
+                                                                                </script></td>';
+                                                                        }
                                                                         echo '</tr>';
                                                                     }
                                                                 } else {
