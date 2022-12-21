@@ -1,19 +1,47 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
+ini_set('display_errors', 1);
+require 'vendor/autoload.php';
 require 'cred.php';
-use Jumbojett\OpenIDConnectClient;
 
-$oidc = new OpenIDConnectClient($issuer,
-                                $cid,
-                                $secret);
-$oidc->providerConfigParam(array('token_endpoint'=>$issuer.'/connect/token'));
+
+$oidc = new Jumbojett\OpenIDConnectClient($issuer, $cid, $secret);
+
+// added by john - this is the scope that other apps are using, you need to send groups to receive them
 $oidc->addScope($scope);
 
-//Add username and password
-$oidc->addAuthParam(array('username'=>'test-client'));
-$oidc->addAuthParam(array('password'=>'thah5eiQuov1'));
+error_log('1');
+$oidc->authenticate();
+// var_dump($oidc);die;
+error_log('2');
+$oidc->requestUserInfo('sub');
+error_log('3');
 
-//Perform the auth and return the token (to validate check if the access_token property is there and a valid JWT) :
-$token = $oidc->requestResourceOwnerToken(TRUE)->access_token;
+$session = array();
+error_log('4');
+foreach($oidc as $key=> $value) {
 
-print_r($token);
+    if(is_array($value)){
+
+            $v = implode(', ', $value);
+
+    }else{
+
+            $v = $value;
+
+    }
+
+    $session[$key] = $v;
+
+}
+
+
+
+session_start();
+
+$_SESSION['attributes'] = $session;
+
+
+header("Location: ./attributes.php");
+
+
+?>
