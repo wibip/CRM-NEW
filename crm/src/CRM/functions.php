@@ -35,6 +35,11 @@ class crm
 
     }
 
+    /**
+     * Summary of getToken
+     * @return mixed
+     * generate token from API server
+     */
     public function getToken(){
         //API Url
         $url = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/token';
@@ -84,6 +89,13 @@ class crm
         
     }
 
+    /**
+     * Summary of createParent
+     * @param mixed $jsonData
+     * @param mixed $mno_id
+     * @return mixed
+     * Create new proprty and location in API server
+     */
     public function createParent($jsonData, $mno_id){
         $access_token = $this->getToken();
         //API Url
@@ -130,7 +142,8 @@ class crm
 
             //$this->db->execDB($q);
             if ($decoded['status'] == 'success') {
-                $ex = $this->db->execDB("UPDATE exp_crm SET `status` = 'Completed' WHERE id = '$mno_id'");
+                $businessId = $decoded['data']['id'];
+                $ex = $this->db->execDB("UPDATE exp_crm SET business_id='".$businessId."', `status` = 'Completed' WHERE id = '$mno_id'");
                 $this->db->addApiLogs('createClient', 'Create CRM Client', 'SUCCESS', 'crm client generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
             }else{
                 $ex = $this->db->execDB("UPDATE exp_crm SET `status` = 'Failed' WHERE id = '$mno_id'");
@@ -146,10 +159,18 @@ class crm
         
     }
 
-    public function createLocation($property_id,$jsonData, $location_id){
+    /**
+     * Summary of createLocation
+     * @param mixed $business_id
+     * @param mixed $jsonData
+     * @param mixed $location_id
+     * @return mixed
+     * Create new location in API server alinged with given business ID
+     */
+    public function createLocation($business_id,$jsonData, $location_id){
         $access_token = $this->getToken();
         //API Url
-        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$property_id.'/locations';
+        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id.'/locations';
         
         try{
             $ch = curl_init($url2);
@@ -204,10 +225,17 @@ class crm
         
     }
 
-    public function updateLocation($property_id,$jsonData, $location_id){
+    /**
+     * Summary of updateLocation
+     * @param mixed $business_id
+     * @param mixed $jsonData
+     * @param mixed $location_id
+     * @return mixed
+     */
+    public function updateLocation($business_id,$jsonData, $location_id){
         $access_token = $this->getToken();
         //API Url
-        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$property_id.'/locations';
+        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id.'/locations/'.$location_id;
         
         try{
             $ch = curl_init($url2);
@@ -220,7 +248,7 @@ class crm
             curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
             curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
             curl_setopt($ch, CURLOPT_HEADER, 1);
             curl_setopt($ch, CURLOPT_VERBOSE, 1);
@@ -246,11 +274,9 @@ class crm
             $req = $url2.'->'.$this->db->escapeDB($jsonData);
 
             if ($decoded['status'] == 'success') {
-                $ex = $this->db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 1 WHERE id = '$location_id'");
-                $this->db->addApiLogs('createLocation', 'Create CRM Location', 'SUCCESS', 'crm location generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+                $this->db->addApiLogs('updateLocation', 'Update CRM Location', 'SUCCESS', 'crm location update', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
             }else{
-                $ex = $this->db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 0 WHERE id = '$location_id'");
-                $this->db->addApiLogs('createLocation', 'Create CRM Location', 'ERROR', 'crm location generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+                $this->db->addApiLogs('updateLocation', 'Update CRM Location', 'ERROR', 'crm location update', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
             }
 
             return $decoded; 
@@ -262,11 +288,17 @@ class crm
         
     }
 
-
-    public function deleteLocation($property_id, $location_id){
+    /**
+     * Summary of deleteLocation
+     * @param mixed $business_id
+     * @param mixed $location_id
+     * @return mixed
+     * Remove location from API server
+     */
+    public function deleteLocation($business_id, $location_id){
         $access_token = $this->getToken();
         //API Url
-        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$property_id.'/locations/'.$location_id;
+        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id.'/locations/'.$location_id;
         
         try{
             $ch = curl_init($url2);

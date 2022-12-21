@@ -226,6 +226,7 @@ if(!empty($api_details['data'])) {
         $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
         $get_service_type = $result['service_type'];
         $get_business_name = $result['business_name'];
+        $get_business_id = $result['business_id'];
         $get_contact_name = $result['contact_name'];
         $get_contact_phone = $result['contact_number'];
         $get_contact_email = $result['contact_email'];
@@ -291,6 +292,7 @@ if(!empty($api_details['data'])) {
     if (isset($_POST['create_location_submit'])) {
         $crm_id = $_POST['crm_id'];        
         $property_id = $_POST['wifi_unique'];
+        $business_id = $_POST['business_id'];
         $property_name = $_POST['business_name'];
         $location_unique = $_POST['location_unique'];
         $contact_name = $_POST['contact'];
@@ -301,8 +303,8 @@ if(!empty($api_details['data'])) {
         $zip = $_POST['zip'];
 
         /* Add location */
-        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
-                        VALUES($crm_id,'".$property_id."','".$property_name."','".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`business_id`,`property_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
+                        VALUES($crm_id,'".$property_id."','".$business_id."','".$property_name."','".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
         $locationResult = $db->execDB($locationSql);
 
         $data = [
@@ -322,7 +324,7 @@ if(!empty($api_details['data'])) {
         $jsondata = json_encode($data);
         $crm = new crm($api_id, $system_package);
 
-        $response = $crm->createLocation($property_id,$jsondata,$idContAutoInc);
+        $response = $crm->createLocation($business_id,$jsondata,$idContAutoInc);
  
     }
 
@@ -542,6 +544,9 @@ if(!empty($api_details['data'])) {
                         "env" => "hosted"
                     ];
                 }
+
+                var_dump($data);
+                die;
 
                 /* Add location */
                 $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
@@ -943,6 +948,7 @@ if(!empty($api_details['data'])) {
                     <input type="hidden" name="crm_id" id="crm_id" value="<?=$id?>" />
                     <input type="hidden" name="wifi_unique" id="wifi_unique" value="<?=$wifi_unique?>" />
                     <input type="hidden" name="business_name" id="business_name" value="<?=$get_business_name?>" />
+                    <input type="hidden" name="business_id" id="business_id" value="<?=$get_business_id?>" />
                     <div class="form-double">
                         <div class="control-group">
                             <div class="controls col-lg-5 form-group">
