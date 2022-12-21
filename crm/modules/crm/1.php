@@ -951,7 +951,7 @@ if (!empty($arrayo)) {
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
                         <?php if($activatePopup == true) {  ?>
                             <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
-                            <button onmouseover="" name="" id="create_crm_submit" class="btn btn-primary pop-up-open">Add Location</button>
+                            <button onmouseover="" class="btn btn-primary pop-up-open">Add Location</button>
                         <?php } ?>
                         <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-disabled="true"><button href="javascript:void(0)" data-type="previous" class="btn btn-primary" role="menuitem">Previous</button></li>
                         <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-hidden="false" aria-disabled="true"><button tabindex="119" href="javascript:void(0)" data-type="next" class="btn btn-primary" role="menuitem">Next</button></li>
