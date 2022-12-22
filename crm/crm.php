@@ -918,7 +918,7 @@ if(!empty($api_details['data'])) {
                                                                                     closeText: \'close\'
                                                                                     }});
                                                                                 $(\'#AP_'.$id.'\').click(function() {
-                                                                                    window.location = "/?token2='.$secret.'&t=1&edit_controller='.$id.'"
+                                                                                    window.location = "?token2='.$secret.'&t=1&edit_controller='.$id.'"
                                                                                 });
                                                                                 });
                                                                             </script></td>';
@@ -934,6 +934,7 @@ if(!empty($api_details['data'])) {
                                                                                         closeText: \'close\'
                                                                                         }});
                                                                                     $(\'#AP_R_'.$id.'\').click(function() {
+                                                                                        alert("clicked");
                                                                                         window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&business_id='.$businessID.'"
                                                                                     });
                                                                                     });
