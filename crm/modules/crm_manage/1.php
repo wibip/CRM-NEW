@@ -331,6 +331,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                                             }
                                         });
                                         $('#VIEWACC_' + element[3]).click(function () {
+                                            alert("clicked");
                                             window.location = "?t=crm_view&token=<?php echo $secret; ?>&edit&id=" + element[3];
                                         });
 
