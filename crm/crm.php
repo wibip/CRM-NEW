@@ -875,7 +875,7 @@ if(!empty($api_details['data'])) {
                                                         </thead>
                                                         <tbody>
                                                             <?php
-                                                                $key_query="SELECT * FROM crm_portal.crm_exp_mno_locations WHERE property_id='".$wifi_unique."'";
+                                                                $key_query="SELECT * FROM crm_portal.crm_exp_mno_locations WHERE property_id='".$wifi_unique."' ORDER BY id DESC";
                                                                 $query_results = $db->selectDB($key_query);
                                                                 if($query_results['rowCount'] > 0) {
                                                                     foreach($query_results['data'] AS $row){
