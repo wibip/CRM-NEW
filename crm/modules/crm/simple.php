@@ -187,7 +187,7 @@ if (!empty($arrayo)) {
                                     <label for="radiobtns">Unique Property ID</label>
                                     <div class="controls col-lg-5 form-group">
                                         <div>
-                                        <span><?php echo $get_opt_code; ?></span>
+                                        <!-- <span>< ?php echo $get_opt_code; ?></span> -->
                                         <input class="wifi_unique" type="text" name="wifi_unique" class="span4 form-control"
                                         value="<?php echo $edit===true?$get_wifi_unique:''?>">
                                         </div>

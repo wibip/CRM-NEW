@@ -451,7 +451,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Reflect a Unique Property ID (Need to Build this logically or just a sequential number like WFN-000001?)</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input readonly type="text" name="opt_code" id="opt_code" class="span4 form-control" value="<?php echo $get_opt_code; ?>" style="margin-bottom: 10px">
+                                        <!-- <input readonly type="text" name="opt_code" id="opt_code" class="span4 form-control" value="< ?php echo $get_opt_code; ?>" style="margin-bottom: 10px"> -->
                                         <input type="text" name="wifi_unique" id="wifi_unique" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_unique:''?>">
                                     </div>
                                 </div>

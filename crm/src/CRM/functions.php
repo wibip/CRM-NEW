@@ -333,7 +333,7 @@ class crm
             // $req = $url2.'->'.$this->db->escapeDB($jsonData);
 
             if ($httpcode == 200) {
-                $ex = $this->db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 3 WHERE id = '$location_id'");
+                $ex = $this->db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$location_id'");
                 $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'SUCCESS', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
             }else{
                 $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'ERROR', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);

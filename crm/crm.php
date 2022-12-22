@@ -190,7 +190,7 @@ if(!empty($api_details['data'])) {
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;
     $opt_q = $package_functions->getSectionType("OPT_CODE", $system_package);
-    $get_opt_code = (isset($opt_q)) ? $opt_q : 'FRT'; //$db->getValueAsf("SELECT api_prefix as f FROM exp_mno WHERE mno_id = '$user_distributor'");
+    $get_opt_code = (isset($opt_q)) ? $opt_q : 'SDL'; //$db->getValueAsf("SELECT api_prefix as f FROM exp_mno WHERE mno_id = '$user_distributor'");
 
     $priority_zone_array = array(
         "America/New_York",
@@ -289,6 +289,26 @@ if(!empty($api_details['data'])) {
         $get_qq_IoT_devices = $result_qq['qq-IoT-devices'];
     }
 
+    /* Remove a location */
+    if (isset($_GET['remove_location'])) {
+        $locationId = $_GET['remove_location'];
+        $businessId = $_GET['business_id'];
+
+        $crm = new crm($api_id, $system_package);
+        $response = $crm->deleteLocation($businessId, $locationId);
+        if($response == 200) {
+            $ex = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
+            $success_msg = "Location has been successfully removed";
+            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
+        } else {
+            $success_msg = "Location removed not successful";
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+        }
+
+    }
+
     if (isset($_POST['create_location_submit'])) {
         $crm_id = $_POST['crm_id'];        
         $property_id = $_POST['wifi_unique'];
@@ -325,7 +345,17 @@ if(!empty($api_details['data'])) {
         $crm = new crm($api_id, $system_package);
 
         $response = $crm->createLocation($business_id,$jsondata,$idContAutoInc);
- 
+        if ($response['status'] == 'success') {
+            $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+            $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
+            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM Location',$idContAutoInc,'3001',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
+        } else {
+            $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create CRM Location',0,'2009',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+        }
+        
     }
 
     if (isset($_POST['create_crm_submit'])) {
@@ -545,8 +575,6 @@ if(!empty($api_details['data'])) {
                     ];
                 }
 
-                var_dump($data);
-                die;
 
                 /* Add location */
                 $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
@@ -848,6 +876,7 @@ if(!empty($api_details['data'])) {
                                                                         $contact_name = $row['contact_name'];
                                                                         $city = $row['city'];
                                                                         $zip = $row['zip'];
+                                                                        $businessID = $row['business_id'];
 
                                                                         switch($row['is_enable'] ) {
                                                                             case 0 :
@@ -863,7 +892,7 @@ if(!empty($api_details['data'])) {
                                                                                 $is_enable = "Inactive";
                                                                         }
 
-                                                                        $id = $row['id'];
+                                                                        $locationId = $row['id'];
 
                                                                         echo '<tr>
                                                                         <td> '.$contact_name.' </td>
@@ -874,13 +903,13 @@ if(!empty($api_details['data'])) {
                                                                             <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
                                                                             $(document).ready(function() {
                                                                             $(\'#AP_'.$id.'\').easyconfirm({locale: {
-                                                                                    title: \'API Profile\',
-                                                                                    text: \'Are you sure you want to edit this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                                    title: \'API Location\',
+                                                                                    text: \'Are you sure you want to edit this API Location?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
                                                                                     button: [\'Cancel\',\' Confirm\'],
                                                                                     closeText: \'close\'
                                                                                     }});
                                                                                 $(\'#AP_'.$id.'\').click(function() {
-                                                                                    window.location = "?token2='.$secret.'&t=1&edit_controller='.$id.'"
+                                                                                    window.location = "/?token2='.$secret.'&t=1&edit_controller='.$id.'"
                                                                                 });
                                                                                 });
                                                                             </script></td>';
@@ -890,13 +919,13 @@ if(!empty($api_details['data'])) {
                                                                             <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
                                                                                 $(document).ready(function() {
                                                                                 $(\'#AP_R_'.$id.'\').easyconfirm({locale: {
-                                                                                        title: \'API Profile\',
-                                                                                        text: \'Are you sure you want to remove this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                                        title: \'API Location\',
+                                                                                        text: \'Are you sure you want to remove this API Location?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
                                                                                         button: [\'Cancel\',\' Confirm\'],
                                                                                         closeText: \'close\'
                                                                                         }});
                                                                                     $(\'#AP_R_'.$id.'\').click(function() {
-                                                                                        window.location = "?token2='.$secret.'&t=1&remove_controller='.$id.'"
+                                                                                        window.location = "/?token='.$secret.'&t=1&remove_location&location_id='.$locationId.'&business_id='.$businessID.'"
                                                                                     });
                                                                                     });
                                                                                 </script></td>';
@@ -962,7 +991,7 @@ if(!empty($api_details['data'])) {
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">Unique Location ID</label>
                                 <div class="controls col-lg-5 form-group">
-                                <span><?php echo $get_opt_code; ?></span><input type="text" name="location_unique" id="location_unique" class="span4 form-control" value="" data-bv-field="location_unique">                                       
+                                <input type="text" name="location_unique" id="location_unique" class="span4 form-control" value="" data-bv-field="location_unique">                                       
                                 </div>
                             </div>
                         </div>
