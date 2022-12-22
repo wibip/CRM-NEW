@@ -599,8 +599,6 @@ if(!empty($api_details['data'])) {
                     $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM property',$idContAutoInc,'3001',$success_msg);
                     $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
                 } else {
-                    var_dump($jsondata);
-                    die;
                     $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Failed' WHERE id = '$idContAutoInc'");
                     $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
                     $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create CRM property',$idContAutoInc,'2009',$success_msg);
@@ -1039,7 +1037,25 @@ if(!empty($api_details['data'])) {
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">State</label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="state" id="state" class="span4 form-control" value="" data-bv-field="state" required>                                       
+                                    <select name="state" id="state" class="span4 form-control" required>
+                                        <option value="">Select State</option>
+                                        <?php
+                                            $get_regions = $db->selectDB("SELECT
+                                                                        `states_code`,
+                                                                        `description`
+                                                                        FROM
+                                                                        `exp_country_states` ORDER BY description ASC");
+
+                                            foreach ($get_regions['data'] as $state) {
+                                                if (($edit===true?$get_state:'') == $state['states_code']) {
+                                                    echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                } else {
+
+                                                    echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                }
+                                            }
+                                        ?>
+                                    </select>                                    
                                 </div>
                             </div>
                         </div>

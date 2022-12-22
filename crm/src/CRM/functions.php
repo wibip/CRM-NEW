@@ -137,11 +137,6 @@ class crm
             
             $req = $url2.'->'.$this->db->escapeDB($jsonData);
         
-            // $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
-            // VALUES('createProperty','Create CRM Property','$req','$result','$httpcode','',NOW())";
-
-            //$this->db->execDB($q);
-            var_dump($decoded);
             if ($decoded['status'] == 'success') {
                 $this->db->addApiLogs('createClient', 'Create CRM Client', 'SUCCESS', 'crm client generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
             }else{
