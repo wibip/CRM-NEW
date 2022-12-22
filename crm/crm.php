@@ -291,7 +291,9 @@ if(!empty($api_details['data'])) {
 
     /* Remove a location */
     if (isset($_GET['remove_location'])) {
-        $locationId = $_GET['remove_location'];
+        $id = $_GET['id'];
+        $token = $_GET['token'];
+        $locationId = $_GET['location_id'];
         $businessId = $_GET['business_id'];
 
         $crm = new crm($api_id, $system_package);
@@ -306,6 +308,7 @@ if(!empty($api_details['data'])) {
             $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
         }
+        header('Location: crm?t=crm_view&token='.$token.'&edit&id='.$id);
 
     }
 
@@ -931,7 +934,7 @@ if(!empty($api_details['data'])) {
                                                                                         closeText: \'close\'
                                                                                         }});
                                                                                     $(\'#AP_R_'.$id.'\').click(function() {
-                                                                                        window.location = "/?token='.$secret.'&t=1&remove_location&location_id='.$locationId.'&business_id='.$businessID.'"
+                                                                                        window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&business_id='.$businessID.'"
                                                                                     });
                                                                                     });
                                                                                 </script></td>';
