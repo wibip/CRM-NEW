@@ -599,7 +599,7 @@ if(!empty($api_details['data'])) {
                     $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM property',$idContAutoInc,'3001',$success_msg);
                     $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
                 } else {
-                    var_dump($data);
+                    var_dump($jsondata);
                     die;
                     $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Failed' WHERE id = '$idContAutoInc'");
                     $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
