@@ -341,12 +341,15 @@ if(!empty($api_details['data'])) {
                         'email' => $contact_email
                     ]
                 ];
+        
+        $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
         $jsondata = json_encode($data);
         $crm = new crm($api_id, $system_package);
 
         $response = $crm->createLocation($business_id,$jsondata,$idContAutoInc);
         if ($response['status'] == 'success') {
-            $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+            $businesId = $response['data']['id'];
+            $ex = $db->execDB("UPDATE crm_exp_mno_locations SET `business_id`='".$businesId."', `is_enable` = 1 WHERE id = '$idContAutoInc'");
             $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
             $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM Location',$idContAutoInc,'3001',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
@@ -578,8 +581,9 @@ if(!empty($api_details['data'])) {
 
                 /* Add location */
                 $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
-                                VALUES($idContAutoInc,'".$property_id."','".$business_name."','".$property_id."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+                                VALUES($idContAutoInc,'".$wifi_unique."','".$business_name."','".$property_id."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
                 $locationResult = $db->execDB($locationSql);
+                $idLocationAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 
                 $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Processing' WHERE id = '$idContAutoInc'");
 
@@ -588,7 +592,9 @@ if(!empty($api_details['data'])) {
                 $response = $crm->createParent($jsondata,$idContAutoInc);
 
                 if ($response['status'] == 'success') {
-                    $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Completed' WHERE id = '$idContAutoInc'");
+                    $businesId = $response['data']['id'];
+                    $ex1 = $db->execDB("UPDATE exp_crm SET `business_id`='".$businesId."',`status` = 'Completed' WHERE id = '$idContAutoInc'");
+                    $ex2 = $db->execDB("UPDATE crm_exp_mno_locations SET `business_id`='".$businesId."', `is_enable` = 1 WHERE id = '$idLocationAutoInc'");
                     $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
                     $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM property',$idContAutoInc,'3001',$success_msg);
                     $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";

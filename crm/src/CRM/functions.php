@@ -142,8 +142,6 @@ class crm
 
             //$this->db->execDB($q);
             if ($decoded['status'] == 'success') {
-                $businessId = $decoded['data']['id'];
-                $ex = $this->db->execDB("UPDATE exp_crm SET business_id='".$businessId."', `status` = 'Completed' WHERE id = '$mno_id'");
                 $this->db->addApiLogs('createClient', 'Create CRM Client', 'SUCCESS', 'crm client generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
             }else{
                 $ex = $this->db->execDB("UPDATE exp_crm SET `status` = 'Failed' WHERE id = '$mno_id'");
@@ -333,7 +331,6 @@ class crm
             // $req = $url2.'->'.$this->db->escapeDB($jsonData);
 
             if ($httpcode == 200) {
-                $ex = $this->db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$location_id'");
                 $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'SUCCESS', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
             }else{
                 $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'ERROR', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
