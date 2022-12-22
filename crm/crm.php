@@ -314,7 +314,7 @@ if(!empty($api_details['data'])) {
         $property_id = $_POST['wifi_unique'];
         $business_id = $_POST['business_id'];
         $property_name = $_POST['business_name'];
-        $location_unique = $_POST['location_unique'];
+        $location_unique = $get_opt_code .$_POST['location_unique'];
         $contact_name = $_POST['contact'];
         $contact_email = $_POST['contact_email'];
         $street = $_POST['street'];
