@@ -325,7 +325,7 @@ class crm
             // $decoded = json_decode($body, true);
             
             // $req = $url2.'->'.$this->db->escapeDB($jsonData);
-
+            var_dump($result);
             if ($httpcode == 200) {
                 $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'SUCCESS', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
             }else{
@@ -335,6 +335,7 @@ class crm
             return $httpcode; 
 
         } catch(Exception $e) {
+            var_dump($e);
             $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, '', $e->getMessage(), 0, $_SESSION['user_id']);
             return 'Error';
         }

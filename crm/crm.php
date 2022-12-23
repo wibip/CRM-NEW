@@ -298,6 +298,7 @@ if(!empty($api_details['data'])) {
 
         $crm = new crm($api_id, $system_package);
         $response = $crm->deleteLocation($businessId, $locationId);
+  
         if($response == 200) {
             $ex = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
             $success_msg = "Location has been successfully removed";
@@ -936,7 +937,6 @@ if(!empty($api_details['data'])) {
                                                                                             closeText: \'close\'
                                                                                     }});
                                                                                     $(\'#remove_api_'.$id.'\').click(function() {
-                                                                                        alert("clicked");
                                                                                         window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&business_id='.$businessID.'"
                                                                                     });
                                                                                 });
