@@ -925,17 +925,17 @@ if(!empty($api_details['data'])) {
                                                                             </script></td>';
                                                                         
                                                                         if($_SESSION['SADMIN'] == true) {
-                                                                            echo '<td><a href="javascript:void();" id="AP_R_'.$id.'"  class="btn btn-small btn-danger">
+                                                                            echo '<td><a href="javascript:void();" id="remove_api_'.$id.'"  class="btn btn-small btn-danger">
                                                                             <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
                                                                             <script type="text/javascript">
                                                                                 $(document).ready(function() {
-                                                                                    $(\'#AP_R_'.$id.'\').easyconfirm({locale: {
+                                                                                    $(\'#remove_api_'.$id.'\').easyconfirm({locale: {
                                                                                             title: \'API Location\',
                                                                                             text: \'Are you sure you want to remove this API Location?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
                                                                                             button: [\'Cancel\',\' Confirm\'],
                                                                                             closeText: \'close\'
                                                                                     }});
-                                                                                    $(\'#AP_R_'.$id.'\').click(function() {
+                                                                                    $(\'#remove_api_'.$id.'\').click(function() {
                                                                                         alert("clicked");
                                                                                         window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&business_id='.$businessID.'"
                                                                                     });
