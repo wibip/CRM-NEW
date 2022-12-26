@@ -937,7 +937,7 @@ if(!empty($api_details['data'])) {
                                                                                             closeText: \'close\'
                                                                                     }});
                                                                                     $(\'#remove_api_'.$locationId.'\').click(function() {
-                                                                                        window.location = "?token='.$secret.'&id='.$locationId.'&remove_location&location_id='.$locationId.'&business_id='.$businessID.'"
+                                                                                        window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&business_id='.$businessID.'"
                                                                                     });
                                                                                 });
                                                                             </script></td>';
