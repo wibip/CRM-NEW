@@ -927,7 +927,7 @@ if(!empty($api_details['data'])) {
                                                                                 });
                                                                             </script></td>';
                                                                         
-                                                                        if($_SESSION['SADMIN'] == true) {
+                                                                        if($_SESSION['SADMIN'] == true && !empty($location_server_id)) {
                                                                             echo '<td><a href="javascript:void();" id="remove_api_'.$locationId.'"  class="btn btn-small btn-danger">
                                                                             <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
                                                                             <script type="text/javascript">
