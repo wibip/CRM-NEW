@@ -921,8 +921,8 @@ if(!empty($api_details['data'])) {
                                                                                     closeText: \'close\'
                                                                                     }});
                                                                                 $(\'#AP_'.$locationId.'\').click(function() {
-                                                                                    alert("clicked");
-                                                                                    window.location = "?token2='.$secret.'&t=1&edit_controller='.$locationId.'"
+                                                                                        $(".pop-up").addClass("show");
+                                                                                        $("body").css("overflow","hidden");
                                                                                 });
                                                                                 });
                                                                             </script></td>';
