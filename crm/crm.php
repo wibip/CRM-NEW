@@ -293,11 +293,11 @@ if(!empty($api_details['data'])) {
     if (isset($_GET['remove_location'])) {
         $id = $_GET['id'];
         $token = $_GET['token'];
-        $locationId = $_GET['location_id'];
         $businessId = $_GET['business_id'];
+        $location_server_id = $_GET['location_server_id'];
 
         $crm = new crm($api_id, $system_package);
-        $response = $crm->deleteLocation($businessId, $locationId);
+        $response = $crm->deleteLocation($businessId, $location_server_id);
   
         if($response == 200) {
             $ex = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
@@ -327,8 +327,8 @@ if(!empty($api_details['data'])) {
         $zip = $_POST['zip'];
 
         /* Add location */
-        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`business_id`,`property_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
-                        VALUES($crm_id,'".$property_id."','".$business_id."','".$property_name."','".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
+                        VALUES($crm_id,'".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
         $locationResult = $db->execDB($locationSql);
 
         $data = [
@@ -352,8 +352,8 @@ if(!empty($api_details['data'])) {
 
         $response = $crm->createLocation($business_id,$jsondata,$idContAutoInc);
         if ($response['status'] == 'success') {
-            $businesId = $response['data']['id'];
-            $ex = $db->execDB("UPDATE crm_exp_mno_locations SET `business_id`='".$businesId."', `is_enable` = 1 WHERE id = '$idContAutoInc'");
+            $locationServerId = $response['data']['locations']['id'];
+            $ex = $db->execDB("UPDATE crm_exp_mno_locations SET `location_server_id`='".$locationServerId."', `is_enable` = 1 WHERE id = '$idContAutoInc'");
             $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
             $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM Location',$idContAutoInc,'3001',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
@@ -879,7 +879,8 @@ if(!empty($api_details['data'])) {
                                                         </thead>
                                                         <tbody>
                                                             <?php
-                                                                $key_query="SELECT * FROM crm_portal.crm_exp_mno_locations WHERE property_id='".$wifi_unique."' ORDER BY id DESC";
+                                                                $key_query="SELECT ceml.id,ceml.contact_name,ceml.city,ceml.zip,ceml.location_server_id,ceml.is_enable,ec.business_id FROM crm_exp_mno_locations AS ceml INNER JOIN exp_crm AS ec ON ec.id = ceml.crm_id 
+                                                                WHERE ceml.crm_id='".$id."' ORDER BY ceml.id DESC";
                                                                 $query_results = $db->selectDB($key_query);
                                                                 if($query_results['rowCount'] > 0) {
                                                                     foreach($query_results['data'] AS $row){
@@ -887,6 +888,7 @@ if(!empty($api_details['data'])) {
                                                                         $city = $row['city'];
                                                                         $zip = $row['zip'];
                                                                         $businessID = $row['business_id'];
+                                                                        $location_server_id = $row['location_server_id'];
 
                                                                         switch($row['is_enable'] ) {
                                                                             case 0 :
@@ -937,7 +939,7 @@ if(!empty($api_details['data'])) {
                                                                                             closeText: \'close\'
                                                                                     }});
                                                                                     $(\'#remove_api_'.$locationId.'\').click(function() {
-                                                                                        window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&business_id='.$businessID.'"
+                                                                                        window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_server_id='.$location_server_id.'&business_id='.$businessID.'"
                                                                                     });
                                                                                 });
                                                                             </script></td>';
