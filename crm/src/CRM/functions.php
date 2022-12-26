@@ -326,6 +326,7 @@ class crm
             
             // $req = $url2.'->'.$this->db->escapeDB($jsonData);
             var_dump($result);
+            die;
             if ($httpcode == 200) {
                 $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'SUCCESS', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
             }else{
