@@ -406,4 +406,10 @@ class CommonFunctions{
         $result =  $this->db->selectDB($sql);
         return $result;
     }
+
+    public function getPropertyDetails($id,$column){
+        $sql = "SELECT ".$column." FROM exp_crm WHERE id=".$id;
+        $result =  $this->db->selectDB($sql);
+        return $result;
+    }
 }

@@ -220,6 +220,8 @@ if(!empty($api_details['data'])) {
         break;
     }
 
+    $crm = new crm($api_id, $system_package);
+
     if (isset($_GET['edit'])) {
         $edit = true;
         $id = $_GET['id'];
@@ -297,16 +299,22 @@ if(!empty($api_details['data'])) {
         $locationId = $_GET['location_id'];
         $location_unique = $_GET['location_unique'];
 
-        $crm = new crm($api_id, $system_package);
         $response = $crm->deleteLocation($businessId, $location_unique);
   
         if($response == 200) {
-            $ex = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
-            $success_msg = "Location has been successfully removed";
-            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
-            $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
+            $delete = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
+            
+            if ($delete === true) {
+                $success_msg = "Location has been successfully removed";
+                $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
+            } else {                    
+                $success_msg = "CRM Location deleting is failed.";
+                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+            }
         } else {
-            $success_msg = "Location removed not successful";
+            $success_msg = "CRM Location deleting is failed.";
             $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
         }
@@ -349,7 +357,6 @@ if(!empty($api_details['data'])) {
         
         $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
         $jsondata = json_encode($data);
-        $crm = new crm($api_id, $system_package);
 
         $response = $crm->createLocation($business_id,$jsondata,$idContAutoInc);
         if ($response['status'] == 'success') {
@@ -592,7 +599,6 @@ if(!empty($api_details['data'])) {
                 $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Processing' WHERE id = '$idContAutoInc'");
 
                 $jsondata = json_encode($data);
-                $crm = new crm($api_id, $system_package);
                 $response = $crm->createParent($jsondata,$idContAutoInc);
 
                 if ($response['status'] == 'success') {
@@ -785,17 +791,37 @@ if(!empty($api_details['data'])) {
     }
 
     if (isset($_GET['remove_id'])) {
-        if ($_GET['token'] == $_SESSION['FORM_SECRET']) {
+        if ($_GET['token'] == $_SESSION['FORM_SECRET']) { 
             $remove_id = $_GET['remove_id'];
-            $delete = $db->execDB("DELETE FROM exp_crm WHERE id='$remove_id'");
-            if ($delete === true) {
-                //delete form user
-                $_SESSION['msg20'] = '<div class="alert alert-success"> <strong>CRM Property is deleted successfully.</strong></div>';
+            $businessId = 0;
+            $property_details = $CommonFunctions->getPropertyDetails($remove_id,'business_id');
+            if(!empty($api_details['data'])) {
+                $businessId = $api_details['data'][0]['business_id'];
+            }
+
+            $response = $crm->deleteParent($businessId);
+    
+            if($response == 200) {
+                $delete = $db->execDB("DELETE FROM exp_crm WHERE id='$remove_id'");
+                if ($delete === true) {
+                    $success_msg = "CRM Property is deleted successfully.";
+                    $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Property',$remove_id,'3001',$success_msg);
+                    //delete form user
+                    $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
+                } else {                    
+                    $success_msg = "CRM Property deleting is failed.";
+                    $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
+                    $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
+                }
             } else {
-                $_SESSION['msg20'] = '<div class="alert alert-danger"> <strong>CRM Property deleting is failed.</strong></div>';
+                $success_msg = "CRM Property deleting is failed";
+                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
             }
         }
     }
+
+
     foreach ($modules[$user_type][$script] as $value) {
         $submit_form = 'modules/' . $value['submit'] . '.php';
         if (file_exists($submit_form)) {
