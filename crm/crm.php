@@ -1,8 +1,6 @@
 <?php ob_start(); ?>
 <!DOCTYPE html>
-
 <html lang="en">
-
 <?php
 session_start();
 include 'header_top.php';
@@ -799,10 +797,15 @@ if(!empty($api_details['data'])) {
             if(!empty($property_details['data'])) {
                 $businessId = $property_details['data'][0]['business_id'];
             }
-
+ 
             $response = $crm->deleteParent($businessId);
     
-            if($response == 200) {
+            if($response == 200) {           
+                $locations = $db->select1DB("SELECT * FROM crm_exp_mno_locations WHERE crm_id = '$remove_id'");
+                $locationCount = count($locations);
+                if($locationCount > 0){
+                    $deleteLocations = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE crm_id = '$remove_id'");
+                }
                 $delete = $db->execDB("DELETE FROM exp_crm WHERE id='$remove_id'");
                 if ($delete === true) {
                     $success_msg = "CRM Property is deleted successfully.";
@@ -850,22 +853,14 @@ if(!empty($api_details['data'])) {
                     <div class="span12">
                         <br class="hideBr"><br class="hideBr">
                         <div class="widget ">
-
-
                             <div class="widget-header">
-
                                 <h3>View and Manage Properties</h3>
-
-
                             </div><!-- /widget-header -->
-
-
                             <div class="widget-content">
                                 <div class="tabbable">
                                     <?php require_once 'modules/' . $modules['tab_menu']['module'] . '.php'; ?>
                                     <div class="tab-content">
-
-                                        <?php
+                                    <?php
 
                                         if (isset($_SESSION['msg20'])) {
                                             echo $_SESSION['msg20'];
