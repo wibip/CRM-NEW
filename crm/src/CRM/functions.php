@@ -318,10 +318,10 @@ class crm
                 
             $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            var_dump($ch);
-            echo '<br/>';
-            var_dump($result);
-            die;
+            // var_dump($ch);
+            // echo '<br/>';
+            // var_dump($result);
+            // die;
             curl_close($ch);
 
             if ($httpcode == 200) {
