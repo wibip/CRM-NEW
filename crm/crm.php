@@ -354,11 +354,11 @@ if(!empty($api_details['data'])) {
         $response = $crm->createLocation($business_id,$jsondata,$idContAutoInc);
         if ($response['status'] == 'success') {
             $ex = $db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 1 WHERE id = '$idContAutoInc'");
-            $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
+            $success_msg = "New Location ".$property_name." addition is successful";
             $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM Location',$idContAutoInc,'3001',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
         } else {
-            $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
+            $success_msg = "New Location ".$property_name." addition is failed";
             $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create CRM Location',0,'2009',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
         }

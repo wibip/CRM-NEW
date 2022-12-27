@@ -318,9 +318,12 @@ class crm
                 
             $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
+            var_dump($ch);
+            echo '<br/>';
+            var_dump($result);
+            die;
             curl_close($ch);
-            
+
             if ($httpcode == 200) {
                 $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'SUCCESS', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
             }else{
@@ -330,7 +333,6 @@ class crm
             return $httpcode; 
 
         } catch(Exception $e) {
-            var_dump($e);
             $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, '', $e->getMessage(), 0, $_SESSION['user_id']);
             return 'Error';
         }
