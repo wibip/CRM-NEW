@@ -320,13 +320,7 @@ class crm
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             curl_close($ch);
-            // $header = substr($result, 0, $header_size);
-            // $body = substr($result, $header_size);
-            // $decoded = json_decode($body, true);
             
-            // $req = $url2.'->'.$this->db->escapeDB($jsonData);
-            var_dump($result);
-            die;
             if ($httpcode == 200) {
                 $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'SUCCESS', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
             }else{
