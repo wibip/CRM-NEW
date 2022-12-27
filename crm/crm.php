@@ -795,8 +795,9 @@ if(!empty($api_details['data'])) {
             $remove_id = $_GET['remove_id'];
             $businessId = 0;
             $property_details = $CommonFunctions->getPropertyDetails($remove_id,'business_id');
-            if(!empty($api_details['data'])) {
-                $businessId = $api_details['data'][0]['business_id'];
+            // var_dump($property_details);
+            if(!empty($property_details['data'])) {
+                $businessId = $property_details['data'][0]['business_id'];
             }
 
             $response = $crm->deleteParent($businessId);
