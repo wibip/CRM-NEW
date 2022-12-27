@@ -888,7 +888,7 @@ if(!empty($api_details['data'])) {
                                                                         $city = $row['city'];
                                                                         $zip = $row['zip'];
                                                                         $businessID = $row['business_id'];
-                                                                        $locationUnique = $_GET['location_unique'];
+                                                                        $locationUnique = $row['location_unique'];
 
                                                                         switch($row['is_enable'] ) {
                                                                             case 0 :
