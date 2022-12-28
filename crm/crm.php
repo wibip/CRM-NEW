@@ -806,7 +806,7 @@ if(!empty($api_details['data'])) {
                     $locationId = $location['id'];
                     $location_unique = $location['location_unique'];
                     $responseLocation = $crm->deleteLocation($businessId, $location_unique);
-                    if($responseLocation == 200 || $responseLocation == 404) {
+                    if($responseLocation == 200 || $responseLocation == 404 || $responseLocation == false) {
                         $deleteLocations = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
                     }
                 }
