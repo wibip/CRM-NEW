@@ -289,37 +289,6 @@ if(!empty($api_details['data'])) {
         $get_qq_IoT_devices = $result_qq['qq-IoT-devices'];
     }
 
-    /* Remove a location */
-    if (isset($_GET['remove_location'])) {
-        $id = $_GET['id'];
-        $token = $_GET['token'];
-        $businessId = $_GET['business_id'];
-        $locationId = $_GET['location_id'];
-        $location_unique = $_GET['location_unique'];
-
-        $response = $crm->deleteLocation($businessId, $location_unique);
-  
-        if($response == 200) {
-            $delete = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
-            
-            if ($delete === true) {
-                $success_msg = "Location has been successfully removed";
-                $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
-                $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
-            } else {                    
-                $success_msg = "CRM Location deleting is failed.";
-                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
-                $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
-            }
-        } else {
-            $success_msg = "CRM Location deleting is failed.";
-            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
-            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
-        }
-        header('Location: crm?t=crm_view&token='.$token.'&edit&id='.$id);
-
-    }
-
     if (isset($_POST['create_location_submit'])) {
         $crm_id = $_POST['crm_id'];        
         $property_id = $_POST['wifi_unique'];
@@ -788,6 +757,38 @@ if(!empty($api_details['data'])) {
         }
     }
 
+    /* Remove a location */
+    if (isset($_GET['remove_location'])) {
+        $id = $_GET['id'];
+        $token = $_GET['token'];
+        $businessId = $_GET['business_id'];
+        $locationId = $_GET['location_id'];
+        $location_unique = $_GET['location_unique'];
+
+        $response = $crm->deleteLocation($businessId, $location_unique);
+    
+        if($response == 200) {
+            $delete = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
+            
+            if ($delete === true) {
+                $success_msg = "Location has been successfully removed";
+                $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
+            } else {                    
+                $success_msg = "CRM Location deleting is failed.";
+                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+            }
+        } else {
+            $success_msg = "CRM Location deleting is failed.";
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+        }
+        header('Location: crm?t=crm_view&token='.$token.'&edit&id='.$id);
+
+    }
+
+    /* Remove a property */
     if (isset($_GET['remove_id'])) {
         if ($_GET['token'] == $_SESSION['FORM_SECRET']) { 
             $remove_id = $_GET['remove_id'];
@@ -797,15 +798,23 @@ if(!empty($api_details['data'])) {
             if(!empty($property_details['data'])) {
                 $businessId = $property_details['data'][0]['business_id'];
             }
+
+            $locations = $db->select1DB("SELECT * FROM crm_exp_mno_locations WHERE crm_id = '$remove_id'");
+            $locationCount = count($locations);
+            if($locationCount > 0){
+                foreach($locations as $location){
+                    $locationId = $location['id'];
+                    $location_unique = $location['location_unique'];
+                    $response = $crm->deleteLocation($businessId, $location_unique);
+                    if($response == 200 || $response == 404) {
+                        $deleteLocations = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
+                    }
+                }
+            }
  
             $response = $crm->deleteParent($businessId);
     
-            if($response == 200) {           
-                $locations = $db->select1DB("SELECT * FROM crm_exp_mno_locations WHERE crm_id = '$remove_id'");
-                $locationCount = count($locations);
-                if($locationCount > 0){
-                    $deleteLocations = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE crm_id = '$remove_id'");
-                }
+            if($response == 200) {   
                 $delete = $db->execDB("DELETE FROM exp_crm WHERE id='$remove_id'");
                 if ($delete === true) {
                     $success_msg = "CRM Property is deleted successfully.";
