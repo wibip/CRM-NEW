@@ -901,7 +901,7 @@ if(!empty($api_details['data'])) {
                                                         </thead>
                                                         <tbody>
                                                             <?php
-                                                                $key_query="SELECT ceml.id,ceml.contact_name,ceml.city,ceml.zip,ceml.location_unique,ceml.is_enable,ec.business_id FROM crm_exp_mno_locations AS ceml INNER JOIN exp_crm AS ec ON ec.id = ceml.crm_id 
+                                                                $key_query="SELECT ceml.*,ec.business_id FROM crm_exp_mno_locations AS ceml INNER JOIN exp_crm AS ec ON ec.id = ceml.crm_id 
                                                                 WHERE ceml.crm_id='".$id."' ORDER BY ceml.id DESC";
                                                                 $query_results = $db->selectDB($key_query);
                                                                 if($query_results['rowCount'] > 0) {
