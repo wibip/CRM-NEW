@@ -783,7 +783,9 @@ if(!empty($api_details['data'])) {
                                                                                                 location_id: "'.$locationUnique.'"
                                                                                             },
                                                                                             success: function(data) {
-                                                                                                console.log(data);
+                                                                                                if(data != "false"){
+                                                                                                    console.log($.parseJSON(data));
+                                                                                                }
                                                                                             },
                                                                                             error: function() {
                                                                                                 
