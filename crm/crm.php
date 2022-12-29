@@ -780,7 +780,7 @@ if(!empty($api_details['data'])) {
                                                                                                 api_id: "'.$api_id.'",
                                                                                                 system_package: "'.$system_package.'",
                                                                                                 business_id: "'.$businessID.'",
-                                                                                                location_id: "'.$locationId.'"
+                                                                                                location_id: "'.$locationUnique.'"
                                                                                             },
                                                                                             success: function(data) {
                                                                                                 console.log(data);
