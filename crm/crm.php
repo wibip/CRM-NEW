@@ -776,12 +776,7 @@ if(!empty($api_details['data'])) {
                                                                                         $.ajax({
                                                                                             type: "POST",
                                                                                             url: "ajax/getdpsk_policies.php",
-                                                                                            data: {
-                                                                                                api_id: '.$api_id.',
-                                                                                                system_package: '.$system_package.',
-                                                                                                business_id : '.$businessID.',
-                                                                                                location_id : '.$locationId.'
-                                                                                            },
+                                                                                            data: {},
                                                                                             success: function(data) {
                                                                                                 console.log(data);
                                                                                             },
