@@ -784,7 +784,7 @@ if(!empty($api_details['data'])) {
                                                                                             },
                                                                                             success: function(data) {
                                                                                                 if(data != "false"){
-                                                                                                    console.log($.parseJSON(data));
+                                                                                                    console.log($.parseJSON(data.locations.name)                                                                                                ));
                                                                                                 }
                                                                                             },
                                                                                             error: function() {
