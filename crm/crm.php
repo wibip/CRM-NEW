@@ -814,7 +814,7 @@ if(!empty($api_details['data'])) {
                     $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
                 }
             } else {
-                $success_msg = $response["data"]["message"];
+                $success_msg = "CRM Property deleting is failed. ".$response["data"]["message"];
                 $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
                 $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
             }
