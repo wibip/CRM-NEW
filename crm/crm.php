@@ -772,19 +772,6 @@ if(!empty($api_details['data'])) {
                                                                                     }});
                                                                                 $(\'#AP_'.$locationId.'\').click(function() {
                                                                                         $(".pop-up").addClass("show");
-
-                                                                                        $.ajax({
-                                                                                            type: "POST",
-                                                                                            url: "ajax/getdpsk_policies.php",
-                                                                                            data: {},
-                                                                                            success: function(data) {
-                                                                                                console.log(data);
-                                                                                            },
-                                                                                            error: function() {
-                                                                                                document.getElementById("cloud_policies_loader").innerHTML = " &nbsp;&nbsp;&nbsp; <font color='red'>Network Error</font>";
-                                                                                            }
-                                                                                        });
-                                                                                        
                                                                                         $("body").css("overflow","hidden");
                                                                                 });
                                                                                 });
