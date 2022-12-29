@@ -775,18 +775,18 @@ if(!empty($api_details['data'])) {
 
                                                                                         $.ajax({
                                                                                             type: "POST",
-                                                                                            url: "ajax/getdpsk_policies.php",
+                                                                                            url: "ajax/load_location_details.php",
                                                                                             data: {
-                                                                                                ctrl_name: ctrl_name,
-                                                                                                get_type: get_type
+                                                                                                api_id: "'.$api_id.'",
+                                                                                                system_package: "'.$system_package.'",
+                                                                                                business_id: "'.$businessID.'",
+                                                                                                location_id: "'.$locationId.'"
                                                                                             },
                                                                                             success: function(data) {
-                                                                                                $("#dpsk_policies").empty(data);
-                                                                                                $("#dpsk_policies").append(data);
-                                                                                                document.getElementById("cloud_policies_loader").innerHTML = "";
+                                                                                                console.log(data);
                                                                                             },
                                                                                             error: function() {
-                                                                                                document.getElementById("cloud_policies_loader").innerHTML = " &nbsp;&nbsp;&nbsp; <font>Network Error</font>";
+                                                                                                
                                                                                             }
                                                                                         });
                                                                                         $("body").css("overflow","hidden");
