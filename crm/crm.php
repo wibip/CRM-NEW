@@ -772,6 +772,23 @@ if(!empty($api_details['data'])) {
                                                                                     }});
                                                                                 $(\'#AP_'.$locationId.'\').click(function() {
                                                                                         $(".pop-up").addClass("show");
+
+                                                                                        $.ajax({
+                                                                                            type: "POST",
+                                                                                            url: "ajax/getdpsk_policies.php",
+                                                                                            data: {
+                                                                                                ctrl_name: ctrl_name,
+                                                                                                get_type: get_type
+                                                                                            },
+                                                                                            success: function(data) {
+                                                                                                $("#dpsk_policies").empty(data);
+                                                                                                $("#dpsk_policies").append(data);
+                                                                                                document.getElementById("cloud_policies_loader").innerHTML = "";
+                                                                                            },
+                                                                                            error: function() {
+                                                                                                document.getElementById("cloud_policies_loader").innerHTML = " &nbsp;&nbsp;&nbsp; <font>Network Error</font>";
+                                                                                            }
+                                                                                        });
                                                                                         $("body").css("overflow","hidden");
                                                                                 });
                                                                                 });
