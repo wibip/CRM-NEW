@@ -219,20 +219,18 @@ class crm
      * get location details from API server alinged with given business ID
      */
     public function getLocationDetails($business_id,$location_id){
-        $access_token = $this->getToken();
-        //API Url
-        $url = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id.'/locations/'.$location_id;
         
-        $header_parameters = "Content-Type: application/json;charset=UTF-8";
-        $header_parameters = array(
-            'Authorization: Bearer '.$access_token.'',
-            'Accept: application/json',
-            'Content-Type: application/json');
-
+            $access_token = $this->getToken();
+            //API Url
+            $url = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id.'/locations/'.$location_id;
         try {
+            $header_parameters = "Content-Type: application/json;charset=UTF-8";
+            $header_parameters = array(
+                                    'Authorization: Bearer '.$access_token.'',
+                                    'Accept: application/json',
+                                    'Content-Type: application/json');
             //Initiate cURL.
             $ch = curl_init($url);
-            $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
