@@ -188,19 +188,21 @@ class crm
                 
             $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            // var_dump($ch);
-            // echo '<br/>';
-            // var_dump($result);
-            // die;
+
             curl_close($ch);
+            $header = substr($result, 0, $header_size);
+            $body = substr($result, $header_size);
+            $decoded = json_decode($body, true);
+            
+            $req = $url2.'->'.$this->db->escapeDB($jsonData);
 
             if ($httpcode == 200) {
-                $this->db->addApiLogs('deleteLocation', 'DELETE CRM Property', 'SUCCESS', 'crm Property deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
+                $this->db->addApiLogs('deleteLocation', 'DELETE CRM Property', 'SUCCESS', 'crm Property deletion', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+                return $httpcode; 
             }else{
-                $this->db->addApiLogs('deleteLocation', 'DELETE CRM Property', 'ERROR', 'crm Property deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
+                $this->db->addApiLogs('deleteLocation', 'DELETE CRM Property', 'ERROR', 'crm Property deletion', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+                return $decoded; 
             }
-
-            return $httpcode; 
 
         } catch(Exception $e) {
             $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, '', $e->getMessage(), 0, $_SESSION['user_id']);

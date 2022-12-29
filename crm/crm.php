@@ -798,19 +798,6 @@ if(!empty($api_details['data'])) {
             if(!empty($property_details['data'])) {
                 $businessId = $property_details['data'][0]['business_id'];
             }
-
-            $locations = $db->select1DB("SELECT * FROM crm_exp_mno_locations WHERE crm_id = '$remove_id'");
-            $locationCount = count($locations);
-            if($locationCount > 0){
-                foreach($locations as $location){
-                    $locationId = $location['id'];
-                    $location_unique = $location['location_unique'];
-                    $responseLocation = $crm->deleteLocation($businessId, $location_unique);
-                    if($responseLocation == 200 || $responseLocation == 404 || $responseLocation == false) {
-                        $deleteLocations = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
-                    }
-                }
-            }
  
             $response = $crm->deleteParent($businessId);
     
@@ -827,7 +814,7 @@ if(!empty($api_details['data'])) {
                     $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
                 }
             } else {
-                $success_msg = "CRM Property deleting is failed";
+                $success_msg = $response["data"]["message"];
                 $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
                 $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
             }
