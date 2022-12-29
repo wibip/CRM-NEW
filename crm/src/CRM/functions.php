@@ -253,14 +253,14 @@ class crm
 
             if ($httpcode == 200 && (count($decoded["locations"]) >0)) {
                 $this->db->addApiLogs('getLocation', 'Get CRM Location details', 'SUCCESS', 'get crm location details', $url, '', $result, $httpcode, $_SESSION['user_id']);
-                return true;
+                return $decoded;
             }else{
                 $this->db->addApiLogs('getLocation', 'Get CRM Location details', 'ERROR', 'get crm location details', $url, '', $result, $httpcode, $_SESSION['user_id']);
                 return false;
             }
         } catch(Exception $e) {
             $this->db->addApiLogs('getLocation', 'Get CRM Location details', 'ERROR', 'get crm location details', $url, '', $e->getMessage(), 0, $_SESSION['user_id']);
-            return 'Error';
+            return false;
         }
         
     }
@@ -403,7 +403,7 @@ class crm
      */
     public function deleteLocation($business_id, $location_id){
         $getLocation = $this->getLocationDetails($business_id, $location_id);
-        if($getLocation == true) {
+        if($getLocation != false) {
             $access_token = $this->getToken();
             //API Url
             $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id.'/locations/'.$location_id;

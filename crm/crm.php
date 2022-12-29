@@ -590,173 +590,6 @@ if(!empty($api_details['data'])) {
         }
     }
 
-    // if(isset($_POST['update_crm_submit'])){
-    //     // echo 'update';die;
-    //     if($_SESSION['FORM_SECRET'] == $_POST['form_secret5']) {
-    //          $business_name = $_POST['business_name'];
-    //          $contact_name = $_POST['contact'];
-    //          $contact_phone = $_POST['contact_Phone'];
-    //          $contact_email = $_POST['contact_email'];
-    //          $order_number = isset($_POST['order_number']) ? $_POST['order_number'] : '';
-    //          $city = $_POST['city'];
-    //          $zip = $_POST['zip'];
-    //          $timezone = $_POST['time_zone'];
-    //          $account_number = isset($_POST['account_number']) ? $_POST['account_number'] : '';
-    //          $street = $_POST['street'];
-    //          $state = $_POST['state'];
-    //          $service_type = $_POST['service_type'];
-    //          $wifi_unique_key = isset($_POST['wifi_unique']) ? $_POST['wifi_unique'] : '';
-    //          $wifi_unique = $get_opt_code.$wifi_unique_key;
-
-    //          $more_than_one_sites = $_POST['more_than_one_sites'];
-    //          $guest_ssid = $_POST['guest_ssid'];
-    //          $wifi_street = $_POST['wifi_street'];
-    //          $wifi_state = $_POST['wifi_state'];
-    //          $wifi_contact = $_POST['wifi_contact'];
-    //          $wifi_email = $_POST['wifi_email'];
-    //          $wifi_ins_time = $_POST['wifi_ins_time'];
-    //          $wifi_site_name = $_POST['wifi_site_name'];
-    //          $private_ssid = $_POST['private_ssid'];
-    //          $wifi_city = $_POST['wifi_city'];
-    //          $wifi_zip = $_POST['wifi_zip'];
-    //          $wifi_phone = $_POST['wifi_phone'];
-    //          $wifi_prop_type = $_POST['wifi_prop_type'];
-    //          $wifi_ins_date = $_POST['wifi_ins_date'];
-    //          $wifi_ins_start = $_POST['wifi_ins_start'];
-
-    //          $wifi_information_arr = array('guest_ssid' => $guest_ssid,
-    //                                        'wifi_street' => $wifi_street,
-    //                                        'private_ssid' => $private_ssid,
-    //                                          'wifi_state' => $wifi_state,
-    //                                          'wifi_contact' => $wifi_contact,
-    //                                          'wifi_email' => $wifi_email,
-    //                                          'wifi_ins_time' => $wifi_ins_time,
-    //                                          'wifi_site_name' => $wifi_site_name,
-    //                                          'wifi_city' => $wifi_city,
-    //                                          'wifi_zip' => $wifi_zip,
-    //                                          'wifi_phone' => $wifi_phone,
-    //                                          'wifi_prop_type' => $wifi_prop_type,
-    //                                          'wifi_ins_date' => $wifi_ins_date,
-    //                                          'wifi_ins_start' => $wifi_ins_start);
-    //          $wifi_information = json_encode($wifi_information_arr);
-
-    //          $prod_order_type = $_POST['prod_order_type'];
-    //          $prod_in_ap_quant = $_POST['prod_in_ap_quant'];
-    //          $prod_content_filter = $_POST['prod_content_filter'];
-    //          $prod_circuit_type = $_POST['prod_circuit_type'];
-    //          $prod_guest = $_POST['prod_guest'];
-    //          $prod_telco = $_POST['prod_telco'];
-    //          $prod_cabling = $_POST['prod_cabling'];
-    //          $prod_flow_plan = $_POST['prod_flow_plan'];
-    //          $prod_cover_area = $_POST['prod_cover_area'];
-    //          $prod_square_footage = $_POST['prod_square_footage'];
-    //          $prod_outdoor = $_POST['prod_outdoor'];
-    //          $prod_guest_capacity = $_POST['prod_guest_capacity'];
-    //          $prod_circuit_size = $_POST['prod_circuit_size'];
-    //          $prod_private = $_POST['prod_private'];
-    //          $prod_rack_space = $_POST['prod_rack_space'];
-    //          $prod_wiring_paths = $_POST['prod_wiring_paths'];
-    //          $prod_telco_room = $_POST['prod-telco-room'];
-
-    //          $product_information_arr = array('prod_order_type' => $prod_order_type,
-    //                                        'prod_in_ap_quant' => $prod_in_ap_quant,
-    //                                        'prod_content_filter' => $prod_content_filter,
-    //                                          'prod_circuit_type' => $prod_circuit_type,
-    //                                          'prod_guest' => $prod_guest,
-    //                                          'prod_telco' => $prod_telco,
-    //                                          'prod_cabling' => $prod_cabling,
-    //                                          'prod_flow_plan' => $prod_flow_plan,
-    //                                          'prod_cover_area' => $prod_cover_area,
-    //                                          'prod_square_footage' => $prod_square_footage,
-    //                                          'prod_outdoor' => $prod_outdoor,
-    //                                          'prod_guest_capacity' => $prod_guest_capacity,
-    //                                          'prod_circuit_size' => $prod_circuit_size,
-    //                                          'prod_private' => $prod_private,
-    //                                          'prod_rack_space' => $prod_rack_space,
-    //                                          'prod_wiring_paths' => $prod_wiring_paths,
-    //                                          'prod_telco_room' => $prod_telco_room);
-    //          $product_information = json_encode($product_information_arr);
-
-    //          $qq_ceiling_hight = $_POST['qq_ceiling_hight'];
-    //          $qq_int_wall = $_POST['qq_int_wall'];
-    //          $qq_communicate_other = $_POST['qq_communicate_other'];
-    //          $qq_residential = $_POST['qq_residential'];
-    //          $qq_atmospheric = $_POST['qq_atmospheric'];
-    //          $qq_ceiling_type = $_POST['qq_ceiling_type'];
-    //          $qq_ext_wall = $_POST['qq_ext_wall'];
-    //          $qq_customizable_ui = $_POST['qq_customizable_ui'];
-    //          $qq_warehouse = $_POST['qq_warehouse'];
-    //          $qq_IoT_devices = $_POST['qq-IoT-devices']; 
-
-    //          $qualifying_questions_arr = array('qq_ceiling_hight' => $qq_ceiling_hight,
-    //                                        'qq_int_wall' => $qq_int_wall,
-    //                                        'qq_communicate_other' => $qq_communicate_other,
-    //                                          'qq_residential' => $qq_residential,
-    //                                          'qq_atmospheric' => $qq_atmospheric,
-    //                                          'qq_ceiling_type' => $qq_ceiling_type,
-    //                                          'qq_ext_wall' => $qq_ext_wall,
-    //                                          'qq_customizable_ui' => $qq_customizable_ui,
-    //                                          'qq_warehouse' => $qq_warehouse,
-    //                                          'qq_IoT_devices' => $qq_IoT_devices);
-    //          $qualifying_questions = json_encode($qualifying_questions_arr);
-
-    //          $query = "UPDATE `exp_crm` SET 
-    //                     `service_type` = '$service_type',
-    //                     `business_name` = '$business_name',
-    //                     `contact_name` = '$contact_name',
-    //                     `contact_number` = '$contact_phone',
-    //                     `contact_email` = '$contact_email',
-    //                     `account_number` = '$account_number',
-    //                     `order_number` = '$order_number',
-    //                     `street` = '$street',
-    //                     `city` = '$city',
-    //                     `state` = '$state',
-    //                     `zip` = '$zip',
-    //                     `timezone` = '$timezone',
-    //                     `wifi_information` = '$wifi_information',
-    //                     `property_id` = '$wifi_unique',
-    //                     `product_information` = '$product_information',
-    //                     `qualifying_questions` = '$qualifying_questions',
-    //                     `mno_id` = '$user_distributor',
-    //                     `last_update` = NOW()
-    //                     ";
-
-    //             $ex = $db->execDB($query);
-    //             // $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
-
-    //             // $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' > /dev/null 2>&1 & echo $!; ';
-    //             // $pid = exec($exec_cmd , $output);
-
-    //         if($ex===true){
-    //             $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
-    //             $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
-    //         }else{
-    //             $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
-    //             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
-    //         }
-    //     }
-    // }
-
-    if (isset($_GET['edit'])) {
-        if ($_GET['token'] == $_SESSION['FORM_SECRET']) {
-            $id = $_GET['id'];
-
-            $q = "SELECT property_details,status FROM exp_provisioning_properties WHERE mno_id='$user_distributor' AND id='$id' AND status<>'4'";
-
-            $data = $db->select1DB($q);
-            //print_r($data);
-            if (count($data) > 0) {
-                $edit = true;
-                //$_GET['t']='provision_create';
-                $prop_details = json_decode($data['property_details'], true);
-                $parent_properties_count = count($prop_details['property']);
-                $prop_details_new = $prop_details['property'][0];
-                $prop_service_type = $prop_details['location_info'][0]['service_type'];
-                $edit_acc_state = $data['status'];
-            }
-        }
-    }
-
     /* Remove a location */
     if (isset($_GET['remove_location'])) {
         $id = $_GET['id'];
@@ -767,7 +600,7 @@ if(!empty($api_details['data'])) {
 
         $response = $crm->deleteLocation($businessId, $location_unique);
     
-        if($response == 200) {
+        if($response == 200 || $response == 404) {
             $delete = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
             
             if ($delete === true) {
@@ -820,7 +653,6 @@ if(!empty($api_details['data'])) {
             }
         }
     }
-
 
     foreach ($modules[$user_type][$script] as $value) {
         $submit_form = 'modules/' . $value['submit'] . '.php';
@@ -940,6 +772,24 @@ if(!empty($api_details['data'])) {
                                                                                     }});
                                                                                 $(\'#AP_'.$locationId.'\').click(function() {
                                                                                         $(".pop-up").addClass("show");
+
+                                                                                        $.ajax({
+                                                                                            type: "POST",
+                                                                                            url: "ajax/getdpsk_policies.php",
+                                                                                            data: {
+                                                                                                api_id: '.$api_id.',
+                                                                                                system_package: '.$system_package.',
+                                                                                                business_id : '.$businessID.',
+                                                                                                location_id : '.$locationId.'
+                                                                                            },
+                                                                                            success: function(data) {
+                                                                                                console.log(data);
+                                                                                            },
+                                                                                            error: function() {
+                                                                                                document.getElementById("cloud_policies_loader").innerHTML = " &nbsp;&nbsp;&nbsp; <font color='red'>Network Error</font>";
+                                                                                            }
+                                                                                        });
+                                                                                        
                                                                                         $("body").css("overflow","hidden");
                                                                                 });
                                                                                 });
