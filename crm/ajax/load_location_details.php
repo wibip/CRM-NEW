@@ -14,7 +14,7 @@ $location_id = $_POST['location_id'];
 
 $crm = new crm($api_id, $system_package);
 $response = $crm->getLocationDetails($business_id, $location_id);
-var_dump($response);
+// var_dump($response);
 if($response != false){
     echo json_encode($response);
 } else {
