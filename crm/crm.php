@@ -619,7 +619,6 @@ if(!empty($api_details['data'])) {
             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
         }
         header('Location: crm?t=crm_view&token='.$token.'&edit&id='.$id);
-
     }
 
     /* Remove a property */
@@ -785,7 +784,12 @@ if(!empty($api_details['data'])) {
                                                                                             },
                                                                                             success: function(data) {
                                                                                                 data = JSON.parse(data);
-                                                                                                if(data != "false"){
+                                                                                                console.log(data);
+                                                                                                if(data == false){
+                                                                                                    $("#overlay").css("display","none");
+                                                                                                    $(".pop-up").removeClass("show");
+                                                                                                    $("body").css("overflow","auto");                                                                                                    
+                                                                                                } else {
                                                                                                     console.log(data["locations"]["0"]["contact"]["name"]);
                                                                                                     $("#locationForm #business_name").val(data["locations"]["0"]["name"]);
                                                                                                     $("#locationForm #location_unique").val(data["locations"]["0"]["id"]);
@@ -801,6 +805,8 @@ if(!empty($api_details['data'])) {
                                                                                             },
                                                                                             error: function() {
                                                                                                 $("#overlay").css("display","none");
+                                                                                                $(".pop-up").removeClass("show");
+                                                                                                $("body").css("overflow","auto"); 
                                                                                             }
                                                                                         });
                                                                                         $("body").css("overflow","hidden");
