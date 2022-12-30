@@ -162,23 +162,24 @@ if(!empty($api_details['data'])) {
         .pop-up-content form .actions button{
             margin-left: 5px;
         }.control-group.mask .controls div{
-                position: relative;
-                overflow: hidden;
-            }
-            .control-group.mask span{
-                position: absolute;
-                left: 0;
-                height: 100%;
-                background: #e4e4e4;
-                border-radius: 10px;
-                padding: 8px;
-                box-sizing: border-box;
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-            .control-group.mask input{
-                /* padding-left: 50px; */
-            }
+            position: relative;
+            overflow: hidden;
+        }
+        .control-group.mask span{
+            position: absolute;
+            left: 0;
+            height: 100%;
+            background: #e4e4e4;
+            border-radius: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .control-group.mask input{
+            /* padding-left: 50px; */
+        }
+
     </style>
 
     <?php
@@ -771,8 +772,8 @@ if(!empty($api_details['data'])) {
                                                                                     closeText: \'close\'
                                                                                     }});
                                                                                 $(\'#AP_'.$locationId.'\').click(function() {
+                                                                                        $("#overlay").css("display","block");
                                                                                         $(".pop-up").addClass("show");
-
                                                                                         $.ajax({
                                                                                             type: "POST",
                                                                                             url: "ajax/load_location_details.php",
@@ -783,13 +784,23 @@ if(!empty($api_details['data'])) {
                                                                                                 location_id: "'.$locationUnique.'"
                                                                                             },
                                                                                             success: function(data) {
-                                                                                                data = $.parseJSON(data);
+                                                                                                data = JSON.parse(data);
                                                                                                 if(data != "false"){
-                                                                                                    console.log(data.locations.name);
+                                                                                                    console.log(data["locations"]["0"]["contact"]["name"]);
+                                                                                                    $("#locationForm #business_name").val(data["locations"]["0"]["name"]);
+                                                                                                    $("#locationForm #location_unique").val(data["locations"]["0"]["id"]);
+                                                                                                    $("#locationForm #location_unique").attr("disabled", true) ;
+                                                                                                    $("#locationForm #contact").val(data["locations"]["0"]["contact"]["name"]);
+                                                                                                    $("#locationForm #contact_email").val(data["locations"]["0"]["contact"]["email"]);
+                                                                                                    $("#locationForm #street").val(data["locations"]["0"]["address"]["street"]);
+                                                                                                    $("#locationForm #city").val(data["locations"]["0"]["address"]["city"]);
+                                                                                                    $("#locationForm #state").val(data["locations"]["0"]["address"]["state"]);
+                                                                                                    $("#locationForm #zip").val(data["locations"]["0"]["address"]["zip"]);
+                                                                                                    $("#overlay").css("display","none");
                                                                                                 }
                                                                                             },
                                                                                             error: function() {
-                                                                                                
+                                                                                                $("#overlay").css("display","none");
                                                                                             }
                                                                                         });
                                                                                         $("body").css("overflow","hidden");
@@ -809,6 +820,7 @@ if(!empty($api_details['data'])) {
                                                                                             closeText: \'close\'
                                                                                     }});
                                                                                     $(\'#remove_api_'.$locationId.'\').click(function() {
+                                                                                        $("#overlay").css("display","block");
                                                                                         console.log("?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'");
                                                                                         window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'"
                                                                                     });
@@ -858,7 +870,7 @@ if(!empty($api_details['data'])) {
         <div class="pop-up-main">
             <div class="pop-up-content">
             <h1 class="head">Add a location</h1>
-                <form method="post" action="">
+                <form method="post" id="locationForm" action="">
                     <input type="hidden" name="crm_id" id="crm_id" value="<?=$id?>" />
                     <input type="hidden" name="wifi_unique" id="wifi_unique" value="<?=$wifi_unique?>" />
                     <input type="hidden" name="business_name" id="business_name" value="<?=$get_business_name?>" />

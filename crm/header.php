@@ -1690,6 +1690,99 @@ else{
 	.navbar .btn-group {
 		margin-top: 0px !important;
 	}
+
+	.ring {
+		position:absolute;
+		top:50%;
+		left:50%;
+		transform:translate(-50%,-50%);
+		width:150px;
+		height:150px;
+		background:transparent;
+		border:3px solid #3c3c3c;
+		border-radius:50%;
+		text-align:center;
+		line-height:150px;
+		font-family:sans-serif;
+		font-size:15px;
+		color:#fff000;
+		letter-spacing:4px;
+		text-transform:uppercase;
+		text-shadow:0 0 10px #fff000;
+		box-shadow:0 0 20px rgba(0,0,0,.5);
+		z-index: 150;
+	}
+	.ring:before {
+		content:'';
+		position:absolute;
+		top:-3px;
+		left:-3px;
+		width:100%;
+		height:100%;
+		border:3px solid transparent;
+		border-top:3px solid #fff000;
+		border-right:3px solid #fff000;
+		border-radius:50%;
+		animation:animateC 2s linear infinite;
+	}
+	.ring > span{
+		display:block;
+		position:absolute;
+		top:calc(50% - 2px);
+		left:50%;
+		width:50%;
+		height:4px;
+		background:transparent;
+		transform-origin:left;
+		animation:animate 2s linear infinite;
+	}
+	.ring > span:before{
+		content:'';
+		position:absolute;
+		width:16px;
+		height:16px;
+		border-radius:50%;
+		background:#fff000;
+		top:-6px;
+		right:-8px;
+		box-shadow:0 0 20px #fff000;
+	}
+	@keyframes animateC{
+		0%
+		{
+			transform:rotate(0deg);
+		}
+		100%
+		{
+			transform:rotate(360deg);
+		}
+	}
+	@keyframes animate{
+		0%
+		{
+			transform:rotate(45deg);
+		}
+		100%
+		{
+			transform:rotate(405deg);
+		}
+	}
+
+	#overlay {
+		position: fixed; /* Sit on top of the page content */
+		display: none; /* Hidden by default */
+		width: 100%; /* Full width (cover the whole page) */
+		height: 100%; /* Full height (cover the whole page) */
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+		z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+		cursor: pointer; /* Add a pointer on hover */
+		z-index: 150;
+	}
+  
 </style>
 
 <title><?php
@@ -1697,6 +1790,9 @@ else{
 		echo defined($title_difiner) ? constant($title_difiner) : constant('_page_title_') ?></title>
 
 <script type="text/javascript">
+	$(document).ready(function() {
+		$('#overlay').css('display','none');
+	});
 	function setCookie() {
 		let cname = "timeout";
 		let cvalue = Math.floor(Date.now() / 1000);
@@ -1716,7 +1812,11 @@ else{
 
 
 <body>
-
+	<div id="overlay">
+		<div class="ring">Processing
+			<span></span>
+		</div>
+	</div>
 
 	<style>
 		.toggle-on {
@@ -1725,6 +1825,7 @@ else{
 	</style>
 
 	<script>
+
 		function dropdown() {
 			var w = window.innerWidth;
 			if (w < 980) {
@@ -1813,7 +1914,7 @@ else{
 
 		$row = $db_class1->select1DB($key_query);
 		//while($row=mysql_fetch_array($query_results)){
-		$logo_top = $row[theme_logo];
+		$logo_top = $row["theme_logo"];
 		//}
 
 		$logo_top = 'top_logo.png';
@@ -1835,7 +1936,7 @@ else{
 
 		$row = $db_class1->select1DB($key_query);
 		//while($row=mysql_fetch_array($query_results)){
-		$logo_top = $row[theme_logo];
+		$logo_top = $row["theme_logo"];
 		//}
 
 		if (strlen($logo_top)) {
@@ -1863,7 +1964,7 @@ else{
 
 		$row = $db_class1->select1DB($key_query);
 		//while($row=mysql_fetch_array($query_results)){
-		$logo_top = $row[theme_logo];
+		$logo_top = $row["theme_logo"];
 		//}
 
 		if (strlen($logo_top)) {

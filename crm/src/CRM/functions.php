@@ -32,7 +32,6 @@ class crm
     public function getOtherConfig($field) {
         $networkArr = $this->networkArr;
         return $networkArr[$field];
-
     }
 
     /**
