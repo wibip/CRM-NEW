@@ -363,11 +363,8 @@ if(!empty($api_details['data'])) {
                                                         `state` = '".$state."',
                                                         `zip` = '".$zip."' 
                         WHERE id=".$location_id;
-
-        echo $locationSql;                
+              
         $locationResult = $db->execDB($locationSql);
-
-        var_dump($locationResult);
 
         $data = [
             'address' => [
