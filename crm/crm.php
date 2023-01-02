@@ -292,7 +292,6 @@ if(!empty($api_details['data'])) {
 
     if (isset($_POST['create_location_submit'])) {
         $crm_id = $_POST['crm_id'];        
-        $property_id = $_POST['wifi_unique'];
         $business_id = $_POST['business_id'];
         $property_name = $_POST['business_name'];
         $location_unique = $get_opt_code .$_POST['location_unique'];
@@ -338,6 +337,64 @@ if(!empty($api_details['data'])) {
             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
         }
         
+    }
+
+    if(isset($_POST['update_location_submit'])) {
+        $crm_id = $_POST['crm_id']; 
+        $business_id = $_POST['business_id'];       
+        $location_id = $_POST['location_id'];
+        $location_unique = $_POST['location_unique'];
+        $contact_name = $_POST['contact'];
+        $contact_email = $_POST['contact_email'];
+        $street = $_POST['street'];
+        $city = $_POST['city'];
+        $state = $_POST['state'];
+        $zip = $_POST['zip'];
+
+         /* Update location */
+        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
+        VALUES($crm_id,'".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+
+        $locationSql = "UPDATE `crm_exp_mno_locations` SET 
+                                                        `contact_name` = '".$contact_name."',
+                                                        `contact_email` = '".$contact_email."',
+                                                        `street` = '".$street."',
+                                                        `city` = '".$city."',
+                                                        `state` = '".$state."',
+                                                        `zip` = '".$zip."' 
+                        WHERE id=".$location_id;
+
+        echo $locationSql;                
+        $locationResult = $db->execDB($locationSql);
+
+        var_dump($locationResult);
+
+        $data = [
+            'address' => [
+                'street' => $street,
+                'city' => $city,
+                'state' => $state,
+                'zip' => $zip
+            ],
+            'contact' =>[
+                'name' => $contact_name,
+                'email' => $contact_email
+            ]
+        ];
+
+        $jsondata = json_encode($data);
+
+        $response = $crm->updateLocation($business_id,$jsondata,$location_unique);
+
+        if ($response['status'] == 'success') {
+            $success_msg = "Location has been updated successfully";
+            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Update CRM Location',$location_id,'3001',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
+        } else {
+            $success_msg = "Location updated has been failed";
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Update CRM Location',$location_id,'2009',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+        }
     }
 
     if (isset($_POST['create_crm_submit'])) {
@@ -772,6 +829,7 @@ if(!empty($api_details['data'])) {
                                                                                     }});
                                                                                 $(\'#AP_'.$locationId.'\').click(function() {
                                                                                         $("#overlay").css("display","block");
+                                                                                        $(".pop-up .head").html("Update location");
                                                                                         $(".pop-up").addClass("show");
                                                                                         $.ajax({
                                                                                             type: "POST",
@@ -790,16 +848,36 @@ if(!empty($api_details['data'])) {
                                                                                                     $(".pop-up").removeClass("show");
                                                                                                     $("body").css("overflow","auto");                                                                                                    
                                                                                                 } else {
-                                                                                                    console.log(data["locations"]["0"]["contact"]["name"]);
                                                                                                     $("#locationForm #business_name").val(data["locations"]["0"]["name"]);
                                                                                                     $("#locationForm #location_unique").val(data["locations"]["0"]["id"]);
                                                                                                     $("#locationForm #location_unique").attr("disabled", true) ;
+                                                                                                    $("<input>").attr({
+                                                                                                        type: "hidden",
+                                                                                                        id: "business_id",
+                                                                                                        name: "business_id",
+                                                                                                        value: '.$businessID.'
+                                                                                                    }).appendTo("#locationForm");
+                                                                                                    $("<input>").attr({
+                                                                                                        type: "hidden",
+                                                                                                        id: "location_id",
+                                                                                                        name: "location_id",
+                                                                                                        value: '.$locationId.'
+                                                                                                    }).appendTo("#locationForm");
+                                                                                                    $("<input>").attr({
+                                                                                                        type: "hidden",
+                                                                                                        id: "location_unique",
+                                                                                                        name: "location_unique",
+                                                                                                        value: data["locations"]["0"]["id"]
+                                                                                                    }).appendTo("#locationForm");
                                                                                                     $("#locationForm #contact").val(data["locations"]["0"]["contact"]["name"]);
                                                                                                     $("#locationForm #contact_email").val(data["locations"]["0"]["contact"]["email"]);
                                                                                                     $("#locationForm #street").val(data["locations"]["0"]["address"]["street"]);
                                                                                                     $("#locationForm #city").val(data["locations"]["0"]["address"]["city"]);
                                                                                                     $("#locationForm #state").val(data["locations"]["0"]["address"]["state"]);
                                                                                                     $("#locationForm #zip").val(data["locations"]["0"]["address"]["zip"]);
+                                                                                                    $(".popup_submit").html("Update");
+                                                                                                    $(".popup_submit").attr("name", "update_location_submit");
+                                                                                                    $(".popup_submit").attr("id", "update_location_submit");
                                                                                                     $("#overlay").css("display","none");
                                                                                                 }
                                                                                             },
@@ -870,7 +948,7 @@ if(!empty($api_details['data'])) {
         </div>
         <!-- /main-inner -->
     </div>
-
+    
     <div class="pop-up">
         <div class="pop-up-bg"></div>
         <div class="pop-up-main">
@@ -967,7 +1045,7 @@ if(!empty($api_details['data'])) {
                     </div>
                     <div class="actions">
                         <button class="btn btn-secondary">Cancel</button>
-                        <button class="btn btn-primary" type="submit" name="create_location_submit" id="create_location_submit">Save</button>
+                        <button class="btn btn-primary popup_submit" type="submit" name="create_location_submit" id="create_location_submit">Save</button>
                     </div>
                 </form>
             </div>
