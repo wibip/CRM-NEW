@@ -852,13 +852,13 @@ if(!empty($api_details['data'])) {
                                                                                                         type: "hidden",
                                                                                                         id: "business_id",
                                                                                                         name: "business_id",
-                                                                                                        value: '.$businessID.'
+                                                                                                        value: "'.$businessID.'"
                                                                                                     }).appendTo("#locationForm");
                                                                                                     $("<input>").attr({
                                                                                                         type: "hidden",
                                                                                                         id: "location_id",
                                                                                                         name: "location_id",
-                                                                                                        value: '.$locationId.'
+                                                                                                        value: "'.$locationId.'"
                                                                                                     }).appendTo("#locationForm");
                                                                                                     $("<input>").attr({
                                                                                                         type: "hidden",

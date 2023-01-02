@@ -247,7 +247,7 @@ class crm
             $body = substr($result, $header_size);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $decoded = json_decode($body, true);
-
+            
             if ($httpcode == 200 && (count($decoded["locations"]) >0)) {
                 $this->db->addApiLogs('getLocation', 'Get CRM Location details', 'SUCCESS', 'get crm location details', $url, '', $result, $httpcode, $_SESSION['user_id']);
                 return $decoded;
