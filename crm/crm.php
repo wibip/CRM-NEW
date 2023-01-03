@@ -956,19 +956,19 @@ if(!empty($api_details['data'])) {
                     <input type="hidden" name="business_name" id="business_name" value="<?=$get_business_name?>" />
                     <input type="hidden" name="business_id" id="business_id" value="<?=$get_business_id?>" />
                     <div class="form-double">
-                        <div class="control-group">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Business Name</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?=$get_business_name?>" data-bv-field="business_name" readonly>                                       
-                                </div>
-                            </div>
-                        </div>
                         <div class="control-group mask">
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">Unique Location ID</label>
                                 <div class="controls col-lg-5 form-group">
                                 <input type="text" name="location_unique" id="location_unique" class="span4 form-control" value="" data-bv-field="location_unique">                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">Business Name</label>
+                                <div class="controls col-lg-5 form-group">
+                                    <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?=$get_business_name?>" data-bv-field="business_name" readonly>                                       
                                 </div>
                             </div>
                         </div>
@@ -1047,8 +1047,12 @@ if(!empty($api_details['data'])) {
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function () {
+
+    <script type="text/javascript" src="js/bootstrapValidator.js"></script>
+    <script type="text/javascript" src="js/bootstrapValidator_new.js?v=1"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
             $('.pop-up .actions button:nth-child(1)').click(function (e) { 
                 e.preventDefault();                
                 $('.pop-up').removeClass('show');
@@ -1060,21 +1064,73 @@ if(!empty($api_details['data'])) {
                 $('body').css('overflow','hidden');
             });
 
-            $('#create_location_submit').click(function(){
+            $('#create_location_submit').on('click', function(e){
+                $("#overlay").css("display","block");
+                // e.preventDefault();
+                // $('#locationForm').bootstrapValidator({
+                //     framework: 'bootstrap',
+                //     excluded: [':disabled', function($field, validator) {
+                //         return (!$field.is(':visible') || $field.is(':hidden'));
+                //     }],
+                //     feedbackIcons: {
+                //         valid: 'glyphicon glyphicon-ok',
+                //         invalid: 'glyphicon glyphicon-remove',
+                //         validating: 'glyphicon glyphicon-refresh'
+                //     },
+                //     fields: {
+                //         location_unique: {
+                //             validators: {
+                //                 < ?php echo $db->validateField('notEmpty'); ?>
+                //             }
+                //         },
+                //         business_name: {
+                //             validators: {
+                //                 < ?php echo $db->validateField('notEmpty'); ?>
+                //             }
+                //         },
+                //         contact: {
+                //             validators: {
+                //                 < ?php echo $db->validateField('notEmpty'); ?>
+                //             }
+                //         },
+                //         contact_email: {
+                //             validators: {
+                //                 < ?php echo $db->validateField('email'); ?>
+                //             }
+                //         },
+                //         street: {
+                //             validators: {
+                //                 < ?php echo $db->validateField('notEmpty'); ?>
+                //             }
+                //         },
+                //         city: {
+                //             validators: {
+                //                 < ?php echo $db->validateField('notEmpty'); ?>
+                //             }
+                //         },
+                //         zip: {
+                //             validators: {
+                //                 < ?php echo $db->validateField('notEmpty'); ?>
+                //             }
+                //         },
+                //         state: {
+                //             validators: {
+                //                 < ?php echo $db->validateField('notEmpty'); ?>
+                //             }
+                //         }
+                //     }
+                // }).on('error.validator.bv', function(e, data) {
+                //     $("#overlay").css("display","none");
+                // }).on('success.field.bv', function(e, data) {
+                //     $("#overlay").css("display","block");
+                // }); 
+            });
+
+            $('#update_location_submit').click(function(e){
+                e.preventDefault();
                 $("#overlay").css("display","block");
             });
 
-            $('#update_location_submit').click(function(){
-                $("#overlay").css("display","block");
-            });
-        });
-    </script>
-
-    <script type="text/javascript" src="js/bootstrapValidator.js"></script>
-    <script type="text/javascript" src="js/bootstrapValidator_new.js?v=1"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
             $('#crm_form').bootstrapValidator({
                 framework: 'bootstrap',
                 excluded: [':disabled', function($field, validator) {
@@ -1186,6 +1242,7 @@ if(!empty($api_details['data'])) {
             }).on('error.validator.bv', function(e, data) {
                 $("#overlay").css("display","none");
             });
+
         });
     </script>
     <?php
