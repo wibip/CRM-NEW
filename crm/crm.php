@@ -293,7 +293,7 @@ if(!empty($api_details['data'])) {
     if (isset($_POST['create_location_submit'])) {
         $crm_id = $_POST['crm_id'];        
         $business_id = $_POST['business_id'];
-        $property_name = $_POST['business_name'];
+        $location_name = $_POST['location_name'];
         $location_unique = $get_opt_code .$_POST['location_unique'];
         $contact_name = $_POST['contact'];
         $contact_email = $_POST['contact_email'];
@@ -303,13 +303,13 @@ if(!empty($api_details['data'])) {
         $zip = $_POST['zip'];
 
         /* Add location */
-        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
-                        VALUES($crm_id,'".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`location_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
+                        VALUES($crm_id,'".$location_name."','".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
         $locationResult = $db->execDB($locationSql);
 
         $data = [
                     'id' => $location_unique,
-                    'name' => $property_name,
+                    'name' => $location_name,
                     'address' => [
                         'street' => $street,
                         'city' => $city,
@@ -341,6 +341,7 @@ if(!empty($api_details['data'])) {
 
     if(isset($_POST['update_location_submit'])) {
         $crm_id = $_POST['crm_id']; 
+        $location_name = $_POST['location_name'];
         $business_id = $_POST['business_id'];       
         $location_id = $_POST['location_id'];
         $location_unique = $_POST['location_unique'];
@@ -352,10 +353,9 @@ if(!empty($api_details['data'])) {
         $zip = $_POST['zip'];
 
          /* Update location */
-        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
-        VALUES($crm_id,'".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
 
         $locationSql = "UPDATE `crm_exp_mno_locations` SET 
+                                                        `location_name` = '".$location_name."',
                                                         `contact_name` = '".$contact_name."',
                                                         `contact_email` = '".$contact_email."',
                                                         `street` = '".$street."',
@@ -367,6 +367,7 @@ if(!empty($api_details['data'])) {
         $locationResult = $db->execDB($locationSql);
 
         $data = [
+            'name' => $location_name,
             'address' => [
                 'street' => $street,
                 'city' => $city,
@@ -845,7 +846,7 @@ if(!empty($api_details['data'])) {
                                                                                                     $(".pop-up").removeClass("show");
                                                                                                     $("body").css("overflow","auto");                                                                                                    
                                                                                                 } else {
-                                                                                                    $("#locationForm #business_name").val(data["locations"]["0"]["name"]);
+                                                                                                    $("#locationForm #location_name").val(data["locations"]["0"]["name"]);
                                                                                                     $("#locationForm #location_unique").val(data["locations"]["0"]["id"]);
                                                                                                     $("#locationForm #location_unique").attr("disabled", true) ;
                                                                                                     $("<input>").attr({
@@ -953,7 +954,6 @@ if(!empty($api_details['data'])) {
                 <form method="post" id="locationForm" action="">
                     <input type="hidden" name="crm_id" id="crm_id" value="<?=$id?>" />
                     <input type="hidden" name="wifi_unique" id="wifi_unique" value="<?=$wifi_unique?>" />
-                    <input type="hidden" name="business_name" id="business_name" value="<?=$get_business_name?>" />
                     <input type="hidden" name="business_id" id="business_id" value="<?=$get_business_id?>" />
                     <div class="form-double">
                         <div class="control-group mask">
@@ -968,7 +968,7 @@ if(!empty($api_details['data'])) {
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">Business Name</label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?=$get_business_name?>" data-bv-field="business_name" readonly>                                       
+                                    <input type="text" name="location_name" id="location_name" class="span4 form-control" value="<?=$get_business_name?>" data-bv-field="location_name">                                       
                                 </div>
                             </div>
                         </div>
@@ -1052,6 +1052,64 @@ if(!empty($api_details['data'])) {
     <script type="text/javascript" src="js/bootstrapValidator_new.js?v=1"></script>
 
     <script type="text/javascript">
+        function validateLocationForm(){
+            $("#overlay").css("display","block");
+                $('#locationForm').bootstrapValidator({
+                    framework: 'bootstrap',
+                    excluded: [':disabled', function($field, validator) {
+                        return (!$field.is(':visible') || $field.is(':hidden'));
+                    }],
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        location_unique: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        location_name: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        contact: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        contact_email: {
+                            validators: {
+                                <?php echo $db->validateField('email'); ?>
+                            }
+                        },
+                        street: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        city: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        zip: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        state: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        }
+                    }
+                }).on('error.validator.bv', function(e, data) {
+                    $("#overlay").css("display","none");
+                }); 
+        }
         $(document).ready(function() {
             $('.pop-up .actions button:nth-child(1)').click(function (e) { 
                 e.preventDefault();                
@@ -1064,71 +1122,12 @@ if(!empty($api_details['data'])) {
                 $('body').css('overflow','hidden');
             });
 
-            $('#create_location_submit').on('click', function(e){
-                $("#overlay").css("display","block");
-                // e.preventDefault();
-                // $('#locationForm').bootstrapValidator({
-                //     framework: 'bootstrap',
-                //     excluded: [':disabled', function($field, validator) {
-                //         return (!$field.is(':visible') || $field.is(':hidden'));
-                //     }],
-                //     feedbackIcons: {
-                //         valid: 'glyphicon glyphicon-ok',
-                //         invalid: 'glyphicon glyphicon-remove',
-                //         validating: 'glyphicon glyphicon-refresh'
-                //     },
-                //     fields: {
-                //         location_unique: {
-                //             validators: {
-                //                 < ?php echo $db->validateField('notEmpty'); ?>
-                //             }
-                //         },
-                //         business_name: {
-                //             validators: {
-                //                 < ?php echo $db->validateField('notEmpty'); ?>
-                //             }
-                //         },
-                //         contact: {
-                //             validators: {
-                //                 < ?php echo $db->validateField('notEmpty'); ?>
-                //             }
-                //         },
-                //         contact_email: {
-                //             validators: {
-                //                 < ?php echo $db->validateField('email'); ?>
-                //             }
-                //         },
-                //         street: {
-                //             validators: {
-                //                 < ?php echo $db->validateField('notEmpty'); ?>
-                //             }
-                //         },
-                //         city: {
-                //             validators: {
-                //                 < ?php echo $db->validateField('notEmpty'); ?>
-                //             }
-                //         },
-                //         zip: {
-                //             validators: {
-                //                 < ?php echo $db->validateField('notEmpty'); ?>
-                //             }
-                //         },
-                //         state: {
-                //             validators: {
-                //                 < ?php echo $db->validateField('notEmpty'); ?>
-                //             }
-                //         }
-                //     }
-                // }).on('error.validator.bv', function(e, data) {
-                //     $("#overlay").css("display","none");
-                // }).on('success.field.bv', function(e, data) {
-                //     $("#overlay").css("display","block");
-                // }); 
+            $('#create_location_submit').on('click', function(e){                
+                validateLocationForm();
             });
 
             $('#update_location_submit').click(function(e){
-                e.preventDefault();
-                $("#overlay").css("display","block");
+                validateLocationForm();
             });
 
             $('#crm_form').bootstrapValidator({
