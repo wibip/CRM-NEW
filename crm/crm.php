@@ -900,9 +900,8 @@ if(!empty($api_details['data'])) {
                                                                                             button: [\'Cancel\',\' Confirm\'],
                                                                                             closeText: \'close\'
                                                                                     }});
-                                                                                    $(\'#remove_api_'.$locationId.'\').click(function() {
+                                                                                    $(\'#remove_api_'.$locationId.'\').click(function() {                                                                                        
                                                                                         $("#overlay").css("display","block");
-                                                                                        console.log("?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'");
                                                                                         window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'"
                                                                                     });
                                                                                 });
@@ -1051,7 +1050,7 @@ if(!empty($api_details['data'])) {
     <script>
         $(document).ready(function () {
             $('.pop-up .actions button:nth-child(1)').click(function (e) { 
-                e.preventDefault();
+                e.preventDefault();                
                 $('.pop-up').removeClass('show');
                 $('body').css('overflow','auto');
             });
@@ -1059,6 +1058,14 @@ if(!empty($api_details['data'])) {
                 e.preventDefault();
                 $('.pop-up').addClass('show');
                 $('body').css('overflow','hidden');
+            });
+
+            $('#create_location_submit').click(function(){
+                $("#overlay").css("display","block");
+            });
+
+            $('#update_location_submit').click(function(){
+                $("#overlay").css("display","block");
             });
         });
     </script>
@@ -1069,7 +1076,6 @@ if(!empty($api_details['data'])) {
     <script type="text/javascript">
         $(document).ready(function() {
             $('#crm_form').bootstrapValidator({
-
                 framework: 'bootstrap',
                 excluded: [':disabled', function($field, validator) {
                     return (!$field.is(':visible') || $field.is(':hidden'));
@@ -1177,6 +1183,8 @@ if(!empty($api_details['data'])) {
                     }
 
                 }
+            }).on('error.validator.bv', function(e, data) {
+                $("#overlay").css("display","none");
             });
         });
     </script>

@@ -390,4 +390,12 @@ if (!empty($arrayo)) {
                     </div>
                 </form>
             </div>
+    <script type="text/javascript">
+            $(document).ready(function(e) {
+                //create_crm_submit
+                $('#create_crm_submit').click(function(){
+                    $("#overlay").css("display","block");
+                });
+            });
+    </script>
             

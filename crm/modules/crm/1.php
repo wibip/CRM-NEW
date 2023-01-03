@@ -1101,6 +1101,11 @@ if (!empty($arrayo)) {
 
 
                 $(document).ready(function(e) {
+                    //create_crm_submit
+                    $('#create_crm_submit').click(function(){
+                        $("#overlay").css("display","block");
+                    });
+
                     var stepListFull = '<div class="steps clearfix" style="margin-top:20px"><ul role="tablist">';
                     var stepCount = 0;
                     $('#crm_form fieldset').each(function(index, element) {
