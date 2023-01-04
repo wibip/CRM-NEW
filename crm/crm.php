@@ -871,7 +871,7 @@ if(!empty($api_details['data'])) {
                                                                                                     $("#locationForm #contact_email").attr("value",data["locations"]["0"]["contact"]["email"]);
                                                                                                     $("#locationForm #street").attr("value",data["locations"]["0"]["address"]["street"]);
                                                                                                     $("#locationForm #city").attr("value",data["locations"]["0"]["address"]["city"]);
-                                                                                                    $("#locationForm #state").attr("value",data["locations"]["0"]["address"]["state"]);
+                                                                                                    $("#locationForm #state option[value="+data["locations"]["0"]["address"]["state"]+"]").attr("selected", "selected");
                                                                                                     $("#locationForm #zip").attr("value",data["locations"]["0"]["address"]["zip"]);
                                                                                                     $(".popup_submit").html("Update");
                                                                                                     $(".popup_submit").attr("name", "update_location_submit");
