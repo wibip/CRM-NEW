@@ -846,6 +846,9 @@ if(!empty($api_details['data'])) {
                                                                                                     $(".pop-up").removeClass("show");
                                                                                                     $("body").css("overflow","auto");                                                                                                    
                                                                                                 } else {
+                                                                                                    
+                                                                                                    $("#locationForm #wifi_unique").attr("value","'.$wifi_unique.'");
+                                                                                                    $("#locationForm #business_id").attr("value","'.$get_business_id.'");
                                                                                                     $("#locationForm #location_name").attr("value", data["locations"]["0"]["name"]);
                                                                                                     $("#locationForm #location_unique").attr("value", data["locations"]["0"]["id"]);
                                                                                                     $("#locationForm #location_unique").attr("name", "location_unique_display");
@@ -950,8 +953,8 @@ if(!empty($api_details['data'])) {
             <h1 class="head">Add a location</h1>
                 <form method="post" id="locationForm" action="">
                     <input type="hidden" name="crm_id" id="crm_id" value="<?=$id?>" />
-                    <input type="hidden" name="wifi_unique" id="wifi_unique" value="" />
-                    <input type="hidden" name="business_id" id="business_id" value="" />
+                    <input type="hidden" name="wifi_unique" id="wifi_unique" value="<?=$wifi_unique?>" />
+                    <input type="hidden" name="business_id" id="business_id" value="<?=$get_business_id?>" />
                     <div class="form-double">
                         <div class="control-group mask">
                             <div class="controls col-lg-5 form-group">
@@ -1051,14 +1054,14 @@ if(!empty($api_details['data'])) {
     <script type="text/javascript">
    
         $(document).ready(function() {
-            $('.pop-up .actions button:nth-child(1)').click(function (e) { 
+            $('.pop-up .actions button:nth-child(1)').click(function (e) {                 
+                $('#locationForm').children('input').val('');
                 e.preventDefault();                
                 $('.pop-up').removeClass('show');
                 $('body').css('overflow','auto');
             });
             $('.pop-up-open').click(function (e) { 
                 e.preventDefault();
-                $('#locationForm').children('input').val('');
                 $("#locationForm #wifi_unique").attr("value","<?=$wifi_unique?>");
                 $("#locationForm #business_id").attr("value","<?=$get_business_id?>");
                 $('.pop-up').addClass('show');
