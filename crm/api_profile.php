@@ -116,9 +116,6 @@ if(isset($_POST['create_ap_controller'])){
 			// $create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
 			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 		}
-
-		
-
 	}//key validation
 	else{
 		$message_response = $message_functions->showMessage('transection_fail', '2004');
@@ -225,15 +222,15 @@ if(isset($_POST['api_update'])){
 																WHERE `id`='$profile_id'";
 
 				$update_wag=$db->execDB($update_wag_q);
-				$edit_ap_control_name = $update_wag_name;
+				// $edit_ap_control_name = $update_wag_name;
 				$edit_api_profile = $edit_api_profile_name;
 				$edit_wag_url=$update_wag_url;
 				$edit_wag_uname=$update_wag_uname;
 				$edit_wag_pass=$update_wag_pass;
 
-				$edit_wag_type=$db->getValueAsf("SELECT `type` as f
-				FROM `exp_locations_ap_controller`
-				WHERE `controller_name`='$update_wag_name'");
+				// $edit_wag_type=$db->getValueAsf("SELECT `type` as f
+				// FROM `exp_locations_ap_controller`
+				// WHERE `controller_name`='$update_wag_name'");
 				
 				if($update_wag===true){
 					$message_response = $message_functions->showMessage('ap_controller_update_success') ;
@@ -248,7 +245,7 @@ if(isset($_POST['api_update'])){
 				}
 			} else {
 				$message_response = $apiReturn['data']['message'];
-				$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create API profile',0,'2001',$message_response);
+				$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify API profile',0,'2001',$message_response);
 				$db->userErrorLog('2001', $user_name, 'script - ' . $script);		
 				// $create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
 				$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";

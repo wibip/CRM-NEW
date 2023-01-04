@@ -950,8 +950,8 @@ if(!empty($api_details['data'])) {
             <h1 class="head">Add a location</h1>
                 <form method="post" id="locationForm" action="">
                     <input type="hidden" name="crm_id" id="crm_id" value="<?=$id?>" />
-                    <input type="hidden" name="wifi_unique" id="wifi_unique" value="<?=$wifi_unique?>" />
-                    <input type="hidden" name="business_id" id="business_id" value="<?=$get_business_id?>" />
+                    <input type="hidden" name="wifi_unique" id="wifi_unique" value="" />
+                    <input type="hidden" name="business_id" id="business_id" value="" />
                     <div class="form-double">
                         <div class="control-group mask">
                             <div class="controls col-lg-5 form-group">
@@ -1059,6 +1059,8 @@ if(!empty($api_details['data'])) {
             $('.pop-up-open').click(function (e) { 
                 e.preventDefault();
                 $('#locationForm').children('input').val('');
+                $("#locationForm #wifi_unique").attr("value","<?=$wifi_unique?>");
+                $("#locationForm #business_id").attr("value","<?=$get_business_id?>");
                 $('.pop-up').addClass('show');
                 $('body').css('overflow','hidden');
             });
