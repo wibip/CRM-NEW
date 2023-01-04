@@ -226,7 +226,7 @@ if(!empty($api_details['data'])) {
         $id = $_GET['id'];
         $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
         $get_service_type = $result['service_type'];
-        $get_business_name = $result['business_name'];
+        $get_location_name = $result['location_name'];
         $get_business_id = $result['business_id'];
         $get_contact_name = $result['contact_name'];
         $get_contact_phone = $result['contact_number'];
@@ -846,15 +846,11 @@ if(!empty($api_details['data'])) {
                                                                                                     $(".pop-up").removeClass("show");
                                                                                                     $("body").css("overflow","auto");                                                                                                    
                                                                                                 } else {
-                                                                                                    $("#locationForm #location_name").val(data["locations"]["0"]["name"]);
-                                                                                                    $("#locationForm #location_unique").val(data["locations"]["0"]["id"]);
-                                                                                                    $("#locationForm #location_unique").attr("disabled", true) ;
-                                                                                                    $("<input>").attr({
-                                                                                                        type: "hidden",
-                                                                                                        id: "business_id",
-                                                                                                        name: "business_id",
-                                                                                                        value: "'.$businessID.'"
-                                                                                                    }).appendTo("#locationForm");
+                                                                                                    $("#locationForm #location_name").attr("value", data["locations"]["0"]["name"]);
+                                                                                                    $("#locationForm #location_unique").attr("value", data["locations"]["0"]["id"]);
+                                                                                                    $("#locationForm #location_unique").attr("name", "location_unique_display");
+                                                                                                    $("#locationForm input[name=location_unique_display]").attr("id", "location_unique_display");
+                                                                                                    $("#locationForm #location_unique_display").attr("disabled", true) ;
                                                                                                     $("<input>").attr({
                                                                                                         type: "hidden",
                                                                                                         id: "location_id",
@@ -867,12 +863,13 @@ if(!empty($api_details['data'])) {
                                                                                                         name: "location_unique",
                                                                                                         value: data["locations"]["0"]["id"]
                                                                                                     }).appendTo("#locationForm");
-                                                                                                    $("#locationForm #contact").val(data["locations"]["0"]["contact"]["name"]);
-                                                                                                    $("#locationForm #contact_email").val(data["locations"]["0"]["contact"]["email"]);
-                                                                                                    $("#locationForm #street").val(data["locations"]["0"]["address"]["street"]);
-                                                                                                    $("#locationForm #city").val(data["locations"]["0"]["address"]["city"]);
-                                                                                                    $("#locationForm #state").val(data["locations"]["0"]["address"]["state"]);
-                                                                                                    $("#locationForm #zip").val(data["locations"]["0"]["address"]["zip"]);
+
+                                                                                                    $("#locationForm #contact").attr("value", data["locations"]["0"]["contact"]["name"]);
+                                                                                                    $("#locationForm #contact_email").attr("value",data["locations"]["0"]["contact"]["email"]);
+                                                                                                    $("#locationForm #street").attr("value",data["locations"]["0"]["address"]["street"]);
+                                                                                                    $("#locationForm #city").attr("value",data["locations"]["0"]["address"]["city"]);
+                                                                                                    $("#locationForm #state").attr("value",data["locations"]["0"]["address"]["state"]);
+                                                                                                    $("#locationForm #zip").attr("value",data["locations"]["0"]["address"]["zip"]);
                                                                                                     $(".popup_submit").html("Update");
                                                                                                     $(".popup_submit").attr("name", "update_location_submit");
                                                                                                     $(".popup_submit").attr("id", "update_location_submit");
@@ -966,9 +963,9 @@ if(!empty($api_details['data'])) {
                         </div>
                         <div class="control-group">
                             <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Business Name</label>
+                                <label for="radiobtns">Location Name</label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="location_name" id="location_name" class="span4 form-control" value="<?=$get_business_name?>" data-bv-field="location_name">                                       
+                                    <input type="text" name="location_name" id="location_name" class="span4 form-control" value="<?=$get_location_name?>" data-bv-field="location_name">                                       
                                 </div>
                             </div>
                         </div>
@@ -1052,8 +1049,22 @@ if(!empty($api_details['data'])) {
     <script type="text/javascript" src="js/bootstrapValidator_new.js?v=1"></script>
 
     <script type="text/javascript">
-        function validateLocationForm(){
-            $("#overlay").css("display","block");
+   
+        $(document).ready(function() {
+            $('.pop-up .actions button:nth-child(1)').click(function (e) { 
+                e.preventDefault();                
+                $('.pop-up').removeClass('show');
+                $('body').css('overflow','auto');
+            });
+            $('.pop-up-open').click(function (e) { 
+                e.preventDefault();
+                $('#locationForm').children('input').val('');
+                $('.pop-up').addClass('show');
+                $('body').css('overflow','hidden');
+            });
+
+            $('#create_location_submit').on('click', function(e){                
+                $("#overlay").css("display","block");
                 $('#locationForm').bootstrapValidator({
                     framework: 'bootstrap',
                     excluded: [':disabled', function($field, validator) {
@@ -1109,25 +1120,61 @@ if(!empty($api_details['data'])) {
                 }).on('error.validator.bv', function(e, data) {
                     $("#overlay").css("display","none");
                 }); 
-        }
-        $(document).ready(function() {
-            $('.pop-up .actions button:nth-child(1)').click(function (e) { 
-                e.preventDefault();                
-                $('.pop-up').removeClass('show');
-                $('body').css('overflow','auto');
-            });
-            $('.pop-up-open').click(function (e) { 
-                e.preventDefault();
-                $('.pop-up').addClass('show');
-                $('body').css('overflow','hidden');
             });
 
-            $('#create_location_submit').on('click', function(e){                
-                validateLocationForm();
-            });
-
-            $('#update_location_submit').click(function(e){
-                validateLocationForm();
+            $('#update_location_submit').on('click',function(e){
+                alert('fff');
+                $("#overlay").css("display","block");
+                $('#locationForm').bootstrapValidator({
+                    framework: 'bootstrap',
+                    excluded: [':disabled', function($field, validator) {
+                        return (!$field.is(':visible') || $field.is(':hidden'));
+                    }],
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        location_name: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        contact: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        contact_email: {
+                            validators: {
+                                <?php echo $db->validateField('email'); ?>
+                            }
+                        },
+                        street: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        city: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        zip: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        state: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        }
+                    }
+                }).on('error.validator.bv', function(e, data) {
+                    $("#overlay").css("display","none");
+                }); 
             });
 
             $('#crm_form').bootstrapValidator({
