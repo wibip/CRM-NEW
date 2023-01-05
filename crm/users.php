@@ -15,8 +15,9 @@ header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 
 /*classes & libraries*/
 require_once 'classes/dbClass.php';
-require_once 'classes/CommonFunctions.php';
 $db = new db_functions();
+require_once 'classes/CommonFunctions.php';
+$common_functions = new CommonFunctions();
 require_once dirname(__FILE__) . '/models/userMainModel.php';
 $user_model = new userMainModel();
 $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
@@ -138,22 +139,13 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 if ($system_package == 'N/A') {
 	$q1 = "SELECT `module_name` ,`name_group` FROM `admin_access_modules` WHERE `user_type` ='$user_type' AND `module_name`  NOT IN ('users','profile','change_portal') AND is_enable=1  ORDER BY module_name";
-
 	$modules1 = $db->selectDB($q1);
 	$modules = $modules1['data'];
 } else {
 	$q11 = "SELECT a.`module_name` ,a.`name_group` FROM `admin_access_modules` a WHERE a.`user_type` ='$user_type' AND a.`module_name`  NOT IN ('users','profile','change_portal') AND a.is_enable=1 ORDER BY module_name";
 	// echo $q11;
 	$modules1 = $db->selectDB($q11);
-	// $q12 = "SELECT options FROM admin_product_controls WHERE product_code='$system_package' AND feature_code='ALLOWED_PAGE'";
-	// $allow_pages = $package_functions->getOptions('ALLOWED_PAGE',$system_package);
-	// $modules2 = json_decode($allow_pages);
-	// var_dump($modules2);
-	// foreach ($modules1['data'] as $key => $value) {
-	// 	if (!in_array($value['module_name'], $modules2)) {
-	// 		unset($modules1['data'][$key]);
-	// 	}
-	// }
+
 	$modules = $modules1['data'];
 }
 
@@ -169,8 +161,9 @@ if ($system_package == 'N/A') {
 		$new_user_name = str_replace(' ', '_', strtolower(substr($full_name, 0, 5) . 'u' . $auto_inc));
 		$password  = CommonFunctions::randomPassword();
 
-		$access_role = $_POST['access_role_1'];
-		$user_type = ($access_role == "SADMIN001") ? "SADMIN" : $_POST['user_type'];
+		$access_role = $_POST['access_role_1']; 
+		$user_type = $common_functions->getUserTypeFromAccessType($access_role);
+		// $user_type = ($access_role == "SADMIN001") ? "SADMIN" : $_POST['user_type'];
 		$loation = $_POST['loation'];
 		$email = $_POST['email_1'];
 		$language = $_POST['language_1'];
@@ -191,85 +184,25 @@ if ($system_package == 'N/A') {
 				VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$user_distributor','$full_name','$email', '$language' ,'$timezone', '$mobile','1',now(),'$user_name')";
 		// echo $query;
 		$ex =$db->execDB($query);
-// echo $ex;die;
 		if ($ex ==true) {
 			$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
-			if ($user_type == 'ADMIN') {
-				$dist = 'ADMIN';
-			} else if ($user_type == 'MNO') {
-				$dist = $user_distributor;
-			} else {
-				$kmno_query = "SELECT mno_id FROM exp_mno_distributor where distributor_code = '$user_distributor'";
-				$query_results=$db->selectDB($kmno_query);
-				foreach($query_results['data'] AS $row){
-					$dist = $row['mno_id'];
-				}
-			}
+			// if ($user_type == 'ADMIN') {
+			// 	$dist = 'ADMIN';
+			// } else if ($user_type == 'MNO') {
+			// 	$dist = $user_distributor;
+			// } else {
+			// 	$kmno_query = "SELECT mno_id FROM exp_mno_distributor where distributor_code = '$user_distributor'";
+			// 	$query_results=$db->selectDB($kmno_query);
+			// 	foreach($query_results['data'] AS $row){
+			// 		$dist = $row['mno_id'];
+			// 	}
+			// }
 
-			if ($access_role == 'ADMIN') {
-				$acc_type = 'Admin';
-			} else {
-				$acc_type = 'User';
-			}
-
-			/*
-			$to = $email;
-
-			if ($package_functions->getSectionType('EMAIL_USER_TEMPLATE', $system_package) == "own") {
-				$email_content = $db->getEmailTemplate('USER_MAIL', $system_package, 'MNO', $user_distributor);
-				$a = $email_content[0]['text_details'];
-				$subject = $email_content[0]['title'];
-
-				if (strlen($subject) == '0') {
-					$email_content = $db->getEmailTemplate('USER_MAIL', $package_functions->getAdminPackage(), 'ADMIN');
-					$a = $email_content[0]['text_details'];
-					$subject = $email_content[0]['title'];
-				}
-			} else {
-				$a = $db->textVal('MAIL', 'ADMIN');
-				$subject = $db->textTitle('MAIL', 'ADMIN');
-			}
-
-			$support_number = $package_functions->getMessageOptions('SUPPORT_NUMBER',$system_package,$property_business_type);
-			$login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
-			$link = $db->getSystemURL('login', $login_design);
-
-			$vars = array(
-				'{$user_full_name}' => $full_name,
-				'{$short_name}'        => $db->setVal("short_title", $user_distributor),
-				'{$account_type}' => $user_type,
-				'{$user_name}' => $new_user_name,
-				'{$password}' => $password,
-				'{$support_number}' => $support_number,
-				'{$link}' => $link
-
-			);
-
-			$message_full = strtr($a, $vars);
-			$message = $message_full;
-			$from = strip_tags($db->setVal("email", $mno_id));
-			if (empty($from)) {
-				$from = strip_tags($db->setVal("email", $user_distributor));
-				if (empty($from)) {
-					$from = strip_tags($db->setVal("email", "ADMIN"));
-				}
-			}
-
-			$title = $db->setVal("short_title", $user_distributor);
-
-			$email_send_method = $package_functions->getSectionType("EMAIL_SYSTEM", $system_package);
-			include_once 'src/email/' . $email_send_method . '/index.php';
-			$cunst_var = array();
-			//$cunst_var['template'] = $package_functions->getOptions('EMAIL_TEMPLATE', $system_package);
-			$cunst_var['system_package'] = $system_package;
-			$cunst_var['mno_package'] = $system_package;
-			$cunst_var['mno_id'] = $mno_id;
-			$cunst_var['verticle'] = $property_business_type;
-			$mail_obj = new email($cunst_var);
-
-			$mail_obj->mno_system_package = $system_package;
-			$mail_sent = $mail_obj->sendEmail($from, $to, $subject, $message_full, '', $title); */
-
+			// if ($access_role == 'ADMIN') {
+			// 	$acc_type = 'Admin';
+			// } else {
+			// 	$acc_type = 'User';
+			// }
 
 			$message_response = $message_functions->showNameMessage('user_create_success', $new_user_name);
 			$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create User',$idContAutoInc,'',$message_response);
@@ -642,7 +575,7 @@ if ($system_package == 'N/A') {
 			$role_type = $_POST['role_type'];
 
 			if($role_edit_id == 0) {
-				$access_role_id = time() . $user_type . $user_distributor;
+				$access_role_id = time() . $role_type . $user_distributor;
 				if (strtoupper($access_role_name) == "ADMIN") {
 					$message_response = $message_functions->showMessage('user_admin_not_allow');
 					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Access Role',0,'',$message_response);
@@ -661,12 +594,13 @@ if ($system_package == 'N/A') {
 						$result1 = $db->execDB($query1);
 					}
 
-					if($role_type == 'sadmin') {
+					if($role_type == 'sadmin' || $role_type == 'salesmanager') {
 						foreach ($_POST['other_modules'] as $selectedOption) {
 							$other_name = $selectedOption;
 							$queryOther = "REPLACE INTO `admin_access_roles_modules`
 											(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
 											VALUES ('$access_role_id', '$other_name', '$user_distributor', 'other', '$user_name', now())";
+							// echo $queryOther."<br/>";
 							$resultOther = $db->execDB($queryOther);
 						}
 
@@ -675,6 +609,7 @@ if ($system_package == 'N/A') {
 							$queryOperation = "REPLACE INTO `admin_access_account`
 											(`access_role`, `operation_id`, `create_user`, `create_date`)
 											VALUES ('$access_role_id', '$operationId', '$user_name', now())";
+							// echo $queryOperation."<br/>";
 							$resultOperation = $db->execDB($queryOperation);
 						}
 					}
@@ -836,9 +771,8 @@ if ($system_package == 'N/A') {
 			$roleData = $db->selectDB("SELECT `description`,role_type FROM `admin_access_roles` WHERE `id`='$role_edit_id'");
 			$role_name = $roleData['data'][0]['description'];
 			$roleType = $roleData['data'][0]['role_type'];
-
 			//check role type
-			if($roleType == "sadmin"){
+			if($roleType == "sadmin"  || $roleType == 'salesmanager'){
 				//get selected other modules
 				$other_result = $db->selectDB("SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role`='$access_role_id' AND module_type='other'");
 				foreach($other_result['data'] AS $otherRole){
@@ -955,8 +889,8 @@ if ($system_package == 'N/A') {
 
 																	$query_results=$db->selectDB($key_query);
 																		foreach($query_results['data'] AS $row){	
-																		$access_role = $row[access_role];
-																		$description = $row[description];
+																		$access_role = $row['access_role'];
+																		$description = $row['description'];
 																		echo '<option value="' . $access_role . '">' . $description . '</option>';
 																	}
 																	?>
@@ -991,8 +925,8 @@ if ($system_package == 'N/A') {
 																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
 																		$query_results=$db->selectDB($key_query);
 																		foreach($query_results['data'] AS $row){
-																			$language_code = $row[language_code];
-																			$language = $row[language];
+																			$language_code = $row['language_code'];
+																			$language = $row['language'];
 																			echo '<option value="' . $language_code . '">' . $language . '</option>';
 																		}
 																	?>
@@ -1371,12 +1305,12 @@ if ($system_package == 'N/A') {
 																	$key_query = "SELECT access_role,description FROM admin_access_roles WHERE distributor = '$user_distributor' OR `distributor` ='SADMIN' ORDER BY description";
 																	$query_results=$db->selectDB($key_query);
 																	foreach($query_results['data'] AS $row){
-																		$access_role = $row[access_role];
+																		$access_role = $row['access_role'];
 																		if ($access_role == $access_role_set) {
-																			$description = $row[description];
+																			$description = $row['description'];
 																			echo '<option value="' . $access_role . '" selected>' . $description . '</option>';
 																		} else {
-																			$description = $row[description];
+																			$description = $row['description'];
 																			echo '<option value="' . $access_role . '">' . $description . '</option>';
 																		}
 																	}
@@ -1423,8 +1357,8 @@ if ($system_package == 'N/A') {
 																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
 																	$query_results=$db->selectDB($key_query);
 																	foreach($query_results['data'] AS $row){
-																		$language_code = $row[language_code];
-																		$language = $row[language];
+																		$language_code = $row['language_code'];
+																		$language = $row['language'];
 																		if ($language_code == $language_set) {
 																			echo '<option value="' . $language_code . '" selected>' . $language . '</option>';
 																		} else {
@@ -1603,7 +1537,10 @@ if ($system_package == 'N/A') {
 																<div class="controls form-group col-lg-5">
 																	<fieldset id="role_types">
 																		<div class="fieldgroup">
-																			<input type="radio" name="role_type" id="role_type" value="sadmin" <?=($roleType == 'sadmin' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "sadmin">Super Admin</label>
+																			<input type="radio" name="role_type" id="role_type" value="sadmin" <?=(($roleType == 'sadmin' || $role_edit_id == 0) ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "sadmin">Super Admin</label>
+																		</div>
+																		<div class="fieldgroup">
+																			<input type="radio" name="role_type" id="role_type" value="salesmanager" <?=($roleType == 'salesmanager' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Sales Manager</label>
 																		</div>
 																		<div class="fieldgroup">
 																			<input type="radio" name="role_type" id="role_type" value="nadmin" <?=($roleType == 'nadmin' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Admin</label>
@@ -1617,7 +1554,7 @@ if ($system_package == 'N/A') {
 																	<input class="form-control span2" id="access_role_name" name="access_role_name" type="text" value="<?=$role_name?>" <?=($role_edit_id != 0 ? "disabled" : "")?>>
 																</div>
 															</div>
-															<div class="control-group">
+															<div class="control-group" id="admin_operations">
 																<label class="control-label" for="my_select"><?=($_SESSION['SADMIN'] == true ? "Admin " : "")?>Modules</label>
 
 																<div class="controls form-group col-lg-5">
@@ -1694,8 +1631,8 @@ if ($system_package == 'N/A') {
 
 
 																		foreach ($modules as $row) {
-																			$module_name = $row[module_name];
-																			$module = $row[name_group];
+																			$module_name = $row['module_name'];
+																			$module = $row['name_group'];
 																			$selected = "";
 																			if (in_array($module_name, $other_array)) {
 																				$selected = "selected";
@@ -1765,11 +1702,11 @@ if ($system_package == 'N/A') {
 																	}
 																	$query_results=$db->selectDB($key_query);
 																	foreach($query_results['data'] AS $row){
-																		$access_role = $row[access_role];
-																		$description = $row[description];
-																		$create_date = $row[create_date];
-																		$id_access_role = $row[id];
-																		$m_list = $row[m_list];
+																		$access_role = $row['access_role'];
+																		$description = $row['description'];
+																		$create_date = $row['create_date'];
+																		$id_access_role = $row['id'];
+																		$m_list = $row['m_list'];
 
 																		//check access Role use or not//
 																		$check_role = $db->SelectDB("SELECT * FROM `admin_users` u WHERE u.`access_role`='$access_role'");
@@ -1941,41 +1878,6 @@ if ($system_package == 'N/A') {
 				}
 			});
 
-			// Create access Roles
-			// $('#assign_roles_submit').bootstrapValidator({
-			// 	framework: 'bootstrap',
-			// 	fields: {
-			// 		'my_select[]': {
-			// 			validators: {
-			// 				< ?php echo $db -> validateField('list'); ?>
-			// 			}
-			// 		},
-			// 		'operations[]': {
-			// 			validators: {
-			// 				< ?php echo $db -> validateField('list'); ?>
-			// 			}
-			// 		},
-			// 		'other_modules[]': {
-			// 			validators: {
-			// 				< ?php echo $db -> validateField('list'); ?>
-			// 			}
-			// 		},
-			// 		access_role_name: {
-			// 			validators: {
-			// 				< ?php echo $db -> validateField('access_role_name'); ?> ,
-			// 				< ?php echo $db -> validateField('not_require_special_character'); ?>
-			// 			}
-			// 		}
-			// 	}
-			// }).on('status.field.bv', function(e, data) {
-			// 	console.log(e);
-			// 	// alert($('#assign_roles_submit').data('bootstrapValidator').isValid());
-			// 	if ($('#assign_roles_submit').data('bootstrapValidator').isValid()) {
-			// 		data.bv.disableSubmitButtons(false);
-			// 	} else {
-			// 		data.bv.disableSubmitButtons(true);
-			// 	}
-			// });
 
 		});
 	</script>
@@ -2064,15 +1966,22 @@ if ($system_package == 'N/A') {
 	<script src="js/jquery.multi-select.js" type="text/javascript"></script>
 	<script>
 		$(document).ready(function() {
+			
 			//sadmin_operations sadmin-omodules
-			<?php if($role_edit_id != 0 && $roleType == 'sadmin') { ?>
-					$('#sadmin_operations').show();
-					$('#sadmin-omodules').show();
+			<?php if ($role_edit_id == 0 || ($role_edit_id != 0 && $roleType == 'sadmin')) { ?>
+				$('#admin_operations').show();	
+				$('#sadmin_operations').show();
+				$('#sadmin-omodules').show();
+			<?php } elseif($role_edit_id != 0 && $roleType == 'salesmanager') { ?>
+				$('#admin_operations').hide();
+				$('#sadmin_operations').show();
+				$('#sadmin-omodules').show();
 			<?php
 				} else {
 			?>
-					$('#sadmin_operations').hide();
-					$('#sadmin-omodules').hide();
+				$('#admin_operations').show();
+				$('#sadmin_operations').hide();
+				$('#sadmin-omodules').hide();
 			<?php
 				}
 			?>
@@ -2083,12 +1992,22 @@ if ($system_package == 'N/A') {
 			$('#operations').multiSelect();
 
 			$('input[type=radio][name=role_type]').change(function() {
-				if($(this).val() == "sadmin"){
-					$('#sadmin_operations').show();
-					$('#sadmin-omodules').show();
-				} else {
-					$('#sadmin_operations').hide();
-					$('#sadmin-omodules').hide();
+				switch ($(this).val()) {
+					case "sadmin":
+						$('#admin_operations').show();
+						$('#sadmin_operations').show();
+						$('#sadmin-omodules').show();
+					break;
+					case "salesmanager":
+						$('#admin_operations').hide();
+						$('#sadmin_operations').show();
+						$('#sadmin-omodules').show();
+					break;
+					case "nadmin":
+						$('#admin_operations').show();
+						$('#sadmin_operations').hide();
+						$('#sadmin-omodules').hide();
+					break;
 				}
 			});
 		});

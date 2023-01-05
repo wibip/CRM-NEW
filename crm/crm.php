@@ -1127,60 +1127,60 @@ if(!empty($api_details['data'])) {
                 }); 
             });
 
-            $('#update_location_submit').on('click',function(e){
-                alert('fff');
-                $("#overlay").css("display","block");
-                $('#locationForm').bootstrapValidator({
-                    framework: 'bootstrap',
-                    excluded: [':disabled', function($field, validator) {
-                        return (!$field.is(':visible') || $field.is(':hidden'));
-                    }],
-                    feedbackIcons: {
-                        valid: 'glyphicon glyphicon-ok',
-                        invalid: 'glyphicon glyphicon-remove',
-                        validating: 'glyphicon glyphicon-refresh'
-                    },
-                    fields: {
-                        location_name: {
-                            validators: {
-                                <?php echo $db->validateField('notEmpty'); ?>
-                            }
-                        },
-                        contact: {
-                            validators: {
-                                <?php echo $db->validateField('notEmpty'); ?>
-                            }
-                        },
-                        contact_email: {
-                            validators: {
-                                <?php echo $db->validateField('email'); ?>
-                            }
-                        },
-                        street: {
-                            validators: {
-                                <?php echo $db->validateField('notEmpty'); ?>
-                            }
-                        },
-                        city: {
-                            validators: {
-                                <?php echo $db->validateField('notEmpty'); ?>
-                            }
-                        },
-                        zip: {
-                            validators: {
-                                <?php echo $db->validateField('notEmpty'); ?>
-                            }
-                        },
-                        state: {
-                            validators: {
-                                <?php echo $db->validateField('notEmpty'); ?>
-                            }
-                        }
-                    }
-                }).on('error.validator.bv', function(e, data) {
-                    $("#overlay").css("display","none");
-                }); 
-            });
+            // $('#update_location_submit').on('click',function(e){
+            //     alert('fff');
+            //     $("#overlay").css("display","block");
+            //     $('#locationForm').bootstrapValidator({
+            //         framework: 'bootstrap',
+            //         excluded: [':disabled', function($field, validator) {
+            //             return (!$field.is(':visible') || $field.is(':hidden'));
+            //         }],
+            //         feedbackIcons: {
+            //             valid: 'glyphicon glyphicon-ok',
+            //             invalid: 'glyphicon glyphicon-remove',
+            //             validating: 'glyphicon glyphicon-refresh'
+            //         },
+            //         fields: {
+            //             location_name: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             },
+            //             contact: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             },
+            //             contact_email: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('email'); ?>
+            //                 }
+            //             },
+            //             street: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             },
+            //             city: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             },
+            //             zip: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             },
+            //             state: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             }
+            //         }
+            //     }).on('error.validator.bv', function(e, data) {
+            //         $("#overlay").css("display","none");
+            //     }); 
+            // });
 
             $('#crm_form').bootstrapValidator({
                 framework: 'bootstrap',

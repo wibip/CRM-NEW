@@ -338,9 +338,9 @@ if ($_GET['log_other'] == '1') {
 		$_SESSION['remote'] = 'yes';
 
 		//login from sub user
-		$_SESSION['user_name'] = $data_arr[uname]; //$_GET['uname'];
-		$_SESSION['access_role'] = $data_arr[urole]; //$_GET['urole'];
-		$_SESSION['full_name'] = $data_arr[fname]; //$_GET['fname'];
+		$_SESSION['user_name'] = $data_arr['uname']; //$_GET['uname'];
+		$_SESSION['access_role'] = $data_arr['urole']; //$_GET['urole'];
+		$_SESSION['full_name'] = $data_arr['fname']; //$_GET['fname'];
 
 		$user_name = $_SESSION['user_name'];
 		$user_details = $db_class1->select1DB("SELECT  user_distributor ,user_type  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");

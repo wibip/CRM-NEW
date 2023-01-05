@@ -412,4 +412,29 @@ class CommonFunctions{
         $result =  $this->db->selectDB($sql);
         return $result;
     }
+
+    public function getUserTypeFromAccessType($access_role){
+        $sql = "SELECT role_type FROM admin_access_roles WHERE access_role='".$access_role."'"; 
+        $result =  $this->db->selectDB($sql);
+        $userType = null;
+        if(count($result) > 0){
+            $roleType = $result['data'][0]['role_type'];
+            switch($roleType) {
+                case 'sadmin':
+                    $userType = 'SADMIN';
+                break;
+                case 'salesmanager':
+                    $userType = 'SMAN';
+                break;
+                case 'nadmin':
+                    $userType = 'ADMIN';
+                break;
+                default:
+                    $userType = 'ADMIN';
+                break;
+            }
+        }
+
+        return $userType;
+    }
 }
