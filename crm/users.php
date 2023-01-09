@@ -575,6 +575,19 @@ if ($system_package == 'N/A') {
 			$role_type = $_POST['role_type'];
 
 			if($role_edit_id == 0) {
+				switch($role_type){
+					case 'sadmin':
+						$user_distributor = 'SADMIN';
+					break;
+					case 'salesmanager':
+						$user_distributor = 'SMAN';
+					break;
+					case 'nadmin':
+						$user_distributor = 'ADMIN';
+					break;
+					default:
+						$user_distributor = 'ADMIN';
+				}
 				$access_role_id = time() . $role_type . $user_distributor;
 				if (strtoupper($access_role_name) == "ADMIN") {
 					$message_response = $message_functions->showMessage('user_admin_not_allow');
