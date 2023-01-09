@@ -17,7 +17,7 @@ $oidc->getAuthParams();
 // $clientCredentialsToken = $oidc->requestClientCredentialsToken()->access_token;
 // $clientCredentialsToken = $oidc->requestResourceOwnerToken(TRUE)->access_token;
 
-$oidc->setCertPath('./certificate.crt');
+// $oidc->setCertPath('./certificate.crt');
 $oidc->authenticate();
 $name = $oidc->requestUserInfo('given_name');
 
