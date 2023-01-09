@@ -7,7 +7,11 @@ use Jumbojett\OpenIDConnectClient;
 $oidc = new OpenIDConnectClient($issuer, $cid, $secret);
 
 // $oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/connect/token'));
-$oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/auth/realms/Infra/protocol/openid-connect/tokenn'));
+
+$oidc->providerConfigParam(array('authorization_endpoint'=>'https://auth.k8spre.arriswifi.com/auth/realms/Infra/protocol/openid-connect/auth'));
+$oidc->providerConfigParam(array('userinfo_endpoint'=>'https://auth.k8spre.arriswifi.com/auth/realms/Infra/protocol/openid-connect/userinfo'));
+$oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/auth/realms/Infra/protocol/openid-connect/token'));
+$oidc->providerConfigParam(array('jwks_uri'=>'https://auth.k8spre.arriswifi.com/auth/realms/Infra/protocol/openid-connect/certs'));
 $oidc->addScope($scope);
 $oidc->getAuthParams();   
 // $oidc->authenticate();
