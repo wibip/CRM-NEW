@@ -4,7 +4,8 @@ require 'vendor/autoload.php';
 require 'cred.php';
 
 use Jumbojett\OpenIDConnectClient;
-
+var_dump('connected');
+die;
 $oidc = new OpenIDConnectClient($issuer, $cid, $secret);
 var_dump($oidc);
 die;
