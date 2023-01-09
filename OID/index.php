@@ -7,10 +7,18 @@ use Jumbojett\OpenIDConnectClient;
 $oidc = new OpenIDConnectClient($issuer, $cid, $secret);
 
 $oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/connect/token'));
-$oidc->addScope($scope);
+// $oidc->addScope($scope);
 // $oidc->authenticate();
 // $name = $oidc->requestUserInfo();
 // var_dump($name);
 // this assumes success (to validate check if the access_token property is there and a valid JWT) :
 // $clientCredentialsToken = $oidc->requestClientCredentialsToken()->access_token;
-$clientCredentialsToken = $oidc->requestResourceOwnerToken(TRUE)->access_token;
+// $clientCredentialsToken = $oidc->requestResourceOwnerToken(TRUE)->access_token;
+$oidc->setResponseTypes(array('id_token'));
+$oidc->addScope(array('openid'));
+$oidc->setAllowImplicitFlow(true);
+$oidc->addAuthParam(array('response_mode' => 'form_post'));
+$oidc->setCertPath('./certificate.crt');
+$oidc->authenticate();
+$sub = $oidc->getVerifiedClaims('sub');
+
