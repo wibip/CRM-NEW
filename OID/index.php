@@ -15,7 +15,7 @@ $oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswif
 // $clientCredentialsToken = $oidc->requestClientCredentialsToken()->access_token;
 // $clientCredentialsToken = $oidc->requestResourceOwnerToken(TRUE)->access_token;
 
-$oidc->setCertPath('./certificate.crt');
+$oidc->setCertPath('./OID/certificate.crt');
 $oidc->authenticate();
 $name = $oidc->requestUserInfo('given_name');
 
