@@ -760,7 +760,7 @@ if(!empty($api_details['data'])) {
                                             include_once 'modules/' . $value['module'] . '.php';
                                         }
                                         //}
-                                        if (isset($_GET['edit'])) {
+                                        if (isset($_GET['edit']) && $get_status == "Completed") {
                                         ?>
                                         <div class="widget widget-table action-table" style="padding-top: 35px;">
                                             <div class="widget-header">
