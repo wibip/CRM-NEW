@@ -56,8 +56,8 @@ if (isset($username)) {
 		$access_role=strtolower($access_role);
 	}
 
-	if($user_type=="SADMIN" && !isset($_GET['auto_login'])){
-		$_SESSION['SADMIN'] = true;
+	if(($user_type=="SADMIN" || $user_type=="SMAN") && !isset($_GET['auto_login'])){
+		$_SESSION[$user_type] = true;
 		// header('Location: '.$_SERVER['PHP_SELF']);
 		header("Location: ".$_SERVER['PHP_SELF']."?auto_login&user_id=1");
 		// var_dump('##########STEP03######');

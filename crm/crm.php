@@ -226,7 +226,7 @@ if(!empty($api_details['data'])) {
         $id = $_GET['id'];
         $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
         $get_service_type = $result['service_type'];
-        $get_location_name = $result['location_name'];
+        $get_business_name = $result['business_name'];
         $get_business_id = $result['business_id'];
         $get_contact_name = $result['contact_name'];
         $get_contact_phone = $result['contact_number'];
