@@ -238,6 +238,7 @@ if(!empty($api_details['data'])) {
         $get_account_number = $result['account_number'];
         $get_street = $result['street'];
         $get_state = $result['state'];
+        $get_status= $result['status'];
         $wifi_unique = $result['property_id'];
         $get_wifi_unique = str_replace($get_opt_code, "", $wifi_unique);
 

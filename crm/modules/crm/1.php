@@ -949,7 +949,7 @@ if (!empty($arrayo)) {
 
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
-                        <?php if($activatePopup == true) {  ?>
+                        <?php if($activatePopup == true && $get_status == "Completed") {  ?>
                             <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
                             <button onmouseover="" class="btn btn-primary pop-up-open">Add Location</button>
                         <?php } ?>
