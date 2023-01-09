@@ -6,8 +6,10 @@ require 'cred.php';
 use Jumbojett\OpenIDConnectClient;
 $oidc = new OpenIDConnectClient($issuer, $cid, $secret);
 
-$oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/connect/token'));
-// $oidc->addScope($scope);
+// $oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/connect/token'));
+$oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/auth/realms/Infra/protocol/openid-connect/tokenn'));
+$oidc->addScope($scope);
+$oidc->getAuthParams();   
 // $oidc->authenticate();
 // $name = $oidc->requestUserInfo();
 // var_dump($name);
