@@ -13,9 +13,9 @@ $oidc = new OpenIDConnectClient($issuer, $cid, $secret);
 // $name = $oidc->requestUserInfo();
 // var_dump($name);
 
-/*Second attempt register a client*/
-$oidc->register();
-$client_id = $oidc->getClientID();
-$client_secret = $oidc->getClientSecret();
-var_dump($client_secret);
+/*Second attempt- Request Client Credentials Token*/
+$oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/connect/token'));
+$oidc->addScope('my_scope');
+// this assumes success (to validate check if the access_token property is there and a valid JWT) :
+$clientCredentialsToken = $oidc->requestClientCredentialsToken()->access_token;
 
