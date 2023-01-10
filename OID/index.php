@@ -6,22 +6,15 @@ require 'cred.php';
 use Jumbojett\OpenIDConnectClient;
 $oidc = new OpenIDConnectClient($issuer, $cid, $secret);
 
+$oidc->setCertPath('./certificate.crt');
 // $oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/connect/token'));
-
-$oidc->providerConfigParam(array('authorization_endpoint'=>'https://auth.k8spre.arriswifi.com/auth/realms/Infra/protocol/openid-connect/auth'));
-$oidc->providerConfigParam(array('userinfo_endpoint'=>'https://auth.k8spre.arriswifi.com/auth/realms/Infra/protocol/openid-connect/userinfo'));
-$oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/auth/realms/Infra/protocol/openid-connect/token'));
-$oidc->providerConfigParam(array('jwks_uri'=>'https://auth.k8spre.arriswifi.com/auth/realms/Infra/protocol/openid-connect/certs'));
-$oidc->addScope($scope);
-$oidc->getAuthParams();   
-// $oidc->authenticate();
-// $name = $oidc->requestUserInfo();
-// var_dump($name);
+  
+$oidc->authenticate();
 // this assumes success (to validate check if the access_token property is there and a valid JWT) :
 // $clientCredentialsToken = $oidc->requestClientCredentialsToken()->access_token;
 // $clientCredentialsToken = $oidc->requestResourceOwnerToken(TRUE)->access_token;
 
 // $oidc->setCertPath('./certificate.crt');
-$oidc->authenticate();
+
 $name = $oidc->requestUserInfo('given_name');
 
