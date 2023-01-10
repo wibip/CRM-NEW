@@ -16,6 +16,6 @@ $oidc->authenticate();
 
 // $oidc->setCertPath('./certificate.crt');
 
-$name = $oidc->requestUserInfo('given_name');
+$name = $oidc->requestUserInfo();
 var_dump($name);
 
