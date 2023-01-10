@@ -14,7 +14,7 @@ $oidc = new OpenIDConnectClient($issuer, $cid, $secret);
 // var_dump($name);
 
 /*Second attempt- Request Client Credentials Token*/
-$oidc->setResponseTypes(array('id_token'));
+$oidc->setResponseTypes(array('token'));
 $oidc->addScope(array('openid'));
 $oidc->setAllowImplicitFlow(true);
 $oidc->addAuthParam(array('response_mode' => 'form_post'));
