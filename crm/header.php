@@ -2375,7 +2375,7 @@ else{
 
 
 									foreach($valuem['module'] as $key=>$checkVal){
-										if(in_array( "Portal Change" ,$checkVal)){
+										if(in_array( "Switch Accounts" ,$checkVal)){
 											unset($valuem['module'][$key]);
 										}
 									}
@@ -2498,7 +2498,7 @@ else{
 													echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
             									<a href="' . $sub_menu_link . '"  target="_blank"  class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
 												} else {
-													if($sub_menu_name != 'Portal Change'){
+													if($sub_menu_name != 'Switch Accounts'){
 														echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
             												<a href="' . $sub_menu_link . $extension . '" class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
 													}

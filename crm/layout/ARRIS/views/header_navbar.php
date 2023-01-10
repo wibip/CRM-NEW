@@ -254,7 +254,7 @@ if ($script != 'verification') {
 $numItems = count($main_mod_array);
 	
 $i = 0;
-$active_title = "Portal Change";
+$active_title = "Switch Accounts";
 foreach ($main_mod_array as $keym => $valuem) {
 	if (strlen($valuem['active'])) {
 		$scrpt_active_status = ' class="active"';
@@ -264,7 +264,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 
 
 	foreach($valuem['module'] as $key=>$checkVal){
-		if(in_array( "Portal Change" ,$checkVal)){
+		if(in_array( "Switch Accounts" ,$checkVal)){
 			unset($valuem['module'][$key]);
 		}
 	}
@@ -324,7 +324,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 					$sub_menu_name = $page_names_arr[$sub_menu_name];
 				}
 
-				if($sub_menu_name != 'Portal Change'){
+				if($sub_menu_name != 'Switch Accounts'){
 					echo '<li><a href="' . $sub_menu_link . $extension . '">' . $sub_menu_name . '</a></li>';
 				}
 			}
@@ -335,7 +335,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 
 if($_SESSION['SADMIN'] == true && isset($_SESSION['section']) && $_SESSION['section'] != 'ADMIN') {
 // 	echo '<li><a href="./change_portal?section='.$_SESSION["section"].'">Change portal</a></li>';
-	echo '<li><a href="./change_portal?section='.$_SESSION["section"].'"><div><i class="icon-signin show"></i><span>Change portal&nbsp;&nbsp;</span></div></a></li>';
+	echo '<li><a href="./change_portal?section='.$_SESSION["section"].'"><div><i class="icon-signin show"></i><span>Switch Accounts&nbsp;&nbsp;</span></div></a></li>';
 }
 
 ?>
