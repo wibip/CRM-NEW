@@ -1827,6 +1827,7 @@ if ($system_package == 'N/A') {
 					email_1: {
 						validators: {
 							<?php echo $db->validateField('email_cant_upper'); ?>
+							<?php echo $db->validateField('email'); ?>
 						}
 					},
 					timezone_1: {
@@ -1870,6 +1871,7 @@ if ($system_package == 'N/A') {
 					email_2: {
 						validators: {
 							<?php echo $db -> validateField('email_cant_upper'); ?>
+							<?php echo $db->validateField('email'); ?>
 						}
 					},
 					timezone_2: {
@@ -1988,7 +1990,7 @@ if ($system_package == 'N/A') {
 			<?php } elseif($role_edit_id != 0 && $roleType == 'salesmanager') { ?>
 				$('#admin_operations').hide();
 				$('#sadmin_operations').show();
-				$('#sadmin-omodules').show();
+				$('#sadmin-omodules').hide();
 			<?php
 				} else {
 			?>
@@ -2014,7 +2016,7 @@ if ($system_package == 'N/A') {
 					case "salesmanager":
 						$('#admin_operations').hide();
 						$('#sadmin_operations').show();
-						$('#sadmin-omodules').show();
+						$('#sadmin-omodules').hide();
 					break;
 					case "nadmin":
 						$('#admin_operations').show();

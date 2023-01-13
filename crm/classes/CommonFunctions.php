@@ -437,4 +437,18 @@ class CommonFunctions{
 
         return $userType;
     }
+
+    public function getAdminUserDetails($id,$column){
+        $sql = "SELECT ".$column." FROM admin_users WHERE id=".$id;
+        $result =  $this->db->selectDB($sql);
+        return $result;
+    }
+
+    public function getAdminUserDetailsFromClient($clientId,$column){
+        $sql = "SELECT au.".$column." FROM crm_portal.crm_clients AS crmc
+                INNER JOIN admin_users AS au ON au.id = crmc.user_id
+                WHERE crmc.id=".$clientId;
+        $result =  $this->db->selectDB($sql);
+        return $result;
+    }
 }

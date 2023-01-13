@@ -1058,8 +1058,9 @@ $(document).ready(function() {
             fields: {
                 
                 email: {
-                    validators: {
-                        <?php echo $db->validateField('email'); ?>
+                    validators: {                        
+							<?php echo $db->validateField('email_cant_upper'); ?>
+							<?php echo $db->validateField('email'); ?>
                     }
                 },
 				full_name: {

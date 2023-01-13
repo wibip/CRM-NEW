@@ -90,6 +90,7 @@ function setQuery($db,$fullCountQuery,$nextPage,$pageLength){
 $nextPage = 0;
 $nextPage = $request_data_ar['nextPage'];
 $pageLength = $request_data_ar['listsize'];
+$user_name = $request_data_ar['user_name'];
 $user_distributor = $request_data_ar['user_distributor'];
 $type = $request_data_ar['type'];
 $user_type = $request_data_ar['user_type'];
@@ -106,6 +107,9 @@ if ($type == 'crmActiveAccounts') {
 		$fullCountQuery .= " AND business_name = '".$accName."'";
 	}if (strlen($busId)>0) {
 		$fullCountQuery .= " AND property_id = '".$busId."'";
+	}
+	if($user_name != null){
+		$fullCountQuery .= " AND create_user = '".$user_name."'";
 	}
 	$queryResult = setQuery($db,$fullCountQuery,$nextPage,$pageLength);
 	foreach($queryResult['qData'] AS $row){
@@ -124,7 +128,9 @@ if ($type == 'crmActiveAccounts') {
 }else{
 
 $fullCountQuery = "SELECT id,property_details,`status` FROM exp_provisioning_properties WHERE mno_id='$user_distributor' AND `status`<>9 AND `status`<>4";
-
+if($user_name != null){
+	$fullCountQuery .= " AND create_user = '".$user_name."'";
+}
 
 $queryResult = setQuery($db,$fullCountQuery,$nextPage,$pageLength);
 
