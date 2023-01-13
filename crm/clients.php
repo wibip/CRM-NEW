@@ -1799,7 +1799,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 												<!-- +++++++++++++++++++++++++++++ Show Property List ++++++++++++++++++++++++++++++++ -->
 												<div class="widget widget-table action-table" style="padding-top: 35px;">
 													<div>
-														<h3>Active Properties</h3>
+														<h3>Related Properties</h3>
 													</div>
 													<!-- /widget-header -->
 													<div class="widget-content table_response ">
@@ -1904,7 +1904,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 													?>
 														<div class="widget widget-table action-table" style="padding-top: 35px;">
 															<div>
-																<h3>Active Locations</h3>
+																<h3>Related Locations</h3>
 															</div>
 															<!-- /widget-header -->
 															<div class="widget-content table_response ">
