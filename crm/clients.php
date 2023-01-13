@@ -56,7 +56,6 @@ $dt = new DateTime('now', $utc);
 
 $page = 'Client';
 
-
 ?>
 
 <head>
@@ -740,6 +739,10 @@ $page = 'Client';
     </script>
 	<?php
 	include 'header.php';
+	
+	require_once 'layout/' . $camp_layout . '/config.php';
+
+	// var_dump($script);
 	// var_dump($user_distributor);
 	// TAB Organization
 	if (isset($_GET['t'])) {
@@ -1172,6 +1175,76 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 		}
 	} 
+
+	if (isset($_GET['property_edit'])) {
+        $edit = true;
+        $id = $_GET['property_id'];
+        $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
+        $get_service_type = $result['service_type'];
+        $get_business_name = $result['business_name'];
+        $get_business_id = $result['business_id'];
+        $get_contact_name = $result['contact_name'];
+        $get_contact_phone = $result['contact_number'];
+        $get_contact_email = $result['contact_email'];
+        $get_order_number = $result['order_number'];
+        $get_city = $result['city'];
+        $get_zip = $result['zip'];
+        $get_timezone = $result['timezone'];
+        $get_account_number = $result['account_number'];
+        $get_street = $result['street'];
+        $get_state = $result['state'];
+        $get_status= $result['status'];
+        $wifi_unique = $result['property_id'];
+        $get_wifi_unique = str_replace($get_opt_code, "", $wifi_unique);
+
+        $result_wifi = json_decode($result['wifi_information'], true);
+        $get_more_than_one_sites = $result_wifi['more_than_one_sites'];
+        $get_guest_ssid = $result_wifi['guest_ssid'];
+        $get_wifi_street = $result_wifi['wifi_street'];
+        $get_wifi_state = $result_wifi['wifi_state'];
+        $get_wifi_contact = $result_wifi['wifi_contact'];
+        $get_wifi_email = $result_wifi['wifi_email'];
+        $get_wifi_ins_time = $result_wifi['wifi_ins_time'];
+        $get_wifi_site_name = $result_wifi['wifi_site_name'];
+        $get_private_ssid = $result_wifi['private_ssid'];
+        $get_wifi_city = $result_wifi['wifi_city'];
+        $get_wifi_zip = $result_wifi['wifi_zip'];
+        $get_wifi_phone = $result_wifi['wifi_phone'];
+        $get_wifi_prop_type = $result_wifi['wifi_prop_type'];
+        $get_wifi_ins_date = $result_wifi['wifi_ins_date'];
+        $get_wifi_ins_start = $result_wifi['wifi_ins_start'];
+
+        $result_product = json_decode($result['product_information'], true);
+        $get_prod_order_type = $result_product['prod_order_type'];
+        $get_prod_in_ap_quant = $result_product['prod_in_ap_quant'];
+        $get_prod_content_filter = $result_product['prod_content_filter'];
+        $get_prod_circuit_type = $result_product['prod_circuit_type'];
+        $get_prod_guest = $result_product['prod_guest'];
+        $get_prod_telco = $result_product['prod_telco'];
+        $get_prod_cabling = $result_product['prod_cabling'];
+        $get_prod_flow_plan = $result_product['prod_flow_plan'];
+        $get_prod_cover_area = $result_product['prod_cover_area'];
+        $get_prod_square_footage = $result_product['prod_square_footage'];
+        $get_prod_outdoor = $result_product['prod_outdoor'];
+        $get_prod_guest_capacity = $result_product['prod_guest_capacity'];
+        $get_prod_circuit_size = $result_product['prod_circuit_size'];
+        $get_prod_private = $result_product['prod_private'];
+        $get_prod_rack_space = $result_product['prod_rack_space'];
+        $get_prod_wiring_paths = $result_product['prod_wiring_paths'];
+        $get_prod_telco_room = $result_product['prod_telco_room'];
+
+        $result_qq = json_decode($result['qualifying_questions'], true);
+        $get_qq_ceiling_hight = $result_qq['qq_ceiling_hight'];
+        $get_qq_int_wall = $result_qq['qq_int_wall'];
+        $get_qq_communicate_other = $result_qq['qq_communicate_other'];
+        $get_qq_residential = $result_qq['qq_residential'];
+        $get_qq_atmospheric = $result_qq['qq_atmospheric'];
+        $get_qq_ceiling_type = $result_qq['qq_ceiling_type'];
+        $get_qq_ext_wall = $result_qq['qq_ext_wall'];
+        $get_qq_customizable_ui = $result_qq['qq_customizable_ui'];
+        $get_qq_warehouse = $result_qq['qq_warehouse'];
+        $get_qq_IoT_devices = $result_qq['qq-IoT-devices'];
+    }
 	//Form Refreshing avoid secret key/////
 	$secret = md5(uniqid(rand(), true));
 	$_SESSION['FORM_SECRET'] = $secret;
@@ -1771,29 +1844,29 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																							}
 																						});
 																						$(\'#VIEWACC_'.$row['id'].'\').click(function () {
-																							window.location = "?t=3&token='. $secret.'&property_id='.$row['id'].'&client_id='.$_GET['edit_id'].'";
+																							window.location = "?t=3&token='. $secret.'&property_edit&property_id='.$row['id'].'&client_id='.$_GET['edit_id'].'";
 																						});
 																					});
 																					</script></td>';
 																				
-																				if($_SESSION['SADMIN'] == true) {
-																					echo '<td><a href="javascript:void();" id="remove_api_'.$row['id'].'"  class="btn btn-small btn-danger">
-																					<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
-																					<script type="text/javascript">
-																						$(document).ready(function() {
-																							$(\'#remove_api_'.$row['id'].'\').easyconfirm({locale: {
-																									title: \'Remove Property\',
-																									text: \'Are you sure you want to remove this Property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																									button: [\'Cancel\',\' Confirm\'],
-																									closeText: \'close\'
-																							}});
-																							$(\'#remove_api_'.$row['id'].'\').click(function() {                                                                                        
-																								$("#overlay").css("display","block");
-																								window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'"
-																							});
-																						});
-																					</script></td>';
-																				}
+																				// if($_SESSION['SADMIN'] == true) {
+																				// 	echo '<td><a href="javascript:void();" id="remove_api_'.$row['id'].'"  class="btn btn-small btn-danger">
+																				// 	<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
+																				// 	<script type="text/javascript">
+																				// 		$(document).ready(function() {
+																				// 			$(\'#remove_api_'.$row['id'].'\').easyconfirm({locale: {
+																				// 					title: \'Remove Property\',
+																				// 					text: \'Are you sure you want to remove this Property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																				// 					button: [\'Cancel\',\' Confirm\'],
+																				// 					closeText: \'close\'
+																				// 			}});
+																				// 			$(\'#remove_api_'.$row['id'].'\').click(function() {                                                                                        
+																				// 				$("#overlay").css("display","block");
+																				// 				window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'"
+																				// 			});
+																				// 		});
+																				// 	</script></td>';
+																				// }
 																				echo '</tr>';
 																			}
 																		} else {
@@ -1816,7 +1889,15 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 											<!-- +++++++++++++++++++++++++++++ Show Property details ++++++++++++++++++++++++++++++++ -->
 											<div <?php if (isset($tab3)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="show_proprties">
-												<p>dddd</p>
+												<?php
+													foreach ($modules["PROVISIONING"]["crm"] as $value) {
+														//echo 'modules/'.$value['module'].'.php';
+														$crmForm = './modules/' . $value['module'] . '.php';
+														if($value['id'] == "crm_create") {
+															include_once $crmForm ;
+														}
+													}
+												?>
 											</div>
 										</div>
 									</div>
