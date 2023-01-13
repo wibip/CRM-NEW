@@ -1272,7 +1272,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 											<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#show_clients" data-toggle="tab">Manage Clients</a></li>
 											<li <?php if (isset($tab2)) { ?>class="active" <?php } ?>><a href="#create_clients" data-toggle="tab"> <?=(isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? "Update" : "Create") ?> Clients</a></li>
 											<?php } elseif($showProperty == true && $showLocation == false ) { ?>
-											<li <?php if (isset($tab3) ) { ?>class="active" <?php } ?>><a href="#show_proprty" data-toggle="tab">Show Proprty</a></li>
+											<li <?php if (isset($tab3) ) { ?>class="active" <?php } ?>><a href="#show_proprty" data-toggle="tab">Show Property</a></li>
 											<?php } ?>
 											<?php if($showLocation == true) { ?>
 											<li <?php if (isset($tab4) ) { ?>class="active" <?php } ?>><a href="#show_location" data-toggle="tab">Show Location</a></li>
