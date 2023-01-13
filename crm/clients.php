@@ -1798,8 +1798,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 												<!-- +++++++++++++++++++++++++++++ Show Property List ++++++++++++++++++++++++++++++++ -->
 												<div class="widget widget-table action-table" style="padding-top: 35px;">
-													<div class="widget-header">
-														<i class="icon-th-list"></i>
+													<div>
 														<h3>Active Properties</h3>
 													</div>
 													<!-- /widget-header -->
@@ -1889,6 +1888,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 											<!-- +++++++++++++++++++++++++++++ Show Property details ++++++++++++++++++++++++++++++++ -->
 											<div <?php if (isset($tab3)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="show_proprties">
+												<div>
+													<h3>View</h3>
+												</div>
 												<?php
 													foreach ($modules["PROVISIONING"]["crm"] as $value) {
 														//echo 'modules/'.$value['module'].'.php';
@@ -1899,12 +1901,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 													}
 
 													if (isset($_GET['property_edit']) && $get_status == "Completed") {
-													echo 'Test';
 													?>
 														<div class="widget widget-table action-table" style="padding-top: 35px;">
-															<div class="widget-header">
-																<i class="icon-th-list"></i>
-																<h3>Active Profiles</h3>
+															<div>
+																<h3>Active Locations</h3>
 															</div>
 															<!-- /widget-header -->
 															<div class="widget-content table_response ">
