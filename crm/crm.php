@@ -925,7 +925,7 @@ if(!empty($api_details['data'])) {
                                                 </div>
                                             </div>
 												<!-- /widget-content -->
-											</div>
+										</div>
                                         <?php
                                         }
                                         ?>

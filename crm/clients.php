@@ -1897,7 +1897,177 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 															include_once $crmForm ;
 														}
 													}
-												?>
+
+													if (isset($_GET['property_edit']) && $get_status == "Completed") {
+													echo 'Test';
+													?>
+														<div class="widget widget-table action-table" style="padding-top: 35px;">
+															<div class="widget-header">
+																<i class="icon-th-list"></i>
+																<h3>Active Profiles</h3>
+															</div>
+															<!-- /widget-header -->
+															<div class="widget-content table_response ">
+																<div style="overflow-x:auto;" >
+																	<table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
+																		<thead>
+																			<tr>
+																				<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Contact Name</th>
+																				<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">City</th>
+																				<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Zip</th>
+																				<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Status</th>
+																				<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th> 
+																				<?php if($_SESSION['SADMIN'] == true) { ?>
+																				<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Remove</th>
+																				<?php } ?>
+																			</tr>
+																		</thead>
+																		<tbody>
+																			<?php
+																				$key_query="SELECT ceml.*,ec.business_id FROM crm_exp_mno_locations AS ceml INNER JOIN exp_crm AS ec ON ec.id = ceml.crm_id 
+																				WHERE ceml.crm_id='".$_GET['property_id']."' ORDER BY ceml.id DESC";
+																				$query_results = $db->selectDB($key_query);
+																				if($query_results['rowCount'] > 0) {
+																					foreach($query_results['data'] AS $row){
+																						$contact_name = $row['contact_name'];
+																						$city = $row['city'];
+																						$zip = $row['zip'];
+																						$businessID = $row['business_id'];
+																						$locationUnique = $row['location_unique'];
+				
+																						switch($row['is_enable'] ) {
+																							case 0 :
+																								$is_enable = "Inactive";
+																							break;
+																							case 1 :
+																								$is_enable = "Active";
+																							break;
+																							case 2 :
+																								$is_enable = "Processing";
+																							break;
+																							default :
+																								$is_enable = "Inactive";
+																						}
+				
+																						$locationId = $row['id'];
+				
+																						echo '<tr>
+																						<td> '.$contact_name.' </td>
+																						<td> '.$city.' </td>
+																						<td> '.$zip.' </td>
+																						<td> '.$is_enable.' </td>';
+																						echo '<td><a href="javascript:void();" id="AP_'.$locationId.'"  class="btn btn-small btn-info">
+																							<i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
+																							$(document).ready(function() {
+																							$(\'#AP_'.$locationId.'\').easyconfirm({locale: {
+																									title: \'API Location\',
+																									text: \'Are you sure you want to edit this API Location?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																									button: [\'Cancel\',\' Confirm\'],
+																									closeText: \'close\'
+																									}});
+																								$(\'#AP_'.$locationId.'\').click(function() {
+																										$("#overlay").css("display","block");
+																										$(".pop-up .head").html("Update location");
+																										$(".pop-up").addClass("show");
+																										$.ajax({
+																											type: "POST",
+																											url: "ajax/load_location_details.php",
+																											data: {
+																												api_id: "'.$api_id.'",
+																												system_package: "'.$system_package.'",
+																												business_id: "'.$businessID.'",
+																												location_id: "'.$locationUnique.'"
+																											},
+																											success: function(data) {
+																												data = JSON.parse(data);
+																												console.log(data);
+																												if(data == false){
+																													$("#overlay").css("display","none");
+																													$(".pop-up").removeClass("show");
+																													$("body").css("overflow","auto");                                                                                                    
+																												} else {
+																													
+																													$("#locationForm #wifi_unique").attr("value","'.$wifi_unique.'");
+																													$("#locationForm #business_id").attr("value","'.$get_business_id.'");
+																													$("#locationForm #location_name").attr("value", data["locations"]["0"]["name"]);
+																													$("#locationForm #location_unique").attr("value", data["locations"]["0"]["id"]);
+																													$("#locationForm #location_unique").attr("name", "location_unique_display");
+																													$("#locationForm input[name=location_unique_display]").attr("id", "location_unique_display");
+																													$("#locationForm #location_unique_display").attr("disabled", true) ;
+																													$("<input>").attr({
+																														type: "hidden",
+																														id: "location_id",
+																														name: "location_id",
+																														value: "'.$locationId.'"
+																													}).appendTo("#locationForm");
+																													$("<input>").attr({
+																														type: "hidden",
+																														id: "location_unique",
+																														name: "location_unique",
+																														value: data["locations"]["0"]["id"]
+																													}).appendTo("#locationForm");
+				
+																													$("#locationForm #contact").attr("value", data["locations"]["0"]["contact"]["name"]);
+																													$("#locationForm #contact_email").attr("value",data["locations"]["0"]["contact"]["email"]);
+																													$("#locationForm #street").attr("value",data["locations"]["0"]["address"]["street"]);
+																													$("#locationForm #city").attr("value",data["locations"]["0"]["address"]["city"]);
+																													$("#locationForm #state option[value="+data["locations"]["0"]["address"]["state"]+"]").attr("selected", "selected");
+																													$("#locationForm #zip").attr("value",data["locations"]["0"]["address"]["zip"]);
+																													$(".popup_submit").html("Update");
+																													$(".popup_submit").attr("name", "update_location_submit");
+																													$(".popup_submit").attr("id", "update_location_submit");
+																													$("#overlay").css("display","none");
+																												}
+																											},
+																											error: function() {
+																												$("#overlay").css("display","none");
+																												$(".pop-up").removeClass("show");
+																												$("body").css("overflow","auto"); 
+																											}
+																										});
+																										$("body").css("overflow","hidden");
+																								});
+																								});
+																							</script></td>';
+																						
+																						if($_SESSION['SADMIN'] == true) {
+																							echo '<td><a href="javascript:void();" id="remove_api_'.$locationId.'"  class="btn btn-small btn-danger">
+																							<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
+																							<script type="text/javascript">
+																								$(document).ready(function() {
+																									$(\'#remove_api_'.$locationId.'\').easyconfirm({locale: {
+																											title: \'API Location\',
+																											text: \'Are you sure you want to remove this API Location?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																											button: [\'Cancel\',\' Confirm\'],
+																											closeText: \'close\'
+																									}});
+																									$(\'#remove_api_'.$locationId.'\').click(function() {                                                                                        
+																										$("#overlay").css("display","block");
+																										window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'"
+																									});
+																								});
+																							</script></td>';
+																						}
+																						echo '</tr>';
+																					}
+																				} else {
+																				?>
+																				<tr>
+																					<td colspan="6" style="text-align: center;">Locations not found</td>
+																				</tr>
+																				<?php
+																				}	
+																				
+																				?>		
+																		</tbody>
+																	</table>
+																</div>
+															</div>
+																<!-- /widget-content -->
+														</div>
+													<?php
+													}
+													?>
 											</div>
 										</div>
 									</div>
