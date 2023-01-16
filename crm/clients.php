@@ -1896,6 +1896,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														//echo 'modules/'.$value['module'].'.php';
 														$crmForm = './modules/' . $value['module'] . '.php';
 														if($value['id'] == "crm_create") {
+															$tab_crm_create = true;
 															include_once $crmForm ;
 														}
 													}
