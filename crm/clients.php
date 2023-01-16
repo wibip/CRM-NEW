@@ -2053,8 +2053,103 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	<div class="pop-up">
         <div class="pop-up-bg"></div>
         <div class="pop-up-main">
-            <div class="pop-up-content">Test</div>
-		</div>
+            <div class="pop-up-content">
+            <h1 class="head">Add a location</h1>
+                <form method="post" id="locationForm" action="">
+                    <input type="hidden" name="crm_id" id="crm_id" value="<?=$id?>" />
+                    <input type="hidden" name="wifi_unique" id="wifi_unique" value="<?=$wifi_unique?>" />
+                    <input type="hidden" name="business_id" id="business_id" value="<?=$get_business_id?>" />
+                    <div class="form-double">
+                        <div class="control-group mask">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">Unique Location ID</label>
+                                <div class="controls col-lg-5 form-group">
+                                <input type="text" name="location_unique" id="location_unique" class="span4 form-control" value="" data-bv-field="location_unique">                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">Location Name</label>
+                                <div class="controls col-lg-5 form-group">
+                                    <input type="text" name="location_name" id="location_name" class="span4 form-control" value="<?=$get_location_name?>" data-bv-field="location_name">                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">Contact Name</label>
+                                <div class="controls col-lg-5 form-group">
+                                    <input type="text" name="contact" id="contact" class="span4 form-control" value="" data-bv-field="contact" required>                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">Contact Email</label>
+                                <div class="controls col-lg-5 form-group">
+                                    <input type="text" name="contact_email" id="contact_email" class="span4 form-control" value="" data-bv-field="contact" required>                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">Address</label>
+                                <div class="controls col-lg-5 form-group">
+                                    <input type="text" name="street" id="street" class="span4 form-control" value="" data-bv-field="street" required>                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">City</label>
+                                <div class="controls col-lg-5 form-group">
+                                    <input type="text" name="city" id="city" class="span4 form-control" value="" data-bv-field="city" required>                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">State</label>
+                                <div class="controls col-lg-5 form-group">
+                                    <select name="state" id="state" class="span4 form-control" required>
+                                        <option value="">Select State</option>
+                                        <?php
+                                            $get_regions = $db->selectDB("SELECT
+                                                                        `states_code`,
+                                                                        `description`
+                                                                        FROM
+                                                                        `exp_country_states` ORDER BY description ASC");
+
+                                            foreach ($get_regions['data'] as $state) {
+                                                if (($edit===true?$get_state:'') == $state['states_code']) {
+                                                    echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                } else {
+
+                                                    echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                }
+                                            }
+                                        ?>
+                                    </select>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">Zip</label>
+                                <div class="controls col-lg-5 form-group">
+                                    <input type="text" name="zip" id="zip" class="span4 form-control" value="" data-bv-field="zip" required>                                       
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-secondary">Cancel</button>
+                        <button class="btn btn-primary popup_submit" type="submit" name="create_location_submit" id="create_location_submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 	</div>
 	<script type="text/javascript" src="js/formValidation.js"></script>
 	<script type="text/javascript" src="js/bootstrap_form.js"></script>
