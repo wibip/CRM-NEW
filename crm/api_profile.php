@@ -20,7 +20,7 @@ $page = "API profile";
 ?> 
 <head>
 <meta charset="utf-8">
-<title>Manage APIs</title>
+<title>Api Profiles</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link href="css/bootstrap.min.css" rel="stylesheet">
