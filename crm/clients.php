@@ -1980,45 +1980,8 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																												location_id: "'.$locationUnique.'"
 																											},
 																											success: function(data) {
-																												data = JSON.parse(data);
-																												console.log(data);
-																												if(data == false){
-																													$("#overlay").css("display","none");
-																													$(".pop-up").removeClass("show");
-																													$("body").css("overflow","auto");                                                                                                    
-																												} else {
-																													
-																													$("#locationForm #wifi_unique").attr("value","'.$wifi_unique.'");
-																													$("#locationForm #business_id").attr("value","'.$get_business_id.'");
-																													$("#locationForm #location_name").attr("value", data["locations"]["0"]["name"]);
-																													$("#locationForm #location_unique").attr("value", data["locations"]["0"]["id"]);
-																													$("#locationForm #location_unique").attr("name", "location_unique_display");
-																													$("#locationForm input[name=location_unique_display]").attr("id", "location_unique_display");
-																													$("#locationForm #location_unique_display").attr("disabled", true) ;
-																													$("<input>").attr({
-																														type: "hidden",
-																														id: "location_id",
-																														name: "location_id",
-																														value: "'.$locationId.'"
-																													}).appendTo("#locationForm");
-																													$("<input>").attr({
-																														type: "hidden",
-																														id: "location_unique",
-																														name: "location_unique",
-																														value: data["locations"]["0"]["id"]
-																													}).appendTo("#locationForm");
-				
-																													$("#locationForm #contact").attr("value", data["locations"]["0"]["contact"]["name"]);
-																													$("#locationForm #contact_email").attr("value",data["locations"]["0"]["contact"]["email"]);
-																													$("#locationForm #street").attr("value",data["locations"]["0"]["address"]["street"]);
-																													$("#locationForm #city").attr("value",data["locations"]["0"]["address"]["city"]);
-																													$("#locationForm #state option[value="+data["locations"]["0"]["address"]["state"]+"]").attr("selected", "selected");
-																													$("#locationForm #zip").attr("value",data["locations"]["0"]["address"]["zip"]);
-																													$(".popup_submit").html("Update");
-																													$(".popup_submit").attr("name", "update_location_submit");
-																													$(".popup_submit").attr("id", "update_location_submit");
-																													$("#overlay").css("display","none");
-																												}
+																												
+																												$("#overlay").css("display","none");
 																											},
 																											error: function() {
 																												$("#overlay").css("display","none");
