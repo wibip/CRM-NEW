@@ -1179,6 +1179,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	if (isset($_GET['property_edit'])) {
         $edit = true;
         $id = $_GET['property_id'];
+		$edit_id = $_GET['edit_id'];
+		$edit_user_data = $client_model->getClient($edit_id);
+		$api_id = $edit_user_data[0]['api_profile'];
+		
         $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
         $get_service_type = $result['service_type'];
         $get_business_name = $result['business_name'];
