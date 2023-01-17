@@ -2074,11 +2074,11 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																												data = JSON.parse(data);
 																												console.log(data);
 																												if(data == false){
+																													alert("Data not retrieve from API");
 																													$("#overlay").css("display","none");
 																													$(".pop-up").removeClass("show");
 																													$("body").css("overflow","auto");                                                                                                    
-																												} else {
-																													
+																												} else {																													
 																													$("#locationForm #wifi_unique").attr("value","'.$wifi_unique.'");
 																													$("#locationForm #business_id").attr("value","'.$get_business_id.'");
 																													$("#locationForm #location_name").attr("value", data["locations"]["0"]["name"]);
@@ -2110,7 +2110,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																													$(".popup_submit").attr("id", "update_location_submit");
 																													$("#overlay").css("display","none");
 																												}
-																												$("#overlay").css("display","none");
 																											},
 																											error: function() {
 																												$("#overlay").css("display","none");
