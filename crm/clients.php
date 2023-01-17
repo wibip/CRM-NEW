@@ -1252,6 +1252,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 	/* Update a location */
 	if(isset($_POST['update_location_submit'])) {
+		$client_id = $_GET['client_id'];
+		$edit_user_data = $client_model->getClient($client_id);
+		$api_id = $edit_user_data[0]['api_profile'];
+		$crm = new crm($api_id, $system_package);
         $crm_id = $_POST['crm_id']; 
         $location_name = $_POST['location_name'];
         $business_id = $_POST['business_id'];       
