@@ -1249,6 +1249,93 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
         $get_qq_warehouse = $result_qq['qq_warehouse'];
         $get_qq_IoT_devices = $result_qq['qq-IoT-devices'];
     }
+
+	/* Update a location */
+	if(isset($_POST['update_location_submit'])) {
+        $crm_id = $_POST['crm_id']; 
+        $location_name = $_POST['location_name'];
+        $business_id = $_POST['business_id'];       
+        $location_id = $_POST['location_id'];
+        $location_unique = $_POST['location_unique'];
+        $contact_name = $_POST['contact'];
+        $contact_email = $_POST['contact_email'];
+        $street = $_POST['street'];
+        $city = $_POST['city'];
+        $state = $_POST['state'];
+        $zip = $_POST['zip'];
+
+         /* Update location */
+
+        $locationSql = "UPDATE `crm_exp_mno_locations` SET 
+                                                        `location_name` = '".$location_name."',
+                                                        `contact_name` = '".$contact_name."',
+                                                        `contact_email` = '".$contact_email."',
+                                                        `street` = '".$street."',
+                                                        `city` = '".$city."',
+                                                        `state` = '".$state."',
+                                                        `zip` = '".$zip."' 
+                        WHERE id=".$location_id;
+              
+        $locationResult = $db->execDB($locationSql);
+
+        $data = [
+            'name' => $location_name,
+            'address' => [
+                'street' => $street,
+                'city' => $city,
+                'state' => $state,
+                'zip' => $zip
+            ],
+            'contact' =>[
+                'name' => $contact_name,
+                'email' => $contact_email
+            ]
+        ];
+
+        $jsondata = json_encode($data);
+
+        $response = $crm->updateLocation($business_id,$jsondata,$location_unique);
+
+        if ($response['status'] == 'success') {
+            $success_msg = "Location has been updated successfully";
+            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Update CRM Location',$location_id,'3001',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
+        } else {
+            $success_msg = "Location updated has been failed";
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Update CRM Location',$location_id,'2009',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+        }
+    }
+
+	/* Remove a location */
+    if (isset($_GET['remove_location'])) {
+        $id = $_GET['id'];
+        $token = $_GET['token'];
+        $businessId = $_GET['business_id'];
+        $locationId = $_GET['location_id'];
+        $location_unique = $_GET['location_unique'];
+
+        $response = $crm->deleteLocation($businessId, $location_unique);
+    
+        if($response == 200 || $response == 404) {
+            $delete = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
+            
+            if ($delete === true) {
+                $success_msg = "Location has been successfully removed";
+                $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
+            } else {                    
+                $success_msg = "CRM Location deleting is failed.";
+                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+            }
+        } else {
+            $success_msg = "CRM Location deleting is failed.";
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+        }
+        header('Location: crm?t=crm_view&token='.$token.'&edit&id='.$id);
+    }
 	//Form Refreshing avoid secret key/////
 	$secret = md5(uniqid(rand(), true));
 	$_SESSION['FORM_SECRET'] = $secret;
