@@ -378,9 +378,9 @@ if (!empty($arrayo)) {
                             <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
                             <button onmouseover="" class="btn btn-primary pop-up-open">Add Location</button>
                         <?php } 
-                        if (!isset($_GET['edit'])){ ?>
+                        if (!isset($_GET['edit']) && !isset($_GET['property_id'])){ ?>
                         <li class="finishParent" style="display: inline-block;margin-left: 5px;" aria-hidden="true">
-                            <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'create_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
+                            <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
                         </li>
                         <?php } ?>
                         <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
