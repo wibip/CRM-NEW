@@ -195,10 +195,12 @@ if (isset($username)) {
 					// var_dump(in_array($module_name,$m_n));
 					// die;
 					if($module_name != 'profile' && in_array($module_name,$m_n)) {
-							var_dump($module_name);
+							// var_dump($module_name);
 						$redirect_url = $global_base_url.'/'.$module_name.$extension;
 						setcookie("system_package", $system_package, time() + (86400 * 30), "/");
 						setcookie("load_login_design", $login_design, time() + (86400 * 30), "/");
+							var_dump($redirect_url);
+							die;
 						header( "Location: $redirect_url");		
 						exit();
 					}
