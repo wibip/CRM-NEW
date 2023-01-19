@@ -190,14 +190,17 @@ if (isset($username)) {
 					// die;
 				foreach($query_results['data'] AS $row){
 					$module_name = $row['module_name'];	
-					// var_dump($module_name);
+					var_dump($module_name);
+					var_dump($m_n);
+					var_dump(in_array($module_name,$m_n));
 					// die;
 					if($module_name != 'profile' && in_array($module_name,$m_n)) {
+							var_dump($module_name);
 						$redirect_url = $global_base_url.'/'.$module_name.$extension;
 						setcookie("system_package", $system_package, time() + (86400 * 30), "/");
 						setcookie("load_login_design", $login_design, time() + (86400 * 30), "/");
-						header( "Location: $redirect_url");		
-						exit();
+						// header( "Location: $redirect_url");		
+						// exit();
 					}
 				}
 			}
