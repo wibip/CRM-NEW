@@ -21,7 +21,6 @@ $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 $CommonFunctions = new CommonFunctions();
 require_once dirname(__FILE__) . '/models/clientUserModel.php';
 $client_model = new clientUserModel();
-
 require_once 'src/CRM/functions.php';
 
 $page = 'Client';
