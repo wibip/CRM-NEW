@@ -537,13 +537,13 @@ if ($user_type == 'MVNO_ADMIN') {
 
 $query_results = $db_class1->select1DB($key_query);
 //while($row=mysql_fetch_array($query_results)){
-$access_role = $query_results[access_role];
-$user_type = $query_results[user_type];
-$user_distributor = $query_results[user_distributor];
+$access_role = $query_results['access_role'];
+$user_type = $query_results['user_type'];
+$user_distributor = $query_results['user_distributor'];
 if (strlen($full_name) == 0) {
-	$full_name = $query_results[full_name];
+	$full_name = $query_results['full_name'];
 }
-$active_user = $query_results[is_enable];
+$active_user = $query_results['is_enable'];
 
 if ($_SESSION['remote'] == 'yes') {
 	if ($active_user == '8') {
@@ -578,7 +578,7 @@ if ($_SESSION['login'] == 'yes') {
 }
 
 //////// System Packages and features
-if ($user_type == "SADMIN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
+if ($user_type == "SADMIN" || $user_type == "SMAN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	if ($user_type == "MNO" || $user_type == "RESELLER_ADMIN" || $user_type == "SUPPORT") {
 		$fearuresjson = $db_class1->getValueAsf("SELECT features as f FROM `exp_mno` WHERE mno_id='$user_distributor'");
@@ -707,10 +707,10 @@ $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHE
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
 // var_dump($query_results_drop1);
 foreach ($query_results_drop1['data'] as $row) {
-	if ($row[menu_item] == 3) {
-		$x_non_admin[] = $row[module_name]; // Non Admin Roles
+	if ($row['menu_item'] == 3) {
+		$x_non_admin[] = $row['module_name']; // Non Admin Roles
 	} else {
-		$x[] = $row[module_name]; // Retuns base access
+		$x[] = $row['module_name']; // Retuns base access
 	}
 }
 

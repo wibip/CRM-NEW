@@ -451,4 +451,13 @@ class CommonFunctions{
         $result =  $this->db->selectDB($sql);
         return $result;
     }
+
+    public function getPropertyForSM($access_role){
+        $sqlProperties = "SELECT ec.id,ec.business_name,ec.property_id,ec.`status`,au.full_name,au.id AS client_id FROM exp_crm AS ec 
+                            INNER JOIN admin_users AS au ON au.user_distributor = ec.mno_id 
+                            INNER JOIN admin_access_account AS aaa ON  aaa.operation_id = au.id 
+                            WHERE aaa.access_role='$access_role'";
+        $result =  $this->db->selectDB($sqlProperties);
+        return $result;
+    }
 }

@@ -607,16 +607,25 @@ if ($system_package == 'N/A') {
 						$result1 = $db->execDB($query1);
 					}
 
-					if($role_type == 'sadmin' || $role_type == 'salesmanager') {
-						foreach ($_POST['other_modules'] as $selectedOption) {
-							$other_name = $selectedOption;
-							$queryOther = "REPLACE INTO `admin_access_roles_modules`
-											(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
-											VALUES ('$access_role_id', '$other_name', '$user_distributor', 'other', '$user_name', now())";
-							// echo $queryOther."<br/>";
-							$resultOther = $db->execDB($queryOther);
-						}
+					if($role_type == 'salesmanager'){
+						$query1 = "REPLACE INTO `admin_access_roles_modules`
+									(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
+									VALUES ('$access_role_id', 'sales_crm', '$user_distributor', 'default', '$user_name', now())";
+						$result1 = $db->execDB($query1);
+					}
 
+					if($role_type == 'sadmin' || $role_type == 'salesmanager') {
+						if($role_type == 'sadmin'){
+							foreach ($_POST['other_modules'] as $selectedOption) {
+								$other_name = $selectedOption;
+								$queryOther = "REPLACE INTO `admin_access_roles_modules`
+												(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
+												VALUES ('$access_role_id', '$other_name', '$user_distributor', 'other', '$user_name', now())";
+								// echo $queryOther."<br/>";
+								$resultOther = $db->execDB($queryOther);
+							}
+						}
+						
 						foreach ($_POST['operations'] as $selectedOperation) {
 							$operationId = $selectedOperation;
 							$queryOperation = "REPLACE INTO `admin_access_account`
@@ -897,9 +906,8 @@ if ($system_package == 'N/A') {
 																	} else {
 																		$key_query = "SELECT `access_role` ,description
 																						FROM `admin_access_roles`
-																						WHERE `distributor` ='$user_distributor' OR `distributor` ='SADMIN' ORDER BY description";
+																						WHERE `create_user`='$user_name' ORDER BY description";
 																	}
-
 																	$query_results=$db->selectDB($key_query);
 																		foreach($query_results['data'] AS $row){	
 																		$access_role = $row['access_role'];
@@ -1271,7 +1279,7 @@ if ($system_package == 'N/A') {
 												<?php
 													if($_GET['edit_id']){
 														$id = $edit_user_data[0]->getId();
-														$user_name =  $edit_user_data[0]->getUserName();
+														// $user_name =  $edit_user_data[0]->getUserName();
 														$access_role_set = $edit_user_data[0]->getAccessRole();
 														$full_name = $edit_user_data[0]->getFullName();
 														$email = $edit_user_data[0]->getEmail();
@@ -1315,7 +1323,9 @@ if ($system_package == 'N/A') {
 																		echo '<option value="Master Admin Peer" '.$a_selected.'>Master Admin Peer</option>
 																		<option value="Master Support Admin" '.$b_selected.'>Master Support Admin</option>';
 																	}
-																	$key_query = "SELECT access_role,description FROM admin_access_roles WHERE distributor = '$user_distributor' OR `distributor` ='SADMIN' ORDER BY description";
+																	$key_query = "SELECT access_role,description FROM admin_access_roles 
+																				WHERE `create_user`='$user_name' ORDER BY description";
+																	// echo $key_query;
 																	$query_results=$db->selectDB($key_query);
 																	foreach($query_results['data'] AS $row){
 																		$access_role = $row['access_role'];
@@ -1439,7 +1449,7 @@ if ($system_package == 'N/A') {
 														</div>
 														<!-- /control-group -->
 														<div class="form-actions">
-															<button type="submit" name="edit-submita" id="edit-submita" class="btn btn-primary" disabled="disabled">Save</button>&nbsp; <strong>
+															<button type="submit" name="edit-submita" id="edit-submita" class="btn btn-primary" >Save</button>&nbsp; <strong>
 																<font color="#FF0000"></font><small></small>
 															</strong>
 															<button type="button" onclick="goto('?t=1')" class="btn btn-danger">Cancel</button>&nbsp;
@@ -1449,7 +1459,7 @@ if ($system_package == 'N/A') {
 																}
 																function footer_submitfn() {
 																	//alert("fn");
-																	$("#edit-submita").prop('disabled', false);
+																	$("#edit-user-profile").prop('disabled', false);
 																}
 															</script>
 														</div>
@@ -1703,15 +1713,23 @@ if ($system_package == 'N/A') {
 																			GROUP BY r.access_role
 																			ORDER BY r.`access_role`";
 																	} else {
+																		// $key_query = "SELECT r.id, r.`access_role`,r.`description`, GROUP_CONCAT(CONCAT('<li>',a.`name_group`,'</li>') SEPARATOR '') AS m_list,m.`module_name`,DATE_FORMAT(r.`create_date`,'%m/%d/%Y %h:%i %p') AS create_date 
+																		// 				FROM `admin_access_roles_modules` m LEFT JOIN `admin_access_roles` r
+																		// 				ON r.`access_role`=m.`access_role`,
+																		// 				`admin_access_modules` a
+																		// 				WHERE r.`distributor`='$user_distributor'
+																		// 				AND a.`module_name`=m.`module_name`
+																		// 				AND a.`user_type`='$user_type'
+																		// 				GROUP BY r.access_role
+																		// 				ORDER BY r.`access_role`";
 																		$key_query = "SELECT r.id, r.`access_role`,r.`description`, GROUP_CONCAT(CONCAT('<li>',a.`name_group`,'</li>') SEPARATOR '') AS m_list,m.`module_name`,DATE_FORMAT(r.`create_date`,'%m/%d/%Y %h:%i %p') AS create_date 
 																						FROM `admin_access_roles_modules` m LEFT JOIN `admin_access_roles` r
 																						ON r.`access_role`=m.`access_role`,
 																						`admin_access_modules` a
-																						WHERE r.`distributor`='$user_distributor'
+																						WHERE r.`create_user`='$user_name'
 																						AND a.`module_name`=m.`module_name`
-																						AND a.`user_type`='$user_type'
 																						GROUP BY r.access_role
-																						ORDER BY r.`access_role`";
+																						ORDER BY r.`id` DESC";
 																	}
 																	$query_results=$db->selectDB($key_query);
 																	foreach($query_results['data'] AS $row){

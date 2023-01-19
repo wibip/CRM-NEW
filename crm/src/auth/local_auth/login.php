@@ -56,7 +56,7 @@ if (isset($username)) {
 		$access_role=strtolower($access_role);
 	}
 
-	if(($user_type=="SADMIN" || $user_type=="SMAN") && !isset($_GET['auto_login'])){
+	if(($user_type=="SADMIN") && !isset($_GET['auto_login'])){
 		$_SESSION[$user_type] = true;
 		// header('Location: '.$_SERVER['PHP_SELF']);
 		header("Location: ".$_SERVER['PHP_SELF']."?auto_login&user_id=1");
@@ -160,9 +160,7 @@ if (isset($username)) {
 			else{
 				$user_query = "SELECT module_name FROM admin_access_roles_modules WHERE access_role = '$access_role'";
 			}
-
-			// echo $user_query;
-
+			
 			$query_results=$dbT->selectDB($user_query);
 
 			$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT',$system_package);
@@ -187,11 +185,14 @@ if (isset($username)) {
 				header( "Location: $redirect_url");
 			}else{
 				$m_n = json_decode($package_functions->getOptions('ALLOWED_PAGE',$system_package));
-				// var_dump($query_results['data'] );
-				// var_dump($m_n);
+					// var_dump($m_n);
+					// var_dump($query_results);
+					// die;
 				foreach($query_results['data'] AS $row){
 					$module_name = $row['module_name'];	
-					if(in_array($module_name,$m_n)){
+					// var_dump($module_name);
+					// die;
+					if($module_name != 'profile' && in_array($module_name,$m_n)){
 						$redirect_url = $global_base_url.'/'.$module_name.$extension;
 						setcookie("system_package", $system_package, time() + (86400 * 30), "/");
 						setcookie("load_login_design", $login_design, time() + (86400 * 30), "/");
