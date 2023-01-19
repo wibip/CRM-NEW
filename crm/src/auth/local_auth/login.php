@@ -185,13 +185,13 @@ if (isset($username)) {
 				header( "Location: $redirect_url");
 			}else{
 				$m_n = json_decode($package_functions->getOptions('ALLOWED_PAGE',$system_package));
-					var_dump($m_n);
-					var_dump($query_results);
+					// var_dump($m_n);
+					// var_dump($query_results);
 					
 				foreach($query_results['data'] AS $row){
 					$module_name = $row['module_name'];	
-					var_dump($module_name);
-					die;
+					// var_dump($module_name);
+					// die;
 					if($module_name != 'profile' && in_array($module_name,$m_n)) {
 						$redirect_url = $global_base_url.'/'.$module_name.$extension;
 						setcookie("system_package", $system_package, time() + (86400 * 30), "/");
