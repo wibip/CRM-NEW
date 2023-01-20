@@ -716,9 +716,9 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row['module_name']; // Retuns base access
 	}
 }
-echo '------------<br/>';
-var_dump($x);
-echo '------------<br/>';
+// echo '------------<br/>';
+// var_dump($x);
+// echo '------------<br/>';
 
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -737,8 +737,8 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-echo '------------<br/>';
-var_dump($x);
+// echo '------------<br/>';
+// var_dump($x);
 
 array_push($x,"change_portal");
 
@@ -752,10 +752,10 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-echo '------------<br/>';
-var_dump($x);
-echo "<<<<<<  Step 06 >>>>>";
-die;
+// echo '------------<br/>';
+// var_dump($x);
+// echo "<<<<<<  Step 06 >>>>>";
+// die;
 $allowed_pages = $x;
 
 $module_ids = join('", "', $x);
