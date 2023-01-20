@@ -978,7 +978,7 @@ $page = 'Client';
                                                                                                 closeText: \'close\'
                                                                                                 }});
                                                                                             $(\'#VIEWACC_' . $id . '\').click(function() {
-                                                                                                window.location = "?t=3&token=' . $secret . '&property_edit&property_id=' . $id .'&client_id='.$_GET['edit_id'].'";
+                                                                                                window.location = "?t=3&token=' . $secret . '&property_edit&property_id=' . $id .'&client_id='.$client_id.'";
                                                                                             });
                                                                                         });
 																					</script></td>
@@ -993,7 +993,7 @@ $page = 'Client';
                                                                                                 closeText: \'close\'
                                                                                                 }});
                                                                                             $(\'#REMOVEACC_' . $id . '\').click(function() {
-                                                                                                window.location = "?token=' . $secret . '&remove_id=' . $id .'&client_id='.$_GET['edit_id'].'";
+                                                                                                window.location = "?token=' . $secret . '&remove_id=' . $id .'&client_id='.$client_id.'";
                                                                                             });
                                                                                         });
 																					</script></td>';		
