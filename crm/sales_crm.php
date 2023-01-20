@@ -798,6 +798,11 @@ $page = 'Client';
         $get_qq_customizable_ui = $result_qq['qq_customizable_ui'];
         $get_qq_warehouse = $result_qq['qq_warehouse'];
         $get_qq_IoT_devices = $result_qq['qq-IoT-devices'];
+
+		$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
+
+		$camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $system_package);
+		require_once 'layout/' . $camp_layout . '/config.php';
     }
 
     /* Remove a property */
