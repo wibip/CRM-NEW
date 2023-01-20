@@ -1290,12 +1290,12 @@ if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
 		$row = $db_class1->select1DB($kmno_query);
 		//print_r(mysql_fetch_array($query_results));
 		//foreach ($query_results as $row) {
-		$mno_id = $row[mno_id];
-		$network_type = $row[network_type];
-		$distributor_name_get = str_replace('\\', '', $row[distributor_name]);
-		$site_title = str_replace('\\', '', $row[site_title]);
-		$camp_theme_color = $row[camp_theme_color];
-		$camp_theme_logo = $row[theme_logo];
+		$mno_id = $row['mno_id'];
+		$network_type = $row['network_type'];
+		$distributor_name_get = str_replace('\\', '', $row['distributor_name']);
+		$site_title = str_replace('\\', '', $row['site_title']);
+		$camp_theme_color = $row['camp_theme_color'];
+		$camp_theme_logo = $row['theme_logo'];
 		$mni_favicon_id = $mno_id;
 
 		$top_line_color = $row['theme_top_line_color'];
@@ -1384,7 +1384,7 @@ if (strlen($user_timezone) < 1) {
 
 $mno_query2 = "SELECT * FROM `exp_mno` WHERE `mno_id` = '$mni_favicon_id'";
 $row = $db_class1->select1DB($mno_query2);
-$favicon_image = $row[favicon_image];
+$favicon_image = $row['favicon_image'];
 
 
 /*if(strlen($favicon_image)){

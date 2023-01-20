@@ -1560,13 +1560,13 @@ if ($system_package == 'N/A') {
 																<div class="controls form-group col-lg-5">
 																	<fieldset id="role_types">
 																		<div class="fieldgroup">
-																			<input type="radio" name="role_type" id="role_type" value="sadmin" <?=(($roleType == 'sadmin' || $role_edit_id == 0) ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "sadmin">Super Admin</label>
+																			<input type="radio" name="role_type" id="role_type" value="nadmin" <?=(($roleType == 'nadmin'  || $role_edit_id == 0 )? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Admin</label>
 																		</div>
 																		<div class="fieldgroup">
 																			<input type="radio" name="role_type" id="role_type" value="salesmanager" <?=($roleType == 'salesmanager' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Sales Manager</label>
 																		</div>
 																		<div class="fieldgroup">
-																			<input type="radio" name="role_type" id="role_type" value="nadmin" <?=($roleType == 'nadmin' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Admin</label>
+																			<input type="radio" name="role_type" id="role_type" value="sadmin" <?=($roleType == 'sadmin' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "sadmin">Super Admin</label>
 																		</div>
 																	</fieldset>	
 																</div>
@@ -1577,6 +1577,32 @@ if ($system_package == 'N/A') {
 																	<input class="form-control span2" id="access_role_name" name="access_role_name" type="text" value="<?=$role_name?>" <?=($role_edit_id != 0 ? "disabled" : "")?>>
 																</div>
 															</div>
+															
+															<div class="control-group" id="sadmin_operations">
+																<label class="control-label" for="my_select">Assign Operators</label>
+
+																<div class="controls form-group col-lg-5">
+																	<select class="form-control span4" multiple="multiple" id="operations" name="operations[]">
+																		<option value="" disabled="disabled"> Choose Operation(s)</option>
+																		<?php
+																			$q12 = "SELECT id,full_name FROM admin_users WHERE user_type='MNO'";
+																			$operations = $db->selectDB($q12);
+																			foreach ($operations['data'] as $row) {
+																				$operation_id = $row['id'];
+																				$operation_name = $row['full_name'];
+																				$selected = "";
+																				if (in_array($operation_id, $account_array )) {
+																					$selected = "selected";
+																				} 
+																				echo "<option " . $selected . " value='" . $operation_id . "'>" . $operation_name . "</option>";
+																			}
+																		?>
+																	</select>
+																</div>
+																<!-- /controls -->
+															</div>
+															<!-- /control-group -->
+															
 															<div class="control-group" id="admin_operations">
 																<label class="control-label" for="my_select"><?=($_SESSION['SADMIN'] == true ? "Admin " : "")?>Modules</label>
 
@@ -1600,33 +1626,9 @@ if ($system_package == 'N/A') {
 															</div>
 															<!-- /control-group -->
 															
-															<div class="control-group" id="sadmin_operations">
-																<label class="control-label" for="my_select">Operations</label>
-
-																<div class="controls form-group col-lg-5">
-																	<select class="form-control span4" multiple="multiple" id="operations" name="operations[]">
-																		<option value="" disabled="disabled"> Choose Operation(s)</option>
-																		<?php
-																			$q12 = "SELECT id,full_name FROM admin_users WHERE user_type='MNO'";
-																			$operations = $db->selectDB($q12);
-																			foreach ($operations['data'] as $row) {
-																				$operation_id = $row['id'];
-																				$operation_name = $row['full_name'];
-																				$selected = "";
-																				if (in_array($operation_id, $account_array )) {
-																					$selected = "selected";
-																				} 
-																				echo "<option " . $selected . " value='" . $operation_id . "'>" . $operation_name . "</option>";
-																			}
-																		?>
-																	</select>
-																</div>
-																<!-- /controls -->
-															</div>
-															<!-- /control-group -->
 
 															<div class="control-group" id="sadmin-omodules">
-																<label class="control-label" for="my_select">Other Modules</label>
+																<label class="control-label" for="my_select">Non Admin Modules</label>
 
 																<div class="controls form-group col-lg-5">
 																	<select class="form-control span4" multiple="multiple" id="other_modules" name="other_modules[]">
@@ -2001,13 +2003,19 @@ if ($system_package == 'N/A') {
 		$(document).ready(function() {
 			
 			//sadmin_operations sadmin-omodules
-			<?php if ($role_edit_id == 0 || ($role_edit_id != 0 && $roleType == 'sadmin')) { ?>
+			<?php if ( ($role_edit_id != 0 && $roleType == 'sadmin')) { ?>
 				$('#admin_operations').show();	
 				$('#sadmin_operations').show();
 				$('#sadmin-omodules').show();
 			<?php } elseif($role_edit_id != 0 && $roleType == 'salesmanager') { ?>
 				$('#admin_operations').hide();
 				$('#sadmin_operations').show();
+				$('#sadmin-omodules').hide();
+			<?php
+				} elseif($role_edit_id == 0) {
+			?>
+				$('#admin_operations').show();
+				$('#sadmin_operations').hide();
 				$('#sadmin-omodules').hide();
 			<?php
 				} else {

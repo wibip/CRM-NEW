@@ -383,7 +383,7 @@ if (!empty($arrayo)) {
                             <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
                         </li>
                         <?php } ?>
-                        <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
+                        <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><button type="button" onclick="goto()" class="btn btn-danger">Cancel</button>&nbsp;</li>
                     </ul>
                 </div>
             </div>

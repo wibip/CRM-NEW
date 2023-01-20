@@ -20,7 +20,7 @@ $page = "API profile";
 ?> 
 <head>
 <meta charset="utf-8">
-<title>Api Profiles</title>
+<title>BI Api Profiles</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -279,8 +279,8 @@ $_SESSION['FORM_SECRET'] = $secret;
 							<div class="widget-content">
 								<div class="tabbable">
 									<ul class="nav nav-tabs">
-										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Manage Profiles</a></li>
-										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Create Profiles</a></li>	
+										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Manage BI APIs</a></li>
+										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Create BI APIs</a></li>	
 									</ul>
 									<div class="tab-content">
 									<?php
@@ -300,7 +300,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 									?>
 										<!-- create_product tab -->
 										<div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="viewap">      	      			
-											<h1 class="head">Manage</h1>		      
+											<h1 class="head">Manage BI APIs</h1>		      
 									<?php
 										if($edit_wag==2){
 									?>
@@ -459,7 +459,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 
                                         <!-- assign_product tab -->
 										<div <?php if(isset($tab2)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="addap">
-										<h1 class="head">Create</h1>		
+										<h1 class="head">Create BI APIs</h1>		
 										<form autocomplete="off" onkeyup="create_ap_controllerfn();" onchange="create_ap_controllerfn();"  id="create_ap_controller_form" name="create_ap_controller_form" method="post" class="form-horizontal" action="?t=2">
 												<fieldset>
 													<div id="response_d3"></div>
