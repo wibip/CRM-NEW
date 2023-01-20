@@ -6,7 +6,7 @@ header("Pragma: no-cache"); // HTTP 1.0.
 header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 
 $load_login_design = $_SESSION['logout_design'];
-echo '------>>>';die;
+// echo '------>>>';die;
 ////////////////////////////
 
 /*ini_set('display_errors', 1);
@@ -482,7 +482,8 @@ if ($_GET['log_other'] == '2') {
 		}
 	}
 }
-
+echo "<<<<<<  Step 02 >>>>>";
+die;
 /////// Login session failed ////
 if ($_SESSION['login'] != 'yes' && $script != 'verification') {
 	$db_class1->userLog($user_name, $script, 'LOGIN Failed', 'N/A');
