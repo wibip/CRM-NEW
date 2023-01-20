@@ -708,7 +708,7 @@ $system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_packa
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
 
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
-var_dump($query_results_drop1);
+// var_dump($query_results_drop1);
 foreach ($query_results_drop1['data'] as $row) {
 	if ($row['menu_item'] == 3) {
 		$x_non_admin[] = $row['module_name']; // Non Admin Roles
@@ -716,9 +716,9 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row['module_name']; // Retuns base access
 	}
 }
-
 echo '------------<br/>';
-var_dump($system_package);
+var_dump($x);
+echo '------------<br/>';
 
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -737,7 +737,8 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-
+echo '------------<br/>';
+var_dump($x);
 
 array_push($x,"change_portal");
 
