@@ -681,8 +681,7 @@ if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 	$main_menu_clickble = 'YES';
 }
 
-echo "<<<<<<  Step 05 >>>>>";
-die;
+
 // New Access Functions
 function isModuleAccess($access_role, $module, $db_function)
 {
@@ -709,7 +708,7 @@ $system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_packa
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
 
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
-// var_dump($query_results_drop1);
+var_dump($query_results_drop1);
 foreach ($query_results_drop1['data'] as $row) {
 	if ($row['menu_item'] == 3) {
 		$x_non_admin[] = $row['module_name']; // Non Admin Roles
@@ -718,8 +717,9 @@ foreach ($query_results_drop1['data'] as $row) {
 	}
 }
 
-// echo '------------<br/>';
-// var_dump($system_package);
+echo '------------<br/>';
+var_dump($system_package);
+
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
@@ -751,8 +751,10 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-// echo '------------<br/>';
-// var_dump($x);
+echo '------------<br/>';
+var_dump($x);
+echo "<<<<<<  Step 06 >>>>>";
+die;
 $allowed_pages = $x;
 
 $module_ids = join('", "', $x);
