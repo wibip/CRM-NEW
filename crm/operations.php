@@ -1651,7 +1651,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                         }
                                                     </style>
                                                     <div class="control-group mno_feature" style="">
-                                                        <label class="control-label" for="api_profile">API Profile<sup>
+                                                        <label class="control-label" for="api_profile">BI API Profile<sup>
                                                                 <font color="#FF0000"></font>
                                                             </sup></label>
                                                         <div class="controls col-lg-5 form-group" readonly>
