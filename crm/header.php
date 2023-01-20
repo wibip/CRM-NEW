@@ -482,8 +482,7 @@ if ($_GET['log_other'] == '2') {
 		}
 	}
 }
-echo "<<<<<<  Step 02 >>>>>";
-die;
+
 /////// Login session failed ////
 if ($_SESSION['login'] != 'yes' && $script != 'verification') {
 	$db_class1->userLog($user_name, $script, 'LOGIN Failed', 'N/A');
@@ -508,6 +507,9 @@ if ($_SESSION['login'] != 'yes' && $script != 'verification') {
 
 	exit();
 }
+
+echo "<<<<<<  Step 03 >>>>>";
+die;
 
 // Collect session valiables
 $user_name = $_SESSION['user_name'];
