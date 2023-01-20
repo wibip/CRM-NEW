@@ -6,7 +6,7 @@ header("Pragma: no-cache"); // HTTP 1.0.
 header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 
 $load_login_design = $_SESSION['logout_design'];
-// echo '------>>>';die;
+echo '------>>>';die;
 ////////////////////////////
 
 /*ini_set('display_errors', 1);
