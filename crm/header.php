@@ -508,8 +508,6 @@ if ($_SESSION['login'] != 'yes' && $script != 'verification') {
 	exit();
 }
 
-echo "<<<<<<  Step 03 >>>>>";
-die;
 
 // Collect session valiables
 $user_name = $_SESSION['user_name'];
@@ -580,6 +578,10 @@ if ($_SESSION['login'] == 'yes') {
 	}
 }
 
+
+
+echo "<<<<<<  Step 04 >>>>>";
+die;
 //////// System Packages and features
 if ($user_type == "SADMIN" || $user_type == "SMAN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
