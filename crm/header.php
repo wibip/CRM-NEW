@@ -2079,6 +2079,28 @@ else{
 		$page_intro = 'YES';
 	}
 
+	
+$loggedMessage = 'You are logged in as ';
+
+switch($user_type){
+	case 'ADMIN':
+		$loggedMessage .= 'Admin';
+	break;
+	case 'MNO':
+		$loggedMessage .= 'Operation Admin';
+	break;
+	case 'PROVISIONING':
+		$loggedMessage .= 'Client';
+	break;
+	case 'SMAN':
+		$loggedMessage .= 'Sales Manager';
+	break;
+	case 'SADMIN':
+		$loggedMessage .= 'Super Admin';
+	break;
+}
+
+
 	$navbar = 'layout/ARRIS/views/header_navbar.php';
 
 	if (file_exists($navbar)) {
