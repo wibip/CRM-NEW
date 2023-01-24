@@ -7,7 +7,8 @@ $icon_arr = [
 	'Logs'=> 'icon-file-text-alt',
 	'CRM'=> 'icon-group',
 	'OPSaaS'=> 'icon-group',
-	'Clients'=> 'icon-group'
+	'Clients'=> 'icon-group',
+	'Properties'=> 'icon-building'
 ];
 if ($script != 'verification') {
 
