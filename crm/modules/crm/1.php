@@ -451,7 +451,7 @@ if (!empty($arrayo)) {
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Reflect a Unique Property ID (Need to Build this logically or just a sequential number like WFN-000001?)</label>
                                     <div class="controls col-lg-5 form-group">
-                                        <input readonly type="text" name="opt_code" id="opt_code" class="span4 form-control" value="<?php echo $get_opt_code; ?>" style="margin-bottom: 10px">
+                                        <!-- <input readonly type="text" name="opt_code" id="opt_code" class="span4 form-control" value="< ?php echo $get_opt_code; ?>" style="margin-bottom: 10px"> -->
                                         <input type="text" name="wifi_unique" id="wifi_unique" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_unique:''?>">
                                     </div>
                                 </div>
@@ -949,7 +949,7 @@ if (!empty($arrayo)) {
 
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
-                        <?php if($activatePopup == true) {  ?>
+                        <?php if($activatePopup == true && $get_status == "Completed") {  ?>
                             <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
                             <button onmouseover="" class="btn btn-primary pop-up-open">Add Location</button>
                         <?php } ?>
@@ -957,10 +957,12 @@ if (!empty($arrayo)) {
                         <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-hidden="false" aria-disabled="true"><button tabindex="119" href="javascript:void(0)" data-type="next" class="btn btn-primary" role="menuitem">Next</button></li>
                         <li class="finishStepone" style="display: none; margin-left: 5px;" aria-hidden="true"><a tabindex="120" href="#steponesubmit" class="btn btn-primary" name="location_submit_one" id="location_submit_one" role="menuitem">Update Account Info</a></li>
                         <li class="finishSteptwo" style="display: none; margin-left: 5px;" aria-hidden="true"><a href="#steptwosubmit" class="btn btn-primary" name="location_submit_two" id="location_submit_two" role="menuitem">Update Controller Info</a></li>
+                        <?php if (!isset($_GET['edit']) && !isset($_GET['property_id'])){ ?>
                         <li class="finishParent" style="display: none; margin-left: 5px;" aria-hidden="true">
                             <!-- <a href="#finish" class="btn btn-primary" name="create_location_submit" id="create_location_submit" role="menuitem" >Finish</a></li> -->
                             <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
                         </li>
+                        <?php } ?>
                         <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
                         </ul>
                     </div>
@@ -1101,6 +1103,11 @@ if (!empty($arrayo)) {
 
 
                 $(document).ready(function(e) {
+                    //create_crm_submit
+                    $('#create_crm_submit').click(function(){
+                        $("#overlay").css("display","block");
+                    });
+
                     var stepListFull = '<div class="steps clearfix" style="margin-top:20px"><ul role="tablist">';
                     var stepCount = 0;
                     $('#crm_form fieldset').each(function(index, element) {

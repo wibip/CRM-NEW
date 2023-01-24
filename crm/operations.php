@@ -1024,7 +1024,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                     $delete2 = $db->execDB("DELETE FROM `exp_mno_ap_controller` WHERE `mno_id`='$remove_mno_id'");
                     $delete2 = $db->execDB("DELETE FROM `admin_users` WHERE `user_distributor`='$remove_mno_id'");
                     $delete2 = $db->execDB("DELETE FROM `mdu_mno_organizations` WHERE `mno`='$remove_mno_id'");
-                    $delete2_1 = $db->execDB("DELETE FROM `exp_camphaign_ads` WHERE `ad_id` = '$default_campaign_id'");
+                    // $delete2_1 = $db->execDB("DELETE FROM `exp_camphaign_ads` WHERE `ad_id` = '$default_campaign_id'");
 
                     if ($delete === true) {
                         $message_response = $message_functions->showNameMessage('operator_remove_success', $remove_mno_id, '3001');
@@ -1651,7 +1651,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                         }
                                                     </style>
                                                     <div class="control-group mno_feature" style="">
-                                                        <label class="control-label" for="api_profile">API Profile<sup>
+                                                        <label class="control-label" for="api_profile">BI API Profile<sup>
                                                                 <font color="#FF0000"></font>
                                                             </sup></label>
                                                         <div class="controls col-lg-5 form-group" readonly>
@@ -1660,12 +1660,12 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                     $key_query="SELECT c.controller_name,c.description,c.brand,c.api_profile,c.id FROM `exp_locations_ap_controller` c ";
                                                                     $query_results=$db->selectDB($key_query);
                                                                     foreach($query_results['data'] AS $rowe){
-                                                                        if(in_array($rowe[id], $features_controler_array)){
+                                                                        if(in_array($rowe['id'], $features_controler_array)){
                                                                             $select="selected";
                                                                         }else{
                                                                             $select="";
                                                                         }
-                                                                        echo '<option '.$select.' value='.$rowe[id].' data-vt="'.$rowe[controller_name].'" >'.$rowe[api_profile].'</option>';
+                                                                        echo '<option '.$select.' value='.$rowe['id'].' data-vt="'.$rowe['controller_name'].'" >'.$rowe['api_profile'].'</option>';
                                                                     }
                                                                     ?>
                                                             </select>
@@ -1699,12 +1699,12 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                     <?php
                                                                         if($user_type == 'ADMIN'){
                                                                             foreach($mno_op['data'] AS $mno_op_row){
-                                                                                if($get_edit_mno_sys_pack==$mno_op_row[product_code]){
+                                                                                if($get_edit_mno_sys_pack==$mno_op_row['product_code']){
                                                                                     $select="selected";
                                                                                 }else{
                                                                                     $select="";
                                                                                 }
-                                                                                echo '<option '.$select.' value='.$mno_op_row[product_code].' data-vt="'.$mno_op_row[options].'" >'.$mno_op_row[product_name].'</option>';
+                                                                                echo '<option '.$select.' value='.$mno_op_row['product_code'].' data-vt="'.$mno_op_row['options'].'" >'.$mno_op_row['product_name'].'</option>';
                                                                             }
                                                                           }
                                                                     ?>
@@ -1983,10 +1983,10 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                     $query_results = $db->selectDB($key_query);
                                                                     // var_dump($query_results);
                                                                     foreach ($query_results['data'] as $row) {
-                                                                        $mno_description = $row[mno_description];
-                                                                        $mno_id = $row[mno_id];
-                                                                        $full_name = $row[full_name];
-                                                                        $email = $row[email];
+                                                                        $mno_description = $row['mno_description'];
+                                                                        $mno_id = $row['mno_id'];
+                                                                        $full_name = $row['full_name'];
+                                                                        $email = $row['email'];
                                                                         // $s= $row[s];
                                                                         // $is_enable= $row[is_enable];
                                                                         // $icomm_num=$row[verification_number];

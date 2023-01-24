@@ -20,7 +20,7 @@ $page = "API profile";
 ?> 
 <head>
 <meta charset="utf-8">
-<title>Manage APIs</title>
+<title>BI Api Profiles</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -116,9 +116,6 @@ if(isset($_POST['create_ap_controller'])){
 			// $create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
 			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 		}
-
-		
-
 	}//key validation
 	else{
 		$message_response = $message_functions->showMessage('transection_fail', '2004');
@@ -225,15 +222,15 @@ if(isset($_POST['api_update'])){
 																WHERE `id`='$profile_id'";
 
 				$update_wag=$db->execDB($update_wag_q);
-				$edit_ap_control_name = $update_wag_name;
+				// $edit_ap_control_name = $update_wag_name;
 				$edit_api_profile = $edit_api_profile_name;
 				$edit_wag_url=$update_wag_url;
 				$edit_wag_uname=$update_wag_uname;
 				$edit_wag_pass=$update_wag_pass;
 
-				$edit_wag_type=$db->getValueAsf("SELECT `type` as f
-				FROM `exp_locations_ap_controller`
-				WHERE `controller_name`='$update_wag_name'");
+				// $edit_wag_type=$db->getValueAsf("SELECT `type` as f
+				// FROM `exp_locations_ap_controller`
+				// WHERE `controller_name`='$update_wag_name'");
 				
 				if($update_wag===true){
 					$message_response = $message_functions->showMessage('ap_controller_update_success') ;
@@ -248,7 +245,7 @@ if(isset($_POST['api_update'])){
 				}
 			} else {
 				$message_response = $apiReturn['data']['message'];
-				$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create API profile',0,'2001',$message_response);
+				$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify API profile',0,'2001',$message_response);
 				$db->userErrorLog('2001', $user_name, 'script - ' . $script);		
 				// $create_log->save('2001',$message_functions->showMessage('ap_controller_create_failed','2001'),'');
 				$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
@@ -282,8 +279,8 @@ $_SESSION['FORM_SECRET'] = $secret;
 							<div class="widget-content">
 								<div class="tabbable">
 									<ul class="nav nav-tabs">
-										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Manage Profiles</a></li>
-										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Create Profiles</a></li>	
+										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Manage BI APIs</a></li>
+										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Create BI APIs</a></li>	
 									</ul>
 									<div class="tab-content">
 									<?php
@@ -303,7 +300,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 									?>
 										<!-- create_product tab -->
 										<div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="viewap">      	      			
-											<h1 class="head">Manage</h1>		      
+											<h1 class="head">Manage BI APIs</h1>		      
 									<?php
 										if($edit_wag==2){
 									?>
@@ -462,7 +459,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 
                                         <!-- assign_product tab -->
 										<div <?php if(isset($tab2)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="addap">
-										<h1 class="head">Create</h1>		
+										<h1 class="head">Create BI APIs</h1>		
 										<form autocomplete="off" onkeyup="create_ap_controllerfn();" onchange="create_ap_controllerfn();"  id="create_ap_controller_form" name="create_ap_controller_form" method="post" class="form-horizontal" action="?t=2">
 												<fieldset>
 													<div id="response_d3"></div>

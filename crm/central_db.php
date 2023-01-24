@@ -33,7 +33,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 
 <head>
 	<meta charset="utf-8">
-	<title>General Config</title>
+	<title>Central DB API Profile</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no" />
@@ -166,7 +166,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 							<div class="widget ">
 								<?php if ($user_type != 'MVNO_ADMIN') { ?>
 									<div class="widget-header">
-										<h3>Configuration</h3>
+										<h3>Central DB API Profile</h3>
 									</div>
 								<?php
 								}
@@ -180,8 +180,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 												if ($user_type == 'ADMIN' || $user_type == 'RESELLER_ADMIN') {
 													if ($user_type == 'ADMIN') {
 											?>
-													<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#live_camp" data-toggle="tab">General Config</a></li>
-													<li <?php if (isset($tab2)) { ?>class="active" <?php } ?>><a href="#central_db" data-toggle="tab">Central DB</a></li>
+													<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#central_db" data-toggle="tab">Central DB</a></li>
 											<?php  } } ?>
 										</ul><br>
 										<div class="tab-content">
@@ -264,104 +263,8 @@ if ($wag_ap_name != 'NO_PROFILE') {
 											?>
 
 											<div id="system1_response"></div>
-											<!-- ======================= Configurations =============================== -->
-											<div <?php if (isset($tab1) && ($user_type == 'ADMIN')) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="live_camp">
-												<?php
-												$tab1_field_ar = json_decode($package_functions->getOptions('CONFIG_GENARAL_FIELDS', $system_package), true);
-												?>
-												<div id="system_response"></div>
-												<h1 class="head">General Config</h1>
-												<form onkeyup="edit_profilefn();" onchange="edit_profilefn();" id="edit_profile_c" class="form-horizontal">
-													<?php
-													echo '<input type="hidden" name="form_secret" id="form_secret" value="' . $_SESSION['FORM_SECRET'] . '" />';
-													echo '<input type="hidden" name="header_logo_img5" id="header_logo_img5" value="' . $settings_value . '" />';
-													?>
-													<fieldset>
-														<div class="control-group" <?php
-
-																					if (!array_key_exists('site_title', $tab1_field_ar) && $system_package != 'N/A') {
-																						echo ' style="display:none";';
-																					}
-																					?>>
-															<label class="control-label" for="radiobtns">Site Title</label>
-															<div class="controls form-group">
-																<input class="span4 form-control" id="main_title" name="main_title" type="text" value="<?php echo $db->setVal("site_title", $user_distributor); ?>">
-															</div>
-														</div>
-														<div class="control-group" <?php
-																					if (!array_key_exists('admin_email', $tab1_field_ar) && $system_package != 'N/A') {
-																						echo ' style="display:none";';
-																					}
-																					?>>
-															<label class="control-label" for="radiobtns">Admin Email</label>
-															<div class="controls form-group">
-																<input class="span4 form-control" id="master_email" name="master_email" type="text" value="<?php echo $db->setVal("email", $user_distributor); ?>">
-															</div>
-														</div>
-														<div class="control-group" <?php
-																					if (!array_key_exists('time_zone', $tab1_field_ar) && $system_package != 'N/A') {
-																						echo ' style="display:none";';
-																					}
-																					?>>
-
-															<label class="control-label" for="radiobtns">Time Zone</label>
-															<div class="controls form-group">
-																<div class="input-prepend input-append">
-																	<select class="span4 form-control" id="time_zone" name="time_zone">
-																		<option value="">- Select Time-zone -</option>
-																		<?php
-																		$get_tz = "SELECT timezones FROM exp_mno WHERE mno_id = '$user_distributor' LIMIT 1";
-																		$reslts = $db->selectDB($get_tz);
-																		$timezones = '';
-																		foreach ($reslts['data'] as $r) {
-																			$timezones = $r['timezones'];
-																		}
-																		$utc = new DateTimeZone('UTC');
-																		$dt = new DateTime('now', $utc);
-																		$select = "";
-																		foreach (DateTimeZone::listIdentifiers() as $tz) {
-																			$current_tz = new DateTimeZone($tz);
-																			$offset =  $current_tz->getOffset($dt);
-																			$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-																			$abbr = $transition[0]['abbr'];
-																			if ($timezones === $tz) {
-																				$select = "selected";
-																				//echo $timezones.'=='.$tz;
-																			} else {
-																				$select = "";
-																			}
-																			echo '<option ' . $select . ' value="' . $tz . '">' . $tz . ' [' . $abbr . ' ' . CommonFunctions::formatOffset($offset) . ']</option>';
-																		}
-																		?>
-																	</select>
-																</div>
-															</div>
-														</div>
-														<div class="control-group" <?php
-																					if (!array_key_exists('global_url', $tab1_field_ar) && $system_package != 'N/A') {
-																						echo ' style="display:none";';
-																					}
-																					?> style="margin-bottom: 0px !important;">
-
-															<label class="control-label" for="radiobtns">CRM URL</label>
-															<div class="controls form-group">
-																<input class="span4 form-control" id="global_url" name="global_url" type="text" value="<?php echo $db->setVal("global_url", $user_distributor); ?>">
-															</div>
-														</div>
-														<div class="form-actions ">
-															<button disabled type="submit" id="system_info" name="submit" class="btn btn-primary">Save</button>
-															<img id="system_loader" src="img/loading_ajax.gif" style="visibility: hidden;">
-														</div>
-														<script>
-															function edit_profilefn() {
-																$("#system_info").prop('disabled', false);
-															}
-														</script>
-													</fieldset>
-												</form>
-											</div>
-
-											<div <?php if (isset($tab2) && ($user_type == 'ADMIN')) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="central_db">
+											<!-- ======================= Central DB API Profile =============================== -->
+											<div <?php if (isset($tab1) && ($user_type == 'ADMIN')) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="central_db">
 												<?php
 												$tab1_field_ar = json_decode($package_functions->getOptions('CONFIG_GENARAL_FIELDS', $system_package), true);
 												?>
@@ -433,7 +336,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 															</div>
 														</div>
 														<div class="control-group" <?php
-																					if (!array_key_exists('global_url', $tab1_field_ar) && $system_package != 'N/A') {
+																					if (!array_key_exists('db_url', $tab1_field_ar) && $system_package != 'N/A') {
 																						echo ' style="display:none";';
 																					}
 																					?> style="margin-bottom: 0px !important;">
@@ -444,12 +347,12 @@ if ($wag_ap_name != 'NO_PROFILE') {
 															</div>
 														</div>
 														<div class="form-actions ">
-															<button disabled type="submit" id="system_info" name="submit" class="btn btn-primary">Save</button>
+															<button disabled type="submit" id="central_db_submit" name="submit" class="btn btn-primary">Save</button>
 															<img id="system_loader" src="img/loading_ajax.gif" style="visibility: hidden;">
 														</div>
 														<script>
 															function edit_profilefn() {
-																$("#system_info").prop('disabled', false);
+																$("#central_db_submit").prop('disabled', false);
 															}
 														</script>
 													</fieldset>
@@ -481,9 +384,9 @@ if ($wag_ap_name != 'NO_PROFILE') {
 	<script src="js/jquery.chained.js"></script>
 	<script type="text/javascript" charset="utf-8">
 		$(document).ready(function() {
-			$("#system_info").easyconfirm({
+			$("#central_db_submit").easyconfirm({
 				locale: {
-					title: 'General Config',
+					title: 'Central DB Configuration',
 					text: 'Are you sure you want to update this information?',
 					button: ['Cancel', ' Confirm'],
 					closeText: 'close'
@@ -507,16 +410,11 @@ if ($wag_ap_name != 'NO_PROFILE') {
 			$('#edit_profile_c').formValidation({
 				framework: 'bootstrap',
 				button: {
-					selector: '#system_info',
+					selector: '#central_db_submit',
 					disabled: 'disabled'
 				},
 				fields: {
-					main_title: {
-						validators: {
-							<?php echo $db->validateField('notEmpty'); ?>
-						}
-					},
-					global_url: {
+					db_name: {
 						validators: {
 							<?php echo $db->validateField('notEmpty'); ?>
 						}
@@ -524,6 +422,11 @@ if ($wag_ap_name != 'NO_PROFILE') {
 					master_email: {
 						validators: {
 							<?php echo $db->validateField('master_email1'); ?>
+						}
+					},
+					db_url: {
+						validators: {
+							<?php echo $db->validateField('notEmpty'); ?>
 						}
 					}
 				}

@@ -1,8 +1,6 @@
 <?php ob_start(); ?>
 <!DOCTYPE html>
-
 <html lang="en">
-
 <?php
 session_start();
 include 'header_top.php';
@@ -164,23 +162,24 @@ if(!empty($api_details['data'])) {
         .pop-up-content form .actions button{
             margin-left: 5px;
         }.control-group.mask .controls div{
-                position: relative;
-                overflow: hidden;
-            }
-            .control-group.mask span{
-                position: absolute;
-                left: 0;
-                height: 100%;
-                background: #e4e4e4;
-                border-radius: 10px;
-                padding: 8px;
-                box-sizing: border-box;
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-            .control-group.mask input{
-                padding-left: 50px;
-            }
+            position: relative;
+            overflow: hidden;
+        }
+        .control-group.mask span{
+            position: absolute;
+            left: 0;
+            height: 100%;
+            background: #e4e4e4;
+            border-radius: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .control-group.mask input{
+            /* padding-left: 50px; */
+        }
+
     </style>
 
     <?php
@@ -190,7 +189,7 @@ if(!empty($api_details['data'])) {
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;
     $opt_q = $package_functions->getSectionType("OPT_CODE", $system_package);
-    $get_opt_code = (isset($opt_q)) ? $opt_q : 'FRT'; //$db->getValueAsf("SELECT api_prefix as f FROM exp_mno WHERE mno_id = '$user_distributor'");
+    $get_opt_code = (isset($opt_q)) ? $opt_q : 'SDL'; //$db->getValueAsf("SELECT api_prefix as f FROM exp_mno WHERE mno_id = '$user_distributor'");
 
     $priority_zone_array = array(
         "America/New_York",
@@ -220,12 +219,15 @@ if(!empty($api_details['data'])) {
         break;
     }
 
+    $crm = new crm($api_id, $system_package);
+
     if (isset($_GET['edit'])) {
         $edit = true;
         $id = $_GET['id'];
         $result = $db->select1DB("SELECT * FROM exp_crm WHERE id = '$id'");
         $get_service_type = $result['service_type'];
         $get_business_name = $result['business_name'];
+        $get_business_id = $result['business_id'];
         $get_contact_name = $result['contact_name'];
         $get_contact_phone = $result['contact_number'];
         $get_contact_email = $result['contact_email'];
@@ -236,6 +238,7 @@ if(!empty($api_details['data'])) {
         $get_account_number = $result['account_number'];
         $get_street = $result['street'];
         $get_state = $result['state'];
+        $get_status= $result['status'];
         $wifi_unique = $result['property_id'];
         $get_wifi_unique = str_replace($get_opt_code, "", $wifi_unique);
 
@@ -290,9 +293,9 @@ if(!empty($api_details['data'])) {
 
     if (isset($_POST['create_location_submit'])) {
         $crm_id = $_POST['crm_id'];        
-        $property_id = $_POST['wifi_unique'];
-        $property_name = $_POST['business_name'];
-        $location_unique = $_POST['location_unique'];
+        $business_id = $_POST['business_id'];
+        $location_name = $_POST['location_name'];
+        $location_unique = $get_opt_code .$_POST['location_unique'];
         $contact_name = $_POST['contact'];
         $contact_email = $_POST['contact_email'];
         $street = $_POST['street'];
@@ -301,13 +304,13 @@ if(!empty($api_details['data'])) {
         $zip = $_POST['zip'];
 
         /* Add location */
-        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
-                        VALUES($crm_id,'".$property_id."','".$property_name."','".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+        $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`location_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
+                        VALUES($crm_id,'".$location_name."','".$location_unique."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
         $locationResult = $db->execDB($locationSql);
 
         $data = [
                     'id' => $location_unique,
-                    'name' => $property_name,
+                    'name' => $location_name,
                     'address' => [
                         'street' => $street,
                         'city' => $city,
@@ -319,11 +322,78 @@ if(!empty($api_details['data'])) {
                         'email' => $contact_email
                     ]
                 ];
+        
+        $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
         $jsondata = json_encode($data);
-        $crm = new crm($api_id, $system_package);
 
-        $response = $crm->createLocation($property_id,$jsondata,$idContAutoInc);
- 
+        $response = $crm->createLocation($business_id,$jsondata,$idContAutoInc);
+        if ($response['status'] == 'success') {
+            $ex = $db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 1 WHERE id = '$idContAutoInc'");
+            $success_msg = "New Location ".$property_name." addition is successful";
+            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM Location',$idContAutoInc,'3001',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
+        } else {
+            $success_msg = "New Location ".$property_name." addition is failed";
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create CRM Location',0,'2009',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+        }
+        
+    }
+
+    if(isset($_POST['update_location_submit'])) {
+        $crm_id = $_POST['crm_id']; 
+        $location_name = $_POST['location_name'];
+        $business_id = $_POST['business_id'];       
+        $location_id = $_POST['location_id'];
+        $location_unique = $_POST['location_unique'];
+        $contact_name = $_POST['contact'];
+        $contact_email = $_POST['contact_email'];
+        $street = $_POST['street'];
+        $city = $_POST['city'];
+        $state = $_POST['state'];
+        $zip = $_POST['zip'];
+
+         /* Update location */
+
+        $locationSql = "UPDATE `crm_exp_mno_locations` SET 
+                                                        `location_name` = '".$location_name."',
+                                                        `contact_name` = '".$contact_name."',
+                                                        `contact_email` = '".$contact_email."',
+                                                        `street` = '".$street."',
+                                                        `city` = '".$city."',
+                                                        `state` = '".$state."',
+                                                        `zip` = '".$zip."' 
+                        WHERE id=".$location_id;
+              
+        $locationResult = $db->execDB($locationSql);
+
+        $data = [
+            'name' => $location_name,
+            'address' => [
+                'street' => $street,
+                'city' => $city,
+                'state' => $state,
+                'zip' => $zip
+            ],
+            'contact' =>[
+                'name' => $contact_name,
+                'email' => $contact_email
+            ]
+        ];
+
+        $jsondata = json_encode($data);
+
+        $response = $crm->updateLocation($business_id,$jsondata,$location_unique);
+
+        if ($response['status'] == 'success') {
+            $success_msg = "Location has been updated successfully";
+            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Update CRM Location',$location_id,'3001',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
+        } else {
+            $success_msg = "Location updated has been failed";
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Update CRM Location',$location_id,'2009',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+        }
     }
 
     if (isset($_POST['create_crm_submit'])) {
@@ -543,19 +613,22 @@ if(!empty($api_details['data'])) {
                     ];
                 }
 
+
                 /* Add location */
                 $locationSql = "INSERT INTO `crm_exp_mno_locations`(`crm_id`,`property_id`,`property_name`,`location_unique`,`contact_name`,`contact_email`,`street`,`city`,`state`,`zip`,`is_enable`,`create_user`) 
-                                VALUES($idContAutoInc,'".$property_id."','".$business_name."','".$property_id."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
+                                VALUES($idContAutoInc,'".$wifi_unique."','".$business_name."','".$property_id."','".$contact_name."','".$contact_email."','".$street."','".$city."','".$state."','".$zip."',2,'".$user_name."')";
                 $locationResult = $db->execDB($locationSql);
+                $idLocationAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 
                 $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Processing' WHERE id = '$idContAutoInc'");
 
                 $jsondata = json_encode($data);
-                $crm = new crm($api_id, $system_package);
                 $response = $crm->createParent($jsondata,$idContAutoInc);
 
                 if ($response['status'] == 'success') {
-                    $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Completed' WHERE id = '$idContAutoInc'");
+                    $businesId = $response['data']['id'];
+                    $ex1 = $db->execDB("UPDATE exp_crm SET `business_id`='".$businesId."',`status` = 'Completed' WHERE id = '$idContAutoInc'");
+                    $ex2 = $db->execDB("UPDATE crm_exp_mno_locations SET `business_id`='".$businesId."', `is_enable` = 1 WHERE id = '$idLocationAutoInc'");
                     $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
                     $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM property',$idContAutoInc,'3001',$success_msg);
                     $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
@@ -574,185 +647,69 @@ if(!empty($api_details['data'])) {
         }
     }
 
-    // if(isset($_POST['update_crm_submit'])){
-    //     // echo 'update';die;
-    //     if($_SESSION['FORM_SECRET'] == $_POST['form_secret5']) {
-    //          $business_name = $_POST['business_name'];
-    //          $contact_name = $_POST['contact'];
-    //          $contact_phone = $_POST['contact_Phone'];
-    //          $contact_email = $_POST['contact_email'];
-    //          $order_number = isset($_POST['order_number']) ? $_POST['order_number'] : '';
-    //          $city = $_POST['city'];
-    //          $zip = $_POST['zip'];
-    //          $timezone = $_POST['time_zone'];
-    //          $account_number = isset($_POST['account_number']) ? $_POST['account_number'] : '';
-    //          $street = $_POST['street'];
-    //          $state = $_POST['state'];
-    //          $service_type = $_POST['service_type'];
-    //          $wifi_unique_key = isset($_POST['wifi_unique']) ? $_POST['wifi_unique'] : '';
-    //          $wifi_unique = $get_opt_code.$wifi_unique_key;
+    /* Remove a location */
+    if (isset($_GET['remove_location'])) {
+        $id = $_GET['id'];
+        $token = $_GET['token'];
+        $businessId = $_GET['business_id'];
+        $locationId = $_GET['location_id'];
+        $location_unique = $_GET['location_unique'];
 
-    //          $more_than_one_sites = $_POST['more_than_one_sites'];
-    //          $guest_ssid = $_POST['guest_ssid'];
-    //          $wifi_street = $_POST['wifi_street'];
-    //          $wifi_state = $_POST['wifi_state'];
-    //          $wifi_contact = $_POST['wifi_contact'];
-    //          $wifi_email = $_POST['wifi_email'];
-    //          $wifi_ins_time = $_POST['wifi_ins_time'];
-    //          $wifi_site_name = $_POST['wifi_site_name'];
-    //          $private_ssid = $_POST['private_ssid'];
-    //          $wifi_city = $_POST['wifi_city'];
-    //          $wifi_zip = $_POST['wifi_zip'];
-    //          $wifi_phone = $_POST['wifi_phone'];
-    //          $wifi_prop_type = $_POST['wifi_prop_type'];
-    //          $wifi_ins_date = $_POST['wifi_ins_date'];
-    //          $wifi_ins_start = $_POST['wifi_ins_start'];
-
-    //          $wifi_information_arr = array('guest_ssid' => $guest_ssid,
-    //                                        'wifi_street' => $wifi_street,
-    //                                        'private_ssid' => $private_ssid,
-    //                                          'wifi_state' => $wifi_state,
-    //                                          'wifi_contact' => $wifi_contact,
-    //                                          'wifi_email' => $wifi_email,
-    //                                          'wifi_ins_time' => $wifi_ins_time,
-    //                                          'wifi_site_name' => $wifi_site_name,
-    //                                          'wifi_city' => $wifi_city,
-    //                                          'wifi_zip' => $wifi_zip,
-    //                                          'wifi_phone' => $wifi_phone,
-    //                                          'wifi_prop_type' => $wifi_prop_type,
-    //                                          'wifi_ins_date' => $wifi_ins_date,
-    //                                          'wifi_ins_start' => $wifi_ins_start);
-    //          $wifi_information = json_encode($wifi_information_arr);
-
-    //          $prod_order_type = $_POST['prod_order_type'];
-    //          $prod_in_ap_quant = $_POST['prod_in_ap_quant'];
-    //          $prod_content_filter = $_POST['prod_content_filter'];
-    //          $prod_circuit_type = $_POST['prod_circuit_type'];
-    //          $prod_guest = $_POST['prod_guest'];
-    //          $prod_telco = $_POST['prod_telco'];
-    //          $prod_cabling = $_POST['prod_cabling'];
-    //          $prod_flow_plan = $_POST['prod_flow_plan'];
-    //          $prod_cover_area = $_POST['prod_cover_area'];
-    //          $prod_square_footage = $_POST['prod_square_footage'];
-    //          $prod_outdoor = $_POST['prod_outdoor'];
-    //          $prod_guest_capacity = $_POST['prod_guest_capacity'];
-    //          $prod_circuit_size = $_POST['prod_circuit_size'];
-    //          $prod_private = $_POST['prod_private'];
-    //          $prod_rack_space = $_POST['prod_rack_space'];
-    //          $prod_wiring_paths = $_POST['prod_wiring_paths'];
-    //          $prod_telco_room = $_POST['prod-telco-room'];
-
-    //          $product_information_arr = array('prod_order_type' => $prod_order_type,
-    //                                        'prod_in_ap_quant' => $prod_in_ap_quant,
-    //                                        'prod_content_filter' => $prod_content_filter,
-    //                                          'prod_circuit_type' => $prod_circuit_type,
-    //                                          'prod_guest' => $prod_guest,
-    //                                          'prod_telco' => $prod_telco,
-    //                                          'prod_cabling' => $prod_cabling,
-    //                                          'prod_flow_plan' => $prod_flow_plan,
-    //                                          'prod_cover_area' => $prod_cover_area,
-    //                                          'prod_square_footage' => $prod_square_footage,
-    //                                          'prod_outdoor' => $prod_outdoor,
-    //                                          'prod_guest_capacity' => $prod_guest_capacity,
-    //                                          'prod_circuit_size' => $prod_circuit_size,
-    //                                          'prod_private' => $prod_private,
-    //                                          'prod_rack_space' => $prod_rack_space,
-    //                                          'prod_wiring_paths' => $prod_wiring_paths,
-    //                                          'prod_telco_room' => $prod_telco_room);
-    //          $product_information = json_encode($product_information_arr);
-
-    //          $qq_ceiling_hight = $_POST['qq_ceiling_hight'];
-    //          $qq_int_wall = $_POST['qq_int_wall'];
-    //          $qq_communicate_other = $_POST['qq_communicate_other'];
-    //          $qq_residential = $_POST['qq_residential'];
-    //          $qq_atmospheric = $_POST['qq_atmospheric'];
-    //          $qq_ceiling_type = $_POST['qq_ceiling_type'];
-    //          $qq_ext_wall = $_POST['qq_ext_wall'];
-    //          $qq_customizable_ui = $_POST['qq_customizable_ui'];
-    //          $qq_warehouse = $_POST['qq_warehouse'];
-    //          $qq_IoT_devices = $_POST['qq-IoT-devices']; 
-
-    //          $qualifying_questions_arr = array('qq_ceiling_hight' => $qq_ceiling_hight,
-    //                                        'qq_int_wall' => $qq_int_wall,
-    //                                        'qq_communicate_other' => $qq_communicate_other,
-    //                                          'qq_residential' => $qq_residential,
-    //                                          'qq_atmospheric' => $qq_atmospheric,
-    //                                          'qq_ceiling_type' => $qq_ceiling_type,
-    //                                          'qq_ext_wall' => $qq_ext_wall,
-    //                                          'qq_customizable_ui' => $qq_customizable_ui,
-    //                                          'qq_warehouse' => $qq_warehouse,
-    //                                          'qq_IoT_devices' => $qq_IoT_devices);
-    //          $qualifying_questions = json_encode($qualifying_questions_arr);
-
-    //          $query = "UPDATE `exp_crm` SET 
-    //                     `service_type` = '$service_type',
-    //                     `business_name` = '$business_name',
-    //                     `contact_name` = '$contact_name',
-    //                     `contact_number` = '$contact_phone',
-    //                     `contact_email` = '$contact_email',
-    //                     `account_number` = '$account_number',
-    //                     `order_number` = '$order_number',
-    //                     `street` = '$street',
-    //                     `city` = '$city',
-    //                     `state` = '$state',
-    //                     `zip` = '$zip',
-    //                     `timezone` = '$timezone',
-    //                     `wifi_information` = '$wifi_information',
-    //                     `property_id` = '$wifi_unique',
-    //                     `product_information` = '$product_information',
-    //                     `qualifying_questions` = '$qualifying_questions',
-    //                     `mno_id` = '$user_distributor',
-    //                     `last_update` = NOW()
-    //                     ";
-
-    //             $ex = $db->execDB($query);
-    //             // $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
-
-    //             // $exec_cmd = 'php -f'.dirname(__FILE__).'/src/CRM/CreateParent.php '.$idContAutoInc.' > /dev/null 2>&1 & echo $!; ';
-    //             // $pid = exec($exec_cmd , $output);
-
-    //         if($ex===true){
-    //             $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
-    //             $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
-    //         }else{
-    //             $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
-    //             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
-    //         }
-    //     }
-    // }
-
-    if (isset($_GET['edit'])) {
-        if ($_GET['token'] == $_SESSION['FORM_SECRET']) {
-            $id = $_GET['id'];
-
-            $q = "SELECT property_details,status FROM exp_provisioning_properties WHERE mno_id='$user_distributor' AND id='$id' AND status<>'4'";
-
-            $data = $db->select1DB($q);
-            //print_r($data);
-            if (count($data) > 0) {
-                $edit = true;
-                //$_GET['t']='provision_create';
-                $prop_details = json_decode($data['property_details'], true);
-                $parent_properties_count = count($prop_details['property']);
-                $prop_details_new = $prop_details['property'][0];
-                $prop_service_type = $prop_details['location_info'][0]['service_type'];
-                $edit_acc_state = $data['status'];
-            }
-        }
-    }
-
-    if (isset($_GET['remove_id'])) {
-        if ($_GET['token'] == $_SESSION['FORM_SECRET']) {
-            $remove_id = $_GET['remove_id'];
-            $delete = $db->execDB("DELETE FROM exp_crm WHERE id='$remove_id'");
+        $response = $crm->deleteLocation($businessId, $location_unique);
+    
+        if($response == 200 || $response == 404) {
+            $delete = $db->execDB("DELETE FROM crm_exp_mno_locations WHERE id = '$locationId'");
+            
             if ($delete === true) {
-                //delete form user
-                $_SESSION['msg20'] = '<div class="alert alert-success"> <strong>CRM Property is deleted successfully.</strong></div>';
+                $success_msg = "Location has been successfully removed";
+                $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
+            } else {                    
+                $success_msg = "CRM Location deleting is failed.";
+                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+            }
+        } else {
+            $success_msg = "CRM Location deleting is failed.";
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+        }
+        header('Location: crm?t=crm_view&token='.$token.'&edit&id='.$id);
+    }
+
+    /* Remove a property */
+    if (isset($_GET['remove_id'])) {
+        if ($_GET['token'] == $_SESSION['FORM_SECRET']) { 
+            $remove_id = $_GET['remove_id'];
+            $businessId = 0;
+            $property_details = $CommonFunctions->getPropertyDetails($remove_id,'business_id');
+            // var_dump($property_details);
+            if(!empty($property_details['data'])) {
+                $businessId = $property_details['data'][0]['business_id'];
+            }
+ 
+            $response = $crm->deleteParent($businessId);
+    
+            if($response == 200) {   
+                $delete = $db->execDB("DELETE FROM exp_crm WHERE id='$remove_id'");
+                if ($delete === true) {
+                    $success_msg = "CRM Property is deleted successfully.";
+                    $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Property',$remove_id,'3001',$success_msg);
+                    //delete form user
+                    $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
+                } else {                    
+                    $success_msg = "CRM Property deleting is failed.";
+                    $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
+                    $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
+                }
             } else {
-                $_SESSION['msg20'] = '<div class="alert alert-danger"> <strong>CRM Property deleting is failed.</strong></div>';
+                $success_msg = "CRM Property deleting is failed. ".$response["data"]["message"];
+                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
             }
         }
     }
+
     foreach ($modules[$user_type][$script] as $value) {
         $submit_form = 'modules/' . $value['submit'] . '.php';
         if (file_exists($submit_form)) {
@@ -780,22 +737,14 @@ if(!empty($api_details['data'])) {
                     <div class="span12">
                         <br class="hideBr"><br class="hideBr">
                         <div class="widget ">
-
-
                             <div class="widget-header">
-
                                 <h3>View and Manage Properties</h3>
-
-
                             </div><!-- /widget-header -->
-
-
                             <div class="widget-content">
                                 <div class="tabbable">
                                     <?php require_once 'modules/' . $modules['tab_menu']['module'] . '.php'; ?>
                                     <div class="tab-content">
-
-                                        <?php
+                                    <?php
 
                                         if (isset($_SESSION['msg20'])) {
                                             echo $_SESSION['msg20'];
@@ -811,7 +760,7 @@ if(!empty($api_details['data'])) {
                                             include_once 'modules/' . $value['module'] . '.php';
                                         }
                                         //}
-                                        if (isset($_GET['edit'])) {
+                                        if (isset($_GET['edit']) && $get_status == "Completed") {
                                         ?>
                                         <div class="widget widget-table action-table" style="padding-top: 35px;">
                                             <div class="widget-header">
@@ -836,13 +785,16 @@ if(!empty($api_details['data'])) {
                                                         </thead>
                                                         <tbody>
                                                             <?php
-                                                                $key_query="SELECT * FROM crm_portal.crm_exp_mno_locations WHERE property_id='".$wifi_unique."'";
+                                                                $key_query="SELECT ceml.*,ec.business_id FROM crm_exp_mno_locations AS ceml INNER JOIN exp_crm AS ec ON ec.id = ceml.crm_id 
+                                                                WHERE ceml.crm_id='".$id."' ORDER BY ceml.id DESC";
                                                                 $query_results = $db->selectDB($key_query);
                                                                 if($query_results['rowCount'] > 0) {
                                                                     foreach($query_results['data'] AS $row){
                                                                         $contact_name = $row['contact_name'];
                                                                         $city = $row['city'];
                                                                         $zip = $row['zip'];
+                                                                        $businessID = $row['business_id'];
+                                                                        $locationUnique = $row['location_unique'];
 
                                                                         switch($row['is_enable'] ) {
                                                                             case 0 :
@@ -858,43 +810,104 @@ if(!empty($api_details['data'])) {
                                                                                 $is_enable = "Inactive";
                                                                         }
 
-                                                                        $id = $row['id'];
+                                                                        $locationId = $row['id'];
 
                                                                         echo '<tr>
                                                                         <td> '.$contact_name.' </td>
                                                                         <td> '.$city.' </td>
                                                                         <td> '.$zip.' </td>
                                                                         <td> '.$is_enable.' </td>';
-                                                                        echo '<td><a href="javascript:void();" id="AP_'.$id.'"  class="btn btn-small btn-info">
+                                                                        echo '<td><a href="javascript:void();" id="AP_'.$locationId.'"  class="btn btn-small btn-info">
                                                                             <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
                                                                             $(document).ready(function() {
-                                                                            $(\'#AP_'.$id.'\').easyconfirm({locale: {
-                                                                                    title: \'API Profile\',
-                                                                                    text: \'Are you sure you want to edit this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                            $(\'#AP_'.$locationId.'\').easyconfirm({locale: {
+                                                                                    title: \'API Location\',
+                                                                                    text: \'Are you sure you want to edit this API Location?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
                                                                                     button: [\'Cancel\',\' Confirm\'],
                                                                                     closeText: \'close\'
                                                                                     }});
-                                                                                $(\'#AP_'.$id.'\').click(function() {
-                                                                                    window.location = "?token2='.$secret.'&t=1&edit_controller='.$id.'"
+                                                                                $(\'#AP_'.$locationId.'\').click(function() {
+                                                                                        $("#overlay").css("display","block");
+                                                                                        $(".pop-up .head").html("Update location");
+                                                                                        $(".pop-up").addClass("show");
+                                                                                        $.ajax({
+                                                                                            type: "POST",
+                                                                                            url: "ajax/load_location_details.php",
+                                                                                            data: {
+                                                                                                api_id: "'.$api_id.'",
+                                                                                                system_package: "'.$system_package.'",
+                                                                                                business_id: "'.$businessID.'",
+                                                                                                location_id: "'.$locationUnique.'"
+                                                                                            },
+                                                                                            success: function(data) {
+                                                                                                data = JSON.parse(data);
+                                                                                                console.log(data);
+                                                                                                if(data == false){
+                                                                                                    $("#overlay").css("display","none");
+                                                                                                    $(".pop-up").removeClass("show");
+                                                                                                    $("body").css("overflow","auto");                                                                                                    
+                                                                                                } else {
+                                                                                                    
+                                                                                                    $("#locationForm #wifi_unique").attr("value","'.$wifi_unique.'");
+                                                                                                    $("#locationForm #business_id").attr("value","'.$get_business_id.'");
+                                                                                                    $("#locationForm #location_name").attr("value", data["locations"]["0"]["name"]);
+                                                                                                    $("#locationForm #location_unique").attr("value", data["locations"]["0"]["id"]);
+                                                                                                    $("#locationForm #location_unique").attr("name", "location_unique_display");
+                                                                                                    $("#locationForm input[name=location_unique_display]").attr("id", "location_unique_display");
+                                                                                                    $("#locationForm #location_unique_display").attr("disabled", true) ;
+                                                                                                    $("<input>").attr({
+                                                                                                        type: "hidden",
+                                                                                                        id: "location_id",
+                                                                                                        name: "location_id",
+                                                                                                        value: "'.$locationId.'"
+                                                                                                    }).appendTo("#locationForm");
+                                                                                                    $("<input>").attr({
+                                                                                                        type: "hidden",
+                                                                                                        id: "location_unique",
+                                                                                                        name: "location_unique",
+                                                                                                        value: data["locations"]["0"]["id"]
+                                                                                                    }).appendTo("#locationForm");
+
+                                                                                                    $("#locationForm #contact").attr("value", data["locations"]["0"]["contact"]["name"]);
+                                                                                                    $("#locationForm #contact_email").attr("value",data["locations"]["0"]["contact"]["email"]);
+                                                                                                    $("#locationForm #street").attr("value",data["locations"]["0"]["address"]["street"]);
+                                                                                                    $("#locationForm #city").attr("value",data["locations"]["0"]["address"]["city"]);
+                                                                                                    $("#locationForm #state option[value="+data["locations"]["0"]["address"]["state"]+"]").attr("selected", "selected");
+                                                                                                    $("#locationForm #zip").attr("value",data["locations"]["0"]["address"]["zip"]);
+                                                                                                    $(".popup_submit").html("Update");
+                                                                                                    $(".popup_submit").attr("name", "update_location_submit");
+                                                                                                    $(".popup_submit").attr("id", "update_location_submit");
+                                                                                                    $("#overlay").css("display","none");
+                                                                                                }
+                                                                                            },
+                                                                                            error: function() {
+                                                                                                $("#overlay").css("display","none");
+                                                                                                $(".pop-up").removeClass("show");
+                                                                                                $("body").css("overflow","auto"); 
+                                                                                            }
+                                                                                        });
+                                                                                        $("body").css("overflow","hidden");
                                                                                 });
                                                                                 });
                                                                             </script></td>';
                                                                         
                                                                         if($_SESSION['SADMIN'] == true) {
-                                                                            echo '<td><a href="javascript:void();" id="AP_R_'.$id.'"  class="btn btn-small btn-danger">
-                                                                            <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
+                                                                            echo '<td><a href="javascript:void();" id="remove_api_'.$locationId.'"  class="btn btn-small btn-danger">
+                                                                            <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
+                                                                            <script type="text/javascript">
                                                                                 $(document).ready(function() {
-                                                                                $(\'#AP_R_'.$id.'\').easyconfirm({locale: {
-                                                                                        title: \'API Profile\',
-                                                                                        text: \'Are you sure you want to remove this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                                        button: [\'Cancel\',\' Confirm\'],
-                                                                                        closeText: \'close\'
-                                                                                        }});
-                                                                                    $(\'#AP_R_'.$id.'\').click(function() {
-                                                                                        window.location = "?token2='.$secret.'&t=1&remove_controller='.$id.'"
+                                                                                    $(\'#remove_api_'.$locationId.'\').easyconfirm({locale: {
+                                                                                            title: \'API Location\',
+                                                                                            text: \'Are you sure you want to remove this API Location?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                                            button: [\'Cancel\',\' Confirm\'],
+                                                                                            closeText: \'close\'
+                                                                                    }});
+                                                                                    $(\'#remove_api_'.$locationId.'\').click(function() {                                                                                        
+                                                                                        $("#overlay").css("display","block");
+                                                                                        window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'"
                                                                                     });
-                                                                                    });
-                                                                                </script></td>';
+                                                                                });
+                                                                            </script></td>';
                                                                         }
                                                                         echo '</tr>';
                                                                     }
@@ -912,7 +925,7 @@ if(!empty($api_details['data'])) {
                                                 </div>
                                             </div>
 												<!-- /widget-content -->
-											</div>
+										</div>
                                         <?php
                                         }
                                         ?>
@@ -933,30 +946,30 @@ if(!empty($api_details['data'])) {
         </div>
         <!-- /main-inner -->
     </div>
-
+    
     <div class="pop-up">
         <div class="pop-up-bg"></div>
         <div class="pop-up-main">
             <div class="pop-up-content">
             <h1 class="head">Add a location</h1>
-                <form method="post" action="">
+                <form method="post" id="locationForm" action="">
                     <input type="hidden" name="crm_id" id="crm_id" value="<?=$id?>" />
                     <input type="hidden" name="wifi_unique" id="wifi_unique" value="<?=$wifi_unique?>" />
-                    <input type="hidden" name="business_name" id="business_name" value="<?=$get_business_name?>" />
+                    <input type="hidden" name="business_id" id="business_id" value="<?=$get_business_id?>" />
                     <div class="form-double">
-                        <div class="control-group">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Business Name</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?=$get_business_name?>" data-bv-field="business_name" readonly>                                       
-                                </div>
-                            </div>
-                        </div>
                         <div class="control-group mask">
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">Unique Location ID</label>
                                 <div class="controls col-lg-5 form-group">
-                                <span><?php echo $get_opt_code; ?></span><input type="text" name="location_unique" id="location_unique" class="span4 form-control" value="" data-bv-field="location_unique">                                       
+                                <input type="text" name="location_unique" id="location_unique" class="span4 form-control" value="" data-bv-field="location_unique">                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls col-lg-5 form-group">
+                                <label for="radiobtns">Location Name</label>
+                                <div class="controls col-lg-5 form-group">
+                                    <input type="text" name="location_name" id="location_name" class="span4 form-control" value="<?=$get_location_name?>" data-bv-field="location_name">                                       
                                 </div>
                             </div>
                         </div>
@@ -996,7 +1009,25 @@ if(!empty($api_details['data'])) {
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">State</label>
                                 <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="state" id="state" class="span4 form-control" value="" data-bv-field="state" required>                                       
+                                    <select name="state" id="state" class="span4 form-control" required>
+                                        <option value="">Select State</option>
+                                        <?php
+                                            $get_regions = $db->selectDB("SELECT
+                                                                        `states_code`,
+                                                                        `description`
+                                                                        FROM
+                                                                        `exp_country_states` ORDER BY description ASC");
+
+                                            foreach ($get_regions['data'] as $state) {
+                                                if (($edit===true?$get_state:'') == $state['states_code']) {
+                                                    echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                } else {
+
+                                                    echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                                                }
+                                            }
+                                        ?>
+                                    </select>                                    
                                 </div>
                             </div>
                         </div>
@@ -1011,34 +1042,148 @@ if(!empty($api_details['data'])) {
                     </div>
                     <div class="actions">
                         <button class="btn btn-secondary">Cancel</button>
-                        <button class="btn btn-primary" type="submit" name="create_location_submit" id="create_location_submit">Save</button>
+                        <button class="btn btn-primary popup_submit" type="submit" name="create_location_submit" id="create_location_submit">Save</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function () {
-            $('.pop-up .actions button:nth-child(1)').click(function (e) { 
-                e.preventDefault();
-                $('.pop-up').removeClass('show');
-                $('body').css('overflow','auto');
-            });
-            $('.pop-up-open').click(function (e) { 
-                e.preventDefault();
-                $('.pop-up').addClass('show');
-                $('body').css('overflow','hidden');
-            });
-        });
-    </script>
 
     <script type="text/javascript" src="js/bootstrapValidator.js"></script>
     <script type="text/javascript" src="js/bootstrapValidator_new.js?v=1"></script>
 
     <script type="text/javascript">
+   
         $(document).ready(function() {
-            $('#crm_form').bootstrapValidator({
+            $('.pop-up .actions button:nth-child(1)').click(function (e) {                 
+                $('#locationForm').children('input').val('');
+                e.preventDefault();                
+                $('.pop-up').removeClass('show');
+                $('body').css('overflow','auto');
+            });
+            $('.pop-up-open').click(function (e) { 
+                e.preventDefault();
+                $("#locationForm #wifi_unique").attr("value","<?=$wifi_unique?>");
+                $("#locationForm #business_id").attr("value","<?=$get_business_id?>");
+                $('.pop-up').addClass('show');
+                $('body').css('overflow','hidden');
+            });
 
+            $('#create_location_submit').on('click', function(e){                
+                $("#overlay").css("display","block");
+                $('#locationForm').bootstrapValidator({
+                    framework: 'bootstrap',
+                    excluded: [':disabled', function($field, validator) {
+                        return (!$field.is(':visible') || $field.is(':hidden'));
+                    }],
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        location_unique: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        location_name: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        contact: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        contact_email: {
+                            validators: {
+                                <?php echo $db->validateField('email'); ?>
+                            }
+                        },
+                        street: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        city: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        zip: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        },
+                        state: {
+                            validators: {
+                                <?php echo $db->validateField('notEmpty'); ?>
+                            }
+                        }
+                    }
+                }).on('error.validator.bv', function(e, data) {
+                    $("#overlay").css("display","none");
+                }); 
+            });
+
+            // $('#update_location_submit').on('click',function(e){
+            //     alert('fff');
+            //     $("#overlay").css("display","block");
+            //     $('#locationForm').bootstrapValidator({
+            //         framework: 'bootstrap',
+            //         excluded: [':disabled', function($field, validator) {
+            //             return (!$field.is(':visible') || $field.is(':hidden'));
+            //         }],
+            //         feedbackIcons: {
+            //             valid: 'glyphicon glyphicon-ok',
+            //             invalid: 'glyphicon glyphicon-remove',
+            //             validating: 'glyphicon glyphicon-refresh'
+            //         },
+            //         fields: {
+            //             location_name: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             },
+            //             contact: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             },
+            //             contact_email: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('email'); ?>
+            //                 }
+            //             },
+            //             street: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             },
+            //             city: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             },
+            //             zip: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             },
+            //             state: {
+            //                 validators: {
+            //                     < ?php echo $db->validateField('notEmpty'); ?>
+            //                 }
+            //             }
+            //         }
+            //     }).on('error.validator.bv', function(e, data) {
+            //         $("#overlay").css("display","none");
+            //     }); 
+            // });
+
+            $('#crm_form').bootstrapValidator({
                 framework: 'bootstrap',
                 excluded: [':disabled', function($field, validator) {
                     return (!$field.is(':visible') || $field.is(':hidden'));
@@ -1146,7 +1291,10 @@ if(!empty($api_details['data'])) {
                     }
 
                 }
+            }).on('error.validator.bv', function(e, data) {
+                $("#overlay").css("display","none");
             });
+
         });
     </script>
     <?php

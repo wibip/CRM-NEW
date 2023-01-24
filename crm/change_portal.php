@@ -90,13 +90,13 @@ if (isset($_POST['select_profile']) || $_GET['section'] == 'ADMIN') {
 							<div class="widget-content">
 								<div class="tabbable">
 									<ul class="nav nav-tabs newTabs">
-										<li class="active"><a href="#show_clients" data-toggle="tab">Portal Change</a></li>
+										<li class="active"><a href="#show_clients" data-toggle="tab">Switch Accounts</a></li>
 									</ul>
 									<br>
 									<div class="tab-content">
 										<!-- +++++++++++++++++++++++++++++ client list ++++++++++++++++++++++++++++++++ -->
 										<div class="tab-pane fade in active" id="show_clients">
-											<h1 class="head">Portal Change</h1>
+											<h1 class="head">Switch Accounts</h1>
 											<?php if (isset($_GET['section']) && $_GET['section'] != 'ADMIN') { ?>
 												<form autocomplete="off" id="assign_roles_submit" name="assign_roles_submit" method="post" class="form-horizontal">
 													<div class="control-group">

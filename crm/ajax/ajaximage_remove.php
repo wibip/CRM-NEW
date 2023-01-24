@@ -26,9 +26,9 @@ $user_name = $_SESSION['user_name'];
 $key_query = "SELECT  `access_role`, user_type, user_distributor FROM  admin_users WHERE user_name = '$user_name' LIMIT 1";
 $query_results=$db->selectDB($key_query);
 foreach ($query_results['data'] as $row) {
-	$access_role = $row[access_role];
-	$user_type = $row[user_type];
-	$user_distributor = $row[user_distributor].'_';
+	$access_role = $row['access_role'];
+	$user_type = $row['user_type'];
+	$user_distributor = $row['user_distributor'].'_';
 }
 
 

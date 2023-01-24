@@ -32,9 +32,13 @@ class crm
     public function getOtherConfig($field) {
         $networkArr = $this->networkArr;
         return $networkArr[$field];
-
     }
 
+    /**
+     * Summary of getToken
+     * @return mixed
+     * generate token from API server
+     */
     public function getToken(){
         //API Url
         $url = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/token';
@@ -84,6 +88,13 @@ class crm
         
     }
 
+    /**
+     * Summary of createParent
+     * @param mixed $jsonData
+     * @param mixed $mno_id
+     * @return mixed
+     * Create new proprty and location in API server
+     */
     public function createParent($jsonData, $mno_id){
         $access_token = $this->getToken();
         //API Url
@@ -125,12 +136,7 @@ class crm
             
             $req = $url2.'->'.$this->db->escapeDB($jsonData);
         
-            // $q = "INSERT INTO `exp_crm_logs` (`name`,`description`,`request`,`response`,`status_code`,`create_user`,`create_date`)
-            // VALUES('createProperty','Create CRM Property','$req','$result','$httpcode','',NOW())";
-
-            //$this->db->execDB($q);
             if ($decoded['status'] == 'success') {
-                $ex = $this->db->execDB("UPDATE exp_crm SET `status` = 'Completed' WHERE id = '$mno_id'");
                 $this->db->addApiLogs('createClient', 'Create CRM Client', 'SUCCESS', 'crm client generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
             }else{
                 $ex = $this->db->execDB("UPDATE exp_crm SET `status` = 'Failed' WHERE id = '$mno_id'");
@@ -146,127 +152,16 @@ class crm
         
     }
 
-    public function createLocation($property_id,$jsonData, $location_id){
+    /**
+     * Summary of deleteParent
+     * @param mixed $business_id
+     * @return mixed
+     * Remove property from API server
+     */
+    public function deleteParent($business_id){
         $access_token = $this->getToken();
         //API Url
-        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$property_id.'/locations';
-        
-        try{
-            $ch = curl_init($url2);
-            $header_parameters = "Content-Type: application/json;charset=UTF-8";
-            $header_parameters = array(
-                'Authorization: Bearer '.$access_token.'',
-                'Accept: application/json',
-                'Content-Type: application/json');
-            //Attach our encoded JSON string to the POST fields.
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-            curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-            curl_setopt($ch, CURLOPT_HEADER, 1);
-            curl_setopt($ch, CURLOPT_VERBOSE, 1);
-            
-            //Set the content type to application/json
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $header_parameters);
-
-            curl_setopt ($ch, CURLOPT_SSLVERSION, 6);
-            curl_setopt ($ch, CURLOPT_SSLVERSION, 'CURL_SSLVERSION_TLSv1_2');
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-            //Execute the request
-            $result = curl_exec($ch);
-                
-            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-            curl_close($ch);
-            $header = substr($result, 0, $header_size);
-            $body = substr($result, $header_size);
-            $decoded = json_decode($body, true);
-            
-            $req = $url2.'->'.$this->db->escapeDB($jsonData);
-
-            if ($decoded['status'] == 'success') {
-                $ex = $this->db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 1 WHERE id = '$location_id'");
-                $this->db->addApiLogs('createLocation', 'Create CRM Location', 'SUCCESS', 'crm location generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
-            }else{
-                $ex = $this->db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 0 WHERE id = '$location_id'");
-                $this->db->addApiLogs('createLocation', 'Create CRM Location', 'ERROR', 'crm location generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
-            }
-
-            return $decoded; 
-
-        } catch(Exception $e) {
-            $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, $jsonData, $e->getMessage(), 0, $_SESSION['user_id']);
-            return 'Error';
-        }
-        
-    }
-
-    public function updateLocation($property_id,$jsonData, $location_id){
-        $access_token = $this->getToken();
-        //API Url
-        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$property_id.'/locations';
-        
-        try{
-            $ch = curl_init($url2);
-            $header_parameters = "Content-Type: application/json;charset=UTF-8";
-            $header_parameters = array(
-                'Authorization: Bearer '.$access_token.'',
-                'Accept: application/json',
-                'Content-Type: application/json');
-            //Attach our encoded JSON string to the POST fields.
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-            curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-            curl_setopt($ch, CURLOPT_HEADER, 1);
-            curl_setopt($ch, CURLOPT_VERBOSE, 1);
-            
-            //Set the content type to application/json
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $header_parameters);
-
-            curl_setopt ($ch, CURLOPT_SSLVERSION, 6);
-            curl_setopt ($ch, CURLOPT_SSLVERSION, 'CURL_SSLVERSION_TLSv1_2');
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-            //Execute the request
-            $result = curl_exec($ch);
-                
-            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-            curl_close($ch);
-            $header = substr($result, 0, $header_size);
-            $body = substr($result, $header_size);
-            $decoded = json_decode($body, true);
-            
-            $req = $url2.'->'.$this->db->escapeDB($jsonData);
-
-            if ($decoded['status'] == 'success') {
-                $ex = $this->db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 1 WHERE id = '$location_id'");
-                $this->db->addApiLogs('createLocation', 'Create CRM Location', 'SUCCESS', 'crm location generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
-            }else{
-                $ex = $this->db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 0 WHERE id = '$location_id'");
-                $this->db->addApiLogs('createLocation', 'Create CRM Location', 'ERROR', 'crm location generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
-            }
-
-            return $decoded; 
-
-        } catch(Exception $e) {
-            $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, $jsonData, $e->getMessage(), 0, $_SESSION['user_id']);
-            return 'Error';
-        }
-        
-    }
-
-
-    public function deleteLocation($property_id, $location_id){
-        $access_token = $this->getToken();
-        //API Url
-        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$property_id.'/locations/'.$location_id;
+        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id;
         
         try{
             $ch = curl_init($url2);
@@ -294,20 +189,19 @@ class crm
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             curl_close($ch);
-            // $header = substr($result, 0, $header_size);
-            // $body = substr($result, $header_size);
-            // $decoded = json_decode($body, true);
+            $header = substr($result, 0, $header_size);
+            $body = substr($result, $header_size);
+            $decoded = json_decode($body, true);
             
-            // $req = $url2.'->'.$this->db->escapeDB($jsonData);
+            $req = $url2.'->'.$this->db->escapeDB($jsonData);
 
             if ($httpcode == 200) {
-                $ex = $this->db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 3 WHERE id = '$location_id'");
-                $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'SUCCESS', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
+                $this->db->addApiLogs('deleteLocation', 'DELETE CRM Property', 'SUCCESS', 'crm Property deletion', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+                return $httpcode; 
             }else{
-                $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'ERROR', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
+                $this->db->addApiLogs('deleteLocation', 'DELETE CRM Property', 'ERROR', 'crm Property deletion', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+                return $decoded; 
             }
-
-            return $httpcode; 
 
         } catch(Exception $e) {
             $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, '', $e->getMessage(), 0, $_SESSION['user_id']);
@@ -315,5 +209,246 @@ class crm
         }
         
     }
+
+    /**
+     * Summary of getLocationDetails
+     * @param mixed $business_id
+     * @param mixed $location_id
+     * @return mixed
+     * get location details from API server alinged with given business ID
+     */
+    public function getLocationDetails($business_id,$location_id){
+        
+            $access_token = $this->getToken();
+            //API Url
+            $url = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id.'/locations/'.$location_id;
+        try {
+            $header_parameters = "Content-Type: application/json;charset=UTF-8";
+            $header_parameters = array(
+                                    'Authorization: Bearer '.$access_token.'',
+                                    'Accept: application/json',
+                                    'Content-Type: application/json');
+            //Initiate cURL.
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_VERBOSE, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER,$header_parameters);
+            curl_setopt($ch, CURLOPT_SSLVERSION, 6);
+            curl_setopt($ch, CURLOPT_SSLVERSION, 'CURL_SSLVERSION_TLSv1_2');
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+            $result = curl_exec($ch);
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $header = substr($result, 0, $header_size);
+            $body = substr($result, $header_size);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $decoded = json_decode($body, true);
+            
+            if ($httpcode == 200 && (count($decoded["locations"]) >0)) {
+                $this->db->addApiLogs('getLocation', 'Get CRM Location details', 'SUCCESS', 'get crm location details', $url, '', $result, $httpcode, $_SESSION['user_id']);
+                return $decoded;
+            }else{
+                $this->db->addApiLogs('getLocation', 'Get CRM Location details', 'ERROR', 'get crm location details', $url, '', $result, $httpcode, $_SESSION['user_id']);
+                return false;
+            }
+        } catch(Exception $e) {
+            $this->db->addApiLogs('getLocation', 'Get CRM Location details', 'ERROR', 'get crm location details', $url, '', $e->getMessage(), 0, $_SESSION['user_id']);
+            return false;
+        }
+        
+    }
+
+    /**
+     * Summary of createLocation
+     * @param mixed $business_id
+     * @param mixed $jsonData
+     * @param mixed $location_id
+     * @return mixed
+     * Create new location in API server alinged with given business ID
+     */
+    public function createLocation($business_id,$jsonData, $location_id){
+        $access_token = $this->getToken();
+        //API Url
+        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id.'/locations';
+        
+        try{
+            $ch = curl_init($url2);
+            $header_parameters = "Content-Type: application/json;charset=UTF-8";
+            $header_parameters = array(
+                'Authorization: Bearer '.$access_token.'',
+                'Accept: application/json',
+                'Content-Type: application/json');
+            //Attach our encoded JSON string to the POST fields.
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_VERBOSE, 1);
+            
+            //Set the content type to application/json
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header_parameters);
+
+            curl_setopt ($ch, CURLOPT_SSLVERSION, 6);
+            curl_setopt ($ch, CURLOPT_SSLVERSION, 'CURL_SSLVERSION_TLSv1_2');
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+            //Execute the request
+            $result = curl_exec($ch);
+                
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            curl_close($ch);
+            $header = substr($result, 0, $header_size);
+            $body = substr($result, $header_size);
+            $decoded = json_decode($body, true);
+            
+            $req = $url2.'->'.$this->db->escapeDB($jsonData);
+
+            if ($decoded['status'] == 'success') {
+                $ex = $this->db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 1 WHERE id = '$location_id'");
+                $this->db->addApiLogs('createLocation', 'Create CRM Location', 'SUCCESS', 'crm location generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+            }else{
+                $ex = $this->db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 0 WHERE id = '$location_id'");
+                $this->db->addApiLogs('createLocation', 'Create CRM Location', 'ERROR', 'crm location generation', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+            }
+
+            return $decoded; 
+
+        } catch(Exception $e) {
+            $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, $jsonData, $e->getMessage(), 0, $_SESSION['user_id']);
+            return 'Error';
+        }
+        
+    }
+
+    /**
+     * Summary of updateLocation
+     * @param mixed $business_id
+     * @param mixed $jsonData
+     * @param mixed $location_id
+     * @return mixed
+     */
+    public function updateLocation($business_id,$jsonData, $location_id){
+        $access_token = $this->getToken();
+        //API Url
+        $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id.'/locations/'.$location_id;
+        
+        try{
+            $ch = curl_init($url2);
+            $header_parameters = "Content-Type: application/json;charset=UTF-8";
+            $header_parameters = array(
+                'Authorization: Bearer '.$access_token.'',
+                'Accept: application/json',
+                'Content-Type: application/json');
+            //Attach our encoded JSON string to the POST fields.
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_VERBOSE, 1);
+            
+            //Set the content type to application/json
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header_parameters);
+
+            curl_setopt ($ch, CURLOPT_SSLVERSION, 6);
+            curl_setopt ($ch, CURLOPT_SSLVERSION, 'CURL_SSLVERSION_TLSv1_2');
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+            //Execute the request
+            $result = curl_exec($ch);
+                
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            curl_close($ch);
+            $header = substr($result, 0, $header_size);
+            $body = substr($result, $header_size);
+            $decoded = json_decode($body, true);
+            
+            $req = $url2.'->'.$this->db->escapeDB($jsonData);
+
+            if ($decoded['status'] == 'success') {
+                $this->db->addApiLogs('updateLocation', 'Update CRM Location', 'SUCCESS', 'crm location update', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+            }else{
+                $this->db->addApiLogs('updateLocation', 'Update CRM Location', 'ERROR', 'crm location update', $url2, $req, $result, $httpcode, $_SESSION['user_id']);
+            }
+
+            return $decoded; 
+
+        } catch(Exception $e) {
+            $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, $jsonData, $e->getMessage(), 0, $_SESSION['user_id']);
+            return 'Error';
+        }
+        
+    }
+
+    /**
+     * Summary of deleteLocation
+     * @param mixed $business_id
+     * @param mixed $location_id
+     * @return mixed
+     * Remove location from API server
+     */
+    public function deleteLocation($business_id, $location_id){
+        $getLocation = $this->getLocationDetails($business_id, $location_id);
+        if($getLocation != false) {
+            $access_token = $this->getToken();
+            //API Url
+            $url2 = $this->getOtherConfig('api_url').'/api/'.$this->getOtherConfig('controller_name').'/accounts/'.$business_id.'/locations/'.$location_id;
+            
+            try{
+                $ch = curl_init($url2);
+                $header_parameters = "Content-Type: application/json;charset=UTF-8";
+                $header_parameters = array(
+                    'Authorization: Bearer '.$access_token.'',
+                    'Accept: application/json',
+                    'Content-Type: application/json');
+                //Attach our encoded JSON string to the POST fields.
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                curl_setopt($ch, CURLOPT_HEADER, 1);
+                curl_setopt($ch, CURLOPT_VERBOSE, 1);
+                //Set the content type to application/json
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $header_parameters);
+                curl_setopt ($ch, CURLOPT_SSLVERSION, 6);
+                curl_setopt ($ch, CURLOPT_SSLVERSION, 'CURL_SSLVERSION_TLSv1_2');
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+                //Execute the request
+                $result = curl_exec($ch);
+                    
+                $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+                curl_close($ch);
+
+                if ($httpcode == 200) {
+                    $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'SUCCESS', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
+                }else{
+                    $this->db->addApiLogs('deleteLocation', 'DELETE CRM Location', 'ERROR', 'crm location deletion', $url2, '', $result, $httpcode, $_SESSION['user_id']);
+                }
+
+                return $httpcode; 
+
+            } catch(Exception $e) {
+                $this->db->addApiLogs('createToken', 'Create CRM Token', 'ERROR', 'crm token generation', $url2, '', $e->getMessage(), 0, $_SESSION['user_id']);
+                return 'Error';
+            }
+        }  else {
+            return $getLocation;
+        }
+    }
+
+    
 }
 ?>

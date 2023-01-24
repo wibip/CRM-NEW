@@ -7,7 +7,10 @@ if (isset($_SESSION['msg_crm_manage'])) {
     unset($_SESSION['msg_crm_manage']);
 
 }
-
+$loggedUserName = null;
+if(isset($_SESSION['user_name'])){
+    $loggedUserName = $_SESSION['user_name'];
+}
 ?>
     <form class="form-horizontal ">
             <div class="form-group">
@@ -116,7 +119,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Unique Property ID</th>
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Business Name</th>
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Status</th>
-                            <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Edit</th>
+                            <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">View</th>
                             <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">Remove</th>                           
                         </tr>
 
@@ -230,6 +233,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                                 var request = {
                                     listsize: $('#activeLocationsTablePerpage').val(),
                                     type: 'crmActiveAccounts',
+                                    user_name: '<?php echo $loggedUserName; ?>',
                                     user_distributor: '<?php echo $user_distributor; ?>',
                                     busId: $('#activeLocationsBusId').val(),
                                     accName: $('#activeLocationsAccount').val()
@@ -241,6 +245,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                                 var request = {
                                     listsize: $('#activeLocationsTablePerpage').val(),
                                     type: 'crmActiveAccounts',
+                                    user_name: '<?php echo $loggedUserName; ?>',
                                     user_distributor: '<?php echo $user_distributor; ?>',
                                     busId: $('#activeLocationsBusId').val(),
                                     accName: $('#activeLocationsAccount').val()
@@ -252,6 +257,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                                 var request = {
                                     listsize: $('#activeLocationsTablePerpage').val(),
                                     type: 'crmActiveAccounts',
+                                    user_name: '<?php echo $loggedUserName; ?>',
                                     user_distributor: '<?php echo $user_distributor; ?>',
                                     busId: $('#activeLocationsBusId').val(),
                                     accName: $('#activeLocationsAccount').val()
@@ -263,6 +269,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                                 var request = {
                                     listsize: $('#activeLocationsTablePerpage').val(),
                                     type: 'crmActiveAccounts',
+                                    user_name: '<?php echo $loggedUserName; ?>',
                                     user_distributor: '<?php echo $user_distributor; ?>',
                                     nextPage: $(this).data('pagenum'),
                                     busId: $('#activeLocationsBusId').val(),
@@ -274,6 +281,7 @@ if (isset($_SESSION['msg_crm_manage'])) {
                                 var request = {
                                     listsize: $('#activeLocationsTablePerpage').val(),
                                     type: 'crmActiveAccounts',
+                                    user_name: '<?php echo $loggedUserName; ?>',
                                     user_distributor: '<?php echo $user_distributor; ?>'
                                 }
                                 ajaxCall(request);

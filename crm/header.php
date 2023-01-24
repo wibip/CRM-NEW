@@ -338,9 +338,9 @@ if ($_GET['log_other'] == '1') {
 		$_SESSION['remote'] = 'yes';
 
 		//login from sub user
-		$_SESSION['user_name'] = $data_arr[uname]; //$_GET['uname'];
-		$_SESSION['access_role'] = $data_arr[urole]; //$_GET['urole'];
-		$_SESSION['full_name'] = $data_arr[fname]; //$_GET['fname'];
+		$_SESSION['user_name'] = $data_arr['uname']; //$_GET['uname'];
+		$_SESSION['access_role'] = $data_arr['urole']; //$_GET['urole'];
+		$_SESSION['full_name'] = $data_arr['fname']; //$_GET['fname'];
 
 		$user_name = $_SESSION['user_name'];
 		$user_details = $db_class1->select1DB("SELECT  user_distributor ,user_type  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
@@ -508,6 +508,7 @@ if ($_SESSION['login'] != 'yes' && $script != 'verification') {
 	exit();
 }
 
+
 // Collect session valiables
 $user_name = $_SESSION['user_name'];
 $access_role = $_SESSION['access_role'];
@@ -537,13 +538,13 @@ if ($user_type == 'MVNO_ADMIN') {
 
 $query_results = $db_class1->select1DB($key_query);
 //while($row=mysql_fetch_array($query_results)){
-$access_role = $query_results[access_role];
-$user_type = $query_results[user_type];
-$user_distributor = $query_results[user_distributor];
+$access_role = $query_results['access_role'];
+$user_type = $query_results['user_type'];
+$user_distributor = $query_results['user_distributor'];
 if (strlen($full_name) == 0) {
-	$full_name = $query_results[full_name];
+	$full_name = $query_results['full_name'];
 }
-$active_user = $query_results[is_enable];
+$active_user = $query_results['is_enable'];
 
 if ($_SESSION['remote'] == 'yes') {
 	if ($active_user == '8') {
@@ -577,8 +578,9 @@ if ($_SESSION['login'] == 'yes') {
 	}
 }
 
+
 //////// System Packages and features
-if ($user_type == "SADMIN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
+if ($user_type == "SADMIN" || $user_type == "SMAN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	if ($user_type == "MNO" || $user_type == "RESELLER_ADMIN" || $user_type == "SUPPORT") {
 		$fearuresjson = $db_class1->getValueAsf("SELECT features as f FROM `exp_mno` WHERE mno_id='$user_distributor'");
@@ -679,6 +681,7 @@ if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 	$main_menu_clickble = 'YES';
 }
 
+
 // New Access Functions
 function isModuleAccess($access_role, $module, $db_function)
 {
@@ -707,15 +710,16 @@ $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHE
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
 // var_dump($query_results_drop1);
 foreach ($query_results_drop1['data'] as $row) {
-	if ($row[menu_item] == 3) {
-		$x_non_admin[] = $row[module_name]; // Non Admin Roles
+	if ($row['menu_item'] == 3) {
+		$x_non_admin[] = $row['module_name']; // Non Admin Roles
 	} else {
-		$x[] = $row[module_name]; // Retuns base access
+		$x[] = $row['module_name']; // Retuns base access
 	}
 }
-
 // echo '------------<br/>';
-// var_dump($system_package);
+// var_dump($x);
+// echo '------------<br/>';
+
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
@@ -733,7 +737,8 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-
+// echo '------------<br/>';
+// var_dump($x);
 
 array_push($x,"change_portal");
 
@@ -749,6 +754,8 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 }
 // echo '------------<br/>';
 // var_dump($x);
+// echo "<<<<<<  Step 06 >>>>>";
+// die;
 $allowed_pages = $x;
 
 $module_ids = join('", "', $x);
@@ -1283,12 +1290,12 @@ if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
 		$row = $db_class1->select1DB($kmno_query);
 		//print_r(mysql_fetch_array($query_results));
 		//foreach ($query_results as $row) {
-		$mno_id = $row[mno_id];
-		$network_type = $row[network_type];
-		$distributor_name_get = str_replace('\\', '', $row[distributor_name]);
-		$site_title = str_replace('\\', '', $row[site_title]);
-		$camp_theme_color = $row[camp_theme_color];
-		$camp_theme_logo = $row[theme_logo];
+		$mno_id = $row['mno_id'];
+		$network_type = $row['network_type'];
+		$distributor_name_get = str_replace('\\', '', $row['distributor_name']);
+		$site_title = str_replace('\\', '', $row['site_title']);
+		$camp_theme_color = $row['camp_theme_color'];
+		$camp_theme_logo = $row['theme_logo'];
 		$mni_favicon_id = $mno_id;
 
 		$top_line_color = $row['theme_top_line_color'];
@@ -1377,7 +1384,7 @@ if (strlen($user_timezone) < 1) {
 
 $mno_query2 = "SELECT * FROM `exp_mno` WHERE `mno_id` = '$mni_favicon_id'";
 $row = $db_class1->select1DB($mno_query2);
-$favicon_image = $row[favicon_image];
+$favicon_image = $row['favicon_image'];
 
 
 /*if(strlen($favicon_image)){
@@ -1690,6 +1697,99 @@ else{
 	.navbar .btn-group {
 		margin-top: 0px !important;
 	}
+
+	.ring {
+		position:absolute;
+		top:50%;
+		left:50%;
+		transform:translate(-50%,-50%);
+		width:150px;
+		height:150px;
+		background:transparent;
+		border:3px solid #3c3c3c;
+		border-radius:50%;
+		text-align:center;
+		line-height:150px;
+		font-family:sans-serif;
+		font-size:15px;
+		color:#fff000;
+		letter-spacing:4px;
+		text-transform:uppercase;
+		text-shadow:0 0 10px #fff000;
+		box-shadow:0 0 20px rgba(0,0,0,.5);
+		z-index: 150;
+	}
+	.ring:before {
+		content:'';
+		position:absolute;
+		top:-3px;
+		left:-3px;
+		width:100%;
+		height:100%;
+		border:3px solid transparent;
+		border-top:3px solid #fff000;
+		border-right:3px solid #fff000;
+		border-radius:50%;
+		animation:animateC 2s linear infinite;
+	}
+	.ring > span{
+		display:block;
+		position:absolute;
+		top:calc(50% - 2px);
+		left:50%;
+		width:50%;
+		height:4px;
+		background:transparent;
+		transform-origin:left;
+		animation:animate 2s linear infinite;
+	}
+	.ring > span:before{
+		content:'';
+		position:absolute;
+		width:16px;
+		height:16px;
+		border-radius:50%;
+		background:#fff000;
+		top:-6px;
+		right:-8px;
+		box-shadow:0 0 20px #fff000;
+	}
+	@keyframes animateC{
+		0%
+		{
+			transform:rotate(0deg);
+		}
+		100%
+		{
+			transform:rotate(360deg);
+		}
+	}
+	@keyframes animate{
+		0%
+		{
+			transform:rotate(45deg);
+		}
+		100%
+		{
+			transform:rotate(405deg);
+		}
+	}
+
+	#overlay {
+		position: fixed; /* Sit on top of the page content */
+		display: none; /* Hidden by default */
+		width: 100%; /* Full width (cover the whole page) */
+		height: 100%; /* Full height (cover the whole page) */
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+		z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+		cursor: pointer; /* Add a pointer on hover */
+		z-index: 150;
+	}
+  
 </style>
 
 <title><?php
@@ -1697,6 +1797,9 @@ else{
 		echo defined($title_difiner) ? constant($title_difiner) : constant('_page_title_') ?></title>
 
 <script type="text/javascript">
+	$(document).ready(function() {
+		$('#overlay').css('display','none');
+	});
 	function setCookie() {
 		let cname = "timeout";
 		let cvalue = Math.floor(Date.now() / 1000);
@@ -1716,7 +1819,11 @@ else{
 
 
 <body>
-
+	<div id="overlay">
+		<div class="ring">Processing
+			<span></span>
+		</div>
+	</div>
 
 	<style>
 		.toggle-on {
@@ -1725,6 +1832,7 @@ else{
 	</style>
 
 	<script>
+
 		function dropdown() {
 			var w = window.innerWidth;
 			if (w < 980) {
@@ -1813,7 +1921,7 @@ else{
 
 		$row = $db_class1->select1DB($key_query);
 		//while($row=mysql_fetch_array($query_results)){
-		$logo_top = $row[theme_logo];
+		$logo_top = $row["theme_logo"];
 		//}
 
 		$logo_top = 'top_logo.png';
@@ -1835,7 +1943,7 @@ else{
 
 		$row = $db_class1->select1DB($key_query);
 		//while($row=mysql_fetch_array($query_results)){
-		$logo_top = $row[theme_logo];
+		$logo_top = $row["theme_logo"];
 		//}
 
 		if (strlen($logo_top)) {
@@ -1863,7 +1971,7 @@ else{
 
 		$row = $db_class1->select1DB($key_query);
 		//while($row=mysql_fetch_array($query_results)){
-		$logo_top = $row[theme_logo];
+		$logo_top = $row["theme_logo"];
 		//}
 
 		if (strlen($logo_top)) {
@@ -1970,6 +2078,28 @@ else{
 		$top_menu = 'bottom';
 		$page_intro = 'YES';
 	}
+
+	
+$loggedMessage = 'You are logged in as ';
+
+switch($user_type){
+	case 'ADMIN':
+		$loggedMessage .= 'Admin';
+	break;
+	case 'MNO':
+		$loggedMessage .= 'Operation Admin';
+	break;
+	case 'PROVISIONING':
+		$loggedMessage .= 'Client';
+	break;
+	case 'SMAN':
+		$loggedMessage .= 'Sales Manager';
+	break;
+	case 'SADMIN':
+		$loggedMessage .= 'Super Admin';
+	break;
+}
+
 
 	$navbar = 'layout/ARRIS/views/header_navbar.php';
 
@@ -2274,7 +2404,7 @@ else{
 
 
 									foreach($valuem['module'] as $key=>$checkVal){
-										if(in_array( "Portal Change" ,$checkVal)){
+										if(in_array( "Switch Accounts" ,$checkVal)){
 											unset($valuem['module'][$key]);
 										}
 									}
@@ -2397,7 +2527,7 @@ else{
 													echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
             									<a href="' . $sub_menu_link . '"  target="_blank"  class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
 												} else {
-													if($sub_menu_name != 'Portal Change'){
+													if($sub_menu_name != 'Switch Accounts'){
 														echo '<li id="li' . $keyY . '" style="float: left;margin-top:8px">
             												<a href="' . $sub_menu_link . $extension . '" class="new" style="padding:5px;">' . $sub_menu_name . '</a></li>';
 													}

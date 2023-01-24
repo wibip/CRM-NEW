@@ -406,4 +406,58 @@ class CommonFunctions{
         $result =  $this->db->selectDB($sql);
         return $result;
     }
+
+    public function getPropertyDetails($id,$column){
+        $sql = "SELECT ".$column." FROM exp_crm WHERE id=".$id;
+        $result =  $this->db->selectDB($sql);
+        return $result;
+    }
+
+    public function getUserTypeFromAccessType($access_role){
+        $sql = "SELECT role_type FROM admin_access_roles WHERE access_role='".$access_role."'"; 
+        $result =  $this->db->selectDB($sql);
+        $userType = null;
+        if(count($result) > 0){
+            $roleType = $result['data'][0]['role_type'];
+            switch($roleType) {
+                case 'sadmin':
+                    $userType = 'SADMIN';
+                break;
+                case 'salesmanager':
+                    $userType = 'SMAN';
+                break;
+                case 'nadmin':
+                    $userType = 'ADMIN';
+                break;
+                default:
+                    $userType = 'ADMIN';
+                break;
+            }
+        }
+
+        return $userType;
+    }
+
+    public function getAdminUserDetails($id,$column){
+        $sql = "SELECT ".$column." FROM admin_users WHERE id=".$id;
+        $result =  $this->db->selectDB($sql);
+        return $result;
+    }
+
+    public function getAdminUserDetailsFromClient($clientId,$column){
+        $sql = "SELECT au.".$column." FROM crm_portal.crm_clients AS crmc
+                INNER JOIN admin_users AS au ON au.id = crmc.user_id
+                WHERE crmc.id=".$clientId;
+        $result =  $this->db->selectDB($sql);
+        return $result;
+    }
+
+    public function getPropertyForSM($access_role){
+        $sqlProperties = "SELECT ec.id,ec.business_name,ec.property_id,ec.`status`,au.full_name,au.id AS client_id FROM exp_crm AS ec 
+                            INNER JOIN admin_users AS au ON au.user_distributor = ec.mno_id 
+                            INNER JOIN admin_access_account AS aaa ON  aaa.operation_id = au.id 
+                            WHERE aaa.access_role='$access_role'";
+        $result =  $this->db->selectDB($sqlProperties);
+        return $result;
+    }
 }

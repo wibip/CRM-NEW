@@ -64,6 +64,7 @@ class SystemPackageOne
             WHERE c.`product_code`='$system_package'
             AND c.`feature_code`='$feature_code'
             AND c.`type` ='option'";
+
         $method = $this->dbT->select1DB($q);
         // var_dump($method);die;
         $access_method = isset($method['access_method']) ? $method['access_method'] : null;

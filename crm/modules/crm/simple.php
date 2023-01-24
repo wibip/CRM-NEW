@@ -187,7 +187,7 @@ if (!empty($arrayo)) {
                                     <label for="radiobtns">Unique Property ID</label>
                                     <div class="controls col-lg-5 form-group">
                                         <div>
-                                        <span><?php echo $get_opt_code; ?></span>
+                                        <!-- <span>< ?php echo $get_opt_code; ?></span> -->
                                         <input class="wifi_unique" type="text" name="wifi_unique" class="span4 form-control"
                                         value="<?php echo $edit===true?$get_wifi_unique:''?>">
                                         </div>
@@ -374,20 +374,28 @@ if (!empty($arrayo)) {
                 
                 <div class="actions clearfix">
                     <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
-                        <?php if($activatePopup == true) {  ?>
+                        <?php if($activatePopup == true && $get_status == "Completed") {  ?>
                             <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
                             <button onmouseover="" class="btn btn-primary pop-up-open">Add Location</button>
                         <?php } 
-                        if (!isset($_GET['edit'])){ ?>
+                        if (!isset($_GET['edit']) && !isset($_GET['property_id'])){ ?>
                         <li class="finishParent" style="display: inline-block;margin-left: 5px;" aria-hidden="true">
-                            <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'create_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
+                            <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
                         </li>
                         <?php } ?>
-                        <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
+                        <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><button type="button" onclick="goto()" class="btn btn-danger">Cancel</button>&nbsp;</li>
                     </ul>
                 </div>
             </div>
                     </div>
                 </form>
             </div>
+    <script type="text/javascript">
+            $(document).ready(function(e) {
+                //create_crm_submit
+                $('#create_crm_submit').click(function(){
+                    $("#overlay").css("display","block");
+                });
+            });
+    </script>
             
