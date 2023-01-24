@@ -96,7 +96,7 @@ if (isset($_POST['select_profile']) || $_GET['section'] == 'ADMIN') {
 									<div class="tab-content">
 										<!-- +++++++++++++++++++++++++++++ client list ++++++++++++++++++++++++++++++++ -->
 										<div class="tab-pane fade in active" id="show_clients">
-											<h1 class="head">Switch Accounts</h1>
+											<h3 class="head">Please select the operations profile</h3>
 											<?php if (isset($_GET['section']) && $_GET['section'] != 'ADMIN') { ?>
 												<form autocomplete="off" id="assign_roles_submit" name="assign_roles_submit" method="post" class="form-horizontal">
 													<div class="control-group">
@@ -123,7 +123,7 @@ if (isset($_POST['select_profile']) || $_GET['section'] == 'ADMIN') {
 														</div>
 													<?php } ?>
 													<div class="form-actions">
-														<button disabled type="submit" name="select_profile" id="select_profile" class="btn btn-primary">Select Profile</button>
+														<button disabled type="submit" name="select_profile" id="select_profile" class="btn btn-primary">Continue</button>
 													</div>
 												</form>
 											<?php } ?>
