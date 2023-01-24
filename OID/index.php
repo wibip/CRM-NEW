@@ -8,6 +8,7 @@ $oidc = new OpenIDConnectClient($issuer, $cid, $secret);
 
 /*First attempt- Get user details*/
 $oidc->setCertPath('./certificate.crt');
+$oidc->addScope($scope);
 // $oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/connect/token'));
 $oidc->authenticate();
 $name = $oidc->requestUserInfo();
