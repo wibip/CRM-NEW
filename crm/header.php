@@ -722,6 +722,9 @@ foreach ($query_results_drop1['data'] as $row) {
 
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
+		// echo $access_role.'---';
+		// echo $valueX;
+		// echo '------------<br/>';
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
 			try {
 				unset($x[$keyX]);

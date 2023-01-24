@@ -354,7 +354,7 @@ if($_SESSION['SADMIN'] == true && isset($_SESSION['section']) && $_SESSION['sect
 			<ul class="dropdown-menu">
 					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
 					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./change_portal?section=MNO">Operations</a></li>
-					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
+					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Client</a></li>
 			</ul>
 		</li>
 	<?php } ?>
