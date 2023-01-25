@@ -107,6 +107,21 @@ if (isset($_GET['t'])) {
 												<div class="widget-header">
 													<h3>Active Properties</h3>
 												</div>
+                                                <div>
+                                                    <label>Client Name</label>
+                                                    <select id="client_name" name="client_name">
+                                                        <option>All</option>
+                                                    </select>
+                                                    <label>Business Name</label>
+                                                    <select id="client_name" name="business_name">
+                                                        <option>All</option>
+                                                    </select>
+                                                    <label>Status</label>
+                                                    <select id="client_name" name="business_name">
+                                                        <option>All</option>
+                                                    </select>
+                                                    <button class="btn btn-secondary">Filter</button>
+                                                </div>
 												<!-- /widget-header -->
 												<div class="widget-content table_response">
                                                     <div style="overflow-x:auto">
