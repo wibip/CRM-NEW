@@ -66,12 +66,22 @@ body{ background: url(../../img/body-bg.png); color:#838383; font: 13px/1.7em 'O
 
 
 .login-actions {
-	float: left;
-	
 	width: 100%;
-	
-	margin-top: -1em;
-	margin-bottom: 1.25em;
+	margin-top: 10px;
+    margin-bottom: 5px;
+	display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+}
+
+.login-actions .button{
+	margin-top: 0;
 }
 
 .login-social {

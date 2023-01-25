@@ -34,7 +34,7 @@ $global_base_url = trim($dbT->setVal('global_url','ADMIN'),"/");
 <link href="<?php echo $global_base_url; ?>/css/font-awesome.css" rel="stylesheet">
 <link href="<?php echo $global_base_url; ?>/css/fonts/css.css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
 <link href="<?php echo $global_base_url; ?>/css/style.css?v=1" rel="stylesheet" type="text/css">
-<link href="<?php echo $global_base_url; ?>/css/pages/signin.css?v=12" rel="stylesheet" type="text/css">
+<link href="<?php echo $global_base_url; ?>/css/pages/signin.css?v=14" rel="stylesheet" type="text/css">
 <script src="<?php echo $global_base_url; ?>/js/jquery-1.7.2.min.js"></script>
 <script src="<?php echo $global_base_url; ?>/js/bootstrap.js"></script>
 <script src="<?php echo $global_base_url; ?>/js/signin.js"></script>
