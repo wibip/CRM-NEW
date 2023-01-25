@@ -438,8 +438,8 @@ class CommonFunctions{
         return $userType;
     }
 
-    public function getAdminUserDetails($id,$column){
-        $sql = "SELECT ".$column." FROM admin_users WHERE id=".$id;
+    public function getAdminUserDetails($column,$value,$retriveValue='*'){
+        $sql = "SELECT ".$retriveValue." FROM admin_users WHERE ".$column."='".$value."'";
         $result =  $this->db->selectDB($sql);
         return $result;
     }
