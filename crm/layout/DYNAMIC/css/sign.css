@@ -242,5 +242,33 @@ a:hover{
 }
 */
 
+.hr-lines{
+    position: relative;
+    max-width: 500px;
+    text-align: center;
+  }
+  
+  .hr-lines:before{
+    content:" ";
+    height: 2px;
+    width: 40%;
+    background: red;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 0;
+  }
+  
+  .hr-lines:after{
+    content:" ";
+    height: 2px;
+    width: 40%;
+    background: red;
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0;
+  }
+  
 
 
