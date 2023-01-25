@@ -572,6 +572,7 @@ if ($system_package == 'N/A') {
 			$access_role_id = isset($_POST['access_role_id']) ? $_POST['access_role_id'] : 0;
 			$role_edit_id = isset($_POST['role_edit_id']) ? $_POST['role_edit_id'] : 0;
 			$access_role_name = trim($_POST['access_role_name']);
+			$oid_group = trim($_POST['oid_group']);
 			$role_type = $_POST['role_type'];
 
 			if($role_edit_id == 0) {
@@ -595,8 +596,8 @@ if ($system_package == 'N/A') {
 					// $msg = $message_functions->showMessage('user_admin_not_allow');
 					$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 				} else {
-					$query0 = "INSERT INTO `admin_access_roles` (`access_role`,`description`,`distributor`,`role_type` ,`create_user`,`create_date`)
-				 				VALUES ('$access_role_id', '$access_role_name', '$user_distributor', '$role_type', '$user_name',now())";
+					$query0 = "INSERT INTO `admin_access_roles` (`access_role`,`oid_group`,`description`,`distributor`,`role_type` ,`create_user`,`create_date`)
+				 				VALUES ('$access_role_id', '$oid_group', '$access_role_name', '$user_distributor', '$role_type', '$user_name',now())";
 					$result0 =$db->execDB($query0);
 
 					foreach ($_POST['my_select'] as $selectedOption) {
@@ -661,6 +662,9 @@ if ($system_package == 'N/A') {
 					}
 				} 
 			}else {
+				$roleUpdateSql = "UPDATE admin_access_roles SET oid_group='$oid_group' WHERE id=$role_edit_id";
+				$roleUpdateResult =$db->execDB($roleUpdateSql);
+
 				$getModRol_q = "SELECT * FROM `admin_access_roles_modules` WHERE `access_role`='$access_role_id'";
 				$getModRol_r=$db->selectDB($getModRol_q);
 
@@ -790,7 +794,8 @@ if ($system_package == 'N/A') {
 			$i = $a = $o = 0;
 
 			//get role name and type
-			$roleData = $db->selectDB("SELECT `description`,role_type FROM `admin_access_roles` WHERE `id`='$role_edit_id'");
+			$roleData = $db->selectDB("SELECT `oid_group`,`description`,role_type FROM `admin_access_roles` WHERE `id`='$role_edit_id'");
+			$oid_group = $roleData['data'][0]['oid_group'];
 			$role_name = $roleData['data'][0]['description'];
 			$roleType = $roleData['data'][0]['role_type'];
 			//check role type
@@ -1575,6 +1580,12 @@ if ($system_package == 'N/A') {
 																<label class="control-label" for="access_role_name">Access Role Name</label>
 																<div class="controls form-group col-lg-5">
 																	<input class="form-control span2" id="access_role_name" name="access_role_name" type="text" value="<?=$role_name?>" <?=($role_edit_id != 0 ? "disabled" : "")?>>
+																</div>
+															</div>
+															<div class="control-group">
+																<label class="control-label" for="oid_group">OID group</label>
+																<div class="controls form-group col-lg-5">
+																	<input class="form-control span2" id="oid_group" name="oid_group" type="text" value="<?=$oid_group?>" >
 																</div>
 															</div>
 															
