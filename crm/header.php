@@ -686,9 +686,9 @@ if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 function isModuleAccess($access_role, $module, $db_function)
 {
 	$sql1 = "SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role` = '$access_role' AND `module_name` = '$module' LIMIT 1";
-	var_dump($sql1);
+	// var_dump($sql1);
 	$result = $db_function->selectDB($sql1);
-	print_r($result);
+	// print_r($result);
 	//$row_count = mysql_num_rows($result);
 	if ($result['rowCount'] > 0) {
 		return true;
@@ -716,15 +716,15 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row['module_name']; // Retuns base access
 	}
 }
-echo '------------<br/>';
-var_dump($x);
-echo '------------<br/>';
+// echo '------------<br/>';
+// var_dump($x);
+// echo '------------<br/>';
 
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
-		echo $access_role.'---';
-		echo $valueX;
-		echo '------------<br/>';
+		// echo $access_role.'---';
+		// echo $valueX;
+		// echo '------------<br/>';
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
 			try {
 				unset($x[$keyX]);
@@ -740,8 +740,8 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-echo '------------<br/>';
-var_dump($x);
+// echo '------------<br/>';
+// var_dump($x);
 
 array_push($x,"change_portal");
 
@@ -755,10 +755,10 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-echo '------------<br/>';
-var_dump($x);
-echo "<<<<<<  Step 06 >>>>>";
-die;
+// echo '------------<br/>';
+// var_dump($x);
+// echo "<<<<<<  Step 06 >>>>>";
+// die;
 $allowed_pages = $x;
 
 $module_ids = join('", "', $x);
