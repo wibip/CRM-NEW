@@ -33,6 +33,7 @@ if(isset($_POST['sign_in'])){
 		}
 		if($key == 'groups'){
 			$oid_group = $value;
+			echo $value;
 			if($value == 'crm-operations') { // For temporary solution for operations till fix the DB record issue in RM side
 				$oid_group = 'crm-admin';
 			}
@@ -42,6 +43,8 @@ if(isset($_POST['sign_in'])){
 	$checkUserSql = "SELECT COUNT(*) AS f FROM admin_users AS au
 				  	INNER JOIN admin_access_roles AS aar ON aar.access_role=au.access_role 
 				  	WHERE au.user_name='$username' AND aar.oid_group='$oid_group'";
+	echo $checkUserSql;
+	die;
 	$checkUserResult = $dbT->selectDB($checkUserSql);
 
 	if($checkUserResult["data"][0]["f"] == 0){
