@@ -19,6 +19,9 @@ if(isset($_POST['sign_in'])){
 	include_once( str_replace('//','/',dirname(__FILE__).'/') .'../../../db/dbTasks.php'); 
 	include_once( str_replace('//','/',dirname(__FILE__).'/') .'../../../classes/systemPackageClass.php');   
 	$dbT = new dbTasks();
+	$robot_verify_method = 'no_verify';
+	include '../../../src/auth/ROBOT_VERIFY/'.$robot_verify_method.'/index.php';
+	$robot_verify_functions = new robot_verify();
 
 	foreach ($_SESSION['attributes'] as $key=>$value){
 		if($key == 'email'){
