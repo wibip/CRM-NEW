@@ -33,27 +33,24 @@ if(isset($_POST['sign_in'])){
 		}
 		if($key == 'groups'){
 			$oid_group = $value;
+			if($value == 'crm-operations') { // For temporary solution for operations till fix the DB record issue in RM side
+				$oid_group = 'crm-admin';
+			}
 		}
 	}
 
 	$checkUserSql = "SELECT COUNT(*) AS f FROM admin_users AS au
 				  	INNER JOIN admin_access_roles AS aar ON aar.access_role=au.access_role 
 				  	WHERE au.user_name='$username' AND aar.oid_group='$oid_group'";
-	echo $checkUserSql;
 	$checkUserResult = $dbT->selectDB($checkUserSql);
 
-	var_dump($checkUserResult["data"][0]["f"]) ;
-	echo $checkUserResult["data"][0]["f"];
-
 	if($checkUserResult["data"][0]["f"] == 0){
-		echo "check IN"; 
 		unset($_SESSION['attributes']);
 		$_SESSION['open_error'] = 1;
 		$_SESSION['open_error_msg'] = 'User not authorized to login';
 		header('Location: /crm/generic/login/');
 		exit();
 	}
-	die;
 }
 
 if (isset($username)) {
