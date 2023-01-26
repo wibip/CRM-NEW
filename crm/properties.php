@@ -144,7 +144,7 @@ if ($query_results['rowCount'] > 0) {
                                                     <div class="control-group">
                                                         <label>Business Name</label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <select id="client_name" name="business_name">
+                                                            <select id="business_name" name="business_name">
                                                                 <option value='all'>All</option>
                                                                 <?php 
                                                                     if(!empty($businessArray)){
@@ -161,17 +161,11 @@ if ($query_results['rowCount'] > 0) {
                                                     <div class="control-group">
                                                         <label>Status</label>
                                                         <div class="controls col-lg-5 form-group">
-                                                            <select id="client_name" name="business_name">
+                                                            <select id="status" name="status">
                                                                 <option value='all'>All</option>
-                                                                <?php 
-                                                                    if(!empty($statusArray)){
-                                                                        foreach($statusArray AS $key=>$value) {
-                                                                ?>
-                                                                        <option value='<?=$key?>'><?=$value?></option>
-                                                                <?php
-                                                                        }
-                                                                    }
-                                                                ?>
+                                                                <option value='Completed'>Completed</option> 
+                                                                <option value='Pending'>Pending</option>                                                               
+                                                                <option value='Failed'>Failed</option>
                                                             </select> 
                                                         </div> 
                                                     </div>
