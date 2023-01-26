@@ -34,9 +34,9 @@ if(isset($_POST['sign_in'])){
 		if($key == 'groups'){
 			$oid_group = $value;
 			// echo $value;
-			if($value == 'crm-operations') { // For temporary solution for operations till fix the DB record issue in RM side
-				$oid_group = 'crm-admin';
-			}
+			// if($value == 'crm-operations') { // For temporary solution for operations till fix the DB record issue in RM side
+			// 	$oid_group = 'crm-admin';
+			// }
 		}
 	}
 
