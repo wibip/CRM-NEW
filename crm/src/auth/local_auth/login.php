@@ -17,8 +17,9 @@ if(isset($_POST['sign_in'])){
 	$password = 'pass@123';//$auroResults['data'][0]['password'];
 } elseif(isset($_GET['source']) && $_GET['source']=='oid'){
 	include_once( str_replace('//','/',dirname(__FILE__).'/') .'../../../db/dbTasks.php'); 
-	include_once( str_replace('//','/',dirname(__FILE__).'/') .'../../../classes/systemPackageClass.php');   
 	$dbT = new dbTasks();
+	include_once( str_replace('//','/',dirname(__FILE__).'/') .'../../../classes/systemPackageClass.php');
+	$package_functions=new package_functions();   
 	$robot_verify_method = 'no_verify';
 	include '../../../src/auth/ROBOT_VERIFY/'.$robot_verify_method.'/index.php';
 	$robot_verify_functions = new robot_verify();
