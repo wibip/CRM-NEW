@@ -1,4 +1,5 @@
 <?php
+session_start();
 ini_set('display_errors', 1);
 require 'vendor/autoload.php';
 require 'cred.php';
@@ -13,10 +14,6 @@ $oidc->setCertPath('./certificate.crt');
 $oidc->addScope($scope);
 // $oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/connect/token'));
 
-// $oidc = $oidc->requestUserInfo();
-// var_dump($oidc);
-
-/*Second attempt- Request Client Credentials Token*/
 try{
     $oidc->authenticate();
     $oidc = $oidc->requestUserInfo();
@@ -30,29 +27,13 @@ try{
         $session[$key] = $v;
     }
 
-    session_start();
     $_SESSION['attributes'] = $session;
 
     // header("Location: ./attributes.php");
-    // header("Location: ../crm/src/auth/local_auth/login.php?source=oid");
+    header("Location: ../crm/src/auth/local_auth/login.php?source=oid");
 } catch(Exception $e){
     var_dump($e);
 }
 
-
-// $session = array();
-// foreach($oidc as $key=> $value) {
-//     if(is_array($value)) {
-// 	    $v = implode(', ', $value);
-//     } else {
-// 	    $v = $value;
-//     }
-//     $session[$key] = $v;
-// }
-
-// session_start();
-// $_SESSION['attributes'] = $session;
-
-// header("Location: ./attributes.php");
 
 ?>

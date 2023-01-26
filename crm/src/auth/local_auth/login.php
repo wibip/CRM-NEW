@@ -128,7 +128,7 @@ if (isset($username)) {
 				//header( "Refresh:1; url=$redirect_url", true, 303);
 
 	}
-	else if(($password_local == $password) || isset($_GET['auto_login'])){
+	else if(($password_local == $password) || isset($_GET['auto_login']) || (isset($_GET['source']) && $_GET['source']=='oid')){
 		
 		/// Package Validation
         // Get user package
