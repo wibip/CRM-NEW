@@ -22,6 +22,7 @@ $CommonFunctions = new CommonFunctions();
 
 require_once './classes/systemPackageClass.php';
 $package_functions = new package_functions();
+
 ?> 
 <head>
 <meta charset="utf-8">
@@ -71,8 +72,23 @@ if (isset($_GET['t'])) {
 } else {
     $tab8 = "set";
 }
+$clientArray = [];
+$businessArray = [];
+$statusArray = [];
 
-
+$propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN (SELECT user_name FROM admin_users WHERE user_distributor='$user_distributor')";
+$query_results = $db->selectDB($propertyQuery);
+if ($query_results['rowCount'] > 0) {
+    foreach ($query_results['data'] as $row) {
+        $clientDetails = $CommonFunctions->getAdminUserDetails('user_name', $row['create_user'], 'full_name');
+        if (!empty($clientDetails['data'])) {
+            $clientName = $clientDetails['data'][0]['full_name'];
+            $clientArray[$row['create_user']] = $clientName;
+        }
+        $businessArray[$row['business_name']] = $row['business_name'];
+        $statusArray[$row['status']] = $row['status'];
+    }
+}
 
 ?>
 <style>
@@ -112,7 +128,16 @@ if (isset($_GET['t'])) {
                                                         <label>Client Name</label>
                                                         <div class="controls col-lg-5 form-group">
                                                             <select id="client_name" name="client_name">
-                                                                <option>All</option>
+                                                                <option value='all'>All</option>
+                                                                <?php 
+                                                                    if(!empty($clientArray)){
+                                                                        foreach($clientArray AS $key=>$value) {
+                                                                ?>
+                                                                        <option value='<?=$key?>'><?=$value?></option>
+                                                                <?php
+                                                                        }
+                                                                    }
+                                                                ?>
                                                             </select>
                                                         </div> 
                                                     </div>
@@ -120,7 +145,16 @@ if (isset($_GET['t'])) {
                                                         <label>Business Name</label>
                                                         <div class="controls col-lg-5 form-group">
                                                             <select id="client_name" name="business_name">
-                                                                <option>All</option>
+                                                                <option value='all'>All</option>
+                                                                <?php 
+                                                                    if(!empty($businessArray)){
+                                                                        foreach($businessArray AS $key=>$value) {
+                                                                ?>
+                                                                        <option value='<?=$key?>'><?=$value?></option>
+                                                                <?php
+                                                                        }
+                                                                    }
+                                                                ?>
                                                             </select> 
                                                         </div> 
                                                     </div>
@@ -128,7 +162,16 @@ if (isset($_GET['t'])) {
                                                         <label>Status</label>
                                                         <div class="controls col-lg-5 form-group">
                                                             <select id="client_name" name="business_name">
-                                                                <option>All</option>
+                                                                <option value='all'>All</option>
+                                                                <?php 
+                                                                    if(!empty($statusArray)){
+                                                                        foreach($statusArray AS $key=>$value) {
+                                                                ?>
+                                                                        <option value='<?=$key?>'><?=$value?></option>
+                                                                <?php
+                                                                        }
+                                                                    }
+                                                                ?>
                                                             </select> 
                                                         </div> 
                                                     </div>
@@ -150,9 +193,8 @@ if (isset($_GET['t'])) {
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                    
-                                                                    $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN (SELECT user_name FROM admin_users WHERE user_distributor='$user_distributor')";
-                                                                    $query_results = $db->selectDB($propertyQuery);
+                                                                    // $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN (SELECT user_name FROM admin_users WHERE user_distributor='$user_distributor')";
+                                                                    // $query_results = $db->selectDB($propertyQuery);
                                                                     if($query_results['rowCount'] > 0) {
                                                                         foreach($query_results['data'] AS $row){
                                                                             $clientDetails = $CommonFunctions->getAdminUserDetails('user_name',$row['create_user'],'full_name');
