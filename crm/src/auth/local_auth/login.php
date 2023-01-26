@@ -35,6 +35,13 @@ if(isset($_POST['sign_in'])){
 			$oid_group = $value;
 		}
 	}
+
+	$checkUserSql = "SELECT id FROM admin_users AS au
+				  INNER JOIN admin_access_roles AS aar ON aar.access_role=au.access_role 
+				  WHERE au.user_name='$username' AND aar.oid_group='$oid_group'";
+	$checkUserResult = $dbT->selectDB($checkUserSql);
+	var_dump($checkUserResult);
+	die;
 }
 
 if (isset($username)) {
