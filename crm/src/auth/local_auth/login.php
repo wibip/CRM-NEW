@@ -4,11 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
-if(isset($_GET['source']) && $_GET['source']=='oid'){
-	foreach ($_SESSION['attributes'] as $key=>$value){
-		echo $key . "==>" . $value . "<br/>";
-	}
-}
+
 if(isset($_POST['sign_in'])){ 
 	$username = trim($_POST['username']);
 	$password = trim($_POST['password']);
@@ -19,7 +15,16 @@ if(isset($_POST['sign_in'])){
 	$auroResults = $dbT->selectDB($autoSql);  
 	$username = $auroResults['data'][0]['user_name'];
 	$password = 'pass@123';//$auroResults['data'][0]['password'];
-} 
+} elseif(isset($_GET['source']) && $_GET['source']=='oid'){
+	foreach ($_SESSION['attributes'] as $key=>$value){
+		if($key == 'email'){
+			$username = $value;
+		}
+		if($key == 'groups'){
+			$oid_group = $value;
+		}
+	}
+}
 
 if (isset($username)) {
 	$password_local = '';
