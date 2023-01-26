@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
+$redirect_url = $global_base_url;
 
 if(isset($_POST['sign_in'])){ 
 	$username = trim($_POST['username']);
@@ -23,6 +24,8 @@ if(isset($_POST['sign_in'])){
 	$robot_verify_method = 'no_verify';
 	include '../../../src/auth/ROBOT_VERIFY/'.$robot_verify_method.'/index.php';
 	$robot_verify_functions = new robot_verify();
+
+	$redirect_url .= "/crm";
 
 	foreach ($_SESSION['attributes'] as $key=>$value){
 		if($key == 'email'){
@@ -127,7 +130,7 @@ if (isset($username)) {
 	
 		$query_ex_log=$dbT->execDB($log_query);
 
-		$redirect_url = $global_base_url."/verification".$extension.'?login='.$login_design;
+		$redirect_url .= "/verification".$extension.'?login='.$login_design;
 
 			//	$redirect_url = "home".$extension;
 		header( "Location: $redirect_url");	
@@ -199,7 +202,7 @@ if (isset($username)) {
 			$_SESSION['theme_text'] = $theme_text;
 
 			if($package_features=="all"||$system_package=="N/A"){
-				$redirect_url = $global_base_url."/home".$extension;
+				$redirect_url .= "/home".$extension;
 				header( "Location: $redirect_url");
 			}else{
 				$m_n = json_decode($package_functions->getOptions('ALLOWED_PAGE',$system_package));
@@ -214,7 +217,7 @@ if (isset($username)) {
 					// die;
 					if($module_name != 'profile' && in_array($module_name,$m_n)) {
 							// var_dump($module_name);
-						$redirect_url = $global_base_url.'/'.$module_name.$extension;
+						$redirect_url .= '/'.$module_name.$extension;
 						setcookie("system_package", $system_package, time() + (86400 * 30), "/");
 						setcookie("load_login_design", $login_design, time() + (86400 * 30), "/");
 							// var_dump($redirect_url);
@@ -225,7 +228,7 @@ if (isset($username)) {
 				}
 			}
 		}else{
-			$redirect_url = $global_base_url.'/suspend'.$extension;
+			$redirect_url .= '/suspend'.$extension;
 		
 				setcookie("system_package", $system_package, time() + (86400 * 30), "/");
 				setcookie("load_login_design", $login_design, time() + (86400 * 30), "/");
