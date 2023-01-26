@@ -39,10 +39,11 @@ if(isset($_POST['sign_in'])){
 	$checkUserSql = "SELECT COUNT(*) AS f FROM admin_users AS au
 				  	INNER JOIN admin_access_roles AS aar ON aar.access_role=au.access_role 
 				  	WHERE au.user_name='$username' AND aar.oid_group='$oid_group'";
-
+	echo $checkUserSql;
 	$checkUserResult = $dbT->selectDB($checkUserSql);
 
 	var_dump($checkUserResult);
+	die;
 	if($checkUserResult['f'] == 0){
 		$_SESSION['open_error'] = 1;
 		$_SESSION['open_error_msg'] = 'User not authorized to login';
