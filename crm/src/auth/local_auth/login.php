@@ -16,10 +16,10 @@ if(isset($_POST['sign_in'])){
 	$username = $auroResults['data'][0]['user_name'];
 	$password = 'pass@123';//$auroResults['data'][0]['password'];
 } elseif(isset($_GET['source']) && $_GET['source']=='oid'){
-	include_once( str_replace('//','/',dirname(__FILE__).'/') .'db/dbTasks.php'); 
-	include_once( str_replace('//','/',dirname(__FILE__).'/') .'classes/systemPackageClass.php');   
+	include_once( str_replace('//','/',dirname(__FILE__).'/') .'../../../db/dbTasks.php'); 
+	include_once( str_replace('//','/',dirname(__FILE__).'/') .'../../../classes/systemPackageClass.php');   
 	$dbT = new dbTasks();
-	
+
 	foreach ($_SESSION['attributes'] as $key=>$value){
 		if($key == 'email'){
 			$username = $value;
