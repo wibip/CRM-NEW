@@ -42,9 +42,9 @@ if(isset($_POST['sign_in'])){
 	echo $checkUserSql;
 	$checkUserResult = $dbT->selectDB($checkUserSql);
 
-	var_dump($checkUserResult);
-	die;
-	if($checkUserResult['f'] == 0){
+	// var_dump($checkUserResult);
+	// die;
+	if($checkUserResult["data"][0]["f"] == 0){
 		$_SESSION['open_error'] = 1;
 		$_SESSION['open_error_msg'] = 'User not authorized to login';
 		header('Location: crm/generic/login/');
