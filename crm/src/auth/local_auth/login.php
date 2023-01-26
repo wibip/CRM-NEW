@@ -42,8 +42,8 @@ if(isset($_POST['sign_in'])){
 	echo $checkUserSql;
 	$checkUserResult = $dbT->selectDB($checkUserSql);
 
-	// var_dump($checkUserResult);
-	// die;
+	var_dump($checkUserResult["data"][0]["f"] ;
+	die;
 	if($checkUserResult["data"][0]["f"] == 0){
 		$_SESSION['open_error'] = 1;
 		$_SESSION['open_error_msg'] = 'User not authorized to login';
