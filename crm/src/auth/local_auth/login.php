@@ -47,6 +47,7 @@ if(isset($_POST['sign_in'])){
 
 	if($checkUserResult["data"][0]["f"] == 0){
 		echo "check IN"; 
+		unset($_SESSION['attributes']);
 		$_SESSION['open_error'] = 1;
 		$_SESSION['open_error_msg'] = 'User not authorized to login';
 		header('Location: /crm/generic/login/');
