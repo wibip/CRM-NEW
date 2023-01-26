@@ -2,7 +2,7 @@
 
 
 
-include_once('../../../classes/dbClass.php');
+include_once(str_replace('//','/',dirname(__FILE__).'/') .'../../../classes/dbClass.php');
 
 
 

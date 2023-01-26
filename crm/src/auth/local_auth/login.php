@@ -3,7 +3,7 @@ session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-include_once(str_replace('//','/',dirname(__FILE__).'/') .'../../../classes/dbClass.php');
+
 
 if(isset($_POST['sign_in'])){ 
 	$username = trim($_POST['username']);
@@ -16,6 +16,10 @@ if(isset($_POST['sign_in'])){
 	$username = $auroResults['data'][0]['user_name'];
 	$password = 'pass@123';//$auroResults['data'][0]['password'];
 } elseif(isset($_GET['source']) && $_GET['source']=='oid'){
+	include_once( str_replace('//','/',dirname(__FILE__).'/') .'db/dbTasks.php'); 
+	include_once( str_replace('//','/',dirname(__FILE__).'/') .'classes/systemPackageClass.php');   
+	$dbT = new dbTasks();
+	
 	foreach ($_SESSION['attributes'] as $key=>$value){
 		if($key == 'email'){
 			$username = $value;
