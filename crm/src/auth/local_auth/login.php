@@ -49,7 +49,7 @@ if(isset($_POST['sign_in'])){
 		echo "check IN"; 
 		$_SESSION['open_error'] = 1;
 		$_SESSION['open_error_msg'] = 'User not authorized to login';
-		header('Location: crm/generic/login/');
+		header('Location: /crm/generic/login/');
 		exit();
 	}
 	die;
