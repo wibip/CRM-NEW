@@ -28,7 +28,7 @@ if(isset($_POST['sign_in'])){
 
 if (isset($username)) {
 	$password_local = '';
-	if(!isset($_GET['auto_login'])) {
+	if(!isset($_GET['auto_login']) && !isset($_GET['source'])) {
 		$user_query_pwd = sprintf("SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1(%s))))) as f", $dbT->GetSQLValueString($password, "text")); 
 		$query_results=$dbT->selectDB($user_query_pwd);  
 		foreach($query_results['data'] AS $row){
