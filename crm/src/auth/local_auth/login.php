@@ -44,12 +44,15 @@ if(isset($_POST['sign_in'])){
 
 	var_dump($checkUserResult["data"][0]["f"]) ;
 	echo $checkUserResult["data"][0]["f"];
-	die;
-	if($checkUserResult["data"][0]["f"] == '0'){
+
+	if($checkUserResult["data"][0]["f"] == 0){
+		echo "check IN"; 
 		$_SESSION['open_error'] = 1;
 		$_SESSION['open_error_msg'] = 'User not authorized to login';
 		header('Location: crm/generic/login/');
+		exit();
 	}
+	die;
 }
 
 if (isset($username)) {
