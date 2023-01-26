@@ -39,7 +39,7 @@
 
 	<h3 class="hr-lines">OR</h3>
 
-	<a href="../../OID" class="">
+	<a href="/OID" class="">
 		Login with OpenID
 	</a>
 
