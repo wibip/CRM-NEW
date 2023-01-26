@@ -32,7 +32,8 @@ try{
     session_start();
     $_SESSION['attributes'] = $session;
 
-    header("Location: ./attributes.php");
+    // header("Location: ./attributes.php");
+    header("Location: ./src/auth/local_auth/login.php");
 } catch(Exception $e){
     var_dump($e);
 }
