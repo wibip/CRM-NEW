@@ -648,7 +648,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                         
                         if ($ex0 === true) {
                             $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
-                                        VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'admin', '$mno_user_type', '$mno_id', '$mno_full_name', '$mno_email', '$mno_mobile_1', '$mno_time_zone', '1','$login_user_name', NOW(), '$user_type')";
+                                        VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'operation', '$mno_user_type', '$mno_id', '$mno_full_name', '$mno_email', '$mno_mobile_1', '$mno_time_zone', '1','$login_user_name', NOW(), '$user_type')";
       
                             $ex0 = $db->execDB($query0);
                             if (isset($mno_sys_package)) {
