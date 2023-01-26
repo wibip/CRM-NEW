@@ -107,20 +107,32 @@ if (isset($_GET['t'])) {
 												<div class="widget-header">
 													<h3>Active Properties</h3>
 												</div>
-                                                <div>
-                                                    <label>Client Name</label>
-                                                    <select id="client_name" name="client_name">
-                                                        <option>All</option>
-                                                    </select>
-                                                    <label>Business Name</label>
-                                                    <select id="client_name" name="business_name">
-                                                        <option>All</option>
-                                                    </select>
-                                                    <label>Status</label>
-                                                    <select id="client_name" name="business_name">
-                                                        <option>All</option>
-                                                    </select>
-                                                    <button class="btn btn-secondary">Filter</button>
+                                                <div class="flex-form">
+                                                    <div class="control-group">
+                                                        <label>Client Name</label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <select id="client_name" name="client_name">
+                                                                <option>All</option>
+                                                            </select>
+                                                        </div> 
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label>Business Name</label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <select id="client_name" name="business_name">
+                                                                <option>All</option>
+                                                            </select> 
+                                                        </div> 
+                                                    </div>
+                                                    <div class="control-group">
+                                                        <label>Status</label>
+                                                        <div class="controls col-lg-5 form-group">
+                                                            <select id="client_name" name="business_name">
+                                                                <option>All</option>
+                                                            </select> 
+                                                        </div> 
+                                                    </div>
+                                                    <button class="btn btn-primary">Filter</button>
                                                 </div>
 												<!-- /widget-header -->
 												<div class="widget-content table_response">
