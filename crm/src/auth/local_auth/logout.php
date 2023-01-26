@@ -18,7 +18,9 @@ $user_name = $_SESSION['user_name'];
   $_SESSION['default_key'] = NULL;
   
   $_SESSION['s_detail'] = NULL;
-  $_SESSION['s_token'] = NULL;  
+  $_SESSION['s_token'] = NULL;
+
+  $_SESSION['attributes'] = NULL;
   
   unset($_SESSION['user_name']);
   unset($_SESSION['access_role']);
@@ -35,6 +37,8 @@ $user_name = $_SESSION['user_name'];
   unset($_SESSION['user_id']);
 
   unset($_SESSION['SADMIN']);
+
+  unset($_SESSION['attributes']);
 	setcookie('timeout', '', 0, '/'); 
 	session_write_close();
 	setcookie(session_name(),'',0,'/');
