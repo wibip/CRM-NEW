@@ -12,12 +12,13 @@ $oidc->addScope($scope);
 $oidc->setCertPath('./certificate.crt');
 $oidc->addScope($scope);
 // $oidc->providerConfigParam(array('token_endpoint'=>'https://auth.k8spre.arriswifi.com/connect/token'));
-$oidc->authenticate();
+
 // $oidc = $oidc->requestUserInfo();
 // var_dump($oidc);
 
 /*Second attempt- Request Client Credentials Token*/
 try{
+    $oidc->authenticate();
     $oidc = $oidc->requestUserInfo();
     $session = array();
     foreach($oidc as $key=> $value) {
