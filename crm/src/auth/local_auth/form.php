@@ -14,8 +14,16 @@
 
         $robot_verify_functions->form();
 
-	if($MMFailed == '1'){
+	if($MMFailed == '1' || (isset($_SESSION['open_error']) && $_SESSION['open_error'] == 1)){
+		if(isset($_SESSION['open_error'])) {
+				$MMFailedMassage = $_SESSION['open_error_msg'];
+		}
+		
 		echo '<div class="error-wrapper bubble-pointer mbubble-pointer submit-error" ><p>'.$MMFailedMassage.'</p></div><br/>';
+		$_SESSION['open_error'] = null;
+		$_SESSION['open_error_msg'] = null;
+		unset($_SESSION['open_error']);
+		unset($_SESSION['open_error_msg']);
 	}
 
 	?>
