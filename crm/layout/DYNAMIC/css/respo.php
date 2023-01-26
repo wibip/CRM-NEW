@@ -128,7 +128,30 @@
   font-weight: normal;
   font-style: normal;
 }
+.flex-form{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: end;
+        -ms-flex-align: end;
+            align-items: end;
+            margin-bottom: 20px;
+}
 
+.flex-form .control-group {
+    margin-right: 20px;
+    margin-bottom: 0;
+}
+
+.flex-form .control-group select {
+    margin-bottom: 0;
+}
+
+@media (max-width: 979px){
+    .flex-form{
+        display: block;
+    }
+}
 
 /* start location steps styles */
 
