@@ -33,7 +33,7 @@ try{
     $_SESSION['attributes'] = $session;
 
     // header("Location: ./attributes.php");
-    header("Location: ../crm/src/auth/local_auth/login.php");
+    header("Location: ../crm/src/auth/local_auth/login.php?source=oid");
 } catch(Exception $e){
     var_dump($e);
 }

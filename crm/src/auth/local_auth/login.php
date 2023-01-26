@@ -4,8 +4,11 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
-var_dump($_SESSION['attributes']);
-echo '>>>>><<<<------';
+if(isset($_GET['source']) && $_GET['source']=='oid'){
+	foreach ($_SESSION['attributes'] as $key=>$value){
+		echo $key . "==>" . $value . "<br/>";
+	}
+}
 if(isset($_POST['sign_in'])){ 
 	$username = trim($_POST['username']);
 	$password = trim($_POST['password']);
