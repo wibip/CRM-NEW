@@ -581,9 +581,9 @@ if ($_SESSION['login'] == 'yes') {
 		}
 	}
 }
-echo '-----------------'.$user_type;
-echo '-----------------'.$user_distributor;
-die;
+// echo '-----------------'.$user_type;
+// echo '-----------------'.$user_distributor;
+// die;
 //////// System Packages and features
 if ($user_type == "SADMIN" || $user_type == "SMAN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
@@ -764,10 +764,10 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-// echo '------------<br/>';
-// var_dump($x);
-// echo "<<<<<<  Step 06 >>>>>";
-// die;
+echo '------------<br/>';
+var_dump($x);
+echo "<<<<<<  Step 06 >>>>>";
+die;
 $allowed_pages = $x;
 
 $module_ids = join('", "', $x);
