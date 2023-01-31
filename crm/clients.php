@@ -1346,6 +1346,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	$secret = md5(uniqid(rand(), true));
 	$_SESSION['FORM_SECRET'] = $secret;
 	$users_mid = 'layout/' . $camp_layout . '/views/users_mid.php';
+	
 	if (($new_design == 'yes') && file_exists($users_mid)) {
 		include_once $users_mid;
 	} else {

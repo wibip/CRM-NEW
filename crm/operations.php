@@ -930,7 +930,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                 $get_mno_wags_r = $db->selectDB($get_mno_wags_q);
                 $edit_wag_prof_string = '';
                 foreach ($get_mno_wags_r['data'] as $get_mno_wags) {
-                    $edit_wag_prof_string .= $get_mno_wags[wag_name] . '
+                    $edit_wag_prof_string .= $get_mno_wags['wag_name'] . '
  ';
                 }
                 //$edit_wag_prof_string;
@@ -1955,116 +1955,121 @@ if (isset($_POST['submit_mno_form'])) { //6
                                         
                                         <!-- ***************Activate Accounts List******************* -->
                                         <div <?php if(isset($tab8)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="active_operations">
-										<h1 class="head">Manage Operations</h1>	
-                                        <div id="response_d1"></div>
-											<div class="widget widget-table action-table">
-												<div class="widget-header">
-													<h3>Active Operations</h3>
-												</div>
-												<!-- /widget-header -->
-												<div class="widget-content table_response">
-                                                    <div style="overflow-x:auto">
-                                                        <table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Operations</th>
-                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">API Profile</th>
-                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Edit</th>
-                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Remove</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
-                                                                    $key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email , u.verification_number
-                                                                                    FROM exp_mno m, admin_users u
-                                                                                    WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='admin'
-                                                                                    GROUP BY m.mno_id
-                                                                                    ORDER BY mno_description ";
-                                                                    $query_results = $db->selectDB($key_query);
-                                                                    // var_dump($query_results);
-                                                                    foreach ($query_results['data'] as $row) {
-                                                                        $mno_description = $row['mno_description'];
-                                                                        $mno_id = $row['mno_id'];
-                                                                        $full_name = $row['full_name'];
-                                                                        $email = $row['email'];
-                                                                        // $s= $row[s];
-                                                                        // $is_enable= $row[is_enable];
-                                                                        // $icomm_num=$row[verification_number];
-                                                                        $api_profiles = json_decode($row['features']);
-                                                                        $show_profile = "";
-                                                                        foreach($api_profiles as $api_profile) {
-                                                                            $profile = $db->getValueAsf("SELECT `api_profile` as f FROM `exp_locations_ap_controller` WHERE `id`=".$api_profile);
-                                                                            $show_profile .= $profile."<br/>";
+										    <h1 class="head">Manage Operations</h1>	
+                                            <div id="response_d1"></div>
+                                                <div class="widget widget-table action-table">
+                                                    <div class="widget-header">
+                                                        <h3>Active Operations</h3>
+                                                    </div>
+                                                    <!-- /widget-header -->
+                                                    <div class="widget-content table_response">
+                                                        <div style="overflow-x:auto">
+                                                            <table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Account Name</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Operation</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Email</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Mobile</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Edit</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Remove</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php
+                                                                        $key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email, u.mobile , u.verification_number
+                                                                                        FROM exp_mno m, admin_users u
+                                                                                        WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='admin'
+                                                                                        GROUP BY m.mno_id
+                                                                                        ORDER BY mno_description ";
+                                                                        $query_results = $db->selectDB($key_query);
+                                                                        // var_dump($query_results);
+                                                                        foreach ($query_results['data'] as $row) {
+                                                                            $mno_description = $row['mno_description'];
+                                                                            $mno_id = $row['mno_id'];
+                                                                            $full_name = $row['full_name'];
+                                                                            $email = $row['email'];
+                                                                            $mobile = $row['mobile'];
+                                                                            // $s= $row[s];
+                                                                            // $is_enable= $row[is_enable];
+                                                                            // $icomm_num=$row[verification_number];
+                                                                            $api_profiles = json_decode($row['features']);
+                                                                            $show_profile = "";
+                                                                            foreach($api_profiles as $api_profile) {
+                                                                                $profile = $db->getValueAsf("SELECT `api_profile` as f FROM `exp_locations_ap_controller` WHERE `id`=".$api_profile);
+                                                                                $show_profile .= $profile."<br/>";
+                                                                            }
+                                                                            echo '<tr>
+                                                                            <td class="table_row"> '.$full_name.' </td>
+                                                                            <td class="table_row"> '.$mno_description.' </td>
+                                                                            <td> '.$email.' </td>
+                                                                            <td> '.$mobile.' </td>';
+                                                                            echo '<td class="table_row"> '.
+
+                                                                                //******************************** Edit ************************************
+                                                                                '<a href="javascript:void();" id="EDITMNOACC_'.$mno_id.'"  class="btn btn-small btn-info">
+                                                                                <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
+                                                                                $(document).ready(function() {
+                                                                                    $(\'#EDITMNOACC_'.$mno_id.'\').easyconfirm({locale: {
+                                                                                        title: \'Account Edit\',
+                                                                                        text: \'Are you sure you want to edit this account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                                        button: [\'Cancel\',\' Confirm\'],
+                                                                                        closeText: \'close\'
+                                                                                        }});
+
+                                                                                    $(\'#EDITMNOACC_'.$mno_id.'\').click(function() {
+                                                                                        window.location = "?token10='.$secret.'&t=6&edit_mno_id='.$mno_id.'"
+                                                                                    });
+                                                                                });
+
+                                                                                </script></td>';
+                                                                                // $distributor_exi = "SELECT * FROM `exp_mno_distributor` WHERE mno_id = '$mno_id'";
+                                                                                // $query_results01 = $db->selectDB($distributor_exi);
+                                                                                // $count_records_exi = count($query_results01);
+                                                                                // if($count_records_exi == 0){
+
+                                                                                //*********************************** Remove  *****************************************
+                                                                                echo '<td class="table_row"><a href="javascript:void();" id="REMMNOACC_'.$mno_id.'"  class="btn btn-small btn-danger">
+
+                                                                                <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
+
+                                                                                                        $(document).ready(function() {
+                                                                                                        $(\'#REMMNOACC_'.$mno_id.'\').easyconfirm({locale: {
+                                                                                                                title: \'Account Remove\',
+                                                                                                                text: \'Are you sure you want to remove this account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                                                                button: [\'Cancel\',\' Confirm\'],
+                                                                                                                closeText: \'close\'
+                                                                                                                }});
+
+                                                                                                            $(\'#REMMNOACC_'.$mno_id.'\').click(function() {
+                                                                                                                window.location = "?token10='.$secret.'&t=8&remove_mno_id='.$mno_id.'"
+
+                                                                                    });
+                                                                                    });
+                                                                                </script>';
+
+
+                                                                                // }else{
+
+                                                                                //     echo '<td><a class="btn btn-small btn-warning" disabled >&nbsp;<i class="icon icon-lock"></i>Remove</a></center>';
+                                                                                // }
+                                                                            //****************************************************************************************
+                                                                            echo ' </td>';
+                                                                            echo '</tr>';
                                                                         }
-                                                                        echo '<tr>
-                                                                        <td class="table_row"> '.$mno_description.' </td>
-                                                                        <td> '.$show_profile.' </td>';
-                                                                        echo '<td class="table_row"> '.
+                                                                    ?>
 
-                                                                            //******************************** Edit ************************************
-                                                                            '<a href="javascript:void();" id="EDITMNOACC_'.$mno_id.'"  class="btn btn-small btn-info">
-                                                                            <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
-                                                                            $(document).ready(function() {
-                                                                                $(\'#EDITMNOACC_'.$mno_id.'\').easyconfirm({locale: {
-                                                                                    title: \'Account Edit\',
-                                                                                    text: \'Are you sure you want to edit this account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                                    button: [\'Cancel\',\' Confirm\'],
-                                                                                    closeText: \'close\'
-                                                                                    }});
-
-                                                                                $(\'#EDITMNOACC_'.$mno_id.'\').click(function() {
-                                                                                    window.location = "?token10='.$secret.'&t=6&edit_mno_id='.$mno_id.'"
-                                                                                });
-                                                                            });
-
-                                                                            </script></td>';
-                                                                            // $distributor_exi = "SELECT * FROM `exp_mno_distributor` WHERE mno_id = '$mno_id'";
-                                                                            // $query_results01 = $db->selectDB($distributor_exi);
-                                                                            // $count_records_exi = count($query_results01);
-                                                                            // if($count_records_exi == 0){
-
-                                                                            //*********************************** Remove  *****************************************
-                                                                            echo '<td class="table_row"><a href="javascript:void();" id="REMMNOACC_'.$mno_id.'"  class="btn btn-small btn-danger">
-
-                                                                            <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
-
-                                                                                                    $(document).ready(function() {
-                                                                                                    $(\'#REMMNOACC_'.$mno_id.'\').easyconfirm({locale: {
-                                                                                                            title: \'Account Remove\',
-                                                                                                            text: \'Are you sure you want to remove this account?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                                                            button: [\'Cancel\',\' Confirm\'],
-                                                                                                            closeText: \'close\'
-                                                                                                            }});
-
-                                                                                                        $(\'#REMMNOACC_'.$mno_id.'\').click(function() {
-                                                                                                            window.location = "?token10='.$secret.'&t=8&remove_mno_id='.$mno_id.'"
-
-                                                                                });
-                                                                                });
-                                                                            </script>';
-
-
-                                                                            // }else{
-
-                                                                            //     echo '<td><a class="btn btn-small btn-warning" disabled >&nbsp;<i class="icon icon-lock"></i>Remove</a></center>';
-                                                                            // }
-                                                                        //****************************************************************************************
-                                                                        echo ' </td>';
-                                                                        echo '</tr>';
-                                                                    }
-                                                                ?>
-
-                                                            </tbody>
-                                                        </table>
-												    </div>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /widget-content -->
                                                 </div>
-												<!-- /widget-content -->
-											</div>
-											<!-- /widget -->
-                                        </div>
-									</div>
-								</div>
-							</div>
+                                                <!-- /widget -->
+                                            </div>
+									    </div>
+								    </div>
+							    </div>
 							<!-- /widget-content -->
 						</div>
 						<!-- /widget -->

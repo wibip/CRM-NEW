@@ -26,7 +26,7 @@ $package_functions = new package_functions();
 ?> 
 <head>
 <meta charset="utf-8">
-<title>Properties</title>
+<title>Operation Accounts</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -64,7 +64,7 @@ $package_functions = new package_functions();
 
 <?php
 include 'header.php';
-$page = 'Properties';
+$page = 'Operation Account';
 // TAB Organization
 if (isset($_GET['t'])) {
     $variable_tab = 'tab' . $_GET['t'];
@@ -106,7 +106,7 @@ if ($query_results['rowCount'] > 0) {
 							<div class="widget-content">
 								<div class="tabbable">
 									<ul class="nav nav-tabs">
-                                        <li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#active_properties" data-toggle="tab">Properties</a></li>
+                                        <li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#operation_list" data-toggle="tab">Operation Account</a></li>
 									</ul>
 									
 									<div class="tab-content">
@@ -116,12 +116,12 @@ if ($query_results['rowCount'] > 0) {
                                             unset($_SESSION['msg6']);
                                         } ?>
                                         <!-- ***************Activate Accounts List******************* -->
-                                        <div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="active_properties">
-										<h1 class="head">Active Properties</h1>	
+                                        <div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="operation_list">
+										<h1 class="head">Operation Accounts</h1>	
                                         <div id="response_d1"></div>
 											<div class="widget widget-table action-table">
 												<div class="widget-header">
-													<h3>Active Properties</h3>
+													<h3>Operation Accounts</h3>
 												</div>
                                                 <div class="flex-form">
                                                     <div class="control-group">
@@ -174,81 +174,71 @@ if ($query_results['rowCount'] > 0) {
 												<!-- /widget-header -->
 												<div class="widget-content table_response">
                                                     <div style="overflow-x:auto">
-                                                        <table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Unique Property ID</th>
-                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Client Name</th>
-                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Business Name</th>
-                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Status</th>
-                                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Show Details</th>
-                                                                    <!-- <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">Remove</th> -->
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
-                                                                    // $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN (SELECT user_name FROM admin_users WHERE user_distributor='$user_distributor')";
-                                                                    // $query_results = $db->selectDB($propertyQuery);
-                                                                    if($query_results['rowCount'] > 0) {
-                                                                        foreach($query_results['data'] AS $row){
-                                                                            $clientDetails = $CommonFunctions->getAdminUserDetails('user_name',$row['create_user'],'full_name');
-                                                                            if(!empty($clientDetails['data'])) {
-                                                                                $clientName = $clientDetails['data'][0]['full_name'];
+                                                    <table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Account Name</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Operation</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Email</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Mobile</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php
+                                                                        $key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email, u.mobile , u.user_distributor
+                                                                                        FROM exp_mno m, admin_users u
+                                                                                        WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.is_enable
+                                                                                        GROUP BY m.mno_id
+                                                                                        ORDER BY m.id ";
+                                                                        $query_results = $db->selectDB($key_query);
+                                                                        // var_dump($query_results);
+                                                                        foreach ($query_results['data'] as $row) {
+                                                                            $mno_description = $row['mno_description'];
+                                                                            $mno_id = $row['mno_id'];
+                                                                            $full_name = $row['full_name'];
+                                                                            $email = $row['email'];
+                                                                            $mobile = $row['mobile'];
+                                                                            $user_distributor = $row['user_distributor'];
+                                                                            // $s= $row[s];
+                                                                            // $is_enable= $row[is_enable];
+                                                                            // $icomm_num=$row[verification_number];
+                                                                            $api_profiles = json_decode($row['features']);
+                                                                            $show_profile = "";
+                                                                            foreach($api_profiles as $api_profile) {
+                                                                                $profile = $db->getValueAsf("SELECT `api_profile` as f FROM `exp_locations_ap_controller` WHERE `id`=".$api_profile);
+                                                                                $show_profile .= $profile."<br/>";
                                                                             }
-                                                                            
                                                                             echo '<tr>
-                                                                            <td> '.$row['property_id'].' </td>
-                                                                            <td> '.$clientName.' </td>
-                                                                            <td> '.$row['business_name'].' </td>
-                                                                            <td> '.$row['status'].' </td>';
-                                                                            echo '<td><a href="javascript:void();" id="VIEWACC_'.$row['id'].'"  class="btn btn-small btn-info">
-                                                                                <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
-                                                                                // $(document).ready(function() {
-                                                                                //     $(\'#VIEWACC_' .$row['id'].'\').easyconfirm({
-                                                                                //         locale: {
-                                                                                //             title: \'Property View\',
-                                                                                //             text: \'Are you sure you want to view this property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                                //             button: [\'Cancel\', \' Confirm\'],
-                                                                                //             closeText: \'close\'
-                                                                                //         }
-                                                                                //     });
-                                                                                //     $(\'#VIEWACC_'.$row['id'].'\').click(function () {
-                                                                                //         window.location = "?t=3&token='. $secret.'&property_edit&property_id='.$row['id'].'&client_id='.$_GET['edit_id'].'";
-                                                                                //     });
-                                                                                // });
+                                                                            <td class="table_row"> '.$full_name.' </td>
+                                                                            <td class="table_row"> '.$mno_description.' </td>
+                                                                            <td> '.$email.' </td>
+                                                                            <td> '.$mobile.' </td>';
+                                                                            echo '<td class="table_row"> '.
+
+                                                                                //******************************** Clients ************************************
+                                                                                '<a href="javascript:void();" id="VIEWCLIENTS_'.$mno_id.'"  class="btn btn-small btn-info">
+                                                                                <i class="btn-icon-only icon-pencil"></i>&nbsp;View Clients</a><script type="text/javascript">
+                                                                                $(document).ready(function() {
+                                                                                    $(\'#VIEWCLIENTS_'.$mno_id.'\').easyconfirm({locale: {
+                                                                                        title: \'View Clients\',
+                                                                                        text: \'Are you sure you want to view related clients?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                                        button: [\'Cancel\',\' Confirm\'],
+                                                                                        closeText: \'close\'
+                                                                                        }});
+
+                                                                                    $(\'#VIEWCLIENTS_'.$mno_id.'\').click(function() {
+                                                                                        window.location = "clients?show=clients&t=1&ud='.$user_distributor.'"
+                                                                                    });
+                                                                                });
+
                                                                                 </script></td>';
-                                                                            
-                                                                            // if($_SESSION['SADMIN'] == true) {
-                                                                            // 	echo '<td><a href="javascript:void();" id="remove_api_'.$row['id'].'"  class="btn btn-small btn-danger">
-                                                                            // 	<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
-                                                                            // 	<script type="text/javascript">
-                                                                            // 		$(document).ready(function() {
-                                                                            // 			$(\'#remove_api_'.$row['id'].'\').easyconfirm({locale: {
-                                                                            // 					title: \'Remove Property\',
-                                                                            // 					text: \'Are you sure you want to remove this Property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                            // 					button: [\'Cancel\',\' Confirm\'],
-                                                                            // 					closeText: \'close\'
-                                                                            // 			}});
-                                                                            // 			$(\'#remove_api_'.$row['id'].'\').click(function() {                                                                                        
-                                                                            // 				$("#overlay").css("display","block");
-                                                                            // 				window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'"
-                                                                            // 			});
-                                                                            // 		});
-                                                                            // 	</script></td>';
-                                                                            // }
                                                                             echo '</tr>';
                                                                         }
-                                                                    } else {
                                                                     ?>
-                                                                    <tr>
-                                                                        <td colspan="6" style="text-align: center;">Properties not found</td>
-                                                                    </tr>
-                                                                    <?php
-                                                                    }	
-                                                                    
-                                                                    ?>		
-                                                            </tbody>
-                                                        </table>
+
+                                                                </tbody>
+                                                            </table>
 												    </div>
                                                 </div>
 												<!-- /widget-content -->

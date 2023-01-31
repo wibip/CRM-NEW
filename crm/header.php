@@ -423,7 +423,7 @@ if ($_GET['log_other'] == '2') {
 		$user_type = $db_class1->getValueAsf("SELECT  user_type AS f  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
 
 		$user_distributor = $db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
-
+		
 		//Sync SSID,AP
 		$exec_cmd = 'php -f' . __DIR__ . '/ajax/syncAP.php ' . $user_distributor . ' > /dev/null &';
 		exec($exec_cmd);
@@ -436,7 +436,7 @@ if ($_GET['log_other'] == '2') {
 			$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 			$property_wired = $db_class1->getValueAsf("SELECT `wired` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 		}
-
+		// echo $system_package; 
 		$new_design = $package_functions->getOptions('NEW_DESIGN', $system_package);
 
 		if ($user_type == "TECH") {
@@ -508,7 +508,6 @@ if ($_SESSION['login'] != 'yes' && $script != 'verification') {
 	exit();
 }
 
-
 // Collect session valiables
 $user_name = $_SESSION['user_name'];
 $access_role = $_SESSION['access_role'];
@@ -560,6 +559,11 @@ if ($_SESSION['remote'] == 'yes') {
 	$active_user = '1';
 }
 
+/* change user_distributor if conditions applied */
+if($_SESSION['SADMIN'] && isset($_GET['show']) && $_GET['show'] == 'clients'){
+	$user_distributor = $_GET['ud'];
+}
+
 $_SESSION['user_distributor'] = $user_distributor;
 
 if ($_SESSION['login'] == 'yes') {
@@ -577,8 +581,8 @@ if ($_SESSION['login'] == 'yes') {
 		}
 	}
 }
-
-
+// echo '-----------------'.$user_type;
+// echo '-----------------'.$user_distributor;
 //////// System Packages and features
 if ($user_type == "SADMIN" || $user_type == "SMAN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
@@ -706,7 +710,7 @@ $user_type = ($user_type == 'SADMIN') ? 'ADMIN' : $user_type;
 $access_role = ($user_type == 'SADMIN') ? 'ADMIN' : $access_role;
 $system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
-
+// echo $dropdown_query1;
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
 // var_dump($query_results_drop1);
 foreach ($query_results_drop1['data'] as $row) {
@@ -743,7 +747,11 @@ foreach ($x as $keyX => $valueX) {
 // echo '------------<br/>';
 // var_dump($x);
 
-array_push($x,"change_portal");
+if($_SESSION['SADMIN'] == true) {
+	array_push($x,"operation_list");
+	array_push($x,"change_portal");
+}
+
 
 /// Non Admin Modules
 foreach ($x_non_admin as $keyXn => $valueXn) {
@@ -803,7 +811,7 @@ AND `user_type` = '$user_type'";
 // var_dump($module_ids);
 // var_dump($user_type);
 $query_results_mod = $db_class1->selectDB($query_modules);
-
+// var_dump($query_results_mod);
 //$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 
 $restricted_pages = $package_functions->getOptions("RESTRICTED_PAGES", $system_package);
@@ -1321,7 +1329,7 @@ if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
 			$row = $db_class1->select1DB($kmno_query);
 			//print_r(mysql_fetch_array($query_results));
 			//while ($row = mysql_fetch_array($query_results)) {
-			$mno_id = $row[mno_id];
+			$mno_id = $row['mno_id'];
 			$mni_favicon_id = $mno_id;
 
 			//}
@@ -1332,10 +1340,10 @@ if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
 			$row = $db_class1->select1DB($kmno_query);
 			//print_r(mysql_fetch_array($query_results));
 			//while ($row = mysql_fetch_array($query_results)) {
-			$mno_id = $row[mno_id];
-			$network_type = $row[network_type];
-			$distributor_name_get = str_replace('\\', '', $row[distributor_name]);
-			$site_title = str_replace('\\', '', $row[site_title]);
+			$mno_id = $row['mno_id'];
+			$network_type = $row['network_type'];
+			$distributor_name_get = str_replace('\\', '', $row['distributor_name']);
+			$site_title = str_replace('\\', '', $row['site_title']);
 			$mni_favicon_id = $mno_id;
 
 			//}
@@ -2139,7 +2147,7 @@ switch($user_type){
 					<div>
 						<ul class="topnav">
 							<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
-							<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./change_portal?section=MNO">Operations</a></li>
+							<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./operation_list">Operations</a></li>
 							<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
 						</ul>
 					</div>

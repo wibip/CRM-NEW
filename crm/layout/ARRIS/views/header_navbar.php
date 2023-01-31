@@ -256,6 +256,9 @@ $numItems = count($main_mod_array);
 	
 $i = 0;
 $active_title = "Switch Accounts";
+if($script == 'operation_list'){
+	$active_title = "";
+}
 foreach ($main_mod_array as $keym => $valuem) {
 	if (strlen($valuem['active'])) {
 		$scrpt_active_status = ' class="active"';
@@ -270,7 +273,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 		}
 	}
 		/// Single Item
-
+			// echo $script;
 		if (sizeof($valuem['module']) == 1) {
 			//print_r($valuem['module']);
 			foreach ($valuem['module'] as $keyY => $valueY) {
@@ -284,6 +287,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 			if (strlen($page_names_arr[$main_menu_name]) > 0) {
 				$main_menu_name = $page_names_arr[$main_menu_name];
 			}
+				;
 			if($link_main_m==$script){
 				$active = 'active';
 				$active_title = $main_menu_name;
@@ -353,7 +357,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-signin show"></i> </a>
 			<ul class="dropdown-menu">
 					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
-					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./change_portal?section=MNO">Operations</a></li>
+					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./operation_list">Operations</a></li>
 					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Client</a></li>
 			</ul>
 		</li>
