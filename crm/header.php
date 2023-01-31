@@ -1186,10 +1186,10 @@ foreach ($query_results_mod['data'] as $row1) {
 	}
 }
 ksort($main_mod_array);
-echo 'After: ';
-	var_dump($main_mod_array);
-	echo '<br/>';
-	die;
+// echo 'After: ';
+// 	var_dump($main_mod_array);
+// 	echo '<br/>';
+// die;
 
 
 /////////////////////////////////////////////////////////
@@ -1226,7 +1226,7 @@ if ($suspended) {
 		//$query_ex_log=mysql_query($log_query);
 
 	} else {
-		// var_dump($system_package); die;
+		var_dump($system_package); die;
 		$redirect_url = $global_base_url; //index".$extension;$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
 		// $db->addLogs($user_name, 'ERROR',$user_type,'login', 'Browse',0,'2000',$redirect_url);
 		$db_class1->userErrorLog('2000', $user_name, 'script - ' . $script);
