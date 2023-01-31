@@ -43,7 +43,7 @@ if(isset($_POST['sign_in'])){
 	$checkUserSql = "SELECT COUNT(*) AS f FROM admin_users AS au
 				  	INNER JOIN admin_access_roles AS aar ON aar.access_role=au.access_role 
 				  	WHERE au.user_name='$username' AND aar.oid_group='$oid_group'";
-	echo $checkUserSql;
+	// echo $checkUserSql;
 	// die;
 	$checkUserResult = $dbT->selectDB($checkUserSql);
 
@@ -55,7 +55,7 @@ if(isset($_POST['sign_in'])){
 		exit();
 	}
 }
-echo $username;
+
 if (isset($username)) {
 	$password_local = '';
 	if(!isset($_GET['auto_login']) && !isset($_GET['source'])) {
@@ -95,7 +95,7 @@ if (isset($username)) {
 		$_SESSION['user_distributor']  = $row['user_distributor'];
 		$access_role=strtolower($access_role);
 	}
-	echo $user_type;
+	
 	if(($user_type=="SADMIN") && !isset($_GET['auto_login'])){
 		$_SESSION["SADMIN"] = true;
 		// header('Location: '.$_SERVER['PHP_SELF']);
@@ -124,7 +124,6 @@ if (isset($username)) {
 		$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	}
 
-	echo $system_package;
 	if($system_package=="N/A" || $system_package=="") {
 		$package_features="all";
 		$system_package="N/A";
@@ -164,6 +163,8 @@ if (isset($username)) {
 		
 		/// Package Validation
         // Get user package
+
+		echo $user_name;
         $user_pkg_name = $package_functions->getPackage($user_name);
        
        if(strlen($login_design)=='0'){
