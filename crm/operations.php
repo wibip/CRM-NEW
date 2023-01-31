@@ -1979,7 +1979,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                                     <?php
                                                                         $key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email, u.mobile , u.verification_number
                                                                                         FROM exp_mno m, admin_users u
-                                                                                        WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='admin'
+                                                                                        WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`access_role`='operation'
                                                                                         GROUP BY m.mno_id
                                                                                         ORDER BY mno_description ";
                                                                         $query_results = $db->selectDB($key_query);
