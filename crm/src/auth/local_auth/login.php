@@ -202,7 +202,7 @@ if (isset($username)) {
 			else{
 				$user_query = "SELECT module_name FROM admin_access_roles_modules WHERE access_role = '$access_role'";
 			}
-				echo $user_query;
+				// echo $user_query;
 			$query_results=$dbT->selectDB($user_query);
 			$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT',$system_package);
 			$theme_text = $package_functions->getMessageOptions('THEME_TEXT',$system_package);
@@ -226,9 +226,9 @@ if (isset($username)) {
 				header( "Location: $redirect_url");
 			}else{
 				$m_n = json_decode($package_functions->getOptions('ALLOWED_PAGE',$system_package));
-					var_dump($m_n);
-					var_dump($query_results);
-					die;
+					// var_dump($m_n);
+					// var_dump($query_results);
+					// die;
 				foreach($query_results['data'] AS $row){
 					$module_name = $row['module_name'];	
 					// var_dump($module_name);
@@ -240,8 +240,8 @@ if (isset($username)) {
 						$redirect_url .= '/'.$module_name.$extension;
 						setcookie("system_package", $system_package, time() + (86400 * 30), "/");
 						setcookie("load_login_design", $login_design, time() + (86400 * 30), "/");
-							var_dump($redirect_url);
-							die;
+							// var_dump($redirect_url);
+							// die;
 						header( "Location: $redirect_url");		
 						exit();
 					}
