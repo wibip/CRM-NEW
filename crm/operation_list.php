@@ -125,7 +125,7 @@ if ($query_results['rowCount'] > 0) {
 												</div>
                                                 <div class="flex-form">
                                                     <div class="control-group">
-                                                        <label>Client Name</label>
+                                                        <label>Account Name</label>
                                                         <div class="controls col-lg-5 form-group">
                                                             <select id="client_name" name="client_name">
                                                                 <option value='all'>All</option>
@@ -142,7 +142,7 @@ if ($query_results['rowCount'] > 0) {
                                                         </div> 
                                                     </div>
                                                     <div class="control-group">
-                                                        <label>Business Name</label>
+                                                        <label>Operation Name</label>
                                                         <div class="controls col-lg-5 form-group">
                                                             <select id="business_name" name="business_name">
                                                                 <option value='all'>All</option>
