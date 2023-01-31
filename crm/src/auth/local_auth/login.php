@@ -43,7 +43,7 @@ if(isset($_POST['sign_in'])){
 	$checkUserSql = "SELECT COUNT(*) AS f FROM admin_users AS au
 				  	INNER JOIN admin_access_roles AS aar ON aar.access_role=au.access_role 
 				  	WHERE au.user_name='$username' AND aar.oid_group='$oid_group'";
-	// echo $checkUserSql;
+	echo $checkUserSql;
 	// die;
 	$checkUserResult = $dbT->selectDB($checkUserSql);
 
@@ -55,7 +55,7 @@ if(isset($_POST['sign_in'])){
 		exit();
 	}
 }
-
+echo $username;
 if (isset($username)) {
 	$password_local = '';
 	if(!isset($_GET['auto_login']) && !isset($_GET['source'])) {
