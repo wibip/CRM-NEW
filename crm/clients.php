@@ -901,7 +901,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				$new_user_name = htmlspecialchars(str_replace(' ', '_', strtolower(substr($full_name, 0, 5) . 'u' . $auto_inc)));
 				$password  = CommonFunctions::randomPassword();
 
-				$access_role = 'admin';
+				$access_role = 'client';
 				$user_type = 'PROVISIONING';
 				$api_profile = $_POST['api_profile'];
 				$email = htmlspecialchars($_POST['email_1']);
