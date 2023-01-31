@@ -742,9 +742,9 @@ $page = 'Client';
 	<?php
 
 	echo 'Safe-01';
-	die;
 	include 'header.php';
-	
+	echo 'Safe-02';
+	die;
 	require_once 'layout/' . $camp_layout . '/config.php';
 
 	// var_dump($script);
