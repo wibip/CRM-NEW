@@ -240,8 +240,8 @@ if (isset($username)) {
 						$redirect_url .= '/'.$module_name.$extension;
 						setcookie("system_package", $system_package, time() + (86400 * 30), "/");
 						setcookie("load_login_design", $login_design, time() + (86400 * 30), "/");
-							// var_dump($redirect_url);
-							// die;
+							var_dump($redirect_url);
+							die;
 						header( "Location: $redirect_url");		
 						exit();
 					}
