@@ -164,7 +164,6 @@ if (isset($username)) {
 		/// Package Validation
         // Get user package
 
-		echo $user_name;
         $user_pkg_name = $package_functions->getPackage($user_name);
        
        if(strlen($login_design)=='0'){
@@ -203,9 +202,9 @@ if (isset($username)) {
 			else{
 				$user_query = "SELECT module_name FROM admin_access_roles_modules WHERE access_role = '$access_role'";
 			}
-			
+				echo $user_query;
 			$query_results=$dbT->selectDB($user_query);
-
+				var_dump($query_results);
 			$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT',$system_package);
 			$theme_text = $package_functions->getMessageOptions('THEME_TEXT',$system_package);
 
