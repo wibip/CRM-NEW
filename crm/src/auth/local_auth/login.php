@@ -95,7 +95,7 @@ if (isset($username)) {
 		$_SESSION['user_distributor']  = $row['user_distributor'];
 		$access_role=strtolower($access_role);
 	}
-
+	echo $user_type;
 	if(($user_type=="SADMIN") && !isset($_GET['auto_login'])){
 		$_SESSION["SADMIN"] = true;
 		// header('Location: '.$_SERVER['PHP_SELF']);
@@ -123,6 +123,8 @@ if (isset($username)) {
 	else{
 		$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	}
+
+	echo $system_package;
 	if($system_package=="N/A" || $system_package=="") {
 		$package_features="all";
 		$system_package="N/A";
