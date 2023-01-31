@@ -202,7 +202,7 @@ if (isset($username)) {
 			else{
 				$user_query = "SELECT module_name FROM admin_access_roles_modules WHERE access_role = '$access_role'";
 			}
-				
+				echo $user_query;
 			$query_results=$dbT->selectDB($user_query);
 			$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT',$system_package);
 			$theme_text = $package_functions->getMessageOptions('THEME_TEXT',$system_package);
