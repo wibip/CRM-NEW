@@ -741,10 +741,10 @@ $page = 'Client';
     </script>
 	<?php
 
-	echo 'Safe-01';
+	// echo 'Safe-01';
 	include 'header.php';
-	echo 'Safe-02';
-	die;
+	// echo 'Safe-02';
+	// die;
 	require_once 'layout/' . $camp_layout . '/config.php';
 
 	// var_dump($script);
