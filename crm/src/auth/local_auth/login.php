@@ -221,10 +221,6 @@ if (isset($username)) {
 
 			$_SESSION['theme_text'] = $theme_text;
 
-				echo $package_features;
-				echo '<br/>';
-				echo $system_package;
-				die;
 			if($package_features=="all"||$system_package=="N/A"){
 				$redirect_url .= "/home".$extension;
 				header( "Location: $redirect_url");
