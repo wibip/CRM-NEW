@@ -1230,7 +1230,7 @@ if ($suspended) {
 		$redirect_url = $global_base_url; //index".$extension;$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
 		// $db->addLogs($user_name, 'ERROR',$user_type,'login', 'Browse',0,'2000',$redirect_url);
 		$db_class1->userErrorLog('2000', $user_name, 'script - ' . $script);
-		var_dump($redirect_url); die;
+		// var_dump($redirect_url); die;
 		header('Location: ' . $redirect_url);
 	?>
 		<meta http-equiv="refresh" content="0;URL='<?php echo $redirect_url; ?>'">
