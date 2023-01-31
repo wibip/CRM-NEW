@@ -740,6 +740,9 @@ $page = 'Client';
 		}
     </script>
 	<?php
+
+	echo 'Safe-01';
+	die;
 	include 'header.php';
 	
 	require_once 'layout/' . $camp_layout . '/config.php';
