@@ -764,35 +764,35 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-echo '------------<br/>';
-var_dump($x);
-echo "<<<<<<  Step 06 >>>>>";
-die;
+// echo '------------<br/>';
+// var_dump($x);
+// echo "<<<<<<  Step 06 >>>>>";
+// die;
 $allowed_pages = $x;
 
 $module_ids = join('", "', $x);
 $suspended = false;
-if ($user_type == 'MVNO') {
-	//Pages allowed to wired properties
-	$wired_pages = ['add_tenant', 'manage_tenant', 'communicate', 'home', 'user_guide', 'venue_support'];
-	$dist_details = $db_class1->select1DB("SELECT d.wired,d.gateway_type,d.private_gateway_type,d.bussiness_type,d.network_type,d.other_settings,d.is_enable,m.system_package as mno_sys FROM exp_mno_distributor d JOIN exp_mno m ON d.mno_id=m.mno_id WHERE distributor_code='" . $user_distributor . "'");
-	$property_getaway_type = $dist_details['gateway_type'];
-	$property_business_type = $dist_details['bussiness_type'];
-	$property_wired = $dist_details['wired'];
-	/* start suspend location logout */
-	$is_enable = $dist_details['is_enable'];
-	$ale4_prod = ['LP_MNO_002', 'LP_MNO_003_LP', 'LP_MNO_004_SL'];
-	if (in_array($dist_details['mno_sys'], $ale4_prod)) {
-		$GLOBALS['qos_ale_version'] = 'ale4';
-	}
-	if ($is_enable == 3 && !isset($_SESSION['s_token'])) {
-		$suspended = true;
-	}
-	/* end suspend location logout */
-	$network_type = $dist_details['network_type'];
-	$other_multi_area = json_decode($dist_details['other_settings'])->other_multi_area;
-	$private_gateway = $dist_details['private_gateway_type'];
-}
+// if ($user_type == 'MVNO') {
+// 	//Pages allowed to wired properties
+// 	$wired_pages = ['add_tenant', 'manage_tenant', 'communicate', 'home', 'user_guide', 'venue_support'];
+// 	$dist_details = $db_class1->select1DB("SELECT d.wired,d.gateway_type,d.private_gateway_type,d.bussiness_type,d.network_type,d.other_settings,d.is_enable,m.system_package as mno_sys FROM exp_mno_distributor d JOIN exp_mno m ON d.mno_id=m.mno_id WHERE distributor_code='" . $user_distributor . "'");
+// 	$property_getaway_type = $dist_details['gateway_type'];
+// 	$property_business_type = $dist_details['bussiness_type'];
+// 	$property_wired = $dist_details['wired'];
+// 	/* start suspend location logout */
+// 	$is_enable = $dist_details['is_enable'];
+// 	$ale4_prod = ['LP_MNO_002', 'LP_MNO_003_LP', 'LP_MNO_004_SL'];
+// 	if (in_array($dist_details['mno_sys'], $ale4_prod)) {
+// 		$GLOBALS['qos_ale_version'] = 'ale4';
+// 	}
+// 	if ($is_enable == 3 && !isset($_SESSION['s_token'])) {
+// 		$suspended = true;
+// 	}
+// 	/* end suspend location logout */
+// 	$network_type = $dist_details['network_type'];
+// 	$other_multi_area = json_decode($dist_details['other_settings'])->other_multi_area;
+// 	$private_gateway = $dist_details['private_gateway_type'];
+// }
 $wysywyg_editor = false;
 $edit_location_old = false;
 if ($_GET['location_parent_id']) {
@@ -812,7 +812,8 @@ AND `user_type` = '$user_type'";
 // var_dump($module_ids);
 // var_dump($user_type);
 $query_results_mod = $db_class1->selectDB($query_modules);
-// var_dump($query_results_mod);
+var_dump($query_results_mod);
+die;
 //$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 
 $restricted_pages = $package_functions->getOptions("RESTRICTED_PAGES", $system_package);
