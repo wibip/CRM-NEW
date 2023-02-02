@@ -76,10 +76,22 @@ $clientArray = [];
 $businessArray = [];
 $statusArray = [];
 
-$propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN (SELECT user_name FROM admin_users WHERE user_distributor='$user_distributor')";
-$query_results = $db->selectDB($propertyQuery);
-if ($query_results['rowCount'] > 0) {
-    foreach ($query_results['data'] as $row) {
+
+$client_name = isset($_POST['client_name']) ? $_POST['client_name'] : null;
+$business_name = isset($_POST['business_name']) ? $_POST['business_name'] : null;
+$status = isset($_POST['status']) ? $_POST['status'] : null;
+
+$subQuery = "SELECT user_name FROM admin_users WHERE user_distributor='$user_distributor'";
+if($client_name != null && $client_name != 'all') {
+    $subQuery .= " AND full_name='".$client_name."'";
+}
+
+$propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN (".$subQuery.")";
+
+/* get values for filters before filtering */
+$filter_results = $db->selectDB($propertyQuery);
+if ($filter_results['rowCount'] > 0) {
+    foreach ($filter_results['data'] as $row) {
         $clientDetails = $CommonFunctions->getAdminUserDetails('user_name', $row['create_user'], 'full_name');
         if (!empty($clientDetails['data'])) {
             $clientName = $clientDetails['data'][0]['full_name'];
@@ -89,6 +101,18 @@ if ($query_results['rowCount'] > 0) {
         $statusArray[$row['status']] = $row['status'];
     }
 }
+
+/* Add filtering */
+if($business_name != null && $business_name != 'all') {
+    $propertyQuery .= " AND business_name='".$business_name."'";
+}
+
+if($status != null && $status != 'all') {
+    $propertyQuery .= " AND status='".$status."'";
+}
+
+$query_results = $db->selectDB($propertyQuery);
+
 
 ?>
 <style>
@@ -123,17 +147,18 @@ if ($query_results['rowCount'] > 0) {
 												<div class="widget-header">
 													<h3>Active Properties</h3>
 												</div>
+                                                <form method="post" >
                                                 <div class="flex-form">
                                                     <div class="control-group">
                                                         <label>Client Name</label>
                                                         <div class="controls col-lg-5 form-group">
                                                             <select id="client_name" name="client_name">
-                                                                <option value='all'>All</option>
+                                                                <option value='all' <?=(($client_name == null) ? "selected" : "")?>>All</option>
                                                                 <?php 
                                                                     if(!empty($clientArray)){
                                                                         foreach($clientArray AS $key=>$value) {
                                                                 ?>
-                                                                        <option value='<?=$key?>'><?=$value?></option>
+                                                                        <option value='<?=$key?>' <?=(($client_name != null && $client_name == $key) ? "selected" : "")?>><?=$value?></option>
                                                                 <?php
                                                                         }
                                                                     }
@@ -145,12 +170,12 @@ if ($query_results['rowCount'] > 0) {
                                                         <label>Business Name</label>
                                                         <div class="controls col-lg-5 form-group">
                                                             <select id="business_name" name="business_name">
-                                                                <option value='all'>All</option>
+                                                                <option value='all' <?=(($business_name == null) ? "selected" : "")?>>All</option>
                                                                 <?php 
                                                                     if(!empty($businessArray)){
                                                                         foreach($businessArray AS $key=>$value) {
                                                                 ?>
-                                                                        <option value='<?=$key?>'><?=$value?></option>
+                                                                        <option value='<?=$key?>' <?=(($business_name != null && $business_name == $key) ? "selected" : "")?>><?=$value?></option>
                                                                 <?php
                                                                         }
                                                                     }
@@ -162,10 +187,11 @@ if ($query_results['rowCount'] > 0) {
                                                         <label>Status</label>
                                                         <div class="controls col-lg-5 form-group">
                                                             <select id="status" name="status">
-                                                                <option value='all'>All</option>
-                                                                <option value='Completed'>Completed</option> 
-                                                                <option value='Pending'>Pending</option>                                                               
-                                                                <option value='Failed'>Failed</option>
+                                                                <option value='all' <?=(($status == null) ? "selected" : "")?>>All</option>
+                                                                <option value='Completed' <?=(($status != null && $status == "Completed") ? "selected" : "")?>>Completed</option> 
+                                                                <option value='Processing' <?=(($status != null && $status == "Processing") ? "selected" : "")?>>Processing</option>
+                                                                <option value='Pending' <?=(($status != null && $status == "Pending") ? "selected" : "")?>>Pending</option>                                                               
+                                                                <option value='Failed' <?=(($status != null && $status == "Failed") ? "selected" : "")?>>Failed</option>
                                                             </select> 
                                                         </div> 
                                                     </div>

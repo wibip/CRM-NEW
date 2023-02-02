@@ -580,9 +580,9 @@ if ($system_package == 'N/A') {
 					case 'sadmin':
 						$user_distributor = 'SADMIN';
 					break;
-					case 'salesmanager':
-						$user_distributor = 'SMAN';
-					break;
+					// case 'salesmanager':
+					// 	$user_distributor = 'SMAN';
+					// break;
 					case 'nadmin':
 						$user_distributor = 'ADMIN';
 					break;
@@ -608,14 +608,14 @@ if ($system_package == 'N/A') {
 						$result1 = $db->execDB($query1);
 					}
 
-					if($role_type == 'salesmanager'){
-						$query1 = "REPLACE INTO `admin_access_roles_modules`
-									(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
-									VALUES ('$access_role_id', 'sales_crm', '$user_distributor', 'default', '$user_name', now())";
-						$result1 = $db->execDB($query1);
-					}
+					// if($role_type == 'salesmanager'){
+					// 	$query1 = "REPLACE INTO `admin_access_roles_modules`
+					// 				(`access_role`, `module_name`, `distributor` , `module_type`, `create_user`, `create_date`)
+					// 				VALUES ('$access_role_id', 'sales_crm', '$user_distributor', 'default', '$user_name', now())";
+					// 	$result1 = $db->execDB($query1);
+					// }
 
-					if($role_type == 'sadmin' || $role_type == 'salesmanager') {
+					if($role_type == 'sadmin' ) { // || $role_type == 'salesmanager'
 						if($role_type == 'sadmin'){
 							foreach ($_POST['other_modules'] as $selectedOption) {
 								$other_name = $selectedOption;
@@ -799,7 +799,7 @@ if ($system_package == 'N/A') {
 			$role_name = $roleData['data'][0]['description'];
 			$roleType = $roleData['data'][0]['role_type'];
 			//check role type
-			if($roleType == "sadmin"  || $roleType == 'salesmanager'){
+			if($roleType == "sadmin"){ //  || $roleType == 'salesmanager'
 				//get selected other modules
 				$other_result = $db->selectDB("SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role`='$access_role_id' AND module_type='other'");
 				foreach($other_result['data'] AS $otherRole){
@@ -1567,9 +1567,9 @@ if ($system_package == 'N/A') {
 																		<div class="fieldgroup">
 																			<input type="radio" name="role_type" id="role_type" value="nadmin" <?=(($roleType == 'nadmin'  || $role_edit_id == 0 )? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Admin</label>
 																		</div>
-																		<div class="fieldgroup">
-																			<input type="radio" name="role_type" id="role_type" value="salesmanager" <?=($roleType == 'salesmanager' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Sales Manager</label>
-																		</div>
+																		<!-- <div class="fieldgroup">
+																			<input type="radio" name="role_type" id="role_type" value="salesmanager" < ?=($roleType == 'salesmanager' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Sales Manager</label>
+																		</div> -->
 																		<div class="fieldgroup">
 																			<input type="radio" name="role_type" id="role_type" value="sadmin" <?=($roleType == 'sadmin' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "sadmin">Super Admin</label>
 																		</div>
@@ -2018,10 +2018,10 @@ if ($system_package == 'N/A') {
 				$('#admin_operations').show();	
 				$('#sadmin_operations').show();
 				$('#sadmin-omodules').show();
-			<?php } elseif($role_edit_id != 0 && $roleType == 'salesmanager') { ?>
-				$('#admin_operations').hide();
-				$('#sadmin_operations').show();
-				$('#sadmin-omodules').hide();
+			<?php //} elseif($role_edit_id != 0 && $roleType == 'salesmanager') { ?>
+				// $('#admin_operations').hide();
+				// $('#sadmin_operations').show();
+				// $('#sadmin-omodules').hide();
 			<?php
 				} elseif($role_edit_id == 0) {
 			?>
@@ -2050,11 +2050,11 @@ if ($system_package == 'N/A') {
 						$('#sadmin_operations').show();
 						$('#sadmin-omodules').show();
 					break;
-					case "salesmanager":
-						$('#admin_operations').hide();
-						$('#sadmin_operations').show();
-						$('#sadmin-omodules').hide();
-					break;
+					// case "salesmanager":
+					// 	$('#admin_operations').hide();
+					// 	$('#sadmin_operations').show();
+					// 	$('#sadmin-omodules').hide();
+					// break;
 					case "nadmin":
 						$('#admin_operations').show();
 						$('#sadmin_operations').hide();
