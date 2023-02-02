@@ -559,9 +559,14 @@ if ($_SESSION['remote'] == 'yes') {
 	$active_user = '1';
 }
 
+// echo '-----------------<<<<<<<'.$_REQUEST['show'];
+// echo '-----------------<<<<<<<'.$_REQUEST['ud'];
 /* change user_distributor if conditions applied */
-if($_SESSION['SADMIN'] && isset($_GET['show']) && $_GET['show'] == 'clients'){
-	$user_distributor = $_GET['ud'];
+if($_SESSION['SADMIN'] && isset($_REQUEST['show']) && $_REQUEST['show'] == 'clients'){
+	$user_distributor = $_REQUEST['ud'];
+	$_SESSION['ud'] = $_REQUEST['ud'];
+	$user_type = $_REQUEST['ut'];
+	$_SESSION['ut'] = $_REQUEST['ut'];
 }
 
 $_SESSION['user_distributor'] = $user_distributor;
@@ -581,8 +586,8 @@ if ($_SESSION['login'] == 'yes') {
 		}
 	}
 }
-// echo '-----------------'.$user_type;
-// echo '-----------------'.$user_distributor;
+// echo '----------------->>>>'.$user_type;
+// echo '----------------->>>>'.$user_distributor;
 // die;
 //////// System Packages and features
 if ($user_type == "SADMIN" || $user_type == "SMAN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
@@ -599,7 +604,7 @@ if ($user_type == "SADMIN" || $user_type == "SMAN" || $user_type == "MNO" || $us
 
 // 	$advanced_features = $db_class1->getValueAsf("SELECT `advanced_features` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 // }
-
+// var_dump($system_package);
 if ($system_package == "N/A" || $system_package == "") {
 	$package_features = "all";
 	$system_package = "N/A";

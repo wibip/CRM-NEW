@@ -186,7 +186,7 @@ if ($query_results['rowCount'] > 0) {
                                                                 </thead>
                                                                 <tbody>
                                                                     <?php
-                                                                        $key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email, u.mobile , u.user_distributor
+                                                                        $key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email, u.mobile , u.user_distributor, u.user_type
                                                                                         FROM exp_mno m, admin_users u
                                                                                         WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.is_enable
                                                                                         GROUP BY m.mno_id
@@ -200,6 +200,7 @@ if ($query_results['rowCount'] > 0) {
                                                                             $email = $row['email'];
                                                                             $mobile = $row['mobile'];
                                                                             $user_distributor = $row['user_distributor'];
+                                                                            $user_type = $row['user_type'];
                                                                             // $s= $row[s];
                                                                             // $is_enable= $row[is_enable];
                                                                             // $icomm_num=$row[verification_number];
@@ -228,7 +229,7 @@ if ($query_results['rowCount'] > 0) {
                                                                                         }});
 
                                                                                     $(\'#VIEWCLIENTS_'.$mno_id.'\').click(function() {
-                                                                                        window.location = "clients?show=clients&t=1&ud='.$user_distributor.'"
+                                                                                        window.location = "clients?show=clients&t=1&ud='.$user_distributor.'&ut='.$user_type.'"
                                                                                     });
                                                                                 });
 

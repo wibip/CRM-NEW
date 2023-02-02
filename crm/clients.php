@@ -26,11 +26,11 @@ $CommonFunctions = new CommonFunctions();
 
 require_once 'src/CRM/functions.php';
 /*Get selected API profiles*/
-$apiIds = $CommonFunctions->getSelectedApis($_SESSION['user_distributor']);
-$api_profiles = null;
-if (!empty($apiIds)) {
-	$api_profiles = $CommonFunctions->getApiProfiles($apiIds);
-}
+// $apiIds = $CommonFunctions->getSelectedApis($_SESSION['user_distributor']);
+// $api_profiles = null;
+// if (!empty($apiIds)) {
+// 	$api_profiles = $CommonFunctions->getApiProfiles($apiIds);
+// }
 $is_edit = false;
 $showProperty = false;
 $showLocation = false;
@@ -744,6 +744,12 @@ $page = 'Client';
 	// echo 'Safe-01';
 	include 'header.php';
 	// echo 'Safe-02';
+	/*Get selected API profiles*/
+	$apiIds = $CommonFunctions->getSelectedApis($user_distributor);
+	$api_profiles = null;
+	if (!empty($apiIds)) {
+		$api_profiles = $CommonFunctions->getApiProfiles($apiIds);
+	}
 	// die;
 	require_once 'layout/' . $camp_layout . '/config.php';
 
@@ -1345,6 +1351,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
         }
         header('Location: crm?t=crm_view&token='.$token.'&edit&id='.$id);
     }
+
 	//Form Refreshing avoid secret key/////
 	$secret = md5(uniqid(rand(), true));
 	$_SESSION['FORM_SECRET'] = $secret;
@@ -1353,6 +1360,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	if (($new_design == 'yes') && file_exists($users_mid)) {
 		include_once $users_mid;
 	} else {
+		$sadminBind = '';
+		if($_SESSION['SADMIN'] && isset($_GET['show']) && $_GET['show'] == 'clients'){
+			$sadminBind = 'show='.$_GET['show'].'&ud='.$_GET['ud'].'&ut='.$_GET['ut'];
+		}
 	?>
 		<div class="main">
 			<div class="custom-tabs"></div>
@@ -1412,6 +1423,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 															unset($_SESSION['msg6']);
 														}
 													}
+
+// 													echo '-----------------'.$user_type;
+// echo '-----------------'.$user_distributor;
 												?>
 												<div class="widget widget-table action-table">
 													<div class="widget-header">
@@ -1478,7 +1492,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																							closeText: \'close\'
 																							}});
 																						$(\'#APE_' . $id . '\').click(function() {
-																							window.location = "?token=' . $secret . '&t=2&edit_id=' . $id . '"
+																							window.location = "?token=' . $secret . '&t=2&edit_id=' . $id . '&'.$sadminBind.'"
 																						});
 																						});
 																					</script></td><td><a href="javascript:void();" id="LS_' . $id . '"  class="btn btn-small btn-' . $btn_color . '">
@@ -1491,7 +1505,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																							closeText: \'close\'
 																							}});
 																						$(\'#LS_' . $id . '\').click(function() {
-																							window.location = "?token=' . $secret . '&t=1&status_change_id=' . $id . '&action_sts=' . $action_status . '"
+																							window.location = "?token=' . $secret . '&t=1&status_change_id=' . $id . '&action_sts=' . $action_status . '&'.$sadminBind.'"
 																						});
 																						});
 																					</script></td><td><a href="javascript:void();" id="RU_' . $id . '"  class="btn btn-small btn-danger">
@@ -1504,7 +1518,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																							closeText: \'close\'
 																							}});
 																						$(\'#RU_' . $id . '\').click(function() {
-																							window.location = "?token=' . $secret . '&t=1&user_rm_id=' . $id . '"
+																							window.location = "?token=' . $secret . '&t=1&user_rm_id=' . $id . '&'.$sadminBind.'"
 																						});
 																						});
 																					</script></td>';		
@@ -1568,17 +1582,21 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														$state_region = (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['state_region'] : "");
 														$zip = (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['zip'] : "");
 														$mobile = (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['mobile'] : ""); 
-														$selected_profile = (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['api_profile'] : ""); 
-
+														$selected_profile = (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['api_profile'] : "");
+												
 													echo '<input type="hidden" name="form_secret" id="form_secret1" value="' . $_SESSION['FORM_SECRET'] . '" />';
+													$actionUrl = "clients.php";
+													if($_SESSION['SADMIN'] && isset($_REQUEST['show']) && $_REQUEST['show'] == 'clients'){
+														$actionUrl = "clients.php?show=".$_REQUEST['show']."&ud=".$_REQUEST['ud']."&ut=".$_REQUEST['ut'];
+													}
 												?>
 												<!-- action="controller/User_Controller.php" -->
-												<form autocomplete="off" id="edit_profile" action="clients.php" method="post" class="form-horizontal">
+												<form autocomplete="off" id="edit_profile" action="<?=$actionUrl?>" method="post" class="form-horizontal">
 													<fieldset>
 														<input type="hidden" name="id" id="id" value="<?=$edit_id?>">
-														<input type="hidden" name="is_edit" id="is_edit" value=<?=$is_edit?>">
 														<input type="hidden" name="user_type" id="user_type1" value="<?=$user_type?>">
 														<input type="hidden" name="loation" id="loation1" value="<?=$user_distributor?>">
+														<input type="hidden" name="is_edit" id="is_edit" value="<?=$is_edit?>">
 														<!-- /control-group -->
 														<div class="control-group">
 															<label class="control-label" for="language_1">API profile</label>
