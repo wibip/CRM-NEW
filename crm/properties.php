@@ -72,9 +72,9 @@ if (isset($_GET['t'])) {
 } else {
     $tab8 = "set";
 }
+
 $clientArray = [];
 $businessArray = [];
-$statusArray = [];
 
 
 $client_name = isset($_POST['client_name']) ? $_POST['client_name'] : null;
@@ -98,7 +98,6 @@ if ($filter_results['rowCount'] > 0) {
             $clientArray[$row['create_user']] = $clientName;
         }
         $businessArray[$row['business_name']] = $row['business_name'];
-        $statusArray[$row['status']] = $row['status'];
     }
 }
 
@@ -112,8 +111,6 @@ if($status != null && $status != 'all') {
 }
 
 $query_results = $db->selectDB($propertyQuery);
-
-
 ?>
 <style>
 #live_camp .tablesaw-columntoggle-popup .btn-group > label {
@@ -147,56 +144,57 @@ $query_results = $db->selectDB($propertyQuery);
 												<div class="widget-header">
 													<h3>Active Properties</h3>
 												</div>
-                                                <form method="post" >
-                                                <div class="flex-form">
-                                                    <div class="control-group">
-                                                        <label>Client Name</label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select id="client_name" name="client_name">
-                                                                <option value='all' <?=(($client_name == null) ? "selected" : "")?>>All</option>
-                                                                <?php 
-                                                                    if(!empty($clientArray)){
-                                                                        foreach($clientArray AS $key=>$value) {
-                                                                ?>
-                                                                        <option value='<?=$key?>' <?=(($client_name != null && $client_name == $key) ? "selected" : "")?>><?=$value?></option>
-                                                                <?php
+                                                <form method="post">
+                                                    <div class="flex-form">
+                                                        <div class="control-group">
+                                                            <label>Client Name</label>
+                                                            <div class="controls col-lg-5 form-group">
+                                                                <select id="client_name" name="client_name">
+                                                                    <option value='all' <?=(($client_name == null) ? "selected" : "")?>>All</option>
+                                                                    <?php 
+                                                                        if(!empty($clientArray)){
+                                                                            foreach($clientArray AS $key=>$value) {
+                                                                    ?>
+                                                                            <option value='<?=$key?>' <?=(($client_name != null && $client_name == $key) ? "selected" : "")?>><?=$value?></option>
+                                                                    <?php
+                                                                            }
                                                                         }
-                                                                    }
-                                                                ?>
-                                                            </select>
-                                                        </div> 
-                                                    </div>
-                                                    <div class="control-group">
-                                                        <label>Business Name</label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select id="business_name" name="business_name">
-                                                                <option value='all' <?=(($business_name == null) ? "selected" : "")?>>All</option>
-                                                                <?php 
-                                                                    if(!empty($businessArray)){
-                                                                        foreach($businessArray AS $key=>$value) {
-                                                                ?>
-                                                                        <option value='<?=$key?>' <?=(($business_name != null && $business_name == $key) ? "selected" : "")?>><?=$value?></option>
-                                                                <?php
+                                                                    ?>
+                                                                </select>
+                                                            </div> 
+                                                        </div>
+                                                        <div class="control-group">
+                                                            <label>Business Name</label>
+                                                            <div class="controls col-lg-5 form-group">
+                                                                <select id="business_name" name="business_name">
+                                                                    <option value='all' <?=(($business_name == null) ? "selected" : "")?>>All</option>
+                                                                    <?php 
+                                                                        if(!empty($businessArray)){
+                                                                            foreach($businessArray AS $key=>$value) {
+                                                                    ?>
+                                                                            <option value='<?=$key?>' <?=(($business_name != null && $business_name == $key) ? "selected" : "")?>><?=$value?></option>
+                                                                    <?php
+                                                                            }
                                                                         }
-                                                                    }
-                                                                ?>
-                                                            </select> 
-                                                        </div> 
+                                                                    ?>
+                                                                </select> 
+                                                            </div> 
+                                                        </div>
+                                                        <div class="control-group">
+                                                            <label>Status</label>
+                                                            <div class="controls col-lg-5 form-group">
+                                                                <select id="status" name="status">
+                                                                    <option value='all' <?=(($status == null) ? "selected" : "")?>>All</option>
+                                                                    <option value='Completed' <?=(($status != null && $status == "Completed") ? "selected" : "")?>>Completed</option> 
+                                                                    <option value='Processing' <?=(($status != null && $status == "Processing") ? "selected" : "")?>>Processing</option>
+                                                                    <option value='Pending' <?=(($status != null && $status == "Pending") ? "selected" : "")?>>Pending</option>                                                               
+                                                                    <option value='Failed' <?=(($status != null && $status == "Failed") ? "selected" : "")?>>Failed</option>
+                                                                </select> 
+                                                            </div> 
+                                                        </div>
+                                                        <button class="btn btn-primary">Filter</button>
                                                     </div>
-                                                    <div class="control-group">
-                                                        <label>Status</label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select id="status" name="status">
-                                                                <option value='all' <?=(($status == null) ? "selected" : "")?>>All</option>
-                                                                <option value='Completed' <?=(($status != null && $status == "Completed") ? "selected" : "")?>>Completed</option> 
-                                                                <option value='Processing' <?=(($status != null && $status == "Processing") ? "selected" : "")?>>Processing</option>
-                                                                <option value='Pending' <?=(($status != null && $status == "Pending") ? "selected" : "")?>>Pending</option>                                                               
-                                                                <option value='Failed' <?=(($status != null && $status == "Failed") ? "selected" : "")?>>Failed</option>
-                                                            </select> 
-                                                        </div> 
-                                                    </div>
-                                                    <button class="btn btn-primary">Filter</button>
-                                                </div>
+                                                </form>
 												<!-- /widget-header -->
 												<div class="widget-content table_response">
                                                     <div style="overflow-x:auto">

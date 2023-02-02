@@ -72,23 +72,46 @@ if (isset($_GET['t'])) {
 } else {
     $tab8 = "set";
 }
-$clientArray = [];
-$businessArray = [];
-$statusArray = [];
 
-$propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN (SELECT user_name FROM admin_users WHERE user_distributor='$user_distributor')";
-$query_results = $db->selectDB($propertyQuery);
-if ($query_results['rowCount'] > 0) {
-    foreach ($query_results['data'] as $row) {
-        $clientDetails = $CommonFunctions->getAdminUserDetails('user_name', $row['create_user'], 'full_name');
-        if (!empty($clientDetails['data'])) {
-            $clientName = $clientDetails['data'][0]['full_name'];
-            $clientArray[$row['create_user']] = $clientName;
-        }
-        $businessArray[$row['business_name']] = $row['business_name'];
-        $statusArray[$row['status']] = $row['status'];
+$accountArray = [];
+$operationArray = [];
+
+
+$account_name = isset($_POST['account_name']) ? $_POST['account_name'] : null;
+$operation_name = isset($_POST['operation_name']) ? $_POST['operation_name'] : null;
+$status = isset($_POST['status']) ? $_POST['status'] : null;
+
+$key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email, u.mobile , u.user_distributor, u.user_type
+                FROM exp_mno m, admin_users u
+                WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.is_enable ";
+
+/* get values for filters before filtering */
+$filter_results = $db->selectDB($key_query);
+if ($filter_results['rowCount'] > 0) {
+    foreach ($filter_results['data'] as $row) {
+        $accountArray[$row['full_name']] = $row['full_name'];       
+        $operationArray[$row['mno_description']] = $row['mno_description'];
     }
 }
+
+/* Add filtering */
+
+if($account_name != null && $account_name != 'all') {
+    $key_query .= " AND u.full_name='".$account_name."'";
+}
+
+if($operation_name != null && $operation_name != 'all') {
+    $key_query .= " AND m.mno_description='".$operation_name."'";
+}
+
+if($status != null && $status != 'all') {
+    $key_query .= " AND u.is_enable='".$status."'";
+}
+
+$key_query .= " ORDER BY m.id";
+
+// echo $key_query;
+$query_results = $db->selectDB($key_query);
 
 ?>
 <style>
@@ -123,76 +146,71 @@ if ($query_results['rowCount'] > 0) {
 												<div class="widget-header">
 													<h3>Operation Accounts</h3>
 												</div>
-                                                <div class="flex-form">
-                                                    <div class="control-group">
-                                                        <label>Account Name</label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select id="client_name" name="client_name">
-                                                                <option value='all'>All</option>
-                                                                <?php 
-                                                                    if(!empty($clientArray)){
-                                                                        foreach($clientArray AS $key=>$value) {
-                                                                ?>
-                                                                        <option value='<?=$key?>'><?=$value?></option>
-                                                                <?php
+                                                <form method="post">
+                                                    <div class="flex-form">
+                                                        <div class="control-group">
+                                                            <label>Account Name</label>
+                                                            <div class="controls col-lg-5 form-group">
+                                                                <select id="account_name" name="account_name">
+                                                                    <option value='all' <?=(($account_name == null) ? "selected" : "")?>>All</option>
+                                                                    <?php 
+                                                                        if(!empty($accountArray)){
+                                                                            foreach($accountArray AS $key=>$value) {
+                                                                    ?>
+                                                                            <option value='<?=$key?>' <?=(($account_name != null && $account_name == $key) ? "selected" : "")?>><?=$value?></option>
+                                                                    <?php
+                                                                            }
                                                                         }
-                                                                    }
-                                                                ?>
-                                                            </select>
-                                                        </div> 
-                                                    </div>
-                                                    <div class="control-group">
-                                                        <label>Operation Name</label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select id="business_name" name="business_name">
-                                                                <option value='all'>All</option>
-                                                                <?php 
-                                                                    if(!empty($businessArray)){
-                                                                        foreach($businessArray AS $key=>$value) {
-                                                                ?>
-                                                                        <option value='<?=$key?>'><?=$value?></option>
-                                                                <?php
+                                                                    ?>
+                                                                </select>
+                                                            </div> 
+                                                        </div>
+                                                        <div class="control-group">
+                                                            <label>Operation Name</label>
+                                                            <div class="controls col-lg-5 form-group">
+                                                                <select id="operation_name" name="operation_name">
+                                                                    <option value='all' <?=(($operation_name == null) ? "selected" : "")?>>All</option>
+                                                                    <?php 
+                                                                        if(!empty($operationArray)){
+                                                                            foreach($operationArray AS $key=>$value) {
+                                                                    ?>
+                                                                            <option value='<?=$key?>' <?=(($operation_name != null && $operation_name == $key) ? "selected" : "")?>><?=$value?></option>
+                                                                    <?php
+                                                                            }
                                                                         }
-                                                                    }
-                                                                ?>
-                                                            </select> 
-                                                        </div> 
+                                                                    ?>
+                                                                </select> 
+                                                            </div> 
+                                                        </div>
+                                                        <div class="control-group">
+                                                            <label>Status</label>
+                                                            <div class="controls col-lg-5 form-group">
+                                                                <select id="status" name="status">
+                                                                    <option value='all' <?=(($status != null && $status == "all") ? "selected" : "")?>>All</option>
+                                                                    <option value='1' <?=(($status != null && $status == "1") ? "selected" : "")?>>Enable</option>                                                              
+                                                                    <option value='0' <?=(($status != null && $status == "0") ? "selected" : "")?>>Disable</option>
+                                                                    <option value='2' <?=(($status != null && $status == "2") ? "selected" : "")?>>Pending</option>  
+                                                                </select> 
+                                                            </div> 
+                                                        </div>
+                                                        <button class="btn btn-primary">Filter</button>
                                                     </div>
-                                                    <div class="control-group">
-                                                        <label>Status</label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select id="status" name="status">
-                                                                <option value='all'>All</option>
-                                                                <option value='Completed'>Completed</option> 
-                                                                <option value='Pending'>Pending</option>                                                               
-                                                                <option value='Failed'>Failed</option>
-                                                            </select> 
-                                                        </div> 
-                                                    </div>
-                                                    <button class="btn btn-primary">Filter</button>
-                                                </div>
+                                                </form>
 												<!-- /widget-header -->
 												<div class="widget-content table_response">
                                                     <div style="overflow-x:auto">
                                                     <table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
                                                                 <thead>
                                                                     <tr>
-                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Account Name</th>
-                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Operation</th>
-                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Email</th>
-                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Mobile</th>
-                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2"></th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Account Name</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Operation</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Email</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Mobile</th>
+                                                                        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist"></th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     <?php
-                                                                        $key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email, u.mobile , u.user_distributor, u.user_type
-                                                                                        FROM exp_mno m, admin_users u
-                                                                                        WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.is_enable
-                                                                                        GROUP BY m.mno_id
-                                                                                        ORDER BY m.id ";
-                                                                        $query_results = $db->selectDB($key_query);
-                                                                        // var_dump($query_results);
                                                                         foreach ($query_results['data'] as $row) {
                                                                             $mno_description = $row['mno_description'];
                                                                             $mno_id = $row['mno_id'];
