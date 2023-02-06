@@ -575,7 +575,7 @@ button[class*=close]:not(.fancy_close):not(.mce-close) {
 }
 
 .ui-tooltip{
-    padding: 30px;
+    padding: 10px;
     max-width: 600px !important;
 }
 .ui-dialog {
@@ -1671,11 +1671,6 @@ div.tablesaw-btn-group>label>label, .tablesaw-columntoggle-popup .btn-group>labe
 
 .dataTables_wrapper .row {
     margin-left: 0
-}
-
-.dataTables_filter,
-.dataTables_length {
-    display: none
 }
 
 input[type=radio]:checked:not(.hide_rad)+label::after {

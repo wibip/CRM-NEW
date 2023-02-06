@@ -504,9 +504,6 @@ div.tablesaw-columntoggle-popup input[type="checkbox"]:checked + label::before{
 .dataTables_wrapper .row {
     margin-left: 0px;
 }
-.dataTables_filter, .dataTables_length {
-    display: none;
-}
 
 input[type="radio"]:checked:not(.hide_rad) + label::before{
     /*background-position: 0 -658px;*/

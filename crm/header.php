@@ -44,6 +44,69 @@ if (!$fileOut || $out) {
 <![endif]-->
 
 <style>
+	
+	div.dataTables_wrapper div.dataTables_filter{
+		position: absolute;
+    	top: -37px;
+	}
+	div.dataTables_wrapper div.dataTables_filter input{
+		margin-left: 0;
+	}
+	div.dataTables_wrapper div.dataTables_length{
+		position: absolute;
+		top: -37px;
+		right: 90px;
+	}
+	div.dataTables_wrapper div.dataTables_length select {
+		width: 75px;
+	}
+	.widget-content.table_response{
+		margin-top: 25px;
+	}
+	.data-table-bottom{
+		display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+			-webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+	}
+	.data-table-controls{
+		padding: 8px;
+	}
+	.data-table-controls button.delete{
+		width: 35px;
+		height: 35px;
+		border-radius: 5.6px;
+		padding: 0;
+		color: #cd782e;
+		background: none;
+		border: 1.6px solid #E57200;
+		margin-right: 10px;
+	}
+	.data-table-controls button.delete[disabled]{
+		opacity: 0.5;
+		cursor: default;
+	}
+	.data-table-controls form{
+		display: inline-block;
+    margin: 0 !important;
+	}
+	.data-table-bottom-right{
+		display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+	-webkit-box-align:center;
+        -ms-flex-align:center;
+            align-items:center
+	}
+	.dataTables_info{
+		margin-right: 10px;
+    	font-size: 12px;
+	}
 	@media (max-width: 980px) {
 		.navbar .nav.pull-right {
 			margin-top: 0px !important;
