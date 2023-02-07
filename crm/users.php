@@ -1135,17 +1135,18 @@ if ($system_package == 'N/A') {
 													<!-- /widget-header -->
 													<div class="widget-content table_response">
 														<div style="overflow-x:auto;">
-															<table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
+															<table id="manage_users" data-delete="true" class="data-table table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
 																<thead>
 																	<tr>
+																	<th scope="col" style="max-width: 20px;" class="no-sort" data-tablesaw-sortable-col data-tablesaw-priority="persist"><input type="checkbox" class="delete-all"></th>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Username</th>																		
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Access Role</th>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="10">Full Name</th>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Email</th>
 																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="10">Created By</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Edit</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="6">Disable</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="7">Remove</th>
+																		<th scope="col" class="no-sort" data-tablesaw-sortable-col data-tablesaw-priority="4">Edit</th>
+																		<th scope="col" class="no-sort" data-tablesaw-sortable-col data-tablesaw-priority="6">Disable</th>
+																		<th scope="col" class="no-sort" data-tablesaw-sortable-col data-tablesaw-priority="7">Remove</th>
 																	</tr>
 																</thead>
 																<tbody>
@@ -1188,6 +1189,7 @@ if ($system_package == 'N/A') {
 																		}
 
 																		echo '<tr>
+																				<td style="max-width: 20px;"> <input type="checkbox" class="delete" value="'.$id.'"></td>
 																				<td> ' . $user_name1 . ' </td>
 																				<td> ' . $access_role_desc . ' </td>
 																				<td> ' . $full_name . ' </td>
@@ -1857,7 +1859,7 @@ if ($system_package == 'N/A') {
 					},
 					email_1: {
 						validators: {
-							<?php echo $db->validateField('email_cant_upper'); ?>
+							<?php echo $db->validateField('email_cant_upper'); ?>,
 							<?php echo $db->validateField('email'); ?>
 						}
 					},
@@ -1901,7 +1903,7 @@ if ($system_package == 'N/A') {
 					},
 					email_2: {
 						validators: {
-							<?php echo $db -> validateField('email_cant_upper'); ?>
+							<?php echo $db -> validateField('email_cant_upper'); ?>,
 							<?php echo $db->validateField('email'); ?>
 						}
 					},

@@ -33,7 +33,7 @@ $page = "API profile";
 <link rel="stylesheet" href="css/jquery-ui-alert.css" type="text/css" />
 <!--    <link rel="stylesheet" href="css/bootstrapValidator.css"/> -->
 <link rel="stylesheet" type="text/css" href="css/formValidation.css">
-<link rel="stylesheet" href="css/tablesaw.css?v1.0">
+<link rel="stylesheet" href="css/tablesaw.css?v1.1">
 <link rel="stylesheet" href="css/jquery-msgpopup.css" type="text/css" />
 <!-- Add jQuery library -->
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
@@ -42,7 +42,7 @@ $page = "API profile";
 <!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
-
+<link rel="stylesheet" href="css/dataTables.bootstrap.css" />
 <!--table colimn show hide-->
 <script type="text/javascript" src="js/tablesaw.js"></script>
 <script type="text/javascript" src="js/tablesaw-init.js"></script>
@@ -187,6 +187,13 @@ if(isset($_POST['create_ap_controller'])){
 
 	}
 }//
+
+if(isset($_POST['api_profile_table_delete_raws'])){
+	$arr = explode(",", $_POST['api_profile_table_delete_raws']);
+	foreach($arr as $value){
+		echo $value;
+	}
+}
 
 if(isset($_POST['api_update'])){
 		$tab1="set";
@@ -378,14 +385,15 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<!-- /widget-header -->
 												<div class="widget-content table_response ">
 													<div style="overflow-x:auto;" >
-														<table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
+														<table id="api_profile_table" data-delete="true" data-create="?t=2" class="data-table table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
 															<thead>
 																<tr>
+																	<th scope="col" style="max-width: 20px;" class="no-sort" data-tablesaw-sortable-col data-tablesaw-priority="persist"><input type="checkbox" class="delete-all"></th>
 																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Profile</th>
 																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">API Version</th>
 																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">API URL</th>
-																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th>
-																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Remove</th>
+																	<th scope="col" class="no-sort" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th>
+																	<th scope="col" class="no-sort" data-tablesaw-sortable-col data-tablesaw-priority="4">Remove</th>
 																</tr>
 															</thead>
 															<tbody>
@@ -408,6 +416,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 																			$id = $row['id'];
 																			$assign_count = $row['assign_count'];
 																			echo '<tr>
+																			<td style="max-width: 20px;"> <input type="checkbox" class="delete" value="'.$id.'"></td>
 																			<td> '.$api_profile.' </td>
 																			<td> '.$controller_name.' </td>
 																			<td> '.$api_url.' </td>';
@@ -633,5 +642,6 @@ return xmlHttp;
   
 </script>
 <script src="js/jquery.multi-select.js" type="text/javascript"></script>
+
 </body>
 </html>
