@@ -8,7 +8,8 @@ $icon_arr = [
 	'CRM'=> 'icon-group',
 	'OPSaaS'=> 'icon-group',
 	'Clients'=> 'icon-group',
-	'Properties'=> 'icon-building'
+	'Properties'=> 'icon-building',
+	'Admin Config'=> 'icon-edit'
 ];
 if ($script != 'verification') {
 
