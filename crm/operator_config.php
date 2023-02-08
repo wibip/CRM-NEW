@@ -36,11 +36,25 @@ include 'header_new.php';
                                             <tbody>
                                                 <tr>
                                                     <td>ALT</td>
-                                                    <td>Altice</td>
-                                                    <td>OPT</td>
-                                                    <td>Optimum</td>
-                                                    <td>Complex</td>
-                                                    <td>Active</td>
+                                                    <td>28K</td>
+                                                    <td>QoS-Profile-28k</td>
+                                                    <td>N/A</td>
+                                                    <td>N/A</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ALT</td>
+                                                    <td>28K</td>
+                                                    <td>QoS-Profile-28k</td>
+                                                    <td>N/A</td>
+                                                    <td>N/A</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
                                                 </tr>
                                             </tbody>
                                         </table>
