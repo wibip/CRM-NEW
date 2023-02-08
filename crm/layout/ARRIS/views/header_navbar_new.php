@@ -10,7 +10,7 @@ $icon_arr = [
 	'OPSaaS'=> 'icon-group',
 	'Clients'=> 'icon-group',
 	'Properties'=> 'icon-building',
-	'Admin Config'=> 'icon-edit'
+	'Admin Config'=> 'fa-solid fa-pen-to-square'
 ];
 if ($script != 'verification') {
 
