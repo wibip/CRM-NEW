@@ -3,12 +3,12 @@
 --- Add new module ---
 INSERT INTO `admin_access_modules` (`module_name`,`name_group`,`user_type`,`is_enable`,`menu_item`,`order`,`main_module`,`main_module_order`,`create_date`,`create_user`,`last_update`) 
 VALUES 
-('operators','Operators','ADMIN',1,1,1,'Admin Config',5,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35'),
-('operator_config','Operator Config','ADMIN',1,1,2,'Admin Config',5,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35'),
-('operator_regions','Operator Region','ADMIN',1,1,3,'Admin Config',5,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35'),
-('operator_realms','Operator Realm Scope','ADMIN',1,1,4,'Admin Config',5,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35'),
-('operator_ipscope','Operator IP Scope','ADMIN',1,1,5,'Admin Config',5,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35'),
-('property_addressing','Property Addressing','ADMIN',1,1,6,'Admin Config',5,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35');
+('operators','Operators','ADMIN',1,1,1,'Admin Config',2,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35'),
+('operator_config','Operator Config','ADMIN',1,1,2,'Admin Config',2,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35'),
+('operator_regions','Operator Region','ADMIN',1,1,3,'Admin Config',2,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35'),
+('operator_realms','Operator Realm Scope','ADMIN',1,1,4,'Admin Config',2,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35'),
+('operator_ipscope','Operator IP Scope','ADMIN',1,1,5,'Admin Config',2,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35'),
+('property_addressing','Property Addressing','ADMIN',1,1,6,'Admin Config',2,'2023-02-08 16:14:26','admin','2023-02-080 06:36:35');
 
 ---- Update allow pages-----
 UPDATE admin_product_controls SET options='["operators","operator_config","operator_regions","operator_realms","operator_ipscope","property_addressing","operations","operation_list","central_db","api_profile","config","users","logs","profile","clients","properties", "crm","change_portal"]' 
