@@ -10,7 +10,7 @@ $icon_arr = [
 	'OPSaaS'=> 'icon-group',
 	'Clients'=> 'icon-group',
 	'Properties'=> 'icon-building',
-	'Admin Config'=> 'icon-exclamation'
+	'Admin Config'=> 'icon-edit'
 ];
 if ($script != 'verification') {
 
