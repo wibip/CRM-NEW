@@ -38,63 +38,32 @@ include 'header_new.php';
 									                <td>West</td>
 									                <td>&nbsp;</td>
 									                <td>&nbsp;</td>
-									            </tr><tr role="row" class="even">
-									                <td class="">All</td>
-													<td class="sorting_1"><span class="responsiveExpander"></span>Hosted</td>
-									                <td>AK</td>
-									                <td>West</td>
-									                <td>&nbsp;</td>
-									                <td>&nbsp;</td>
-									            </tr><tr role="row" class="odd">
-									                <td class="">All</td>
-													<td class="sorting_1"><span class="responsiveExpander"></span>Hosted</td>
-									                <td>GA</td>
-									                <td>South</td>
-									                <td>&nbsp;</td>
-									                <td>&nbsp;</td>
-									            </tr><tr role="row" class="even">
-									                <td class="">All</td>
-													<td class="sorting_1"><span class="responsiveExpander"></span>Hosted</td>
-									                <td>NH</td>
-									                <td>Northeast</td>
-									                <td>&nbsp;</td>
-									                <td>&nbsp;</td>
-									            </tr><tr role="row" class="odd">
-									                <td class="">All</td>
-													<td class="sorting_1"><span class="responsiveExpander"></span>Hosted</td>
-									                <td>WA</td>
-									                <td>West</td>
-									                <td>&nbsp;</td>
-									                <td>&nbsp;</td>
-									            </tr><tr role="row" class="even">
+									            </tr>
+                                                <tr role="row" class="even">									                
 									                <td class="">All</td>
 													<td class="sorting_1"><span class="responsiveExpander"></span>Hosted</td>
 									                <td>WI</td>
 									                <td>Midwest</td>
 									                <td>&nbsp;</td>
 									                <td>&nbsp;</td>
-									            </tr><tr role="row" class="odd">
+									            </tr>
+                                                <tr role="row" class="odd">
 									                <td class="">ALT</td>
 													<td class="sorting_1"><span class="responsiveExpander"></span>Complex</td>
 									                <td>CA</td>
 									                <td>West</td>
 									                <td>&nbsp;</td>
 									                <td>&nbsp;</td>
-									            </tr><tr role="row" class="even">
-									                <td class="">ALT</td>
-													<td class="sorting_1"><span class="responsiveExpander"></span>Complex</td>
-									                <td>KY</td>
-									                <td>South</td>
-									                <td>&nbsp;</td>
-									                <td>&nbsp;</td>
-									            </tr><tr role="row" class="odd">
+									            </tr>
+                                                <tr role="row" class="odd">
 									                <td class="">COX</td>
 													<td class="sorting_1"><span class="responsiveExpander"></span></td>
 									                <td>AT</td>
 									                <td>East</td>
 									                <td>Atlanta</td>
 									                <td>&nbsp;</td>
-									            </tr><tr role="row" class="even">
+									            </tr>
+                                                <tr role="row" class="even">
 									                <td class="">COX</td>
 													<td class="sorting_1"><span class="responsiveExpander"></span></td>
 									                <td>AR</td>
