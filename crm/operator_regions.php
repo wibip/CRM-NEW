@@ -11,14 +11,14 @@ include 'header_new.php';
                             <div class="tabbable">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="operators" data-bs-toggle="tab" data-bs-target="#operators-tab-pane" type="button" role="tab" aria-controls="operators" aria-selected="true">Operators</button>
+                                        <button class="nav-link active" id="operators" data-bs-toggle="tab" data-bs-target="#operators-tab-pane" type="button" role="tab" aria-controls="operators" aria-selected="true">Operator Regions</button>
                                     </li>
                                 </ul>
 
                                 <div class="tab-content">
 
                                     <div div class="tab-pane fade show active" id="operators-tab-pane" role="tabpanel" aria-labelledby="operators" tabindex="0">
-                                        <h1 class="head">Operators</h1>
+                                        <h1 class="head">Operator Regions</h1>
                                         <table class="table table-striped" style="width:100%" id="operator-table">
                                             <thead>
                                                 <tr>
@@ -112,15 +112,15 @@ include 'header_new.php';
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">State Name</label>
-                                                    <input type="state_name" class="form-control">
+                                                    <input type="text" class="form-control">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">City</label>
-                                                    <input type="city" class="form-control">
+                                                    <input type="text" class="form-control">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="inputEmail4" class="form-label">Notes</label>
-                                                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                                                    <textarea class="form-control" placeholder="" id="floatingTextarea"></textarea>
                                                 </div>
                                                 <div class="col-12">
                                                     <button type="submit" class="btn btn-primary">Submit</button>
