@@ -16,10 +16,11 @@ include 'header_new.php';
                                 </ul>
 
                                 <div class="tab-content">
-
                                     <div div class="tab-pane fade show active" id="operators-tab-pane" role="tabpanel" aria-labelledby="operators" tabindex="0">
                                         <h1 class="head">Operator Config</h1>
-                                        <table class="table table-striped" style="width:100%" id="operator-table">
+                                        <br/>
+                                        <h5 class="head">QoS Profile</h5>
+                                        <table class="table table-striped" style="width:100%" id="qos-table">
                                             <thead>
                                                 <tr>
                                                     <th>Operator Code</th>
@@ -59,48 +60,63 @@ include 'header_new.php';
                                             </tbody>
                                         </table>
                                         <br>
-                                        <div class="border card my-4">
-                                            <div class="border-bottom card-header p-4">
-                                                <div class="g-3 row">
-                                                    <h4>Create Operator</h4>
-                                                </div>
-                                            </div>
-                                            <form class="row g-3 p-4">
-                                                <div class="col-md-6">
-                                                    <label for="inputEmail4" class="form-label">Operator Code</label>
-                                                    <input type="email" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputPassword4" class="form-label">Operator Name</label>
-                                                    <input type="password" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputEmail4" class="form-label">Sub Operator Code</label>
-                                                    <input type="email" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputPassword4" class="form-label">Sub Operator Name</label>
-                                                    <input type="password" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputState" class="form-label">Environment</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option selected>None</option>
-                                                        <option>Complex</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputState" class="form-label">Status</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option selected>Active</option>
-                                                        <option>Inactive</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-12">
-                                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                        <h5 class="head">BusinessID Scope</h5>
+                                        <table class="table table-striped" style="width:100%" id="bid-scope-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Operator Code</th>
+                                                    <th>SubOperator Code</th>
+                                                    <th>Service Type</th>
+                                                    <th>Business Type</th>
+                                                    <th>BusinessID Prefix</th>
+                                                    <th>BusinessID From</th>
+                                                    <th>BusinessID To</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>ALT</td>
+                                                    <td>SDL</td>
+                                                    <td>ENT-SMB-NON-AP-MERA</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ALT</td>
+                                                    <td>SDL</td>
+                                                    <td>ENT-SMB-NON-AP-MERA</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <h5 class="head">ServiceType Map</h5>
+                                        <table class="table table-striped" style="width:100%" id="service-type-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Operator Code</th>
+                                                    <th>SubOperator Code</th>
+                                                    <th>Service Type</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>ALT</td>
+                                                    <td>SDL</td>
+                                                    <td>ENT-SMB-NON-AP-MERA</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ALT</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>ENT-SMB-NON-AP-VYOS</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -121,6 +137,8 @@ include 'header_new.php';
 
 <script>
     $(document).ready(function () {
-        $('#operator-table').dataTable();
+        $('#qos-table').dataTable();
+        $('#bid-scope-table').dataTable();
+        $('#service-type-table').dataTable();
     });
 </script>
