@@ -45,7 +45,7 @@ include 'header_new.php';
                                         <div class="border card my-4">
                                             <div class="border-bottom card-header p-4">
                                                 <div class="g-3 row">
-                                                    <h4>Create Operator</h4>
+                                                    <span class="fs-5">Create Operator</span>
                                                 </div>
                                             </div>
                                             <form class="row g-3 p-4">

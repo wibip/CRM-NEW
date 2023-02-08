@@ -1,12 +1,12 @@
 <?php 
 $icon_arr = [
-	'Configuration'=> 'icon-cogs',
-	'Operations'=> 'icon-cog',
+	'Configuration'=> 'fa-solid fa-gear',
+	'Operations'=> 'fa-solid fa-screwdriver-wrench',
 	'Operators'=> 'fa-solid fa-user-gear',
-	'Roles'=> 'icon-user',
-	'Users'=> 'icon-user',
-	'Logs'=> 'icon-file-text-alt',
-	'CRM'=> 'icon-group',
+	'Roles'=> 'fa-solid fa-users-gear',
+	'Users'=> 'fa-solid fa-users',
+	'Logs'=> 'fa-solid fa-inbox',
+	'CRM'=> 'fa-solid fa-people-group',
 	'OPSaaS'=> 'icon-group',
 	'Clients'=> 'icon-group',
 	'Properties'=> 'icon-building',
@@ -86,9 +86,8 @@ foreach ($main_mod_array as $keym => $valuem) {
 				$main_menu_name2 = $page_names_arr[$main_menu_name2];
 			}
 
-
-			echo '<li><div><i class="'.$icon_arr[$main_menu_name2].' show"></i><span><a>'.$main_menu_name2.'&nbsp;&nbsp;</a></span></div><ul class="scnd">';
-
+			$li = '';
+			$main_active = '';
 			foreach ($modarray as $keyY => $valueY) {
 				$sub_menu_link = $valueY['link'];
 				$sub_menu_new_link = $valueY['nw_link'];
@@ -98,13 +97,19 @@ foreach ($main_mod_array as $keym => $valuem) {
 				if (strlen($page_names_arr[$sub_menu_name]) > 0) {
 					$sub_menu_name = $page_names_arr[$sub_menu_name];
 				}
-
+				if($sub_menu_link==$script){
+					$active = 'active';
+					$active_title = $main_menu_name;
+					$main_active = 'active';
+				}else{
+					$active = '';
+				}
 				if($sub_menu_name != 'Switch Accounts'){
-					echo '<li><a href="' . $sub_menu_link . $extension . '">' . $sub_menu_name . '</a></li>';
+					$li .= '<li class="'.$active.'"><a href="' . $sub_menu_link . $extension . '">' . $sub_menu_name . '</a></li>';
 				}
 			}
 
-			echo '</ul> </li>';
+			echo '<li class="'.$main_active.'"><div><i class="'.$icon_arr[$main_menu_name2].' show"></i><span><a>'.$main_menu_name2.'&nbsp;&nbsp;</a></span></div><ul class="scnd">'.$li.'</ul> </li>';
 		}
 }
 

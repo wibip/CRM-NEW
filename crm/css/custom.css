@@ -69,7 +69,7 @@ input:not(.btn) {
 
 .sidebar ul.scnd{
     margin: 0;
-    margin-left: 65px;
+    margin-left: 0;
     display: none;
 }
 
@@ -81,9 +81,11 @@ input:not(.btn) {
 
 .sidebar ul.scnd li a{
     font-size: 14px;
-    color: #cccccc;
+    color: #D9D9D6;
 }
-
+.sidebar ul.scnd li.active a, .sidebar ul.scnd li.active{
+    color: #f99c25 ;
+}
 .sidebar.hover ul.scnd {
     display: block;
 }
@@ -97,6 +99,10 @@ width: 100%;
         box-sizing: border-box;
         white-space: nowrap;
 text-overflow: ellipsis;
+}
+
+.sidebar a:hover{
+    color: #f99c25 !important;
 }
 .sidebar ul li div{
     display: -webkit-box;
@@ -112,9 +118,6 @@ padding-right: 10px;
 }
 .sidebar.hover ul li.active div{
     background: #E57200;
-}
-.sidebar ul li div:hover {
-    background: rgb(2 2 2 / 16%);
 }
 .flex-center{
     display: -webkit-box;
@@ -135,6 +138,9 @@ padding-right: 10px;
     color: #fff;
     padding: 10px;
     text-align: center;
+    position: relative;
+    z-index: 2;
+    background: #525e6e;
 }
 .sidebar ul li.active i{
     background: #E57200;
