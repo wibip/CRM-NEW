@@ -597,9 +597,9 @@ $originalUserType = $user_type;
 $originalAccessRole = $access_role;
 $originalSystemPackage = $system_package;
 
-$user_type = ($user_type == 'SADMIN') ? 'ADMIN' : $user_type;
-$access_role = ($user_type == 'SADMIN') ? 'ADMIN' : $access_role;
-$system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
+// $user_type = ($user_type == 'SADMIN') ? 'ADMIN' : $user_type;
+// $access_role = ($user_type == 'SADMIN') ? 'ADMIN' : $access_role;
+// $system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
 // echo $dropdown_query1;
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);

@@ -1258,7 +1258,7 @@ foreach ($query_results_mod['data'] as $row1) {
 }
 ksort($main_mod_array);
 // echo 'After: ';
-// 	var_dump($main_mod_array);
+// 	print_r($main_mod_array);
 // 	echo '<br/>';
 // die;
 
