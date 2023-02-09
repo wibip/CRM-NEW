@@ -14,76 +14,85 @@ include 'header_new.php';
                                         <button class="nav-link active" id="operators" data-bs-toggle="tab" data-bs-target="#operators-tab-pane" type="button" role="tab" aria-controls="operators" aria-selected="true">Operators</button>
                                     </li>
                                 </ul>
-
                                 <div class="tab-content">
-
                                     <div div class="tab-pane fade show active" id="operators-tab-pane" role="tabpanel" aria-labelledby="operators" tabindex="0">
-                                        <h1 class="head">Operators</h1>
-                                        <table class="table table-striped" style="width:100%" id="operator-table">
+                                        <h1 class="head">Property Addressing</h1>
+                                        <br/>
+                                        <h5 class="head">Properties</h5>
+                                        <table class="table table-striped" style="width:100%" id="property-addressing-table">
                                             <thead>
                                                 <tr>
                                                     <th>Operator Code</th>
-                                                    <th>Operator Name</th>
-                                                    <th>Sub Operator Code</th>
-                                                    <th>Sub Operator Name</th>
-                                                    <th>Environment</th>
-                                                    <th>Status</th>
+                                                    <th>SubOperator Code</th>
+                                                    <th>Vertical</th>
+                                                    <th>Property Name</th>
+                                                    <th>Realm</th>
+                                                    <th>Type</th>
+                                                    <th>CLLI</th>
+                                                    <th>Property Short Name</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td>ALT</td>
-                                                    <td>Altice</td>
-                                                    <td>OPT</td>
-                                                    <td>Optimum</td>
-                                                    <td>Complex</td>
-                                                    <td>Active</td>
+                                                    <td>SDL</td>
+                                                    <td>ENT</td>
+                                                    <td>Upfield Foods</td>
+                                                    <td>421666600002</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ALT</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>HOS</td>
+                                                    <td>Radisson</td>
+                                                    <td>421666600043</td>
+                                                    <td>AC</td>
+                                                    <td>CHCGIL</td>
+                                                    <td>448NLASALLE</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                         <br>
-                                        <div class="border card my-4">
-                                            <div class="border-bottom card-header p-4">
-                                                <div class="g-3 row">
-                                                    <h4>Create Operator</h4>
-                                                </div>
-                                            </div>
-                                            <form class="row g-3 p-4">
-                                                <div class="col-md-6">
-                                                    <label for="inputEmail4" class="form-label">Operator Code</label>
-                                                    <input type="email" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputPassword4" class="form-label">Operator Name</label>
-                                                    <input type="password" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputEmail4" class="form-label">Sub Operator Code</label>
-                                                    <input type="email" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputPassword4" class="form-label">Sub Operator Name</label>
-                                                    <input type="password" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputState" class="form-label">Environment</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option selected>None</option>
-                                                        <option>Complex</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputState" class="form-label">Status</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option selected>Active</option>
-                                                        <option>Inactive</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-12">
-                                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                        <h5 class="head">Property IP Addressing</h5>
+                                        <table class="table table-striped" style="width:100%" id="pip-addressing-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Property Name</th>
+                                                    <th>Vertical</th>
+                                                    <th>Node Type</th>
+                                                    <th>Model Number</th>
+                                                    <th>Host Name</th>
+                                                    <th>IP</th>
+                                                    <th>VLAN-Type-Network-Netmask-Gateway</th>
+                                                    <th>Notes</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>448 N LaSalle</td>
+                                                    <td>MXU</td>
+                                                    <td>Firewall - VPN</td>
+                                                    <td>Fortinet 60F</td>
+                                                    <td>448NLaSalle-FGT-01</td>
+                                                    <td>10.92.1.129</td>
+                                                    <td>VLAN50 - MGMT - 10.92.1.128/26 - Netmask 255.255.255.192 - GW 10.92.1.129</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>448 N LaSalle</td>
+                                                    <td>MXU</td>
+                                                    <td>AC-IPMI</td>
+                                                    <td>SMC SYS-5019S-L</td>
+                                                    <td>448NLaSalle-IPMI-01</td>
+                                                    <td>10.92.1.131</td>
+                                                    <td>VLAN50 - MGMT - 10.92.1.128/26 - Netmask 255.255.255.192 - GW 10.92.1.129</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -104,6 +113,7 @@ include 'header_new.php';
 
 <script>
     $(document).ready(function () {
-        $('#operator-table').dataTable();
+        $('#property-addressing-table').dataTable();
+        $('#pip-addressing-table').dataTable();
     });
 </script>

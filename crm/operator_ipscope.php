@@ -11,79 +11,149 @@ include 'header_new.php';
                             <div class="tabbable">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="operators" data-bs-toggle="tab" data-bs-target="#operators-tab-pane" type="button" role="tab" aria-controls="operators" aria-selected="true">Operators</button>
+                                        <button class="nav-link active" id="operators" data-bs-toggle="tab" data-bs-target="#operators-tab-pane" type="button" role="tab" aria-controls="operators" aria-selected="true">Operator IP Scope</button>
                                     </li>
                                 </ul>
-
                                 <div class="tab-content">
-
                                     <div div class="tab-pane fade show active" id="operators-tab-pane" role="tabpanel" aria-labelledby="operators" tabindex="0">
-                                        <h1 class="head">Operators</h1>
-                                        <table class="table table-striped" style="width:100%" id="operator-table">
+                                        <h1 class="head">Operator IP Scope</h1>
+                                        <br/>
+                                        <h5 class="head">Operator Management IP Scope</h5>
+                                        <table class="table table-striped" style="width:100%" id="oip-table">
                                             <thead>
                                                 <tr>
                                                     <th>Operator Code</th>
-                                                    <th>Operator Name</th>
-                                                    <th>Sub Operator Code</th>
-                                                    <th>Sub Operator Name</th>
-                                                    <th>Environment</th>
-                                                    <th>Status</th>
+                                                    <th>SubOperator Code</th>
+                                                    <th>Region</th>
+                                                    <th>IP Range: From</th>
+                                                    <th>IP Range: To</th>
+                                                    <th>Netmask</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td>ALT</td>
-                                                    <td>Altice</td>
-                                                    <td>OPT</td>
-                                                    <td>Optimum</td>
-                                                    <td>Complex</td>
-                                                    <td>Active</td>
+                                                    <td>SDL</td>
+                                                    <td>West</td>
+                                                    <td>10.1.0.1</td>
+                                                    <td>10.1.0.120</td>
+                                                    <td>28</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ALT</td>
+                                                    <td>SDL</td>
+                                                    <td>East</td>
+                                                    <td>10.1.1.200</td>
+                                                    <td>10.1.1.400</td>
+                                                    <td>25</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                         <br>
-                                        <div class="border card my-4">
-                                            <div class="border-bottom card-header p-4">
-                                                <div class="g-3 row">
-                                                    <h4>Create Operator</h4>
-                                                </div>
-                                            </div>
-                                            <form class="row g-3 p-4">
-                                                <div class="col-md-6">
-                                                    <label for="inputEmail4" class="form-label">Operator Code</label>
-                                                    <input type="email" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputPassword4" class="form-label">Operator Name</label>
-                                                    <input type="password" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputEmail4" class="form-label">Sub Operator Code</label>
-                                                    <input type="email" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputPassword4" class="form-label">Sub Operator Name</label>
-                                                    <input type="password" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputState" class="form-label">Environment</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option selected>None</option>
-                                                        <option>Complex</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="inputState" class="form-label">Status</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option selected>Active</option>
-                                                        <option>Inactive</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-12">
-                                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                        <h5 class="head">Property IP Scope</h5>
+                                        <table class="table table-striped" style="width:100%" id="pip-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Operator Code</th>
+                                                    <th>SubOperator Code</th>
+                                                    <th>Property</th>
+                                                    <th>Customer Peer ID</th>
+                                                    <th>IP Network</th>
+                                                    <th>Netmask</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>ALT</td>
+                                                    <td>SDL</td>
+                                                    <td>Full Gospel</td>
+                                                    <td>FULLGSPLHLYTMPL</td>
+                                                    <td>10.95.255.208</td>
+                                                    <td>27</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>FRT</td>
+                                                    <td>SDL</td>
+                                                    <td>Carlinville National Bank</td>
+                                                    <td>CARLINVILLEBANK</td>
+                                                    <td>10.130.0.32</td>
+                                                    <td>28</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <h5 class="head">Property IP Scope :: Public</h5>
+                                        <table class="table table-striped" style="width:100%" id="pips-public-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Operator Code</th>
+                                                    <th>SubOperator Code</th>
+                                                    <th>Property Name</th>
+                                                    <th>Customer Peer ID</th>
+                                                    <th>Firewall Public Net</th>
+                                                    <th>Firewall Public IP</th>
+                                                    <th>Firewall VLAN50 IP</th>
+                                                    <th>Firewall Serial No</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>ATT</td>
+                                                    <td>SDL</td>
+                                                    <td>Full Gospel</td>
+                                                    <td>FULLGSPLHLYTMPL</td>
+                                                    <td>12.13.57.88/29</td>
+                                                    <td>12.13.57.90</td>
+                                                    <td>10.95.255.193</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ATT</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>Creekside</td>
+                                                    <td>CREEKSIDE</td>
+                                                    <td>12.13.57.88/29</td>
+                                                    <td>12.13.57.90</td>
+                                                    <td>10.95.255.193</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <h5 class="head">Property IP Scope :: Private</h5>
+                                        <table class="table table-striped" style="width:100%" id="pips-private-table">
+                                        <thead>
+                                                <tr>
+                                                    <th>Operator Code</th>
+                                                    <th>SubOperator Code</th>
+                                                    <th>Property Name</th>
+                                                    <th>Customer Peer ID</th>
+                                                    <th>VLAN Static IP</th>
+                                                    <th>Underlay Net</th>
+                                                    <th>VLAN DHCP AP IP</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>ATT</td>
+                                                    <td>SDL</td>
+                                                    <td>Full Gospel</td>
+                                                    <td>FULLGSPLHLYTMPL</td>
+                                                    <td>10.95.1.66-75</td>
+                                                    <td>32.143.114.154/30</td>
+                                                    <td>10.95.1.76-90</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ATT</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>Creekside</td>
+                                                    <td>CREEKSIDE</td>
+                                                    <td>10.95.255.194 - 197</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>10.95.255.198 - 206</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -104,6 +174,9 @@ include 'header_new.php';
 
 <script>
     $(document).ready(function () {
-        $('#operator-table').dataTable();
+        $('#oip-table').dataTable();
+        $('#pip-table').dataTable();
+        $('#pips-public-table').dataTable();
+        $('#pips-private-table').dataTable();
     });
 </script>
