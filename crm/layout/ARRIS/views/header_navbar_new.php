@@ -7,8 +7,8 @@ $icon_arr = [
 	'Users'=> 'fa-solid fa-users',
 	'Logs'=> 'fa-solid fa-inbox',
 	'CRM'=> 'fa-solid fa-people-group',
-	'OPSaaS'=> 'icon-group',
-	'Clients'=> 'icon-group',
+	'OPSaaS'=> 'fa-solid fa-people-group',
+	'Clients'=> 'fa-solid fa-people-group',
 	'Properties'=> 'icon-building',
 	'Admin Config'=> 'fa-solid fa-pen-to-square'
 ];
