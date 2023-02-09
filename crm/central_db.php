@@ -136,7 +136,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 	$secret = md5(uniqid(rand(), true));
 	$_SESSION['FORM_SECRET'] = $secret;
 	$config_mid = 'layout/' . $camp_layout . '/views/config_mid.php';
-
+	// echo $config_mid;
 	if (($new_design == 'yes') && file_exists($config_mid)) {
 		include_once $config_mid;
 	} else {
@@ -177,8 +177,8 @@ if ($wag_ap_name != 'NO_PROFILE') {
 									<div class="tabbable">
 										<ul class="nav nav-tabs newTabs">
 											<?php
-												if ($user_type == 'ADMIN' || $user_type == 'RESELLER_ADMIN') {
-													if ($user_type == 'ADMIN') {
+												if ($user_type == 'ADMIN' || $user_type == 'SADMIN' || $user_type == 'RESELLER_ADMIN') {
+													if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
 											?>
 													<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#central_db" data-toggle="tab">Central DB</a></li>
 											<?php  } } ?>
@@ -264,7 +264,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 
 											<div id="system1_response"></div>
 											<!-- ======================= Central DB API Profile =============================== -->
-											<div <?php if (isset($tab1) && ($user_type == 'ADMIN')) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="central_db">
+											<div <?php if (isset($tab1) && ($user_type == 'ADMIN' || $user_type == 'SADMIN')) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="central_db">
 												<?php
 												$tab1_field_ar = json_decode($package_functions->getOptions('CONFIG_GENARAL_FIELDS', $system_package), true);
 												?>
