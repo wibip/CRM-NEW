@@ -11,6 +11,8 @@ $loggedUserName = null;
 if(isset($_SESSION['user_name'])){
     $loggedUserName = $_SESSION['user_name'];
 }
+
+// echo '----------------------------'. $user_distributor;
 ?>
     <form class="form-horizontal ">
             <div class="form-group">

@@ -185,7 +185,7 @@ if(!empty($api_details['data'])) {
     <?php
     $data_secret = $db->setVal('data_secret', 'ADMIN');
     include 'header.php';
-
+    
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;
     $opt_q = $package_functions->getSectionType("OPT_CODE", $system_package);
@@ -728,6 +728,7 @@ if(!empty($api_details['data'])) {
     $secret = md5(uniqid(rand(), true));
     $_SESSION['FORM_SECRET'] = $secret;
 
+    // var_dump($modules);
     ?>
     <div class="main">
         <div class="custom-tabs"></div>
@@ -759,7 +760,8 @@ if(!empty($api_details['data'])) {
                                             //echo 'modules/'.$value['module'].'.php';
                                             include_once 'modules/' . $value['module'] . '.php';
                                         }
-                                        //}
+                                        //}                                    
+                                
                                         if (isset($_GET['edit']) && $get_status == "Completed") {
                                         ?>
                                         <div class="widget widget-table action-table" style="padding-top: 35px;">

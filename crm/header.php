@@ -677,6 +677,8 @@ if ($system_package == "N/A" || $system_package == "") {
 	$result1 = json_decode($features_tab, true);
 	$features_array = array_merge($features_array, $result1); 
 }
+// echo "---------------------".$system_package."-------------<br/>";
+// var_dump($features_tab);
 
 $advanced_features = json_decode($advanced_features, true);
 
