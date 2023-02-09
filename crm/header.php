@@ -775,9 +775,9 @@ $originalUserType = $user_type;
 $originalAccessRole = $access_role;
 $originalSystemPackage = $system_package;
 
-$user_type = ($user_type == 'SADMIN') ? 'ADMIN' : $user_type;
-$access_role = ($user_type == 'SADMIN') ? 'ADMIN' : $access_role;
-$system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
+// $user_type = ($user_type == 'SADMIN') ? 'ADMIN' : $user_type;
+// $access_role = ($user_type == 'SADMIN') ? 'ADMIN' : $access_role;
+// $system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
 // echo $dropdown_query1;
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
@@ -2213,16 +2213,16 @@ switch($user_type){
 					}
 
 					
-					if($_SESSION['SADMIN'] == true) {
+					// if($_SESSION['SADMIN'] == true) {
 					?>
-					<div>
+					<!-- <div>
 						<ul class="topnav">
-							<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
-							<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./operation_list">Operations</a></li>
-							<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
+							<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
+							<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./operation_list">Operations</a></li>
+							<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
 						</ul>
-					</div>
-					<?php } ?>
+					</div> -->
+					<?php //} ?>
 					<div class="nav-collapse">
 						<ul class="nav pull-right">
 							<?php
