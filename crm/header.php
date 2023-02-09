@@ -883,7 +883,7 @@ AND `user_type` = '$user_type'";
 // var_dump($module_ids);
 // var_dump($user_type);
 $query_results_mod = $db_class1->selectDB($query_modules);
-// var_dump($query_results_mod);
+var_dump($query_results_mod);
 // die;
 //$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 
