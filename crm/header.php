@@ -779,7 +779,7 @@ $originalSystemPackage = $system_package;
 // $access_role = ($user_type == 'SADMIN') ? 'ADMIN' : $access_role;
 // $system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
 $dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
-echo $dropdown_query1;
+// echo $dropdown_query1;
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
 // var_dump($query_results_drop1);
 foreach ($query_results_drop1['data'] as $row) {
@@ -789,9 +789,9 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row['module_name']; // Retuns base access
 	}
 }
-// echo '------------<br/>';
-// var_dump($x);
-// echo '------------<br/>';
+echo '------------<br/>';
+var_dump($x);
+echo '------------<br/>';
 
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -816,8 +816,8 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-echo '------------<br/>';
-var_dump($x);
+// echo '------------<br/>';
+// var_dump($x);
 
 if($_SESSION['SADMIN'] == true) {
 	array_push($x,"operation_list");
@@ -883,7 +883,7 @@ AND `user_type` = '$user_type'";
 // var_dump($module_ids);
 // var_dump($user_type);
 $query_results_mod = $db_class1->selectDB($query_modules);
-var_dump($query_results_mod);
+// var_dump($query_results_mod);
 // die;
 //$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 
