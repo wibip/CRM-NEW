@@ -41,6 +41,7 @@ if ($script != 'verification') {
 		z-index: 5;
 		overflow: hidden;
 		transition: all 0.5s;
+		overflow-y: auto;
 	}
 	.sidebar.hover{
 		width: 250px;
