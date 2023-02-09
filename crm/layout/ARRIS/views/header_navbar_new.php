@@ -8,8 +8,8 @@ $icon_arr = [
 	'Logs'=> 'fa-solid fa-inbox',
 	'CRM'=> 'fa-solid fa-people-group',
 	'OPSaaS'=> 'fa-solid fa-people-group',
-	'Clients'=> 'fa-solid fa-people-group',
-	'Properties'=> 'icon-building',
+	'Clients'=> 'fa-solid fa-users-viewfinder',
+	'Properties'=> 'fa-solid fa-building-user',
 	'Admin Config'=> 'fa-solid fa-pen-to-square'
 ];
 if ($script != 'verification') {
