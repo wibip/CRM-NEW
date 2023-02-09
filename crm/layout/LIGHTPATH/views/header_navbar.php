@@ -341,7 +341,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 
 if($_SESSION['SADMIN'] == true && isset($_SESSION['section']) && $_SESSION['section'] != 'ADMIN') {
 // 	echo '<li><a href="./change_portal?section='.$_SESSION["section"].'">Change portal</a></li>';
-	echo '<li><a href="./change_portal?section='.$_SESSION["section"].'"><div><i class="icon-signin show"></i><span>Change portal&nbsp;&nbsp;</span></div></a></li>';
+	// echo '<li><a href="./change_portal?section='.$_SESSION["section"].'"><div><i class="icon-signin show"></i><span>Change portal&nbsp;&nbsp;</span></div></a></li>';
 }
 
 ?>
@@ -354,14 +354,14 @@ if($_SESSION['SADMIN'] == true && isset($_SESSION['section']) && $_SESSION['sect
 	<?php if($_SESSION['SADMIN'] == true) { ?>
 		<li class="dropdown" style="margin-right: 20px;">
 			<?=$loggedMessage?></li>
-		<li class="dropdown" style="margin-right: 20px;">
+		<!-- <li class="dropdown" style="margin-right: 20px;">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-signin show"></i> </a>
 			<ul class="dropdown-menu">
-					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
-					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./operation_list">Operations</a></li>
-					<li class=<?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Client</a></li>
+					<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
+					<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./operation_list">Operations</a></li>
+					<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Client</a></li>
 			</ul>
-		</li>
+		</li> -->
 	<?php } ?>
 	<li class="dropdown" style="<?php echo $li_style; ?>"><a style="<?php echo $a_style; ?>" href="#" class="dropdown-toggle" data-toggle="dropdown">
            <?php echo $full_name1; ?> <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" tag="i" class="v-icon notranslate v-theme--dark v-icon--size-default iconify iconify--tabler" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="7" r="4"></circle><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path></g></svg></a>
