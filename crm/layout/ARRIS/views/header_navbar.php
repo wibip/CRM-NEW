@@ -69,7 +69,7 @@ if ($script != 'verification') {
 
 	.sidebar ul.scnd{
 		margin: 0;
-		margin-left: 65px;
+		margin-left: 40px;
 		display: none;
 	}
 
