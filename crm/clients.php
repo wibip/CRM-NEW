@@ -1398,8 +1398,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 												<h1 class="head">Manage Clients</h1>	
 												<div id="response_d3"></div>
 												<?php
-												var_dump(isset($tab1));
-												var_dump(isset($tab2));
 													if(isset($tab1)){
 														if (isset($_SESSION['msg5'])) {
 															echo $_SESSION['msg5'];
