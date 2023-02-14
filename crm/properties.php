@@ -66,7 +66,7 @@ $query_results = $db->selectDB($propertyQuery);
                             <div class="tabbable">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="properties" data-bs-toggle="tab" data-bs-target="#properties-tab-pane" type="button" role="tab" aria-controls="operators" aria-selected="true">Operator Regions</button>
+                                        <button class="nav-link active" id="properties" data-bs-toggle="tab" data-bs-target="#properties-tab-pane" type="button" role="tab" aria-controls="operators" aria-selected="true">Properties</button>
                                     </li>
                                 </ul>
                                 <div class="tab-content">
