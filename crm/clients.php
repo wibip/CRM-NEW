@@ -761,7 +761,8 @@ $page = 'Client';
 		$$variable_tab = 'set';
 	} else {
 		//initially page loading///
-		$tab1 = "set";
+		$tab2 = "set";
+		$tab1 = null;
 	}
 
 	$priority_zone_array = array(
@@ -1380,15 +1381,15 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 								<div class="widget-content">
 									<div class="tabbable">
 										<ul class="nav nav-tabs newTabs">
-											<?php if ($showProperty == false && $showLocation == false ) { ?>
-											<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#show_clients" data-toggle="tab">Manage Clients</a></li>
-											<li <?php if (isset($tab2)) { ?>class="active" <?php } ?>><a href="#create_clients" data-toggle="tab"> <?=(isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? "Update" : "Create") ?> Clients</a></li>
-											<?php } elseif($showProperty == true && $showLocation == false ) { ?>
-											<li <?php if (isset($tab3) ) { ?>class="active" <?php } ?>><a href="#show_proprty" data-toggle="tab">Show Property</a></li>
-											<?php } ?>
-											<?php if($showLocation == true) { ?>
-											<li <?php if (isset($tab4) ) { ?>class="active" <?php } ?>><a href="#show_location" data-toggle="tab">Show Location</a></li>
-											<?php } ?>
+											<?php //if ($showProperty == false && $showLocation == false ) { ?>
+											<!-- <li < ?php if (isset($tab1)) { ?>class="active" < ?php } ?>><a href="#show_clients" data-toggle="tab">Manage Clients</a></li> -->
+											<li <?php if (isset($tab2)) { ?>class="active" <?php } ?>><a href="#create_clients" data-toggle="tab"> <?=(isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? "Update" : "Create") ?> Orders</a></li>
+											<?php //} elseif($showProperty == true && $showLocation == false ) { ?>
+											<!-- <li < ?php if (isset($tab3) ) { ?>class="active" < ?php } ?>><a href="#show_proprty" data-toggle="tab">Show Property</a></li> -->
+											<?php //} ?>
+											<?php //if($showLocation == true) { ?>
+											<!-- <li < ?php if (isset($tab4) ) { ?>class="active" < ?php } ?>><a href="#show_location" data-toggle="tab">Show Location</a></li> -->
+											<?php //} ?>
 										</ul>
 										<br>
 										<div class="tab-content">
@@ -1397,6 +1398,8 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 												<h1 class="head">Manage Clients</h1>	
 												<div id="response_d3"></div>
 												<?php
+												var_dump(isset($tab1));
+												var_dump(isset($tab2));
 													if(isset($tab1)){
 														if (isset($_SESSION['msg5'])) {
 															echo $_SESSION['msg5'];
@@ -1424,8 +1427,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														}
 													}
 
-// 													echo '-----------------'.$user_type;
-// echo '-----------------'.$user_distributor;
 												?>
 												<div class="widget widget-table action-table">
 													<div class="widget-header">
@@ -1540,7 +1541,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 											<!-- +++++++++++++++++++++++++++++ create / update clients ++++++++++++++++++++++++++++++++ -->
 											<div <?php if (isset($tab2)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_clients">
-												<h1 class="head"> <?=(isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? "Update": "Create")?> Clients</h1>
+												<h1 class="head"> <?=(isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? "Update": "Create")?> Orders</h1>
 												<div id="response_d3"></div>
 												<?php
 													if(isset($tab2)){
