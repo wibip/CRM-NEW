@@ -2,6 +2,7 @@
 include 'header_new.php';
 ?>
 <?php
+$CommonFunctions = new CommonFunctions();
 $page = 'Properties';
 // TAB Organization
 if (isset($_GET['t'])) {
@@ -14,20 +15,18 @@ if (isset($_GET['t'])) {
 $clientArray = [];
 $businessArray = [];
 
-
 $client_name = isset($_POST['client_name']) ? $_POST['client_name'] : null;
 $business_name = isset($_POST['business_name']) ? $_POST['business_name'] : null;
 $status = isset($_POST['status']) ? $_POST['status'] : null;
 
-$subQuery = "SELECT user_name FROM admin_users WHERE user_distributor='$user_distributor'";
-if($client_name != null && $client_name != 'all') {
-    $subQuery .= " AND full_name='".$client_name."'";
-}
+$subQuery = "";
 
-$propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN (".$subQuery.")";
+$propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
 
+// echo $propertyQuery;
 /* get values for filters before filtering */
 $filter_results = $db->selectDB($propertyQuery);
+// var_dump($filter_results);
 if ($filter_results['rowCount'] > 0) {
     foreach ($filter_results['data'] as $row) {
         $clientDetails = $CommonFunctions->getAdminUserDetails('user_name', $row['create_user'], 'full_name');
@@ -37,6 +36,13 @@ if ($filter_results['rowCount'] > 0) {
         }
         $businessArray[$row['business_name']] = $row['business_name'];
     }
+}
+
+
+if($client_name != null && $client_name != 'all' && $user_type != 'SADMIN') {
+    $subQuery .= " WHERE user_distributor='$user_distributor' AND full_name='".$client_name."'";
+} elseif($client_name != null && $client_name != 'all' && $user_type == 'SADMIN') {
+    $subQuery .= " WHERE full_name='".$client_name."'";
 }
 
 /* Add filtering */
@@ -77,54 +83,48 @@ $query_results = $db->selectDB($propertyQuery);
                                     <div div class="tab-pane fade show active" id="properties-tab-pane" role="tabpanel" aria-labelledby="properties" tabindex="0">
                                         <h1 class="head">Properties</h1>
                                         <div class="border card my-4">
-                                            <form method="post">
-                                                <div class="flex-form">
-                                                    <div class="control-group">
-                                                        <label>Client Name</label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select id="client_name" name="client_name">
-                                                                <option value='all' <?=(($client_name == null) ? "selected" : "")?>>All</option>
-                                                                <?php 
-                                                                    if(!empty($clientArray)){
-                                                                        foreach($clientArray AS $key=>$value) {
-                                                                ?>
-                                                                        <option value='<?=$key?>' <?=(($client_name != null && $client_name == $key) ? "selected" : "")?>><?=$value?></option>
-                                                                <?php
-                                                                        }
-                                                                    }
-                                                                ?>
-                                                            </select>
-                                                        </div> 
-                                                    </div>
-                                                    <div class="control-group">
-                                                        <label>Business Name</label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select id="business_name" name="business_name">
-                                                                <option value='all' <?=(($business_name == null) ? "selected" : "")?>>All</option>
-                                                                <?php 
-                                                                    if(!empty($businessArray)){
-                                                                        foreach($businessArray AS $key=>$value) {
-                                                                ?>
-                                                                        <option value='<?=$key?>' <?=(($business_name != null && $business_name == $key) ? "selected" : "")?>><?=$value?></option>
-                                                                <?php
-                                                                        }
-                                                                    }
-                                                                ?>
-                                                            </select> 
-                                                        </div> 
-                                                    </div>
-                                                    <div class="control-group">
-                                                        <label>Status</label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <select id="status" name="status">
-                                                                <option value='all' <?=(($status == null) ? "selected" : "")?>>All</option>
-                                                                <option value='Completed' <?=(($status != null && $status == "Completed") ? "selected" : "")?>>Completed</option> 
-                                                                <option value='Processing' <?=(($status != null && $status == "Processing") ? "selected" : "")?>>Processing</option>
-                                                                <option value='Pending' <?=(($status != null && $status == "Pending") ? "selected" : "")?>>Pending</option>                                                               
-                                                                <option value='Failed' <?=(($status != null && $status == "Failed") ? "selected" : "")?>>Failed</option>
-                                                            </select> 
-                                                        </div> 
-                                                    </div>
+                                            <form method="post" class="row g-3 p-4">
+                                                <div class="col-md-3">
+                                                    <label>Client Name</label>
+                                                    <select id="client_name" name="client_name">
+                                                        <option value='all' <?=(($client_name == null) ? "selected" : "")?>>All</option>
+                                                        <?php 
+                                                            if(!empty($clientArray)){
+                                                                foreach($clientArray AS $key=>$value) {
+                                                        ?>
+                                                                <option value='<?=$key?>' <?=(($client_name != null && $client_name == $key) ? "selected" : "")?>><?=$value?></option>
+                                                        <?php
+                                                                }
+                                                            }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label>Business Name</label>
+                                                    <select id="business_name" name="business_name">
+                                                        <option value='all' <?=(($business_name == null) ? "selected" : "")?>>All</option>
+                                                        <?php 
+                                                            if(!empty($businessArray)){
+                                                                foreach($businessArray AS $key=>$value) {
+                                                        ?>
+                                                                <option value='<?=$key?>' <?=(($business_name != null && $business_name == $key) ? "selected" : "")?>><?=$value?></option>
+                                                        <?php
+                                                                }
+                                                            }
+                                                        ?>
+                                                    </select> 
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label>Status</label>
+                                                    <select id="status" name="status">
+                                                        <option value='all' <?=(($status == null) ? "selected" : "")?>>All</option>
+                                                        <option value='Completed' <?=(($status != null && $status == "Completed") ? "selected" : "")?>>Completed</option> 
+                                                        <option value='Processing' <?=(($status != null && $status == "Processing") ? "selected" : "")?>>Processing</option>
+                                                        <option value='Pending' <?=(($status != null && $status == "Pending") ? "selected" : "")?>>Pending</option>                                                               
+                                                        <option value='Failed' <?=(($status != null && $status == "Failed") ? "selected" : "")?>>Failed</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
                                                     <button class="btn btn-primary">Filter</button>
                                                 </div>
                                             </form>
@@ -143,8 +143,6 @@ $query_results = $db->selectDB($propertyQuery);
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                    // $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN (SELECT user_name FROM admin_users WHERE user_distributor='$user_distributor')";
-                                                    // $query_results = $db->selectDB($propertyQuery);
                                                     if($query_results['rowCount'] > 0) {
                                                         foreach($query_results['data'] AS $row){
                                                             $clientDetails = $CommonFunctions->getAdminUserDetails('user_name',$row['create_user'],'full_name');
