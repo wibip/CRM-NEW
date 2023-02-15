@@ -1,7 +1,6 @@
 <?php
 include 'header_new.php';
-?>
-<?php
+
 $CommonFunctions = new CommonFunctions();
 $page = 'Properties';
 // TAB Organization
