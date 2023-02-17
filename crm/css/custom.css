@@ -10,13 +10,41 @@ body.hover{
     position: relative;
 }
 
+[class^="col-md"] .control-label {
+    vertical-align: top;
+}
+
 .container, .navbar-fixed-bottom .container, .navbar-fixed-top .container{
     margin-left: 80px !important;
     margin-right: 10px !important;
 }
 
-.nav.nav-tabs .nav-item{
+.nav.nav-tabs .nav-item .nav-link.active{
     border-bottom: 3px solid #E57200 !important;
+}
+
+.pagination a {
+    float: left;
+    padding: 0 14px;
+    line-height: 34px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+}
+.pagination .disabled a, .pagination .disabled a:hover, .pagination .disabled span {
+    color: #999;
+    background-color: transparent;
+    cursor: default;
+}
+.pagination li:first-child a {
+    border-left-width: 1px;
+    -webkit-border-radius: 3px 0 0 3px;
+    -moz-border-radius: 3px 0 0 3px;
+    border-radius: 3px 0 0 3px;
+}
+.pagination li:last-child a {
+    -webkit-border-radius: 0 3px 3px 0;
+    -moz-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
 }
 
 .nav.nav-tabs .nav-item .nav-link{
