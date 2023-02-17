@@ -243,13 +243,16 @@ $_SESSION['FORM_SECRET'] = $secret;
 								<div class="tabbable">
 									<ul class="nav nav-tabs">
 										<li class="nav-item" role="presentation">
-											<button class="nav-link active" id="operators" data-bs-toggle="tab" data-bs-target="#operators-tab-pane" type="button" role="tab" aria-controls="operators" aria-selected="true">Operator Realms</button>
+											<button class="nav-link active" id="manage_apis" data-bs-toggle="tab" data-bs-target="#manage_apis-tab-pane" type="button" role="tab" aria-controls="manage_apis" aria-selected="true">Manage BI APIs</button>
+										</li>
+										<li class="nav-item" role="presentation">
+											<button class="nav-link" id="create_apis" data-bs-toggle="tab" data-bs-target="#create_apis-tab-pane" type="button" role="tab" aria-controls="create_apis">Create BI APIs</button>
 										</li>
 									</ul>
-									<ul class="nav nav-tabs">
-										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Manage BI APIs</a></li>
-										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Create BI APIs</a></li>	
-									</ul>
+									<!-- <ul class="nav nav-tabs">
+										<li < ?php if(isset($tab1)){?>class="active" < ?php }?>><a href="#viewap" data-toggle="tab">Manage BI APIs</a></li>
+										<li < ?php if(isset($tab2)){?>class="active" < ?php }?>><a href="#addap" data-toggle="tab">Create BI APIs</a></li>	
+									</ul> -->
 									<div class="tab-content">
 									<?php
 											if(isset($_SESSION['msg17'])){
@@ -521,6 +524,9 @@ include 'footer.php';
 	<script src="js/jquery.chained.js"></script>
 	<script type="text/javascript" charset="utf-8">
  $(document).ready(function() { 
+	$('#manage_users-table').dataTable();//role-table
+	$('#role-table').dataTable();
+	
     $("#product_code").chained("#category");
 
     $("#create_ap_controller").easyconfirm({locale: {
