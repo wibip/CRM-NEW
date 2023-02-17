@@ -1274,14 +1274,14 @@ if ($system_package == 'N/A') {
 																echo '<input type="hidden" name="role_type" id="role_type" value="'.$roleType.'" />';
 															}
 															?>
-															<div class="col-md-6">
+															<div class="col-md-12">
 																<label class="control-label" for="role_type">Role Type</label>
 																<fieldset id="role_types">
 																	<div class="fieldgroup">
 																		<input type="radio" name="role_type" id="role_type" value="nadmin" <?=(($roleType == 'nadmin'  || $role_edit_id == 0 )? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Admin</label>
 																	</div>
 																	<!-- <div class="fieldgroup">
-																		<input type="radio" name="role_type" id="role_type" value="salesmanager" < ?=($roleType == 'salesmanager' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Sales Manager</label>
+																		<input type="radio" name="role_type" id="role_type" value="salesmanager" < ?=($roleType == 'salesmanager' ? 'checked' : '')?> <  ?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Sales Manager</label>
 																	</div> -->
 																	<div class="fieldgroup">
 																		<input type="radio" name="role_type" id="role_type" value="sadmin" <?=($roleType == 'sadmin' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "sadmin">Super Admin</label>
@@ -1297,7 +1297,7 @@ if ($system_package == 'N/A') {
 																<input class="form-control span2" id="oid_group" name="oid_group" type="text" value="<?=$oid_group?>" >
 															</div>
 															
-															<div class="col-md-6" id="sadmin_operations">
+															<div class="col-md-4" id="sadmin_operations">
 																<label class="control-label" for="my_select">Assign Operators</label>
 																<select class="form-control span4" multiple="multiple" id="operations" name="operations[]">
 																	<option value="" disabled="disabled"> Choose Operation(s)</option>
@@ -1318,7 +1318,7 @@ if ($system_package == 'N/A') {
 															</div>
 															<!-- /control-group -->
 															
-															<div class="col-md-6" id="admin_operations">
+															<div class="col-md-4" id="admin_operations">
 																<label class="control-label" for="my_select"><?=($_SESSION['SADMIN'] == true ? "Admin " : "")?>Modules</label>
 																<select class="form-control span4" multiple="multiple" id="my_select" name="my_select[]">
 																	<option value="" disabled="disabled"> Choose Module(s)</option>
@@ -1336,7 +1336,7 @@ if ($system_package == 'N/A') {
 																</select>
 															</div>
 
-															<div class="col-md-6" id="sadmin-omodules">
+															<div class="col-md-4" id="sadmin-omodules">
 																<label class="control-label" for="my_select">Non Admin Modules</label>
 																<select class="form-control span4" multiple="multiple" id="other_modules" name="other_modules[]">
 																	<option value="" disabled="disabled"> Choose Module(s)</option>
@@ -1385,127 +1385,98 @@ if ($system_package == 'N/A') {
 														});
 													</script>
 
-
-												<div class="widget widget-table action-table">
-													<div class="widget-header">
-														<!-- <i class="icon-th-list"></i> -->
-														<h3>Existing Admin Roles</h3>
-													</div>
-
-													<div class="widget-content table_response">
-														<div style="overflow-x:auto;">
-															<table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
-																<thead>
-																	<tr>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Access Role</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Modules Assigned</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Created Date</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Remove</th>
-																	</tr>
-																</thead>
-																<tbody>
-																	<?php
-																	if ($user_type == 'SUPPORT') {
-																		$key_query = "SELECT r.id, r.`access_role`,r.`description`, GROUP_CONCAT(CONCAT('<li>',a.`name_group`,'</li>') SEPARATOR '') AS m_list,m.`module_name`,r.`create_date` 
+												<br/>
+												<h1 class="head">Admin Roles</h1>	
+												<table class="table table-striped" style="width:100%" id="role-table">
+													<thead>
+														<tr>
+															<th>Access Role</th>
+															<th>Modules Assigned</th>
+															<th>Created Date</th>
+															<th>Edit</th>
+															<th>Remove</th>
+														</tr>
+													</thead>
+													<tbody>
+														<?php
+															$key_query = "SELECT r.id, r.`access_role`,r.`description`, GROUP_CONCAT(CONCAT('<li>',a.`name_group`,'</li>') SEPARATOR '') AS m_list,m.`module_name`,DATE_FORMAT(r.`create_date`,'%m/%d/%Y %h:%i %p') AS create_date 
 																			FROM `admin_access_roles_modules` m LEFT JOIN `admin_access_roles` r
 																			ON r.`access_role`=m.`access_role`,
 																			`admin_access_modules` a
-																			WHERE r.`distributor`='$user_distributor'
-																			AND a.`module_name`=m.`module_name`
-																			AND a.`user_type`='$user_type' AND m.`module_name`='support'
+																			WHERE a.`module_name`=m.`module_name`
 																			GROUP BY r.access_role
-																			ORDER BY r.`access_role`";
-																	} else {
-																		// $key_query = "SELECT r.id, r.`access_role`,r.`description`, GROUP_CONCAT(CONCAT('<li>',a.`name_group`,'</li>') SEPARATOR '') AS m_list,m.`module_name`,DATE_FORMAT(r.`create_date`,'%m/%d/%Y %h:%i %p') AS create_date 
-																		// 				FROM `admin_access_roles_modules` m LEFT JOIN `admin_access_roles` r
-																		// 				ON r.`access_role`=m.`access_role`,
-																		// 				`admin_access_modules` a
-																		// 				WHERE r.`distributor`='$user_distributor'
-																		// 				AND a.`module_name`=m.`module_name`
-																		// 				AND a.`user_type`='$user_type'
-																		// 				GROUP BY r.access_role
-																		// 				ORDER BY r.`access_role`";
-																		$key_query = "SELECT r.id, r.`access_role`,r.`description`, GROUP_CONCAT(CONCAT('<li>',a.`name_group`,'</li>') SEPARATOR '') AS m_list,m.`module_name`,DATE_FORMAT(r.`create_date`,'%m/%d/%Y %h:%i %p') AS create_date 
-																						FROM `admin_access_roles_modules` m LEFT JOIN `admin_access_roles` r
-																						ON r.`access_role`=m.`access_role`,
-																						`admin_access_modules` a
-																						WHERE r.`create_user`='$user_name'
-																						AND a.`module_name`=m.`module_name`
-																						GROUP BY r.access_role
-																						ORDER BY r.`id` DESC";
-																	}
-																	$query_results=$db->selectDB($key_query);
-																	foreach($query_results['data'] AS $row){
-																		$access_role = $row['access_role'];
-																		$description = $row['description'];
-																		$create_date = $row['create_date'];
-																		$id_access_role = $row['id'];
-																		$m_list = $row['m_list'];
+																			ORDER BY r.`id` DESC";
+															if($user_type != 'SADMIN') {
+																$key_query = " AND r.`create_user`='$user_name'";
+															}
+														$query_results=$db->selectDB($key_query);
+														foreach($query_results['data'] AS $row){
+															$access_role = $row['access_role'];
+															$description = $row['description'];
+															$create_date = $row['create_date'];
+															$id_access_role = $row['id'];
+															$m_list = $row['m_list'];
 
-																		//check access Role use or not//
-																		$check_role = $db->SelectDB("SELECT * FROM `admin_users` u WHERE u.`access_role`='$access_role'");
+															//check access Role use or not//
+															$check_role = $db->SelectDB("SELECT * FROM `admin_users` u WHERE u.`access_role`='$access_role'");
 
-																		echo '<tr>
-																				<td> ' . $description . ' </td>
-																				<td >  <a class="btn" id="' . $access_role . '"> View </a> ';
-																									echo '<script>
-																					$(document).ready(function() {
-																						$(\'#' . $access_role . '\').tooltipster({
-																							content: $("' . $m_list . '"),
-																							theme: \'tooltipster-shadow\',
-																							animation: \'grow\',
-																							onlyOne: true,
-																							trigger: \'click\'
-																						});
-																					});
-																				</script></td>' .
-																			'<td> ' . $create_date . ' </td>';
-																		/////////////////////////////////////////////
-																		echo '<td>';
-																		echo '<a href="javascript:void();" id="RE_' . $id_access_role . '"  class="btn btn-small btn-primary">
-																				<i class="btn-icon-only icon-wrench"></i>&nbsp;Edit</a><script type="text/javascript">
-																				$(document).ready(function() {
-																				$(\'#RE_' . $id_access_role . '\').easyconfirm({locale: {
-																						title: \'Role Edit\',
-																						text: \'Are you sure you want to edit this Role?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																						button: [\'Cancel\',\' Confirm\'],
-																						closeText: \'close\'
-																						}});
-																					$(\'#RE_' . $id_access_role . '\').click(function() {
-																						window.location = "?form_secreat=' . $secret . '&t=3&role_ID=' . $access_role . '&role_edit_id=' . $id_access_role . '"
-																					});
-																					});
-																				</script>';
-																		echo '</td>';
-																		echo '<td>';
-																		if ($check_role['rowCount'] == 0) {
-																			echo '<a href="javascript:void();" id="AP_' . $id_access_role . '"  class="btn btn-small btn-primary">
-																					<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a><script type="text/javascript">
-																					$(document).ready(function() {
-																					$(\'#AP_' . $id_access_role . '\').easyconfirm({locale: {
-																							title: \'Role Remove\',
-																							text: \'Are you sure you want to remove this Role?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																							button: [\'Cancel\',\' Confirm\'],
-																							closeText: \'close\'
-																							}});
-																						$(\'#AP_' . $id_access_role . '\').click(function() {
-																							window.location = "?token2=' . $secret . '&t=3&remove_access_role=' . $access_role . '&description=' . $description . '&remove_id=' . $id_access_role . '"
-																						});
-																						});
-																					</script>';
-																		} else {
-																			echo	'<a class="btn btn-small btn-primary" disabled>
-																					<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a>';
-																		}
-																		echo '</td>';
-																	}
-																	?>
-																</tbody>
-															</table>
-														</div>
-													</div>
-												</div>
+															echo '<tr>
+																	<td> ' . $description . ' </td>
+																	<td >  <a class="btn" id="' . $access_role . '"> View </a> ';
+																						echo '<script>
+																		$(document).ready(function() {
+																			$(\'#' . $access_role . '\').tooltipster({
+																				content: $("' . $m_list . '"),
+																				theme: \'tooltipster-shadow\',
+																				animation: \'grow\',
+																				onlyOne: true,
+																				trigger: \'click\'
+																			});
+																		});
+																	</script></td>' .
+																'<td> ' . $create_date . ' </td>';
+															/////////////////////////////////////////////
+															echo '<td>';
+															echo '<a href="javascript:void();" id="RE_' . $id_access_role . '"  class="btn btn-small btn-primary">
+																	<i class="btn-icon-only icon-wrench"></i>&nbsp;Edit</a><script type="text/javascript">
+																	$(document).ready(function() {
+																	$(\'#RE_' . $id_access_role . '\').easyconfirm({locale: {
+																			title: \'Role Edit\',
+																			text: \'Are you sure you want to edit this Role?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																			button: [\'Cancel\',\' Confirm\'],
+																			closeText: \'close\'
+																			}});
+																		$(\'#RE_' . $id_access_role . '\').click(function() {
+																			window.location = "?form_secreat=' . $secret . '&t=3&role_ID=' . $access_role . '&role_edit_id=' . $id_access_role . '"
+																		});
+																		});
+																	</script>';
+															echo '</td>';
+															echo '<td>';
+															if ($check_role['rowCount'] == 0) {
+																echo '<a href="javascript:void();" id="AP_' . $id_access_role . '"  class="btn btn-small btn-primary">
+																		<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a><script type="text/javascript">
+																		$(document).ready(function() {
+																		$(\'#AP_' . $id_access_role . '\').easyconfirm({locale: {
+																				title: \'Role Remove\',
+																				text: \'Are you sure you want to remove this Role?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																				button: [\'Cancel\',\' Confirm\'],
+																				closeText: \'close\'
+																				}});
+																			$(\'#AP_' . $id_access_role . '\').click(function() {
+																				window.location = "?token2=' . $secret . '&t=3&remove_access_role=' . $access_role . '&description=' . $description . '&remove_id=' . $id_access_role . '"
+																			});
+																			});
+																		</script>';
+															} else {
+																echo	'<a class="btn btn-small btn-primary" disabled>
+																		<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a>';
+															}
+															echo '</td>';
+														}
+														?>
+													</tbody>
+												</table>
 											</div>
 										</div>
 									</div>
@@ -1530,7 +1501,8 @@ if ($system_package == 'N/A') {
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#manage_users-table').dataTable();
+			$('#manage_users-table').dataTable();//role-table
+			$('#role-table').dataTable();
 
 			$("#mobile_1").keypress(function(event) {
 				var ew = event.which;
