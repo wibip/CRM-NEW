@@ -26,7 +26,7 @@ if ($script != 'verification') {
 $numItems = count($main_mod_array);
 	
 $i = 0;
-$active_title = "Switch Accounts";
+// $active_title = "Switch Accounts";
 if($script == 'operation_list'){
 	$active_title = "";
 }
@@ -38,11 +38,11 @@ foreach ($main_mod_array as $keym => $valuem) {
 	}
 
 
-	foreach($valuem['module'] as $key=>$checkVal){
-		if(in_array( "Switch Accounts" ,$checkVal)){
-			unset($valuem['module'][$key]);
-		}
-	}
+	// foreach($valuem['module'] as $key=>$checkVal){
+	// 	if(in_array( "Switch Accounts" ,$checkVal)){
+	// 		unset($valuem['module'][$key]);
+	// 	}
+	// }
 		/// Single Item
 			// echo $script;
 		if (sizeof($valuem['module']) == 1) {

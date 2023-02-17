@@ -393,11 +393,12 @@ class CommonFunctions{
 
     public function getApiProfiles($api_ids){
         $result = null;
+        $sql = "SELECT id,api_profile FROM exp_locations_ap_controller";
         if(!empty($api_ids)) {
             $ids = implode(",", $api_ids);
-            $sql = "SELECT id,api_profile FROM exp_locations_ap_controller WHERE id IN (".$ids.")";
-            $result =  $this->db->selectDB($sql);
+            $sql .= " WHERE id IN (".$ids.")";
         }
+        $result =  $this->db->selectDB($sql);
         return $result;
     }
 

@@ -702,9 +702,9 @@ $page = 'Client';
 	/*Get selected API profiles*/
 	$apiIds = $CommonFunctions->getSelectedApis($user_distributor);
 	$api_profiles = null;
-	if (!empty($apiIds)) {
-		$api_profiles = $CommonFunctions->getApiProfiles($apiIds);
-	}
+	// if (!empty($apiIds)) {
+	$api_profiles = $CommonFunctions->getApiProfiles($apiIds);
+	// }
 	// die;
 	require_once 'layout/' . $camp_layout . '/config.php';
 
