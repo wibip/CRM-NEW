@@ -1384,7 +1384,6 @@ if ($system_package == 'N/A') {
 															// document.getElementById("assign_roles_submita").disabled = true;
 														});
 													</script>
-
 												<br/>
 												<h1 class="head">Admin Roles</h1>	
 												<table class="table table-striped" style="width:100%" id="role-table">
