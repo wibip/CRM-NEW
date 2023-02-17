@@ -1,54 +1,9 @@
-<?php ob_start();?>
-<!DOCTYPE html>
-<html lang="en">
 <?php
-session_start();
-include 'header_top.php';
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
-/* No cache*/
-header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
-header("Pragma: no-cache"); // HTTP 1.0.
-header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
-/*classes & libraries*/
-require_once 'classes/dbClass.php';
-$db = new db_functions();
-require_once 'classes/CommonFunctions.php';
+include 'header_new.php';
+
 $CommonFunctions = new CommonFunctions();
 $page = "API profile";
-?> 
-<head>
-<meta charset="utf-8">
-<title>BI Api Profiles</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="css/multi-select.css" media="screen" rel="stylesheet" type="text/css">
-<link href="css/fonts/css.css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
-<link href="css/font-awesome.css" rel="stylesheet">
-<link href="css/style.css" rel="stylesheet">
-<!--Alert message css--> 
-<link rel="stylesheet" href="css/jquery-ui-alert.css" type="text/css" />
-<!--    <link rel="stylesheet" href="css/bootstrapValidator.css"/> -->
-<link rel="stylesheet" type="text/css" href="css/formValidation.css">
-<link rel="stylesheet" href="css/tablesaw.css?v1.1">
-<link rel="stylesheet" href="css/jquery-msgpopup.css" type="text/css" />
-<!-- Add jQuery library -->
-<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
-<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-<!--[if lt IE 9]>
-	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<link rel="stylesheet" href="css/dataTables.bootstrap.css" />
-<!--table colimn show hide-->
-<script type="text/javascript" src="js/tablesaw.js"></script>
-<script type="text/javascript" src="js/tablesaw-init.js"></script>
 
-<?php
-include 'header.php';
 // TAB Organization
 if (isset($_GET['t'])) {
 	$variable_tab = 'tab' . $_GET['t'];
@@ -56,6 +11,7 @@ if (isset($_GET['t'])) {
 } else {
 	$tab1 = "set";
 }
+
 $ap_control_var = $db->setVal('ap_controller', 'ADMIN');
 
 
@@ -285,6 +241,11 @@ $_SESSION['FORM_SECRET'] = $secret;
 							<!-- /widget-header -->
 							<div class="widget-content">
 								<div class="tabbable">
+									<ul class="nav nav-tabs">
+										<li class="nav-item" role="presentation">
+											<button class="nav-link active" id="operators" data-bs-toggle="tab" data-bs-target="#operators-tab-pane" type="button" role="tab" aria-controls="operators" aria-selected="true">Operator Realms</button>
+										</li>
+									</ul>
 									<ul class="nav nav-tabs">
 										<li <?php if(isset($tab1)){?>class="active" <?php }?>><a href="#viewap" data-toggle="tab">Manage BI APIs</a></li>
 										<li <?php if(isset($tab2)){?>class="active" <?php }?>><a href="#addap" data-toggle="tab">Create BI APIs</a></li>	
