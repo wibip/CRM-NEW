@@ -40,7 +40,7 @@ if (!$fileOut || $out) {
 ?>
 
 <link rel="stylesheet" href="css/bootstrap5.2.min.css" type="text/css" />
-<link rel="stylesheet" href="css/custom.css?v=3">
+<link rel="stylesheet" href="css/custom.css?v=4">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
 <link href="css/fontawesome/css/fontawesome.min.css" rel="stylesheet">
   <link href="css/fontawesome/css/brands.css" rel="stylesheet">
