@@ -966,13 +966,19 @@ if ($system_package == 'N/A') {
 													}
 												?>
 												<!-- action="controller/User_Controller.php" -->
+											<div class="border card">
+												<div class="border-bottom card-header p-4">
+													<div class="g-3 row">
+														<span class="fs-5">Create User</span>
+													</div>
+												</div>
 												<form autocomplete="off" id="edit_profile" action="users.php" method="post" class="row g-3 p-4">
+													<div class="col-md-6">
 													<?php
 													echo '<input type="hidden" name="user_type" id="user_type1" value="' . $user_type . '">';
 													echo '<input type="hidden" name="loation" id="loation1" value="' . $user_distributor . '">';
 													echo '<input type="hidden" name="id" id="id" value="' . $id . '">';
 													?>
-													<div class="col-md-6">
 														<label class="control-label" for="access_role_1">Access Role<sup><font color="#FF0000"></font></sup></label>
 														<select class="span4 form-control" name="access_role_1" id="access_role_1">
 															<option value="">Select Access Role</option>
@@ -1079,6 +1085,7 @@ if ($system_package == 'N/A') {
 														<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary">Save</button>
 													</div>
 												</form>
+											</div>
 												<br/>
 												<?php if (isset($_GET['edit_id']) && $edit_user_data != null) { ?>
 												<form onkeyup="footer_submitfn1();" onchange="footer_submitfn1();" autocomplete="off" id="edit-user-password" action="?t=1" method="post" class="row g-3 p-4">
@@ -1264,8 +1271,14 @@ if ($system_package == 'N/A') {
 														unset($_SESSION['msg6']);
 													}
 												?>
+												<div class="border card">
+													<div class="border-bottom card-header p-4">
+														<div class="g-3 row">
+															<span class="fs-5">Create Role</span>
+														</div>
+													</div>
 													<form autocomplete="off" id="assign_roles_submit" name="assign_roles_submit" method="post" class="row g-3 p-4"" action="?t=3">
-															<div id="response_d3"></div>
+															
 															<?php
 															echo '<input type="hidden" name="form_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'] .'" />';
 															echo '<input type="hidden" name="role_edit_id" id="role_edit_id" value="'.$role_edit_id.'" />';
@@ -1276,14 +1289,14 @@ if ($system_package == 'N/A') {
 															?>
 															<div class="col-md-12">
 																<label class="control-label" for="role_type">Role Type</label>
-																<fieldset id="role_types">
-																	<div class="fieldgroup">
+																<fieldset id="role_types" class="flex">
+																	<div class="fieldgroup flex">
 																		<input type="radio" name="role_type" id="role_type" value="nadmin" <?=(($roleType == 'nadmin'  || $role_edit_id == 0 )? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Admin</label>
 																	</div>
 																	<!-- <div class="fieldgroup">
 																		<input type="radio" name="role_type" id="role_type" value="salesmanager" < ?=($roleType == 'salesmanager' ? 'checked' : '')?> <  ?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "nadmin">Sales Manager</label>
 																	</div> -->
-																	<div class="fieldgroup">
+																	<div class="fieldgroup flex">
 																		<input type="radio" name="role_type" id="role_type" value="sadmin" <?=($roleType == 'sadmin' ? 'checked' : '')?> <?=($role_edit_id != 0 ? "disabled" : "")?>><label for= "sadmin">Super Admin</label>
 																	</div>
 																</fieldset>	
@@ -1297,7 +1310,7 @@ if ($system_package == 'N/A') {
 																<input class="form-control span2" id="oid_group" name="oid_group" type="text" value="<?=$oid_group?>" >
 															</div>
 															
-															<div class="col-md-4" id="sadmin_operations">
+															<div class="col-md-6" id="sadmin_operations">
 																<label class="control-label" for="my_select">Assign Operators</label>
 																<select class="form-control span4" multiple="multiple" id="operations" name="operations[]">
 																	<option value="" disabled="disabled"> Choose Operation(s)</option>
@@ -1318,7 +1331,7 @@ if ($system_package == 'N/A') {
 															</div>
 															<!-- /control-group -->
 															
-															<div class="col-md-4" id="admin_operations">
+															<div class="col-md-6" id="admin_operations">
 																<label class="control-label" for="my_select"><?=($_SESSION['SADMIN'] == true ? "Admin " : "")?>Modules</label>
 																<select class="form-control span4" multiple="multiple" id="my_select" name="my_select[]">
 																	<option value="" disabled="disabled"> Choose Module(s)</option>
@@ -1336,7 +1349,7 @@ if ($system_package == 'N/A') {
 																</select>
 															</div>
 
-															<div class="col-md-4" id="sadmin-omodules">
+															<div class="col-md-6" id="sadmin-omodules">
 																<label class="control-label" for="my_select">Non Admin Modules</label>
 																<select class="form-control span4" multiple="multiple" id="other_modules" name="other_modules[]">
 																	<option value="" disabled="disabled"> Choose Module(s)</option>
@@ -1378,7 +1391,7 @@ if ($system_package == 'N/A') {
 																<button type="submit" name="assign_roles_submita" id="assign_roles_submita" class="btn btn-primary">Save</button>
 															</div>
 													</form>
-
+												</div>
 													<script type="text/javascript">
 														$(document).ready(function() {
 															// document.getElementById("assign_roles_submita").disabled = true;
@@ -1692,11 +1705,6 @@ if ($system_package == 'N/A') {
 			});
 		});
 	</script>
-	<style type="text/css">
-		.ms-container {
-			display: inline-block !important;
-		}
-	</style>
 
 	<script type="text/javascript">
 		function GetXmlHttpObject() {

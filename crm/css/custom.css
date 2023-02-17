@@ -14,9 +14,23 @@ body.hover{
     vertical-align: top;
 }
 
+.row-px{
+    padding-left: 0.5rem;
+}
+
+.flex{
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex
+}
+
 .container, .navbar-fixed-bottom .container, .navbar-fixed-top .container{
-    margin-left: 80px !important;
-    margin-right: 10px !important;
+    margin-left: 90px !important;
+    margin-right: 20px !important;
+}
+
+.control-label{
+    margin-bottom: 10px;
 }
 
 .nav.nav-tabs .nav-item .nav-link.active{
