@@ -1,26 +1,5 @@
-<?php ob_start(); ?>
-<!DOCTYPE html>
-
-<html lang="en">
-
 <?php
-session_start();
-include 'header_top.php';
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
-
-/* No cache*/
-
-header("Cache-Control: no-cache, must-revalidate");
-/*classes & libraries*/
-
-require_once 'classes/dbClass.php';
-require_once 'classes/systemPackageClass.php';
-require_once 'classes/CommonFunctions.php';
-$package_functions = new package_functions();
-$db = new db_functions();
+include 'header_new.php';
 
 $wag_ap_name = $db->getValueAsf("SELECT `settings_value` AS f FROM `exp_settings` WHERE `settings_code`='wag_ap_name' LIMIT 1");
 //echo $wag_ap_name='NO_PROFILE';
@@ -30,26 +9,6 @@ if ($wag_ap_name != 'NO_PROFILE') {
 }
 
 ?>
-
-<head>
-	<meta charset="utf-8">
-	<title>Central DB API Profile</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="format-detection" content="telephone=no" />
-	<link href="css/bootstrap.min.css" rel="stylesheet">
-	<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
-	<link href="css/multi-select.css" media="screen" rel="stylesheet" type="text/css">
-	<link href="css/fonts/css.css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
-	<link href="css/font-awesome.css" rel="stylesheet">
-	<link href="css/style.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/jquery-ui-alert.css" type="text/css" />
-	<link href="css/multi-select.css" media="screen" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" type="text/css" href="css/formValidation.css">
-	<link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.5" media="screen" />
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-
 	<style>
 		td>.span2 {
 			width: 100% !important;
@@ -75,23 +34,6 @@ if ($wag_ap_name != 'NO_PROFILE') {
 			width: 85% !important;
 		}
 	</style>
-	<!-- tool tip css -->
-	<link rel="stylesheet" type="text/css" href="css/tooltipster-shadow.css" />
-	<link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
-	<script src="js/jquery.filestyle.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
-	<!-- on-off switch -->
-	<link href="css/bootstrap-toggle.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/tablesaw.css">
-	<!--[if lt IE 9]>
-
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-
-    <![endif]-->
-	<!--table colimn show hide-->
-	<script type="text/javascript" src="js/tablesaw.js"></script>
-	<script type="text/javascript" src="js/tablesaw-init.js"></script>
-
 	<script>
 		$(document).ready(function() {
 			$('[data-toggle="tooltip"]').tooltip();
@@ -99,7 +41,6 @@ if ($wag_ap_name != 'NO_PROFILE') {
 	</script>
 	<?php
 	require_once 'classes/faqClass.php';
-	include 'header.php';
 
 	$global_url = $db->setVal('global_url', 'ADMIN');
 
@@ -140,23 +81,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 	if (($new_design == 'yes') && file_exists($config_mid)) {
 		include_once $config_mid;
 	} else {
-		 if ($user_type == 'MVNO_ADMIN') { 
-	?>
-			<style type="text/css">
-				.nav-tabs>li>a {
-					padding-top: 3px !important;
-					padding-bottom: 3px !important;
-					color: #fff !important;
-					border-radius: 0px 0px 0 0 !important;
-				}
-
-				.nav-tabs>li>a {
-					background: none !important;
-					border: none !important;
-					border-right: 1px solid white !important;
-				}
-			</style>
-		<?php } ?>
+?>
 		<div class="main">
 			<div class="custom-tabs"></div>
 			<div class="main-inner">
@@ -164,189 +89,91 @@ if ($wag_ap_name != 'NO_PROFILE') {
 					<div class="row">
 						<div class="span12">
 							<div class="widget ">
-								<?php if ($user_type != 'MVNO_ADMIN') { ?>
-									<div class="widget-header">
-										<h3>Central DB API Profile</h3>
-									</div>
-								<?php
-								}
-								
-								?>
 								<!-- /widget-header -->
 								<div class="widget-content">
 									<div class="tabbable">
-										<ul class="nav nav-tabs newTabs">
+										<ul class="nav nav-tabs">
+											<li class="nav-item" role="presentation">
+												<button class="nav-link active" id="central_db" data-bs-toggle="tab" data-bs-target="#central_db-tab-pane" type="button" role="tab" aria-controls="central_db" aria-selected="true">Central DB</button>
+											</li>
+										</ul>
+										<div class="tab-content">	
 											<?php
-												if ($user_type == 'ADMIN' || $user_type == 'SADMIN' || $user_type == 'RESELLER_ADMIN') {
-													if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
-											?>
-													<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#central_db" data-toggle="tab">Central DB</a></li>
-											<?php  } } ?>
-										</ul><br>
-										<div class="tab-content">
-											<?php
-											if (isset($_SESSION['msg7'])) {
-												echo $_SESSION['msg7'];
-												unset($_SESSION['msg7']);
-											}
-
-											if (isset($_SESSION['msgft'])) {
-												echo $_SESSION['msgft'];
-												unset($_SESSION['msgft']);
-											}
-
-											if (isset($_SESSION['msg30'])) {
-												echo $_SESSION['msg30'];
-												unset($_SESSION['msg30']);
-											}
-
-											if (isset($_SESSION['msg1'])) {
-												echo $_SESSION['msg1'];
-												unset($_SESSION['msg1']);
-												$isalert = 0;
-											}
-
-											if (isset($_SESSION['msg112'])) {
-												echo $_SESSION['msg112'];
-												unset($_SESSION['msg112']);
-											}
-
-											if (isset($_SESSION['msg'])) {
-												echo $_SESSION['msg'];
-												unset($_SESSION['msg']);
-											}
-
-											if (isset($_SESSION['msgx'])) {
-												echo $_SESSION['msgx'];
-												unset($_SESSION['msgx']);
-											}
-
-											if (isset($_SESSION['msgy'])) {
-												echo $_SESSION['msgy'];
-												unset($_SESSION['msgy']);
-											}
-
-											if (isset($_SESSION['msgy1'])) {
-												echo $_SESSION['msgy1'];
-												unset($_SESSION['msgy1']);
-											}
-
-											if (isset($_SESSION['msg41'])) {
-												echo $_SESSION['msg41'];
-												unset($_SESSION['msg41']);
-											}
-
-											if (isset($_SESSION['msg2'])) {
-												echo $_SESSION['msg2'];
-												unset($_SESSION['msg2']);
-											}
-
-											if (isset($_SESSION['msg17'])) {
-												echo $_SESSION['msg17'];
-												unset($_SESSION['msg17']);
-											}
-
-											if (isset($_SESSION['msg18'])) {
-												echo $_SESSION['msg18'];
-												unset($_SESSION['msg18']);
-											}
-
-											if (isset($_SESSION['msg22'])) {
-												echo $_SESSION['msg22'];
-												unset($_SESSION['msg22']);
-											}
-											if (isset($_SESSION['system1_msg'])) {
-												echo $_SESSION['system1_msg'];
-												unset($_SESSION['system1_msg']);
-											}
-
-											?>
-
-											<div id="system1_response"></div>
-											<!-- ======================= Central DB API Profile =============================== -->
-											<div <?php if (isset($tab1) && ($user_type == 'ADMIN' || $user_type == 'SADMIN')) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="central_db">
-												<?php
-												$tab1_field_ar = json_decode($package_functions->getOptions('CONFIG_GENARAL_FIELDS', $system_package), true);
-												?>
-												<div id="system_response"></div>
-												<h1 class="head">Central DB Configuration</h1>
-												<form onkeyup="edit_central_db();" onchange="edit_central_db();" id="edit_profile_c" class="form-horizontal">
-													<?php
-													echo '<input type="hidden" name="form_secret" id="form_secret" value="' . $_SESSION['FORM_SECRET'] . '" />';
-													?>
-													<fieldset>
-														<div class="control-group" <?php
+											$tab1_field_ar = json_decode($package_functions->getOptions('CONFIG_GENARAL_FIELDS', $system_package), true);
+											?>										
+											<div div class="tab-pane fade show active" id="central_db-tab-pane" role="tabpanel" aria-labelledby="central_db" tabindex="0">
+												<div class="border card">
+													<div class="border-bottom card-header p-4">
+														<div class="g-3 row">
+															<span class="fs-5">Central DB Configuration</span>
+														</div>
+													</div>
+													<form onkeyup="edit_central_db();" onchange="edit_central_db();" id="edit_profile_c" class="row g-3 p-4">
+														<?php
+														echo '<input type="hidden" name="form_secret" id="form_secret" value="' . $_SESSION['FORM_SECRET'] . '" />';
+														?>
+														<div class="col-md-6" <?php
 
 																					if (!array_key_exists('site_title', $tab1_field_ar) && $system_package != 'N/A') {
 																						echo ' style="display:none";';
 																					}
 																					?>>
 															<label class="control-label" for="radiobtns">DB Name</label>
-															<div class="controls form-group">
-																<input class="span4 form-control" id="db_name" name="db_name" type="text" value="<?php echo $db->setVal("db_name", $user_distributor); ?>">
-															</div>
+															<input class="span4 form-control" id="db_name" name="db_name" type="text" value="<?php echo $db->setVal("db_name", $user_distributor); ?>">
 														</div>
-														<div class="control-group" <?php
+														<div class="col-md-6" <?php
 																					if (!array_key_exists('admin_email', $tab1_field_ar) && $system_package != 'N/A') {
 																						echo ' style="display:none";';
 																					}
 																					?>>
 															<label class="control-label" for="radiobtns">Admin Email</label>
-															<div class="controls form-group">
-																<input class="span4 form-control" id="admin_email" name="admin_email" type="text" value="<?php echo $db->setVal("admin_email", $user_distributor); ?>">
-															</div>
+															<input class="span4 form-control" id="admin_email" name="admin_email" type="text" value="<?php echo $db->setVal("admin_email", $user_distributor); ?>">
 														</div>
-														<div class="control-group" <?php
+														<div class="col-md-6" <?php
 																					if (!array_key_exists('time_zone', $tab1_field_ar) && $system_package != 'N/A') {
 																						echo ' style="display:none";';
 																					}
 																					?>>
 
 															<label class="control-label" for="radiobtns">Time Zone</label>
-															<div class="controls form-group">
-																<div class="input-prepend input-append">
-																	<select class="span4 form-control" id="db_time_zone" name="db_time_zone">
-																		<option value="">- Select Time-zone -</option>
-																		<?php
-																		$get_tz = "SELECT timezones FROM exp_mno WHERE mno_id = '$user_distributor' LIMIT 1";
-																		$reslts = $db->selectDB($get_tz);
-																		$timezones = '';
-																		foreach ($reslts['data'] as $r) {
-																			$timezones = $r['timezones'];
-																		}
-																		$utc = new DateTimeZone('UTC');
-																		$dt = new DateTime('now', $utc);
+															<select class="span4 form-control" id="db_time_zone" name="db_time_zone">
+																<option value="">- Select Time-zone -</option>
+																<?php
+																$get_tz = "SELECT timezones FROM exp_mno WHERE mno_id = '$user_distributor' LIMIT 1";
+																$reslts = $db->selectDB($get_tz);
+																$timezones = '';
+																foreach ($reslts['data'] as $r) {
+																	$timezones = $r['timezones'];
+																}
+																$utc = new DateTimeZone('UTC');
+																$dt = new DateTime('now', $utc);
+																$select = "";
+																foreach (DateTimeZone::listIdentifiers() as $tz) {
+																	$current_tz = new DateTimeZone($tz);
+																	$offset =  $current_tz->getOffset($dt);
+																	$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+																	$abbr = $transition[0]['abbr'];
+																	if ($timezones === $tz) {
+																		$select = "selected";
+																		//echo $timezones.'=='.$tz;
+																	} else {
 																		$select = "";
-																		foreach (DateTimeZone::listIdentifiers() as $tz) {
-																			$current_tz = new DateTimeZone($tz);
-																			$offset =  $current_tz->getOffset($dt);
-																			$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-																			$abbr = $transition[0]['abbr'];
-																			if ($timezones === $tz) {
-																				$select = "selected";
-																				//echo $timezones.'=='.$tz;
-																			} else {
-																				$select = "";
-																			}
-																			echo '<option ' . $select . ' value="' . $tz . '">' . $tz . ' [' . $abbr . ' ' . CommonFunctions::formatOffset($offset) . ']</option>';
-																		}
-																		?>
-																	</select>
-																</div>
-															</div>
+																	}
+																	echo '<option ' . $select . ' value="' . $tz . '">' . $tz . ' [' . $abbr . ' ' . CommonFunctions::formatOffset($offset) . ']</option>';
+																}
+																?>
+															</select>
 														</div>
-														<div class="control-group" <?php
+														<div class="col-md-6" <?php
 																					if (!array_key_exists('db_url', $tab1_field_ar) && $system_package != 'N/A') {
 																						echo ' style="display:none";';
 																					}
 																					?> style="margin-bottom: 0px !important;">
 
 															<label class="control-label" for="radiobtns">DB URL</label>
-															<div class="controls form-group">
-																<input class="span4 form-control" id="db_url" name="db_url" type="text" value="<?php echo $db->setVal("db_url", $user_distributor); ?>">
-															</div>
+															<input class="span4 form-control" id="db_url" name="db_url" type="text" value="<?php echo $db->setVal("db_url", $user_distributor); ?>">
 														</div>
-														<div class="form-actions ">
+														<div class="col-md-12">
 															<button disabled type="submit" id="central_db_submit" name="submit" class="btn btn-primary">Save</button>
 															<img id="system_loader" src="img/loading_ajax.gif" style="visibility: hidden;">
 														</div>
@@ -355,8 +182,8 @@ if ($wag_ap_name != 'NO_PROFILE') {
 																$("#central_db_submit").prop('disabled', false);
 															}
 														</script>
-													</fieldset>
-												</form>
+													</form>
+												</div>
 											</div>
 										</div>
 									</div>
