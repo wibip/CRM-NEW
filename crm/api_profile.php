@@ -249,12 +249,8 @@ $_SESSION['FORM_SECRET'] = $secret;
 											<button class="nav-link" id="create_apis" data-bs-toggle="tab" data-bs-target="#create_apis-tab-pane" type="button" role="tab" aria-controls="create_apis">Create BI APIs</button>
 										</li>
 									</ul>
-									<!-- <ul class="nav nav-tabs">
-										<li < ?php if(isset($tab1)){?>class="active" < ?php }?>><a href="#viewap" data-toggle="tab">Manage BI APIs</a></li>
-										<li < ?php if(isset($tab2)){?>class="active" < ?php }?>><a href="#addap" data-toggle="tab">Create BI APIs</a></li>	
-									</ul> -->
 									<div class="tab-content">
-									<?php
+										<?php
 											if(isset($_SESSION['msg17'])){
 												echo $_SESSION['msg17'];
 												unset($_SESSION['msg17']);
@@ -268,216 +264,181 @@ $_SESSION['FORM_SECRET'] = $secret;
 												echo $_SESSION['msg2']; 
 												unset($_SESSION['msg2']);	
 											}
-									?>
-										<!-- create_product tab -->
-										<div <?php if(isset($tab1)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="viewap">      	      			
-											<h1 class="head">Manage BI APIs</h1>		      
-									<?php
-										if($edit_wag==2){
-									?>
-										<form onkeyup="admin_updatefn();" onchange="admin_updatefn();" class="form-horizontal" method="post" action="?t=1">
-											<input type="hidden" name="t" value="1">
-											<input type="hidden" name="profile_id" id="profile_id" value="<?php echo $edit_controller;?>" />
-											<?php
-											echo '<input type="hidden" name="update_wag_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
-											?>
-											<fieldset>
-												<div class="control-group">
-													<label class="control-label" for="mg_product_code_1">API Profile<font color="#FF0000"></font></label>
-													<div class="controls col-lg-5 form-group">
-														<input class="span4 form-control" id="api_profile" name="edit_api_profile" type="text" value="<?php echo $edit_api_profile;?>" required="required">
-													</div>
-												</div>	
-												<div class="control-group">
-													<label class="control-label" for="mg_product_code_1">Version<font color="#FF0000"></font></label>
-													<div class="controls col-lg-5 form-group">
-															<select class="span4 form-control" name="edit_api_version" id="version" required="required">
-																<option value="">Select Version</option>
-																<option value="v1_0" <?=($edit_ap_control_name == "v1_0" ? "selected" : "")?>>API v1</option>
-																<option value="v2_0" <?=($edit_ap_control_name == "v2_0" ? "selected" : "")?>>API v2</option>
-															</select>
-														</div>
-												</div>
-												
-												<div class="control-group">
-													<label class="control-label" for="approfile"> API Server URL<font color="#FF0000"></font></label>
-													<div class="controls">
-														<div class="input-prepend input-append ">
-															<input type="text"  value="<?php echo $edit_wag_url;?>" name="edit_api_url" class="span4" required="required">
-														</div>
-													</div>
-												</div>
-												<div class="control-group ed_ap_sw ed_dpsk">
-													<label class="control-label" for="approfile"> API Username<font color="#FF0000"></font></label>
-													<div class="controls">
-														<div class="input-prepend input-append ">
-															<input type="text"  value="<?php echo $edit_wag_uname;?>" name="edit_api_uname" class="span4" required="required">
-														</div>
-													</div>
-												</div>
-												<div class="control-group ed_ap_sw ed_dpsk">
-													<label class="control-label" for="approfile"> API Password<font color="#FF0000"></font></label>
-													<div class="controls">
-														<div class="input-prepend input-append ">
-															<input type="text"  value="<?php echo $edit_wag_pass;?>" name="edit_api_pass" class="span4 password_f" required="required">
-														</div>
-													</div>
-												</div>
-											</fieldset>
-											<div class="form-actions">
-												<button disabled type="submit" name="api_update" id="admin_update" class="btn btn-primary">Update</button>
-												<button type="button" class="btn btn-info inline-btn"  onclick="goto1();" class="btn btn-danger">Cancel</button> 
-													<script>
-														function admin_updatefn() {
-															$("#admin_update").prop('disabled', false);
-														}
-														
-														function goto1(url){              
-															window.location = "?";              
-														}	
-													</script>
-											</div>
-										</form>
-										<?php
-										}
 										?>
-											<div class="widget widget-table action-table">
-												<div class="widget-header">
-													<i class="icon-th-list"></i>
-													<h3>Active Profiles</h3>
-												</div>
-												<!-- /widget-header -->
-												<div class="widget-content table_response ">
-													<div style="overflow-x:auto;" >
-														<table id="api_profile_table" data-delete="true" data-create="?t=2" class="data-table table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
-															<thead>
-																<tr>
-																	<th scope="col" style="max-width: 20px;" class="no-sort" data-tablesaw-sortable-col data-tablesaw-priority="persist"><input type="checkbox" class="delete-all"></th>
-																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Profile</th>
-																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">API Version</th>
-																	<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">API URL</th>
-																	<th scope="col" class="no-sort" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th>
-																	<th scope="col" class="no-sort" data-tablesaw-sortable-col data-tablesaw-priority="4">Remove</th>
-																</tr>
-															</thead>
-															<tbody>
-																<?php
-																	$key_query="SELECT c.controller_name,c.description,c.brand,c.model,c.brand,c.description,c.create_date,c.ip_address,c.api_url,c.api_profile,c.id,count(d.id) as assign_count FROM `exp_locations_ap_controller` c LEFT JOIN exp_mno_distributor d ON c.controller_name=d.ap_controller
-																				group by c.description,c.brand,c.model,c.brand,c.description,c.create_date,c.ip_address,c.api_url,c.api_profile,c.id";
-																	$query_results=$db->selectDB($key_query);
-																	// var_dump($query_results);	
-																	foreach($query_results['data'] AS $row){
-																			$controller_name = $row['controller_name'];
-																			$description = $row['description'];
-																			$brand = $row['brand'];
-																			$model = $row['model'];
-																			$create_date = $row['create_date'];
-																			$ip_address = $row['ip_address'];
-																			
-																			$api_url = $row['api_url'];
-																			$api_profile=$row['api_profile'];
-																			
-																			$id = $row['id'];
-																			$assign_count = $row['assign_count'];
-																			echo '<tr>
-																			<td style="max-width: 20px;"> <input type="checkbox" class="delete" value="'.$id.'"></td>
-																			<td> '.$api_profile.' </td>
-																			<td> '.$controller_name.' </td>
-																			<td> '.$api_url.' </td>';
-																				echo '<td><a href="javascript:void();" id="AP_'.$id.'"  class="btn btn-small btn-info">
-																					<i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
-																					$(document).ready(function() {
-																					$(\'#AP_'.$id.'\').easyconfirm({locale: {
-																							title: \'API Profile\',
-																							text: \'Are you sure you want to edit this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																							button: [\'Cancel\',\' Confirm\'],
-																							closeText: \'close\'
-																							}});
-																						$(\'#AP_'.$id.'\').click(function() {
-																							window.location = "?token2='.$secret.'&t=1&edit_controller='.$id.'"
-																						});
-																						});
-																					</script></td>';
-																			if($assign_count==0){																				
-																				echo '<td><a href="javascript:void();" id="AP_R_'.$id.'"  class="btn btn-small btn-danger">
-																				<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
-																					$(document).ready(function() {
-																					$(\'#AP_R_'.$id.'\').easyconfirm({locale: {
-																							title: \'API Profile\',
-																							text: \'Are you sure you want to remove this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																							button: [\'Cancel\',\' Confirm\'],
-																							closeText: \'close\'
-																							}});
-																						$(\'#AP_R_'.$id.'\').click(function() {
-																							window.location = "?token2='.$secret.'&t=1&remove_controller='.$id.'"
-																						});
-																						});
-																					</script></td>';
-																			
-																			}
-																			else{
-																				echo '<td><a class="btn btn-small btn-warning" disabled ><i class="icon icon-lock"></i>&nbsp;Remove</a></td>';
-																			}
-																			echo '</tr>';
-																		}
-																	?>		
-																</tbody>
-															</table>
+										<!-- create_product tab -->
+										<div div class="tab-pane fade show active" id="manage_apis-tab-pane" role="tabpanel" aria-labelledby="manage_apis" tabindex="0">    	      			
+											<h1 class="head">Manage BI APIs</h1>		      
+											<?php
+												if($edit_wag==2){
+											?>
+											<div class="border card">
+												<div class="border-bottom card-header p-4">
+													<div class="g-3 row">
+														<span class="fs-5">Create BI APIs</span>
 													</div>
 												</div>
-												<!-- /widget-content -->
+												<form onkeyup="admin_updatefn();" onchange="admin_updatefn();" class="row g-3 p-4" method="post" action="?t=1">
+													<input type="hidden" name="t" value="1">
+													<input type="hidden" name="profile_id" id="profile_id" value="<?php echo $edit_controller;?>" />
+													<?php
+													echo '<input type="hidden" name="update_wag_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
+													?>
+													<div class="col-md-6">
+														<label class="control-label" for="mg_product_code_1">API Profile<font color="#FF0000"></font></label>
+														<input class="span4 form-control" id="api_profile" name="edit_api_profile" type="text" value="<?php echo $edit_api_profile;?>" required="required">
+													</div>	
+													<div class="col-md-6">
+														<label class="control-label" for="mg_product_code_1">Version<font color="#FF0000"></font></label>
+														<select class="span4 form-control" name="edit_api_version" id="version" required="required">
+															<option value="">Select Version</option>
+															<option value="v1_0" <?=($edit_ap_control_name == "v1_0" ? "selected" : "")?>>API v1</option>
+															<option value="v2_0" <?=($edit_ap_control_name == "v2_0" ? "selected" : "")?>>API v2</option>
+														</select>
+													</div>
+													
+													<div class="col-md-6">
+														<label class="control-label" for="approfile"> API Server URL<font color="#FF0000"></font></label>
+														<input type="text"  value="<?php echo $edit_wag_url;?>" name="edit_api_url" class="form-control span4" required="required">
+													</div>
+													<div class="col-md-6">
+														<label class="control-label" for="approfile"> API Username<font color="#FF0000"></font></label>
+														<input type="text"  value="<?php echo $edit_wag_uname;?>" name="edit_api_uname" class="form-control span4" required="required">
+													</div>
+													<div class="col-md-6">
+														<label class="control-label" for="approfile"> API Password<font color="#FF0000"></font></label>
+														<input type="text"  value="<?php echo $edit_wag_pass;?>" name="edit_api_pass" class="form-control span4 password_f" required="required">
+													</div>
+													<div class="col-md-12">
+														<button disabled type="submit" name="api_update" id="admin_update" class="btn btn-primary">Update</button>
+														<button type="button" class="btn btn-info inline-btn"  onclick="goto1();" class="btn btn-danger">Cancel</button> 
+															<script>
+																function admin_updatefn() {
+																	$("#admin_update").prop('disabled', false);
+																}
+																
+																function goto1(url){              
+																	window.location = "?";              
+																}	
+															</script>
+													</div>
+												</form>
 											</div>
-											<!-- /widget -->
+											<?php
+											}
+											?>
+											<br/>
+											<h5 class="head">Active Profiles</h5>
+											<table class="table table-striped" style="width:100%" id="api_profile_table">
+												<thead>
+													<tr>
+														<th>Profile</th>
+														<th>API Version</th>
+														<th>API URL</th>
+														<th>Edit</th>
+														<th>Remove</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php
+													$key_query="SELECT c.controller_name,c.description,c.brand,c.model,c.brand,c.description,c.create_date,c.ip_address,c.api_url,c.api_profile,c.id,count(d.id) as assign_count FROM `exp_locations_ap_controller` c LEFT JOIN exp_mno_distributor d ON c.controller_name=d.ap_controller
+																group by c.description,c.brand,c.model,c.brand,c.description,c.create_date,c.ip_address,c.api_url,c.api_profile,c.id";
+													$query_results=$db->selectDB($key_query);
+													// var_dump($query_results);	
+													foreach($query_results['data'] AS $row){
+															$controller_name = $row['controller_name'];
+															$description = $row['description'];
+															$brand = $row['brand'];
+															$model = $row['model'];
+															$create_date = $row['create_date'];
+															$ip_address = $row['ip_address'];
+															
+															$api_url = $row['api_url'];
+															$api_profile=$row['api_profile'];
+															
+															$id = $row['id'];
+															$assign_count = $row['assign_count'];
+															echo '<tr>
+															<td> '.$api_profile.' </td>
+															<td> '.$controller_name.' </td>
+															<td> '.$api_url.' </td>';
+																echo '<td><a href="javascript:void();" id="AP_'.$id.'"  class="btn btn-small btn-info">
+																	<i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
+																	$(document).ready(function() {
+																	$(\'#AP_'.$id.'\').easyconfirm({locale: {
+																			title: \'API Profile\',
+																			text: \'Are you sure you want to edit this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																			button: [\'Cancel\',\' Confirm\'],
+																			closeText: \'close\'
+																			}});
+																		$(\'#AP_'.$id.'\').click(function() {
+																			window.location = "?token2='.$secret.'&t=1&edit_controller='.$id.'"
+																		});
+																		});
+																	</script></td>';
+															if($assign_count==0){																				
+																echo '<td><a href="javascript:void();" id="AP_R_'.$id.'"  class="btn btn-small btn-danger">
+																<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a><script type="text/javascript">
+																	$(document).ready(function() {
+																	$(\'#AP_R_'.$id.'\').easyconfirm({locale: {
+																			title: \'API Profile\',
+																			text: \'Are you sure you want to remove this API Profile?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+																			button: [\'Cancel\',\' Confirm\'],
+																			closeText: \'close\'
+																			}});
+																		$(\'#AP_R_'.$id.'\').click(function() {
+																			window.location = "?token2='.$secret.'&t=1&remove_controller='.$id.'"
+																		});
+																		});
+																	</script></td>';
+															
+															}
+															else{
+																echo '<td><a class="btn btn-small btn-warning" disabled ><i class="icon icon-lock"></i>&nbsp;Remove</a></td>';
+															}
+															echo '</tr>';
+														}
+													?>		
+												</tbody>
+											</table>	
 										</div><!-- /over product tab -->
 
-                                        <!-- assign_product tab -->
-										<div <?php if(isset($tab2)){?>class="tab-pane fade in active" <?php }else {?> class="tab-pane fade" <?php }?> id="addap">
-										<h1 class="head">Create BI APIs</h1>		
-										<form autocomplete="off" onkeyup="create_ap_controllerfn();" onchange="create_ap_controllerfn();"  id="create_ap_controller_form" name="create_ap_controller_form" method="post" class="form-horizontal" action="?t=2">
-												<fieldset>
-													<div id="response_d3"></div>
+										<div div class="tab-pane fade" id="create_apis-tab-pane" role="tabpanel" aria-labelledby="create_apis" tabindex="0">	
+											<div class="border card">
+												<div class="border-bottom card-header p-4">
+													<div class="g-3 row">
+														<span class="fs-5">Create BI APIs</span>
+													</div>
+												</div>
+												<form autocomplete="off" onkeyup="create_ap_controllerfn();" onchange="create_ap_controllerfn();"  id="create_ap_controller_form" name="create_ap_controller_form" method="post" class="row g-3 p-4">
 													<?php 
 															echo '<input type="hidden" name="form_secret" id="form_secret" value="'.$_SESSION['FORM_SECRET'].'" />';
 															echo '<input type="hidden" name="create_user" id="create_user" value="'.$user_distributor.'" />';
-													?>	
-													<div class="control-group">														
-													<div class="control-group">
+													?>														
+													<div class="col-md-6">
                                                         <label class="control-label" for="mg_product_code_1">API Profile<font color="#FF0000"></font></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="api_profile" name="api_profile" type="text" required="required">
-                                                        </div>
+                                                        <input class="span4 form-control" id="api_profile" name="api_profile" type="text" required="required">
                                                     </div>
-													<div class="control-group">
+													<div class="col-md-6">
                                                         <label class="control-label" for="mg_product_code_1">Version<font color="#FF0000"></font></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                     							<select class="span4 form-control" name="version" id="version" required="required">
-                                                                    <option value="">Select Version</option>
-																	<option value="v1_0">API v1</option>
-																	<option value="v2_0">API v2</option>
-																</select>
-                                                          </div>
+														<select class="span4 form-control" name="version" id="version" required="required">
+															<option value="">Select Version</option>
+															<option value="v1_0">API v1</option>
+															<option value="v2_0">API v2</option>
+														</select>
                                                     </div>
-													<div class="control-group">
+													<div class="col-md-6">
                                                         <label class="control-label" for="mg_product_code_1">API Server URL<font color="#FF0000"></font></label>
-                                                        <div class="controls col-lg-5 form-group">
-															<div class="input-prepend input-append ">
-																<input class="span4 form-control" id="api_server_url" name="api_server_url" type="text" required="required">
-															</div>
-                                                        </div>
+														<input class="span4 form-control" id="api_server_url" name="api_server_url" type="text" required="required">
                                                     </div>
-													<div class="control-group">
+													<div class="col-md-6">
                                                         <label class="control-label" for="mg_product_code_1">API Username<font color="#FF0000"></font></label>
-                                                        <div class="controls col-lg-5 form-group">
                                                             <input class="span4 form-control" id="api_username" name="api_username" type="text"required="required" >
-                                                        </div>
                                                     </div>
-													<div class="control-group">
+													<div class="col-md-6">
                                                         <label class="control-label" for="mg_product_code_1">API Password<font color="#FF0000"></font></label>
-                                                        <div class="controls col-lg-5 form-group">
-                                                            <input class="span4 form-control" id="api_password" name="api_password" type="text" required="required">
-                                                        </div>
+                                                        <input class="span4 form-control" id="api_password" name="api_password" type="text" required="required">
                                                     </div>													
-													<div class="form-actions">
+													<div class="col-md-12">
 														<button disabled type="submit" name="create_ap_controller" id="create_ap_controller" class="btn btn-primary">Save</button>
 														<a style="display: inline-block;margin-left: 20px" id="test_api" class="btn btn-primary wag_link inline-btn"><i class="btn-icon-only icon-refresh"></i> Test</a>																		
 														<script>
@@ -486,8 +447,8 @@ $_SESSION['FORM_SECRET'] = $secret;
 															}
 															</script>													
 	                                                </div>	
-												</fieldset>
-											</form>
+												</form>
+											</div>
 										</div>
                                     </div>
 								</div>
@@ -526,7 +487,7 @@ include 'footer.php';
  $(document).ready(function() { 
 	$('#manage_users-table').dataTable();//role-table
 	$('#role-table').dataTable();
-	
+
     $("#product_code").chained("#category");
 
     $("#create_ap_controller").easyconfirm({locale: {

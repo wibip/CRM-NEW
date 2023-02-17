@@ -1337,7 +1337,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 										</ul>
 										<div class="tab-content">
 											<div div class="tab-pane fade show active" id="create_order-tab-pane" role="tabpanel" aria-labelledby="create_order" tabindex="0">
-											<h1 class="head">Create Orders</h1>
 												<?php
 														if (isset($_SESSION['msg5'])) {
 															echo $_SESSION['msg5'];
@@ -1384,172 +1383,179 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														$actionUrl = "clients.php?show=".$_REQUEST['show']."&ud=".$_REQUEST['ud']."&ut=".$_REQUEST['ut'];
 													}
 												?>
+												<div class="border card">
+													<div class="border-bottom card-header p-4">
+														<div class="g-3 row">
+															<span class="fs-5">Create User</span>
+														</div>
+													</div>
 												<!-- action="controller/User_Controller.php" -->
-												<form autocomplete="off" id="edit_profile" action="<?=$actionUrl?>" method="post" class="row g-3 p-4">
-														<input type="hidden" name="id" id="id" value="<?=$edit_id?>">
-														<input type="hidden" name="user_type" id="user_type1" value="<?=$user_type?>">
-														<input type="hidden" name="loation" id="loation1" value="<?=$user_distributor?>">
-														<input type="hidden" name="is_edit" id="is_edit" value="<?=$is_edit?>">
-														
-														<div class="col-md-6">
-															<label class="control-label" for="language_1">API profile</label>
-															<select class="form-control span4" name="api_profile" id="api_profile">
-																<option value="">Select API profile</option>
-																<?php
-																foreach($api_profiles['data'] AS $row){
-																	$apiId = $row['id'];
-																	$profile = $row['api_profile'];
-																	if ($apiId == $selected_profile) {
-																		echo '<option value="'.$apiId.'" selected>' . $profile . '</option>';
-																	} else {
-																		echo '<option value="'.$apiId.'">' . $profile . '</option>';
-																	}
-																}
-																?>
-															</select>
-														</div>
-														
-														<div class="col-md-6">
-															<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="full_name_1" name="full_name_1" maxlength="25" type="text" value="<?=$full_name?>">
-														</div>
-												
-														<div class="col-md-6">
-															<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="email_1" name="email_1" placeholder="name@mycompany.com" value="<?=$email?>">
-														</div>
-
-														<div class="col-md-6">
-															<label class="control-label" for="language_1">Language</label>
-															<select class="form-control span4" name="language_1" id="language_1">
-																<?php
-																$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
-																$query_results=$db->selectDB($key_query);
-																foreach($query_results['data'] AS $row){
-																	$language_code = $row['language_code'];
-																	$language = $row['language'];
-																	if ($language_code == $language_set) {
-																		echo '<option value="' . $language_code . '" selected>' . $language . '</option>';
-																	} else {
-																		echo '<option value="' . $language_code . '">' . $language . '</option>';
-																	}
-																}
-																?>
-															</select>
-														</div>
-														
-														<div class="col-md-6">
-                                                            <label class="control-label" for="timezone_1">Time Zone<sup><font color="#FF0000"></font></sup></label>
-															<select class="span4 form-control" id="timezone_1" name="timezone_1" autocomplete="off">
-																<option value="">Select Time Zone</option>
-																<?php
-																$utc = new DateTimeZone('UTC');
-																$dt = new DateTime('now', $utc);
-
-																foreach ($priority_zone_array as $tz){
-																	$current_tz = new DateTimeZone($tz);
-																	$offset =  $current_tz->getOffset($dt);
-																	$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-																	$abbr = $transition[0]['abbr'];
-																	if($timezone_set==$tz){
-																		$select="selected";
-																	}else{
-																		$select="";
-																	}
-																	echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-																}
-																foreach(DateTimeZone::listIdentifiers() as $tz) {
-																	//Skip
-																	if(in_array($tz,$priority_zone_array))
-																		continue;
-
-																	$current_tz = new DateTimeZone($tz);
-																	$offset =  $current_tz->getOffset($dt);
-																	$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-																	$abbr = $transition[0]['abbr'];
-																	
-																	if($timezone_set==$tz){
-																	$select="selected";
-																	}else{
-																		$select="";
-																	}
-																	echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-																}
-																?>
-															</select>
-														</div>
-														
-														<div class="col-md-6">
-															<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="mobile_1" name="mobile_1" type="text" placeholder="xxx-xxx-xxxx" maxlength="12" value="<?=$mobile?>">
-														</div>
-														
-														<div class="col-md-6">
-															<label class="control-label" for="address_1">Address<sup><font color="#FF0000"></font></sup></label>
-															<input class="span4 form-control" id="address_1" placeholder="Address" name="address_1" type="text" value="<?=$bussiness_address1?>" autocomplete="off">
-														</div>
-
-														<div class="col-md-6">
-															<label class="control-label" for="address_2">City<sup><font color="#FF0000"></font></sup></label>
-															<input class="span4 form-control" id="address_2" placeholder="City" name="address_2" type="text" value="<?=$bussiness_address2?>" autocomplete="off">
-														</div>
-
-														<div class="col-md-6">
-															<label class="control-label" for="country" >Country<font color="#FF0000"></font></sup></label>
-															<select name="country" id="country" class="span4 form-control" autocomplete="off">
-																<option value="">Select Country</option>
-																<?php
-																
-																foreach ($country_result['data'] as $row) {
-																	$select="";
-																	if($row['a']==$country){
-																		$select="selected";
-																	}
-																	echo '<option value="'.$row['a'].'" '.$select.'>'.$row['b'].'</option>';
-																}
-																?>
-															</select>
-														</div>
-
-														<script language="javascript">
-															populateCountries("country", "state");
-														</script>
-														<div class="col-md-6">
-															<label class="control-label" for="state">State/Region<font color="#FF0000"></font></sup></label>
-															<select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="state" placeholder="State or Region" name="state" required autocomplete="off">
-																<?php
-																	echo '<option value="">Select State</option>';
-																	// var_dump($get_regions['data']);
-																	foreach ($get_regions['data'] AS $state) {
-																		//edit_state_region , get_edit_state_region
-																		if($get_edit_state_region == 'N/A') {
-																			echo '<option selected value="N/A">Others</option>';
+													<form autocomplete="off" id="edit_profile" action="<?=$actionUrl?>" method="post" class="row g-3 p-4">
+															<input type="hidden" name="id" id="id" value="<?=$edit_id?>">
+															<input type="hidden" name="user_type" id="user_type1" value="<?=$user_type?>">
+															<input type="hidden" name="loation" id="loation1" value="<?=$user_distributor?>">
+															<input type="hidden" name="is_edit" id="is_edit" value="<?=$is_edit?>">
+															
+															<div class="col-md-6">
+																<label class="control-label" for="language_1">API profile</label>
+																<select class="form-control span4" name="api_profile" id="api_profile">
+																	<option value="">Select API profile</option>
+																	<?php
+																	foreach($api_profiles['data'] AS $row){
+																		$apiId = $row['id'];
+																		$profile = $row['api_profile'];
+																		if ($apiId == $selected_profile) {
+																			echo '<option value="'.$apiId.'" selected>' . $profile . '</option>';
 																		} else {
-																			if ($state_region == $state['states_code']) {
-																				echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-																			} else {
-																				echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-																			}
+																			echo '<option value="'.$apiId.'">' . $profile . '</option>';
 																		}
-																		
 																	}
-																?>
-															</select>
-														</div>
+																	?>
+																</select>
+															</div>
+															
+															<div class="col-md-6">
+																<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
+																<input class="form-control span4" id="full_name_1" name="full_name_1" maxlength="25" type="text" value="<?=$full_name?>">
+															</div>
+													
+															<div class="col-md-6">
+																<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
+																<input class="form-control span4" id="email_1" name="email_1" placeholder="name@mycompany.com" value="<?=$email?>">
+															</div>
 
-														<div class="col-md-6">
-															<label class="control-label" for="region">ZIP Code<sup><font color="#FF0000"></font></sup></label>
-															<input class="span4 form-control" id="zip_code" maxlength="5" placeholder="XXXXX" name="zip_code" type="text" value="<?=$zip?>" autocomplete="off">
-														</div>
+															<div class="col-md-6">
+																<label class="control-label" for="language_1">Language</label>
+																<select class="form-control span4" name="language_1" id="language_1">
+																	<?php
+																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
+																	$query_results=$db->selectDB($key_query);
+																	foreach($query_results['data'] AS $row){
+																		$language_code = $row['language_code'];
+																		$language = $row['language'];
+																		if ($language_code == $language_set) {
+																			echo '<option value="' . $language_code . '" selected>' . $language . '</option>';
+																		} else {
+																			echo '<option value="' . $language_code . '">' . $language . '</option>';
+																		}
+																	}
+																	?>
+																</select>
+															</div>
+															
+															<div class="col-md-6">
+																<label class="control-label" for="timezone_1">Time Zone<sup><font color="#FF0000"></font></sup></label>
+																<select class="span4 form-control" id="timezone_1" name="timezone_1" autocomplete="off">
+																	<option value="">Select Time Zone</option>
+																	<?php
+																	$utc = new DateTimeZone('UTC');
+																	$dt = new DateTime('now', $utc);
 
-														<div class="col-md-12">
-															<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary"><?=(isset($_GET['edit_id']) ? "Update" : "Create")?> Account</button>&nbsp; <strong>
-																<font color="#FF0000"></font><small></small>
-															</strong>
-															<?php if($is_edit == true){ ?> <button type="button" class="btn btn-info inline-btn"  onclick="goto();" class="btn btn-danger">Cancel</button> <?php } ?>
-														</div>
-														<!-- /form-actions -->
-												</form>
+																	foreach ($priority_zone_array as $tz){
+																		$current_tz = new DateTimeZone($tz);
+																		$offset =  $current_tz->getOffset($dt);
+																		$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+																		$abbr = $transition[0]['abbr'];
+																		if($timezone_set==$tz){
+																			$select="selected";
+																		}else{
+																			$select="";
+																		}
+																		echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+																	}
+																	foreach(DateTimeZone::listIdentifiers() as $tz) {
+																		//Skip
+																		if(in_array($tz,$priority_zone_array))
+																			continue;
+
+																		$current_tz = new DateTimeZone($tz);
+																		$offset =  $current_tz->getOffset($dt);
+																		$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+																		$abbr = $transition[0]['abbr'];
+																		
+																		if($timezone_set==$tz){
+																		$select="selected";
+																		}else{
+																			$select="";
+																		}
+																		echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+																	}
+																	?>
+																</select>
+															</div>
+															
+															<div class="col-md-6">
+																<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
+																<input class="form-control span4" id="mobile_1" name="mobile_1" type="text" placeholder="xxx-xxx-xxxx" maxlength="12" value="<?=$mobile?>">
+															</div>
+															
+															<div class="col-md-6">
+																<label class="control-label" for="address_1">Address<sup><font color="#FF0000"></font></sup></label>
+																<input class="span4 form-control" id="address_1" placeholder="Address" name="address_1" type="text" value="<?=$bussiness_address1?>" autocomplete="off">
+															</div>
+
+															<div class="col-md-6">
+																<label class="control-label" for="address_2">City<sup><font color="#FF0000"></font></sup></label>
+																<input class="span4 form-control" id="address_2" placeholder="City" name="address_2" type="text" value="<?=$bussiness_address2?>" autocomplete="off">
+															</div>
+
+															<div class="col-md-6">
+																<label class="control-label" for="country" >Country<font color="#FF0000"></font></sup></label>
+																<select name="country" id="country" class="span4 form-control" autocomplete="off">
+																	<option value="">Select Country</option>
+																	<?php
+																	
+																	foreach ($country_result['data'] as $row) {
+																		$select="";
+																		if($row['a']==$country){
+																			$select="selected";
+																		}
+																		echo '<option value="'.$row['a'].'" '.$select.'>'.$row['b'].'</option>';
+																	}
+																	?>
+																</select>
+															</div>
+
+															<script language="javascript">
+																populateCountries("country", "state");
+															</script>
+															<div class="col-md-6">
+																<label class="control-label" for="state">State/Region<font color="#FF0000"></font></sup></label>
+																<select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="state" placeholder="State or Region" name="state" required autocomplete="off">
+																	<?php
+																		echo '<option value="">Select State</option>';
+																		// var_dump($get_regions['data']);
+																		foreach ($get_regions['data'] AS $state) {
+																			//edit_state_region , get_edit_state_region
+																			if($get_edit_state_region == 'N/A') {
+																				echo '<option selected value="N/A">Others</option>';
+																			} else {
+																				if ($state_region == $state['states_code']) {
+																					echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+																				} else {
+																					echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+																				}
+																			}
+																			
+																		}
+																	?>
+																</select>
+															</div>
+
+															<div class="col-md-6">
+																<label class="control-label" for="region">ZIP Code<sup><font color="#FF0000"></font></sup></label>
+																<input class="span4 form-control" id="zip_code" maxlength="5" placeholder="XXXXX" name="zip_code" type="text" value="<?=$zip?>" autocomplete="off">
+															</div>
+
+															<div class="col-md-12">
+																<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary"><?=(isset($_GET['edit_id']) ? "Update" : "Create")?> Account</button>&nbsp; <strong>
+																	<font color="#FF0000"></font><small></small>
+																</strong>
+																<?php if($is_edit == true){ ?> <button type="button" class="btn btn-info inline-btn"  onclick="goto();" class="btn btn-danger">Cancel</button> <?php } ?>
+															</div>
+															<!-- /form-actions -->
+													</form>
+												</div>
 												<script type="text/javascript">
 													$(document).ready(function() {
 														var editClient = <?php echo ($is_edit == true ? "true" : "false"); ?>;

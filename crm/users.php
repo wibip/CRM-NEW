@@ -1088,33 +1088,39 @@ if ($system_package == 'N/A') {
 											</div>
 												<br/>
 												<?php if (isset($_GET['edit_id']) && $edit_user_data != null) { ?>
-												<form onkeyup="footer_submitfn1();" onchange="footer_submitfn1();" autocomplete="off" id="edit-user-password" action="?t=1" method="post" class="row g-3 p-4">
-													<?php
-													echo '<input type="hidden" name="form_secret" id="form_secret2" value="' . $_SESSION['FORM_SECRET'] . '" />';
-													?>
-														<legend>Reset Password</legend>
+												<div class="border card">
+													<div class="border-bottom card-header p-4">
+														<div class="g-3 row">
+															<span class="fs-5">Reset Password</span>
+														</div>
+													</div>
+													<form onkeyup="footer_submitfn1();" onchange="footer_submitfn1();" autocomplete="off" id="edit-user-password" action="?t=1" method="post" class="row g-3 p-4">
 														<?php
-														echo '<input type="hidden" name="user_type" id="user_type3" value="' . $user_type . '">';
-														echo '<input type="hidden" name="loation" id="loation3" value="' . $user_distributor . '">';
-														echo '<input type="hidden" name="id" id="id1" value="' . $id . '">';
+														echo '<input type="hidden" name="form_secret" id="form_secret2" value="' . $_SESSION['FORM_SECRET'] . '" />';
 														?>
-														<div class="col-md-6">
-															<label class="control-label" for="full_name_2" _1>Password<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="passwd" name="passwd" type="password" required>
-														</div>
-														<!-- /control-group -->
-														<div class="col-md-6">
-															<label class="control-label" for="email_2">Confirm Password<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="passwd_2" name="passwd_2" type="password" required="required">
-														</div>
-														<!-- /control-group -->
-														<div  class="col-md-12">
-															<button type="submit" name="edit-submita-pass" id="edit-submita-pass" class="btn btn-primary" disabled="disabled">Save</button>&nbsp; <strong>
-																<font color="#FF0000"></font><small></small>
-															</strong>
-															<button type="button" onclick="goto('/')" class="btn btn-danger">Cancel</button>&nbsp;
-														</div>
-												</form>
+															<?php
+															echo '<input type="hidden" name="user_type" id="user_type3" value="' . $user_type . '">';
+															echo '<input type="hidden" name="loation" id="loation3" value="' . $user_distributor . '">';
+															echo '<input type="hidden" name="id" id="id1" value="' . $id . '">';
+															?>
+															<div class="col-md-6">
+																<label class="control-label" for="full_name_2" _1>Password<sup><font color="#FF0000"></font></sup></label>
+																<input class="form-control span4" id="passwd" name="passwd" type="password" required>
+															</div>
+															<!-- /control-group -->
+															<div class="col-md-6">
+																<label class="control-label" for="email_2">Confirm Password<sup><font color="#FF0000"></font></sup></label>
+																<input class="form-control span4" id="passwd_2" name="passwd_2" type="password" required="required">
+															</div>
+															<!-- /control-group -->
+															<div  class="col-md-12">
+																<button type="submit" name="edit-submita-pass" id="edit-submita-pass" class="btn btn-primary" disabled="disabled">Save</button>&nbsp; <strong>
+																	<font color="#FF0000"></font><small></small>
+																</strong>
+																<button type="button" onclick="goto('/')" class="btn btn-danger">Cancel</button>&nbsp;
+															</div>
+													</form>
+												</div>
 												<?php } ?>
 												<script type="text/javascript">
 												function footer_submitfn1() {
