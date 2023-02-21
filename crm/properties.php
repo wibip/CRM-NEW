@@ -82,8 +82,13 @@ $query_results = $db->selectDB($propertyQuery);
                                     <div div class="tab-pane fade show active" id="properties-tab-pane" role="tabpanel" aria-labelledby="properties" tabindex="0">
                                         <h1 class="head">Properties</h1>
                                         <div class="border card my-4">
+                                            <div class="border-bottom card-header p-4">
+                                                <div class="g-3 row">
+                                                    <span class="fs-5">Property Filters</span>
+                                                </div>
+                                            </div>
                                             <form method="post" class="row g-3 p-4">
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <label>Client Name</label>
                                                     <select id="client_name" name="client_name">
                                                         <option value='all' <?=(($client_name == null) ? "selected" : "")?>>All</option>
@@ -98,7 +103,7 @@ $query_results = $db->selectDB($propertyQuery);
                                                         ?>
                                                     </select>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <label>Business Name</label>
                                                     <select id="business_name" name="business_name">
                                                         <option value='all' <?=(($business_name == null) ? "selected" : "")?>>All</option>
@@ -113,7 +118,7 @@ $query_results = $db->selectDB($propertyQuery);
                                                         ?>
                                                     </select> 
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <label>Status</label>
                                                     <select id="status" name="status">
                                                         <option value='all' <?=(($status == null) ? "selected" : "")?>>All</option>
@@ -123,7 +128,7 @@ $query_results = $db->selectDB($propertyQuery);
                                                         <option value='Failed' <?=(($status != null && $status == "Failed") ? "selected" : "")?>>Failed</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-12">
                                                     <button class="btn btn-primary">Filter</button>
                                                 </div>
                                             </form>

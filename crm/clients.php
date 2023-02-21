@@ -1386,7 +1386,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 												<div class="border card">
 													<div class="border-bottom card-header p-4">
 														<div class="g-3 row">
-															<span class="fs-5">Create User</span>
+															<span class="fs-5">Create Order</span>
 														</div>
 													</div>
 												<!-- action="controller/User_Controller.php" -->
@@ -1548,7 +1548,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 															</div>
 
 															<div class="col-md-12">
-																<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary"><?=(isset($_GET['edit_id']) ? "Update" : "Create")?> Account</button>&nbsp; <strong>
+																<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary"><?=(isset($_GET['edit_id']) ? "Update" : "Create")?> Order</button>&nbsp; <strong>
 																	<font color="#FF0000"></font><small></small>
 																</strong>
 																<?php if($is_edit == true){ ?> <button type="button" class="btn btn-info inline-btn"  onclick="goto();" class="btn btn-danger">Cancel</button> <?php } ?>
