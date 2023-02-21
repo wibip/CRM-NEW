@@ -297,7 +297,11 @@ class db_functions extends dbTasks
 
 	public function getLogsByFilters($start_date,$end_date,$limit=10,$userName = null,$logType=null,$page=null) {
 		$sql = "SELECT user_name,log_type,page,log_details,create_date FROM crm_user_logs 
-				WHERE create_date BETWEEN '".$start_date."' AND '".$end_date."'";
+				WHERE TRUE ";
+
+		if ($start_date != null && $end_date != null) {
+			$sql.=" AND create_date BETWEEN '".$start_date."' AND '".$end_date."'";
+		}
 
 		if($userName != null) {
 			$sql.=" AND user_name='".$userName."'";
@@ -319,8 +323,11 @@ class db_functions extends dbTasks
 
 	public function getApiLogsByFilters($start_date,$end_date,$limit=10,$name = null,$logType=null,$section=null) {
 		$sql = "SELECT name,section,log_type,description,create_date FROM crm_api_logs 
-				WHERE create_date BETWEEN '".$start_date."' AND '".$end_date."'";
+				WHERE TRUE ";
 
+		if ($start_date != null && $end_date != null) {
+			$sql.=" AND create_date BETWEEN '".$start_date."' AND '".$end_date."'";
+		}
 		if($name != null) {
 			$sql.=" AND `name`='".$name."'";
 		}
@@ -330,9 +337,10 @@ class db_functions extends dbTasks
 		if($section != null) {
 			$sql.=" AND section='".$section."'";
 		}
+
 		$sql.=" ORDER BY id DESC";
         $sql.=" LIMIT ".$limit;
-// echo $sql;
+
 		$data = $this->selectDB($sql);
 
 		return $data['data'];

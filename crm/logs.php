@@ -2,13 +2,14 @@
 include 'header_new.php'; 
 require_once 'src/LOG/Logger.php';
 
+$tab = (isset($_POST['tab']) ? $_POST['tab'] : "user_activity_log" ) ;
 $pages = $db->getDataFromLogsField('page');
 $logTypes = $db->getDataFromLogsField('log_type');
 $sections = $db->getDataFromApiLogsField('section','section');
-// var_dump($sections);
+$logNames = $db->getDataFromApiLogsField('name','name');
 
-$today = date('m/d/Y');
-$day_before_week = date('m/d/Y', strtotime('-7 days'));
+$today = $show_end  = date('m/d/Y');
+$day_before_week = $show_start = date('m/d/Y', strtotime('-7 days'));
 
 $en_date = DateTime::createFromFormat('m/d/Y', $today)->format('Y-m-d');
 $st_date = DateTime::createFromFormat('m/d/Y', $day_before_week)->format('Y-m-d');
@@ -27,13 +28,15 @@ if (isset($_POST['activity_lg'])) {
 		$limit = isset($_POST['limit'])  ? $_POST['limit'] : null;
 		$logType = (isset($_POST['log_type']) && $_POST['log_type'] != '-1') ? $_POST['log_type'] : null;
 		$page = (isset($_POST['pages']) && $_POST['pages'] != '-1') ? $_POST['pages'] : null;
+		$start_date = null;
+		$end_date = null;
 
 		if ($_POST['start_date'] != NULL && $_POST['end_date'] != NULL) {
-			$mg_end = $_POST['end_date'];
-			$mg_start = $_POST['start_date'];
+			$user_mg_end = $_POST['end_date'];
+			$user_mg_start = $_POST['start_date'];
 
-			$en_date = DateTime::createFromFormat('m/d/Y', $mg_end)->format('Y-m-d');
-			$st_date = DateTime::createFromFormat('m/d/Y', $mg_start)->format('Y-m-d');
+			$en_date = DateTime::createFromFormat('m/d/Y', $user_mg_end)->format('Y-m-d');
+			$st_date = DateTime::createFromFormat('m/d/Y', $user_mg_start)->format('Y-m-d');
 
 			$start_date = $st_date . ' 00:00:00';
 			$end_date = $en_date . ' 23:59:59';
@@ -47,28 +50,27 @@ if (isset($_POST['activity_lg'])) {
 if (isset($_POST['api_lg'])) {
 	if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
 		$name = (isset($_POST['name']) && $_POST['name'] != '-1') ? $_POST['name'] : null;
-		$limit = isset($_POST['api_limit'])  ? $_POST['api_limit'] : null;
-		$logType = (isset($_POST['api_log_type']) && $_POST['api_log_type'] != '-1') ? $_POST['api_log_type'] : null;
+		$api_limit = isset($_POST['api_limit'])  ? $_POST['api_limit'] : null;
+		$apiLogType = (isset($_POST['api_log_type']) && $_POST['api_log_type'] != '-1') ? $_POST['api_log_type'] : null;
 		$section = (isset($_POST['section']) && $_POST['section'] != '-1') ? $_POST['section'] : null;
-		$start_date = '';
-		$end_date = '';
+		$start_date = null;
+		$end_date = null;
 
 		if ($_POST['start_date_api'] != NULL && $_POST['end_date_api'] != NULL) {
-			$mg_end = $_POST['end_date_api'];
-			$mg_start = $_POST['start_date_api'];
+			$api_mg_end = $_POST['end_date_api'];
+			$api_mg_start = $_POST['start_date_api'];
 
-			$en_date = DateTime::createFromFormat('m/d/Y', $mg_end)->format('Y-m-d');
-			$st_date = DateTime::createFromFormat('m/d/Y', $mg_start)->format('Y-m-d');
+			$en_date = DateTime::createFromFormat('m/d/Y', $api_mg_end)->format('Y-m-d');
+			$st_date = DateTime::createFromFormat('m/d/Y', $api_mg_start)->format('Y-m-d');
 
 			$start_date = $st_date . ' 00:00:00';
 			$end_date = $en_date . ' 23:59:59';
 		}
 
-		$api_log_results = $db->getApiLogsByFilters($start_date,$end_date,$limit,$userName,$logType,$section);
+		$api_log_results = $db->getApiLogsByFilters($start_date,$end_date,$api_limit,$name,$apiLogType,$section);
 	}
 }
 
-// var_dump($api_log_results);
 //Form Refreshing avoid secret key/////
 $secret = md5(uniqid(rand(), true));
 $_SESSION['FORM_SECRET'] = $secret;
@@ -82,11 +84,11 @@ $_SESSION['FORM_SECRET'] = $secret;
 						<div class="widget-content">
 							<div class="tabbable">
 								<ul class="nav nav-tabs">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="user_activity_logs" data-bs-toggle="tab" data-bs-target="#user_activity_logs-tab-pane" type="button" role="tab" aria-controls="user_activity_logs" aria-selected="true">User Activity Logs</button>
+                                    <li class="nav-item" role="<?=($tab=="user_activity_log" ? 'presentation' : '')?>">
+                                        <button class="nav-link <?=($tab=="user_activity_log" ? 'active' : '')?>" id="user_activity_logs" data-bs-toggle="tab" data-bs-target="#user_activity_logs-tab-pane" type="button" role="tab" aria-controls="user_activity_logs" aria-selected="true">User Activity Logs</button>
                                     </li>
-									<li class="nav-item">
-                                        <button class="nav-link" id="api_logs" data-bs-toggle="tab" data-bs-target="#api_logs-tab-pane" type="button" role="tab" aria-controls="api_logs" aria-selected="true">API Logs</button>
+									<li class="nav-item" role="<?=($tab=="api_log" ? 'presentation' : '')?>">
+                                        <button class="nav-link <?=($tab=="api_log" ? 'active' : '')?>" id="api_logs" data-bs-toggle="tab" data-bs-target="#api_logs-tab-pane" type="button" role="tab" aria-controls="api_logs" aria-selected="true">API Logs</button>
                                     </li>
                                 </ul>
 							</div>
@@ -97,7 +99,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 										unset($_SESSION['msg2']);
 									}
 								?>
-								<div div class="tab-pane fade show active" id="user_activity_logs-tab-pane" role="tabpanel" aria-labelledby="user_activity_logs" tabindex="0">
+								<div div class="tab-pane fade <?=($tab=="user_activity_log" ? 'show active' : '')?>" id="user_activity_logs-tab-pane" role="tabpanel" aria-labelledby="user_activity_logs" tabindex="0">
                                     <h1 class="head">User Activity Logs</h1>
 									<div class="border card my-4">
 										<div class="border-bottom card-header p-4">
@@ -108,6 +110,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 										<form id="activity_log1" name="activity_log" method="post" class="row g-3 p-4">
 											<input type="hidden" name="form_secret" id="form_secret" value="<?=$_SESSION['FORM_SECRET']?>" />
 											<input type="hidden" name="activity_lg" id="activity_lg" value="activity_lg" />
+											<input type="hidden" name="tab" id="tab" value="user_activity_log" />
 											<div class="col-md-4">
 												<label class="control-label" for="name">User</label>
 												<select class="span2 form-control" name="name" id="name" value=<?php echo $name ?>>
@@ -116,7 +119,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 													$user_select_qu = "SELECT user_name FROM `admin_users` ";
 													$user_select_re = $db->selectDB($user_select_qu);
 													foreach ($user_select_re['data'] as $row_user) {
-														if ($row_user['user_name'] == $name) {
+														if ($row_user['user_name'] == $userName) {
 															echo "<option value='" . $row_user['user_name'] . "' selected> " . $row_user['user_name'] . " </option>";
 														} else {
 															echo "<option value='" . $row_user['user_name'] . "'> " . $row_user['user_name'] . " </option>";
@@ -130,11 +133,11 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<select class="span2 form-control" name="log_type" id="log_type">
 													<option value="-1"> All </option>
 													<?php
-													foreach($logTypes as $logType) {
-														if ($logType['log_type'] == $name) {
-															echo "<option value='" . $logType['log_type']. "' selected> " . $logType['log_type']. " </option>";
+													foreach($logTypes as $userLogType) {
+														if ($userLogType['log_type'] == $logType) {
+															echo "<option value='" . $userLogType['log_type']. "' selected> " . $userLogType['log_type']. " </option>";
 														} else {
-															echo "<option value='" . $logType['log_type']. "'> " . $logType['log_type']. " </option>";
+															echo "<option value='" . $userLogType['log_type']. "'> " . $userLogType['log_type']. " </option>";
 														}
 													} 
 													?>
@@ -145,11 +148,11 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<select class="span2 form-control" name="pages" id="pages">
 													<option value="-1"> All </option>
 													<?php
-													foreach($pages as $page) {
-														if ($page['page'] == $name) {
-															echo "<option value='" . $page['page']. "' selected> " . $page['page']. " </option>";
+													foreach($pages as $userPage) {
+														if ($userPage['page'] == $page) {
+															echo "<option value='" . $userPage['page']. "' selected> " . $userPage['page']. " </option>";
 														} else {
-															echo "<option value='" . $page['page']. "'> " . $page['page']. " </option>";
+															echo "<option value='" . $userPage['page']. "'> " . $userPage['page']. " </option>";
 														}
 													} 
 													?>
@@ -159,10 +162,10 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<label class="control-label" for="limit">Limit</label>
 												<?php
 												if (!isset($limit)) {
-													$limit = 50;
+													$limit = 10;
 												}
 												?>
-												<?php echo '<input class="span2 form-control limit_log" id="limit" name="limit" value="' . $limit . '" type="text"  title="Set the upper limit of how many log records you want to be displayed in the table below." placeholder="50">' ?>
+												<?php echo '<input class="span2 form-control limit_log" id="limit" name="limit" value="' . $limit . '" type="text"  title="Set the upper limit of how many log records you want to be displayed in the table below." placeholder="10">' ?>
 												<script type="text/javascript">
 													$(document).ready(function() {
 														$('#limit').tooltip();
@@ -171,13 +174,13 @@ $_SESSION['FORM_SECRET'] = $secret;
 											</div>
 											<div class="col-md-4">
 												<label class="control-label" for="radiobtns">Period</label>
-												<input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($mg_start_date)) {
-																																											echo $mg_start;
-																																										} ?>" placeholder="mm/dd/yyyy">
+												<input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($user_mg_start)) {
+																																											echo $user_mg_start;
+																																										} ?>" placeholder="<?=(isset($show_start) ? $show_start : 'mm/dd/yyyy')?>">
 												to
-												<input class="inline_error inline_error_1 span2 form-control" id="end_date" name="end_date" type="text" value="<?php if (isset($mg_end_date)) {
-																																										echo $mg_end;
-																																									} ?>" placeholder="mm/dd/yyyy">
+												<input class="inline_error inline_error_1 span2 form-control" id="end_date" name="end_date" type="text" value="<?php if (isset($user_mg_end)) {
+																																										echo $user_mg_end;
+																																									} ?>" placeholder="<?=(isset($show_end) ? $show_end : 'mm/dd/yyyy')?>">
 
 												<input type="hidden" name="date3" />
 												<!-- /controls -->
@@ -222,7 +225,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 									</table>
 								</div>
 
-								<div div class="tab-pane fade" id="api_logs-tab-pane" role="tabpanel" aria-labelledby="api_logs" tabindex="0">
+								<div div class="tab-pane fade <?=($tab=="api_log" ? 'show active' : '')?>" id="api_logs-tab-pane" role="tabpanel" aria-labelledby="api_logs" tabindex="0">
                                     <h1 class="head">API Logs</h1>
 									<div class="border card my-4">
 										<div class="border-bottom card-header p-4">
@@ -230,21 +233,20 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<span class="fs-5">API Logs Filters</span>
 											</div>
 										</div>
-										<form id="activity_log1" name="activity_log" method="post" class="row g-3 p-4">
+										<form id="api_log" name="api_log" method="post" class="row g-3 p-4">
 											<input type="hidden" name="form_secret" id="form_secret" value="<?=$_SESSION['FORM_SECRET']?>" />
 											<input type="hidden" name="api_lg" id="api_lg" value="api_lg" />
+											<input type="hidden" name="tab" id="tab" value="api_log" />
 											<div class="col-md-4">
-												<label class="control-label" for="name">User</label>
-												<select class="span2 form-control" name="name" id="name" value=<?php echo $userName ?>>
+												<label class="control-label" for="name">Log Name</label>
+												<select class="span2 form-control" name="name" id="name">
 													<option value="-1"> All </option>
 													<?php
-													$user_select_qu = "SELECT id,user_name FROM `admin_users` ";
-													$user_select_re = $db->selectDB($user_select_qu);
-													foreach ($user_select_re['data'] as $row_user) {
-														if ($row_user['id'] == $userName) {
-															echo "<option value='" . $row_user['id'] . "' selected> " . $row_user['user_name'] . " </option>";
+													foreach ($logNames as $logName) {
+														if ($logName['name'] == $name) {
+															echo "<option value='" . $logName['name'] . "' selected> " . $logName['name'] . " </option>";
 														} else {
-															echo "<option value='" . $row_user['id'] . "'> " . $row_user['user_name'] . " </option>";
+															echo "<option value='" . $logName['name'] . "'> " . $logName['name'] . " </option>";
 														}
 													}
 													?>
@@ -256,7 +258,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 													<option value="-1"> All </option>
 													<?php
 													foreach($logTypes as $logType) {
-														if ($logType['log_type'] == $name) {
+														if ($logType['log_type'] == $apiLogType) {
 															echo "<option value='" . $logType['log_type']. "' selected> " . $logType['log_type']. " </option>";
 														} else {
 															echo "<option value='" . $logType['log_type']. "'> " . $logType['log_type']. " </option>";
@@ -270,11 +272,11 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<select class="span2 form-control" name="section" id="section">
 													<option value="-1"> All </option>
 													<?php
-													foreach($sections as $section) {
-														if ($section['section'] == $section) {
-															echo "<option value='" . $section['section']. "' selected> " . $section['section']. " </option>";
+													foreach($sections as $sectionName) {
+														if ($sectionName['section'] == $section) {
+															echo "<option value='" . $sectionName['section']. "' selected> " . $sectionName['section']. " </option>";
 														} else {
-															echo "<option value='" . $section['section']. "'> " . $section['section']. " </option>";
+															echo "<option value='" . $sectionName['section']. "'> " . $sectionName['section']. " </option>";
 														}
 													} 
 													?>
@@ -283,11 +285,11 @@ $_SESSION['FORM_SECRET'] = $secret;
 											<div class="col-md-4">
 												<label class="control-label" for="api_limit">Limit</label>
 												<?php
-												if (!isset($limit)) {
-													$limit = 50;
+												if (!isset($api_limit)) {
+													$api_limit = 10;
 												}
 												?>
-												<?php echo '<input class="span2 form-control limit_log" id="api_limit" name="api_limit" value="' . $limit . '" type="text"  title="Set the upper limit of how many log records you want to be displayed in the table below." placeholder="50">' ?>
+												<?php echo '<input class="span2 form-control limit_log" id="api_limit" name="api_limit" value="' . $api_limit . '" type="text"  title="Set the upper limit of how many log records you want to be displayed in the table below." placeholder="10">' ?>
 												<script type="text/javascript">
 													$(document).ready(function() {
 														$('#api_limit').tooltip();
@@ -296,13 +298,13 @@ $_SESSION['FORM_SECRET'] = $secret;
 											</div>
 											<div class="col-md-4">
 												<label class="control-label" for="radiobtns">Period</label>
-												<input class="inline_error inline_error_1 span2 form-control" id="start_date_api" name="start_date_api" type="text" value="<?php if (isset($mg_start_date)) {
-																																											echo $mg_start;
-																																										} ?>" placeholder="mm/dd/yyyy">
+												<input class="inline_error inline_error_1 span2 form-control" id="start_date_api" name="start_date_api" type="text" value="<?php if (isset($api_mg_start)) {
+																																											echo $api_mg_start;
+																																										} ?>" placeholder="<?=(isset($show_start) ? $show_start : 'mm/dd/yyyy')?>">
 												to
-												<input class="inline_error inline_error_1 span2 form-control" id="end_date_api" name="end_date_api" type="text" value="<?php if (isset($mg_end_date)) {
-																																										echo $mg_end;
-																																									} ?>" placeholder="mm/dd/yyyy">
+												<input class="inline_error inline_error_1 span2 form-control" id="end_date_api" name="end_date_api" type="text" value="<?php if (isset($api_mg_end)) {
+																																										echo $api_mg_end;
+																																									} ?>" placeholder="<?=(isset($show_end) ? $show_end : 'mm/dd/yyyy')?>">
 
 												<input type="hidden" name="date3" />
 												<!-- /controls -->
