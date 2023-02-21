@@ -68,7 +68,7 @@ if (isset($_POST['api_lg'])) {
 	}
 }
 
-var_dump($api_log_results);
+// var_dump($api_log_results);
 //Form Refreshing avoid secret key/////
 $secret = md5(uniqid(rand(), true));
 $_SESSION['FORM_SECRET'] = $secret;

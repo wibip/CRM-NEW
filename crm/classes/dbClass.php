@@ -332,7 +332,7 @@ class db_functions extends dbTasks
 		}
 		$sql.=" ORDER BY id DESC";
         $sql.=" LIMIT ".$limit;
-echo $sql;
+// echo $sql;
 		$data = $this->selectDB($sql);
 
 		return $data['data'];
