@@ -6,9 +6,9 @@ VALUES
 UPDATE admin_access_modules SET `main_module_order`=1 WHERE main_module='Users';
 UPDATE admin_access_modules SET `main_module_order`=2 WHERE main_module='Admin Config';
 UPDATE admin_access_modules SET `main_module_order`=3 WHERE main_module='Operations';
-UPDATE admin_access_modules SET `main_module_order`=4 WHERE main_module='Clients';
+UPDATE admin_access_modules SET `main_module_order`=6 WHERE main_module='Clients';
 UPDATE admin_access_modules SET `main_module_order`=5 WHERE main_module='Properties';
-UPDATE admin_access_modules SET `main_module_order`=6 WHERE main_module='CRM';
+UPDATE admin_access_modules SET `main_module_order`=4 WHERE main_module='CRM';
 UPDATE admin_access_modules SET `main_module_order`=7 WHERE main_module='Configuration';
 UPDATE admin_access_modules SET `main_module_order`=8 WHERE main_module='Logs';
 

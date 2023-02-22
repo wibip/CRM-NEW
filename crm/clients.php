@@ -1332,7 +1332,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 									<div class="tabbable">
 										<ul class="nav nav-tabs">
 											<li class="nav-item" role="presentation">
-												<button class="nav-link active" id="create_order" data-bs-toggle="tab" data-bs-target="#create_order-tab-pane" type="button" role="tab" aria-controls="create_order" aria-selected="true">Create Orders</button>
+												<button class="nav-link active" id="create_order" data-bs-toggle="tab" data-bs-target="#create_order-tab-pane" type="button" role="tab" aria-controls="create_order" aria-selected="true">Create Clients</button>
 											</li>
 										</ul>
 										<div class="tab-content">
@@ -1386,7 +1386,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 												<div class="border card">
 													<div class="border-bottom card-header p-4">
 														<div class="g-3 row">
-															<span class="fs-5">Create Order</span>
+															<span class="fs-5">Create Client</span>
 														</div>
 													</div>
 												<!-- action="controller/User_Controller.php" -->
