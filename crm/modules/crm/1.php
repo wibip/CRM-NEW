@@ -88,20 +88,9 @@ if (!empty($arrayo)) {
 }
 
 ?>
-<div <?php if (isset($tab_crm_create)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="crm_create">
-<h1 class="head"><?=$formTitle?></h1>    
-<div id="crm-create-progress"></div>
-    <div id="msg27"></div>
-    <?php
-
-    if (isset($_SESSION['msg_crm_create'])) {
-        echo $_SESSION['msg_crm_create'];
-        unset($_SESSION['msg_crm_create']);
-
-    }
-
-    ?>
-    <form onkeyup="" onchange="" autocomplete="off" id="crm_form" name="crm_form" method="post" class="form-horizontal" action="">
+<div div class="tab-pane fade show active" id="create_orders-tab-pane" role="tabpanel" aria-labelledby="create_orders" tabindex="0">
+    <h1 class="head"><?=$formTitle?></h1>    
+    <form onkeyup="" onchange="" autocomplete="off" id="crm_form" name="crm_form" method="post" class="row g-3 p-4" action="">
         <?php
         echo '<input type="hidden" name="form_secret5" id="form_secret5" value="' . $_SESSION['FORM_SECRET'] . '" />';
         ?>
