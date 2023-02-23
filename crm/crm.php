@@ -41,10 +41,10 @@
             }
             // var_dump($camp_layout);
             $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $system_package);
-            var_dump($camp_layout);
+            
         }
     }
-
+    var_dump($camp_layout);
     $data_secret = $db->setVal('data_secret', 'ADMIN');    
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;
