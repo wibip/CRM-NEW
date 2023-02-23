@@ -40,9 +40,6 @@
                 $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $operatorsSystemPackage);
                 var_dump($camp_layout);
             }
-            // var_dump($camp_layout);
-            $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $system_package);
-            
         }
     }
     var_dump($camp_layout);
