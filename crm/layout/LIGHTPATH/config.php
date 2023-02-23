@@ -225,6 +225,20 @@ $modules = [
                 "module"=>"pending_mno/1"
             ],
         ]
+    ],,
+    "SADMIN"=>[
+        "crm" => [
+            [
+                "id"=>"crm_manage",
+                "name"=>"Manage",
+                "module"=>"crm_manage/1"
+            ],
+            [
+                "id" => "crm_create",
+                "name" => "Create",
+                "module" => "crm/simple"
+            ]
+        ]
     ],
     "PROVISIONING" => [
         "provision" => [
