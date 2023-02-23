@@ -11,6 +11,29 @@
         cursor: progress;
         display: none;
     }
+    .prov-sub-headers {padding: 0em 0em 0em 0.7em; line-height: unset; font-weight: bold;}
+
+    div.flex {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        width: 100%;
+    }
+
+    .create_le {
+        width: 100%;
+    }
+
+    .create_re {
+        width: 100%;
+        padding-left: 20px;
+    }
+    .form-horizontal .create_l .controls, .form-horizontal .create_le .controls, .form-horizontal .create_r .controls, .form-horizontal .create_re .controls, .fieldStep .controls {
+        margin-left: 0px !important;
+    }
+    .actions.clearfix{
+        width: 100%;
+    }
 </style>
 
 <?php
@@ -89,42 +112,18 @@ if (!empty($arrayo)) {
 
 ?>
 <div div class="tab-pane fade show active" id="create_orders-tab-pane" role="tabpanel" aria-labelledby="create_orders" tabindex="0">
-    <h1 class="head"><?=$formTitle?></h1>    
-    <form onkeyup="" onchange="" autocomplete="off" id="crm_form" name="crm_form" method="post" class="row g-3 p-4" action="">
+    <div class="border card my-4">
+        <div class="border-bottom card-header p-4">
+            <div class="g-3 row">
+                <h4><?=$formTitle?></h4>
+            </div>
+        </div>  
+        <form onkeyup="" onchange="" autocomplete="off" id="crm_form" name="crm_form" method="post" class="row g-3 p-4" action="">
         <?php
         echo '<input type="hidden" name="form_secret5" id="form_secret5" value="' . $_SESSION['FORM_SECRET'] . '" />';
         ?>
-        <style>
-            .prov-sub-headers {padding: 0em 0em 0em 0.7em; line-height: unset; font-weight: bold;}
-
-            div.flex {
-                display: -webkit-box;
-                display: -ms-flexbox;
-                display: flex;
-                width: 100%;
-            }
-
-            .create_le {
-                width: 100%;
-            }
-
-            .create_re {
-                width: 100%;
-                padding-left: 20px;
-            }
-            .form-horizontal .create_l .controls, .form-horizontal .create_le .controls, .form-horizontal .create_r .controls, .form-horizontal .create_re .controls, .fieldStep .controls {
-                margin-left: 0px !important;
-            }
-            .actions.clearfix{
-                width: 100%;
-            }
-        </style>
-        <div>
-            <div class="content clearfix">
                 <fieldset id="customer_info" data-name="Customer Information ">
-                    <div class="flex">
-                        <div class="create_le">
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Business Name</label>
                                     <div class="controls col-lg-5 form-group">
@@ -133,7 +132,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
 
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Contact Phone</label>
                                     <div class="controls col-lg-5 form-group">
@@ -143,109 +142,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
 
-                            <script type="text/javascript">
-                            $(document).ready(function() {
-
-                                $('.mobile3_vali').focus(function() {
-                                    $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                                    $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
-                                });
-
-                                $('.mobile3_vali').keyup(function() {
-                                  var phone_1 = $(this).val().replace(/[^\d]/g, "");
-                                  if (phone_1.length > 9) {
-                                    //$('#customer_form').bootstrapValidator().enableFieldValidators('phone', false);
-                                    var phone2 = phone_1.length;
-                                    if (phone_1.length > 10) {
-                                      var phone2 = phone_1.length;
-                                      $('#crm_form')
-                                                .bootstrapValidator('enableFieldValidators', 'contact_Phone', false);
-                                      var phone_1 = phone_1.slice(0,10);
-
-                                                }
-                                              $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
-                                              //console.log(phone_1+'sss');
-                                              if (phone2 == 10) {
-                                                  $('#crm_form')
-                                                .bootstrapValidator('enableFieldValidators', 'contact_Phone', true);
-                                            }
-
-                                              }
-                                              else{
-                                  $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                                  $('#crm_form')
-                                                .bootstrapValidator('enableFieldValidators', 'contact_Phone', true)
-                                  }
-
-                                $('#crm_form').bootstrapValidator('revalidateField', 'contact_Phone');
-                              });
-
-                                //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
-
-
-                                $(".mobile3_vali").keydown(function(e) {
-
-
-                                    var mac = $('.mobile3_vali').val();
-                                    var len = mac.length + 1;
-                                    //console.log(e.keyCode);
-                                    //console.log('len '+ len);
-
-                                    if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
-                                        mac1 = mac.replace(/[^0-9]/g, '');
-
-
-                                        //var valu = mac1.substr(0, 3) + '-' + mac1.substr(3,3) + '-' + mac1.substr(6,4);
-
-                                        //console.log(valu);
-                                        //$('#phone_num_val').val(valu);
-
-                                    } else {
-
-                                        if (len == 4) {
-                                            $('.mobile3_vali').val(function() {
-                                                return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
-                                                //console.log('mac1 ' + mac);
-
-                                            });
-                                        } else if (len == 8) {
-                                            $('.mobile3_vali').val(function() {
-                                                return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
-                                                //console.log('mac2 ' + mac);
-
-                                            });
-                                        }
-                                    }
-
-
-                                    // Allow: backspace, delete, tab, escape, enter, '-' and .
-                                    if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                                        // Allow: Ctrl+A, Command+A
-                                        (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: Ctrl+C, Command+C
-                                        (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: Ctrl+x, Command+x
-                                        (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: Ctrl+V, Command+V
-                                        (e.keyCode == 86 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: home, end, left, right, down, up
-                                        (e.keyCode >= 35 && e.keyCode <= 40)) {
-                                        // let it happen, don't do anything
-                                        return;
-                                    }
-                                    // Ensure that it is a number and stop the keypress
-                                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                                        e.preventDefault();
-
-                                    }
-                                    $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
-                                });
-
-
-                            });
-                        </script>
-
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Account Number</label>
                                     <div class="controls col-lg-5 form-group">
@@ -253,7 +150,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Street</label>
                                     <div class="controls col-lg-5 form-group">
@@ -261,7 +158,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">State</label>
                                     <div class="controls col-lg-5 form-group">
@@ -289,7 +186,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Service Type</label>
                                     <div class="controls col-lg-5 form-group">
@@ -309,10 +206,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-
-                        </div>
-                        <div class="create_re">
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Contact</label>
                                     <div class="controls col-lg-5 form-group">
@@ -320,7 +214,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Contact Email</label>
                                     <div class="controls col-lg-5 form-group">
@@ -329,7 +223,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
 
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Order Number</label>
                                     <div class="controls col-lg-5 form-group">
@@ -337,7 +231,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">City</label>
                                     <div class="controls col-lg-5 form-group">
@@ -345,7 +239,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Zip</label>
                                     <div class="controls col-lg-5 form-group">
@@ -353,8 +247,6 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                 </fieldset>
                 <style>
                     .radio-controls label{
@@ -364,7 +256,7 @@ if (!empty($arrayo)) {
                 <fieldset id="wifi_info" data-name="Wi-Fi Site Information ">
                     <div class="flex">
                         <div class="create_le">
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Will this customer have more than one site on the WiFi Now service? </label>
                                     <div class="controls col-lg-5 form-group radio-controls" style="display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-align: center;-ms-flex-align: center;align-items: center;">
@@ -374,7 +266,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
 
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Startup Guest SSID</label>
                                     <div class="controls col-lg-5 form-group">
@@ -383,7 +275,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
 
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Street</label>
                                     <div class="controls col-lg-5 form-group">
@@ -391,7 +283,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">State</label>
                                     <div class="controls col-lg-5 form-group">
@@ -419,7 +311,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Access Contact </label>
                                     <div class="controls col-lg-5 form-group">
@@ -428,7 +320,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
 
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Contact Email</label>
                                     <div class="controls col-lg-5 form-group">
@@ -436,7 +328,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Reflect a Unique Property ID (Need to Build this logically or just a sequential number like WFN-000001?)</label>
                                     <div class="controls col-lg-5 form-group">
@@ -446,7 +338,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
 
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Preferred Install Time Slot</label>
                                     <div class="controls col-lg-5 form-group">
@@ -456,7 +348,7 @@ if (!empty($arrayo)) {
                             </div>
                         </div>
                         <div class="create_re">
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns"> Name </label>
                                     <div class="controls col-lg-5 form-group">
@@ -464,7 +356,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Startup Private SSID</label>
                                     <div class="controls col-lg-5 form-group">
@@ -473,7 +365,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
 
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">City</label>
                                     <div class="controls col-lg-5 form-group">
@@ -481,7 +373,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">zip</label>
                                     <div class="controls col-lg-5 form-group">
@@ -489,7 +381,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Contact Phone</label>
                                     <div class="controls col-lg-5 form-group">
@@ -497,109 +389,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-
-                            <script type="text/javascript">
-                            $(document).ready(function() {
-
-                                $('.mobile3_vali').focus(function() {
-                                    $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                                    $('#crm_form').data('bootstrapValidator').updateStatus('wifi_phone', 'NOT_VALIDATED').validateField('wifi_phone');
-                                });
-
-                                $('.mobile3_vali').keyup(function() {
-                                  var phone_1 = $(this).val().replace(/[^\d]/g, "");
-                                  if (phone_1.length > 9) {
-                                    //$('#customer_form').bootstrapValidator().enableFieldValidators('phone', false);
-                                    var phone2 = phone_1.length;
-                                    if (phone_1.length > 10) {
-                                      var phone2 = phone_1.length;
-                                      $('#crm_form')
-                                                .bootstrapValidator('enableFieldValidators', 'wifi_phone', false);
-                                      var phone_1 = phone_1.slice(0,10);
-
-                                                }
-                                              $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
-                                              //console.log(phone_1+'sss');
-                                              if (phone2 == 10) {
-                                                  $('#crm_form')
-                                                .bootstrapValidator('enableFieldValidators', 'wifi_phone', true);
-                                            }
-
-                                              }
-                                              else{
-                                  $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                                  $('#crm_form')
-                                                .bootstrapValidator('enableFieldValidators', 'wifi_phone', true)
-                                  }
-
-                                $('#crm_form').bootstrapValidator('revalidateField', 'wifi_phone');
-                              });
-
-                                //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
-
-
-                                $(".mobile3_vali").keydown(function(e) {
-
-
-                                    var mac = $('.mobile3_vali').val();
-                                    var len = mac.length + 1;
-                                    //console.log(e.keyCode);
-                                    //console.log('len '+ len);
-
-                                    if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
-                                        mac1 = mac.replace(/[^0-9]/g, '');
-
-
-                                        //var valu = mac1.substr(0, 3) + '-' + mac1.substr(3,3) + '-' + mac1.substr(6,4);
-
-                                        //console.log(valu);
-                                        //$('#phone_num_val').val(valu);
-
-                                    } else {
-
-                                        if (len == 4) {
-                                            $('.mobile3_vali').val(function() {
-                                                return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
-                                                //console.log('mac1 ' + mac);
-
-                                            });
-                                        } else if (len == 8) {
-                                            $('.mobile3_vali').val(function() {
-                                                return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
-                                                //console.log('mac2 ' + mac);
-
-                                            });
-                                        }
-                                    }
-
-
-                                    // Allow: backspace, delete, tab, escape, enter, '-' and .
-                                    if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                                        // Allow: Ctrl+A, Command+A
-                                        (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: Ctrl+C, Command+C
-                                        (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: Ctrl+x, Command+x
-                                        (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: Ctrl+V, Command+V
-                                        (e.keyCode == 86 && (e.ctrlKey === true || e.metaKey === true)) ||
-                                        // Allow: home, end, left, right, down, up
-                                        (e.keyCode >= 35 && e.keyCode <= 40)) {
-                                        // let it happen, don't do anything
-                                        return;
-                                    }
-                                    // Ensure that it is a number and stop the keypress
-                                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                                        e.preventDefault();
-
-                                    }
-                                    $('#crm_form').data('bootstrapValidator').updateStatus('wifi_phone', 'NOT_VALIDATED').validateField('wifi_phone');
-                                });
-
-
-                            });
-                        </script>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Property Type</label>
                                     <div class="controls col-lg-5 form-group">
@@ -607,7 +397,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">Requested Install Date</label>
                                     <div class="controls col-lg-5 form-group">
@@ -616,7 +406,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
 
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label for="radiobtns">If After Hours, Please Specify Start Time (Install can be 8+ hours if 4 APs are included)</label>
                                     <div class="controls col-lg-5 form-group">
@@ -632,7 +422,7 @@ if (!empty($arrayo)) {
                 <fieldset id="wifi_product_info" data-name="Product Information ">
                     <div class="flex">
                     <div class="create_le">
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label for="radiobtns">Order Type </label>
                                 <div class="controls col-lg-5 form-group">
@@ -644,7 +434,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Indoor AP Quantity </label>
                                 <div class="controls col-lg-5 form-group">
@@ -652,7 +442,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Is Content Filtering Required? </label>
                                 <div class="controls col-lg-5 form-group">
@@ -663,7 +453,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Circuit Type </label>
                                 <div class="controls col-lg-5 form-group">
@@ -675,7 +465,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>QoS For Guest Network </label>
                                 <div class="controls col-lg-5 form-group">
@@ -694,7 +484,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Does the site have a rack where the Telco equipment is installed? </label>
                                 <div class="controls col-lg-5 form-group">
@@ -705,7 +495,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Are the cabling paths from the Telco room into the site where Access Points will be mounted open and accessible? (drop ceiling, open conduit, etc.) </label>
                                 <div class="controls col-lg-5 form-group">
@@ -716,7 +506,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Please attach a Floor Plan of the property </label>
                                 <div class="controls col-lg-5 form-group">
@@ -724,7 +514,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Please attach Pictures of the areas to be covered with WiFi </label>
                                 <div class="controls col-lg-5 form-group">
@@ -734,7 +524,7 @@ if (!empty($arrayo)) {
                         </div>
                     </div>
                     <div class="create_re">
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Indoor Square Footage </label>
                                 <div class="controls col-lg-5 form-group">
@@ -743,7 +533,7 @@ if (!empty($arrayo)) {
                             </div>
                         </div>
 
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Outdoor AP Required?</label>
                                 <div class="controls col-lg-5 form-group">
@@ -754,7 +544,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Maximum Guest Capacity </label>
                                 <div class="controls col-lg-5 form-group">
@@ -762,7 +552,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Circuit Size </label>
                                 <div class="controls col-lg-5 form-group">
@@ -786,7 +576,7 @@ if (!empty($arrayo)) {
                                 </select>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>Does the rack have available space for the new equipment? (Approximately 5 Rack Units) </label>
                                 <div class="controls col-lg-5 form-group">
@@ -797,7 +587,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
                                 <div class="controls col-lg-5 form-group">
@@ -809,7 +599,7 @@ if (!empty($arrayo)) {
                             </div>
                         </div>
                         <!-- Please attach a Picture of the Telco Room  -->
-                        <div class="control-group">
+                        <div class="col-md-6">
                             <div class="controls col-lg-5 form-group">
                                 <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
                                 <div class="controls col-lg-5 form-group">
@@ -827,7 +617,7 @@ if (!empty($arrayo)) {
                 <fieldset id="wifi_qualify_info" data-name="Qualifying Questions ">
                     <div class="flex">
                         <div class="create_le">
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Ceiling Heights </label>
                                     <div class="controls col-lg-5 form-group">
@@ -836,7 +626,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                             <!-- Interior Wall Type  -->
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Interior Wall Type </label>
                                     <div class="controls col-lg-5 form-group">
@@ -844,7 +634,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Do you have other networks that need to communicate through this network? (Examples: proprietary IT systems or office network, security system, cameras with a DVR/Video Monitoring System, PMI or POP systems, inventory systems, IoT devices, etc.) </label>
                                     <div class="controls col-lg-5 form-group">
@@ -856,7 +646,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                             <!-- Is this site a residential property?  -->
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Is this site a residential property?</label>
                                     <div class="controls col-lg-5 form-group">
@@ -867,7 +657,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Does this site have atmospheric conditioning to control temperature and humidity?</label>
                                     <div class="controls col-lg-5 form-group">
@@ -880,7 +670,7 @@ if (!empty($arrayo)) {
                             </div>
                         </div>
                         <div class="create_re">
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Ceiling Type </label>
                                     <div class="controls col-lg-5 form-group">
@@ -888,7 +678,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Exterior Wall Type </label>
                                     <div class="controls col-lg-5 form-group">
@@ -897,7 +687,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                             <!-- Do you require a fully customizable UI?  -->
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Do you require a fully customizable UI?</label>
                                     <div class="controls col-lg-5 form-group">
@@ -909,7 +699,7 @@ if (!empty($arrayo)) {
                                 </div>
                             </div>
                             <!-- Is this site a warehouse?  -->
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Is this site a warehouse?</label>
                                     <div class="controls col-lg-5 form-group">
@@ -920,7 +710,7 @@ if (!empty($arrayo)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="col-md-6">
                                 <div class="controls col-lg-5 form-group">
                                     <label>Are there IoT devices that need to be controlled or monitored by the system? </label>
                                     <div class="controls col-lg-5 form-group">
@@ -935,30 +725,29 @@ if (!empty($arrayo)) {
                     </div>
                 </fieldset>
 
-
-                <div class="actions clearfix">
-                    <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
-                        <?php if($activatePopup == true && $get_status == "Completed") {  ?>
-                            <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
-                            <button onmouseover="" class="btn btn-primary pop-up-open">Add Location</button>
-                        <?php } ?>
-                        <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-disabled="true"><button href="javascript:void(0)" data-type="previous" class="btn btn-primary" role="menuitem">Previous</button></li>
-                        <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-hidden="false" aria-disabled="true"><button tabindex="119" href="javascript:void(0)" data-type="next" class="btn btn-primary" role="menuitem">Next</button></li>
-                        <li class="finishStepone" style="display: none; margin-left: 5px;" aria-hidden="true"><a tabindex="120" href="#steponesubmit" class="btn btn-primary" name="location_submit_one" id="location_submit_one" role="menuitem">Update Account Info</a></li>
-                        <li class="finishSteptwo" style="display: none; margin-left: 5px;" aria-hidden="true"><a href="#steptwosubmit" class="btn btn-primary" name="location_submit_two" id="location_submit_two" role="menuitem">Update Controller Info</a></li>
-                        <?php if (!isset($_GET['edit']) && !isset($_GET['property_id'])){ ?>
-                        <li class="finishParent" style="display: none; margin-left: 5px;" aria-hidden="true">
-                            <!-- <a href="#finish" class="btn btn-primary" name="create_location_submit" id="create_location_submit" role="menuitem" >Finish</a></li> -->
-                            <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
-                        </li>
-                        <?php } ?>
-                        <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
+                    <div class="actions clearfix">
+                        <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
+                            <?php if($activatePopup == true && $get_status == "Completed") {  ?>
+                                <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
+                                <button onmouseover="" class="btn btn-primary pop-up-open">Add Location</button>
+                            <?php } ?>
+                            <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-disabled="true"><button href="javascript:void(0)" data-type="previous" class="btn btn-primary" role="menuitem">Previous</button></li>
+                            <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-hidden="false" aria-disabled="true"><button tabindex="119" href="javascript:void(0)" data-type="next" class="btn btn-primary" role="menuitem">Next</button></li>
+                            <li class="finishStepone" style="display: none; margin-left: 5px;" aria-hidden="true"><a tabindex="120" href="#steponesubmit" class="btn btn-primary" name="location_submit_one" id="location_submit_one" role="menuitem">Update Account Info</a></li>
+                            <li class="finishSteptwo" style="display: none; margin-left: 5px;" aria-hidden="true"><a href="#steptwosubmit" class="btn btn-primary" name="location_submit_two" id="location_submit_two" role="menuitem">Update Controller Info</a></li>
+                            <?php if (!isset($_GET['edit']) && !isset($_GET['property_id'])){ ?>
+                            <li class="finishParent" style="display: none; margin-left: 5px;" aria-hidden="true">
+                                <!-- <a href="#finish" class="btn btn-primary" name="create_location_submit" id="create_location_submit" role="menuitem" >Finish</a></li> -->
+                                <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
+                            </li>
+                            <?php } ?>
+                            <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
                         </ul>
                     </div>
-                    </div>
-                    </div>
-                </form>
-            </div>
+
+        </form>
+    </div>
+</div>
             <script type="text/javascript">
                 function stepList_crm(index, name) {
                     var clz = '';
@@ -1092,6 +881,195 @@ if (!empty($arrayo)) {
 
 
                 $(document).ready(function(e) {
+                    $('.mobile3_vali').focus(function() {
+                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+                        $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
+                    });
+
+                    $('.mobile3_vali').keyup(function() {
+                        var phone_1 = $(this).val().replace(/[^\d]/g, "");
+                        if (phone_1.length > 9) {
+                        //$('#customer_form').bootstrapValidator().enableFieldValidators('phone', false);
+                        var phone2 = phone_1.length;
+                        if (phone_1.length > 10) {
+                            var phone2 = phone_1.length;
+                            $('#crm_form')
+                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', false);
+                            var phone_1 = phone_1.slice(0,10);
+
+                                    }
+                                    $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
+                                    //console.log(phone_1+'sss');
+                                    if (phone2 == 10) {
+                                        $('#crm_form')
+                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', true);
+                                }
+
+                                    }
+                                    else{
+                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+                        $('#crm_form')
+                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', true)
+                        }
+
+                    $('#crm_form').bootstrapValidator('revalidateField', 'contact_Phone');
+                    });
+
+                    //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
+
+
+                    $(".mobile3_vali").keydown(function(e) {
+
+
+                        var mac = $('.mobile3_vali').val();
+                        var len = mac.length + 1;
+                        //console.log(e.keyCode);
+                        //console.log('len '+ len);
+
+                        if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
+                            mac1 = mac.replace(/[^0-9]/g, '');
+
+
+                            //var valu = mac1.substr(0, 3) + '-' + mac1.substr(3,3) + '-' + mac1.substr(6,4);
+
+                            //console.log(valu);
+                            //$('#phone_num_val').val(valu);
+
+                        } else {
+
+                            if (len == 4) {
+                                $('.mobile3_vali').val(function() {
+                                    return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
+                                    //console.log('mac1 ' + mac);
+
+                                });
+                            } else if (len == 8) {
+                                $('.mobile3_vali').val(function() {
+                                    return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
+                                    //console.log('mac2 ' + mac);
+
+                                });
+                            }
+                        }
+
+
+                        // Allow: backspace, delete, tab, escape, enter, '-' and .
+                        if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
+                            // Allow: Ctrl+A, Command+A
+                            (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                            // Allow: Ctrl+C, Command+C
+                            (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                            // Allow: Ctrl+x, Command+x
+                            (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                            // Allow: Ctrl+V, Command+V
+                            (e.keyCode == 86 && (e.ctrlKey === true || e.metaKey === true)) ||
+                            // Allow: home, end, left, right, down, up
+                            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                            // let it happen, don't do anything
+                            return;
+                        }
+                        // Ensure that it is a number and stop the keypress
+                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                            e.preventDefault();
+
+                        }
+                        $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
+                    });
+
+                    $('.mobile3_vali').focus(function() {
+                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+                        $('#crm_form').data('bootstrapValidator').updateStatus('wifi_phone', 'NOT_VALIDATED').validateField('wifi_phone');
+                    });
+
+                    $('.mobile3_vali').keyup(function() {
+                        var phone_1 = $(this).val().replace(/[^\d]/g, "");
+                        if (phone_1.length > 9) {
+                        //$('#customer_form').bootstrapValidator().enableFieldValidators('phone', false);
+                        var phone2 = phone_1.length;
+                        if (phone_1.length > 10) {
+                            var phone2 = phone_1.length;
+                            $('#crm_form')
+                                    .bootstrapValidator('enableFieldValidators', 'wifi_phone', false);
+                            var phone_1 = phone_1.slice(0,10);
+
+                                    }
+                                    $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
+                                    //console.log(phone_1+'sss');
+                                    if (phone2 == 10) {
+                                        $('#crm_form')
+                                    .bootstrapValidator('enableFieldValidators', 'wifi_phone', true);
+                                }
+
+                                    }
+                                    else{
+                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+                        $('#crm_form')
+                                    .bootstrapValidator('enableFieldValidators', 'wifi_phone', true)
+                        }
+
+                    $('#crm_form').bootstrapValidator('revalidateField', 'wifi_phone');
+                    });
+
+                    //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
+
+
+                    $(".mobile3_vali").keydown(function(e) {
+
+
+                        var mac = $('.mobile3_vali').val();
+                        var len = mac.length + 1;
+                        //console.log(e.keyCode);
+                        //console.log('len '+ len);
+
+                        if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
+                            mac1 = mac.replace(/[^0-9]/g, '');
+
+
+                            //var valu = mac1.substr(0, 3) + '-' + mac1.substr(3,3) + '-' + mac1.substr(6,4);
+
+                            //console.log(valu);
+                            //$('#phone_num_val').val(valu);
+
+                        } else {
+
+                            if (len == 4) {
+                                $('.mobile3_vali').val(function() {
+                                    return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
+                                    //console.log('mac1 ' + mac);
+
+                                });
+                            } else if (len == 8) {
+                                $('.mobile3_vali').val(function() {
+                                    return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
+                                    //console.log('mac2 ' + mac);
+
+                                });
+                            }
+                        }
+
+
+                        // Allow: backspace, delete, tab, escape, enter, '-' and .
+                        if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
+                            // Allow: Ctrl+A, Command+A
+                            (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                            // Allow: Ctrl+C, Command+C
+                            (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                            // Allow: Ctrl+x, Command+x
+                            (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                            // Allow: Ctrl+V, Command+V
+                            (e.keyCode == 86 && (e.ctrlKey === true || e.metaKey === true)) ||
+                            // Allow: home, end, left, right, down, up
+                            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                            // let it happen, don't do anything
+                            return;
+                        }
+                        // Ensure that it is a number and stop the keypress
+                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                            e.preventDefault();
+
+                        }
+                        $('#crm_form').data('bootstrapValidator').updateStatus('wifi_phone', 'NOT_VALIDATED').validateField('wifi_phone');
+                    });
                     //create_crm_submit
                     $('#create_crm_submit').click(function(){
                         $("#overlay").css("display","block");

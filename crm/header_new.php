@@ -611,15 +611,15 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row['module_name']; // Retuns base access
 	}
 }
-echo '------------<br/>';
-var_dump($x);
-echo '------------<br/>';
+// echo '------------<br/>';
+// var_dump($x);
+// echo '------------<br/>';
 
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
-		echo $access_role.'---';
-		echo $valueX;
-		echo '------------<br/>';
+		// echo $access_role.'---';
+		// echo $valueX;
+		// echo '------------<br/>';
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
 			try {
 				unset($x[$keyX]);
@@ -635,8 +635,8 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-echo '------------<br/>';
-var_dump($x);
+// echo '------------<br/>';
+// var_dump($x);
 
 if($_SESSION['SADMIN'] == true) {
 	array_push($x,"operation_list");
@@ -654,10 +654,10 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-echo '------------<br/>';
-var_dump($x);
-echo "<<<<<<  Step 06 >>>>>";
-
+// echo '------------<br/>';
+// var_dump($x);
+// echo "<<<<<<  Step 06 >>>>>";
+// die;
 $allowed_pages = $x;
 
 $module_ids = join('", "', $x);
