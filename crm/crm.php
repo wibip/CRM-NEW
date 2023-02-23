@@ -38,6 +38,7 @@
             if($operatorsPackage['rowCount'] > 0){
                 $operatorsSystemPackage = $operatorsPackage['data'][0]['f'];
                 $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $operatorsSystemPackage);
+                var_dump($camp_layout);
             }
             // var_dump($camp_layout);
             $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $system_package);
