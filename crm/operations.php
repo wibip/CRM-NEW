@@ -1615,10 +1615,10 @@ if (isset($_POST['submit_mno_form'])) { //6
 									<ul class="nav nav-tabs">
                                     <?php
                                     
-                                     if($user_type == 'ADMIN'){ ?>
+                                     if($user_type == 'ADMIN' || $user_type == 'SADMIN'){ ?>
                                         <li <?php if(isset($tab8)){?>class="active" <?php }?>><a href="#active_operations" data-toggle="tab">Manage Operations</a></li>
                                     <?php }
-										if($user_type == 'ADMIN'){
+										if($user_type == 'ADMIN' || $user_type == 'SADMIN'){
 									?>
 										<li <?php if(isset($tab6)){?>class="active" <?php }?>><a href="#operation_account" data-toggle="tab"><?php if($mno_edit==1){echo"Edit Operations Account";}else{echo"Create Operations Account";};?></a></li>
 									<?php }

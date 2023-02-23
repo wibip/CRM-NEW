@@ -461,4 +461,16 @@ class CommonFunctions{
         $result =  $this->db->selectDB($sqlProperties);
         return $result;
     }
+
+    public function getAllOperators(){
+        $sqlOperators = "SELECT full_name,user_distributor FROM crm_portal.admin_users WHERE user_type='MNO' AND is_enable=1";
+        $result =  $this->db->selectDB($sqlOperators);
+        return $result;
+    }
+
+    public function getSystemPackage($mno_id){
+        $sqlSysPackage = "SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$mno_id'";
+        $resultSysPackage =  $this->db->selectDB($sqlSysPackage);
+        return $resultSysPackage;
+    }
 }

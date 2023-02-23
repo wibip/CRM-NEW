@@ -1,139 +1,49 @@
 <?php 
-include 'header_new.php';
+    include 'header_new.php';
 
-/*classes & libraries*/
-$db = new db_functions();
-$package_functions = new package_functions();
-$CommonFunctions = new CommonFunctions();
-/*Encryption script*/
-include_once 'classes/cryptojs-aes.php';
-require_once dirname(__FILE__) . '/models/clientUserModel.php';
-// echo 'Username= ';
-require_once 'src/CRM/functions.php';
-$client_model = new clientUserModel();
-$client_data = $client_model->getClient($_SESSION['user_id'], 'user_id');
-$api_id = $client_data[0]['api_profile'];
-$api_details = $CommonFunctions->getApiDetails($api_id);
+    /*classes & libraries*/
+    $db = new db_functions();
+    $package_functions = new package_functions();
+    $CommonFunctions = new CommonFunctions();
+    /*Encryption script*/
+    include_once 'classes/cryptojs-aes.php';
+    require_once dirname(__FILE__) . '/models/clientUserModel.php';
+    // echo 'Username= ';
+    require_once 'src/CRM/functions.php';
+    $client_model = new clientUserModel();
+    $client_data = $client_model->getClient($_SESSION['user_id'], 'user_id');
+    $api_id = $client_data[0]['api_profile'];
+    $api_details = $CommonFunctions->getApiDetails($api_id);
 
-$page = "CRM";
-$apiVersion = 0;
-$apiUrl = '';
-$apiUsername = '';
-$apiPassword = '';
+    $page = "CRM";
+    $apiVersion = 0;
+    $apiUrl = '';
+    $apiUsername = '';
+    $apiPassword = '';
 
-if(!empty($api_details['data'])) {
-    $apiVersion = $api_details['data'][0]['controller_name'];
-    $apiUrl = $api_details['data'][0]['api_url'];
-    $apiUsername = $api_details['data'][0]['api_username'];
-    $apiPassword = $api_details['data'][0]['api_password'];
-}
-?>
-
-<style>
-    #crm-create-progress{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgb(102 102 102);
-        opacity: 0.75;
-        z-index: 100;
-        cursor: progress;
-        display: none;
-    }
-    .pop-up{
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        display: none;
-        z-index: 122;
-    }
-    .pop-up.show{
-        display: block;
-    }
-    .pop-up-bg{
-        background-color: rgba(76, 78, 100, 0.5);
-        position: fixed;
-        width: 100%;
-        top: 0;
-        bottom: 0;
-        z-index: -1;
-    }
-    .pop-up-main{
-        height: 100%;
-    overflow: auto;
-    text-align: center;
-    width: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    }
-    .pop-up-content{
-        background: #fff;
-    margin: auto;
-    box-shadow: rgb(76 78 100 / 20%) 0px 6px 6px -3px;
-    border-radius: 10px;
-    padding: 40px;
-    max-width: 800px;
-    width: 100%;
-    box-sizing: border-box;
-    }
-    .pop-up-content .form-double{
-        display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-flow: row wrap;
-            flex-flow: row wrap;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
-    }
-    .pop-up-content .form-double .control-group{
-        width: 50%;
-        text-align: left;
-    }
-    .pop-up-content .form-double .control-group input{
-        width: 90% !important;
-    }
-    .pop-up-content form{
-        margin-bottom: 0;
-    }
-    .pop-up-content form .actions{
-        text-align: right;
-    margin-top: 20px;
-    }
-    .pop-up-content form .actions button{
-        margin-left: 5px;
-    }.control-group.mask .controls div{
-        position: relative;
-        overflow: hidden;
-    }
-    .control-group.mask span{
-        position: absolute;
-        left: 0;
-        height: 100%;
-        background: #e4e4e4;
-        border-radius: 10px;
-        padding: 8px;
-        box-sizing: border-box;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-    }
-    .control-group.mask input{
-        /* padding-left: 50px; */
+    if(!empty($api_details['data'])) {
+        $apiVersion = $api_details['data'][0]['controller_name'];
+        $apiUrl = $api_details['data'][0]['api_url'];
+        $apiUsername = $api_details['data'][0]['api_username'];
+        $apiPassword = $api_details['data'][0]['api_password'];
     }
 
-</style>
+    if($user_type == 'ADMIN' || $user_type == 'SADMIN') {
+        $operators = $CommonFunctions->getAllOperators();
+        if(isset($_POST['load_operator'])) {
+            $operatorsSystemPackage = null;
+            $selected_operator = $_POST['selected_operator'];
+            $operatorsPackage = $CommonFunctions->getSystemPackage($selected_operator);
+            var_dump($operatorsPackage);
+            if($operatorsPackage['rowCount'] > 0){
+                $operatorsSystemPackage = $operatorsPackage['data'][0]['f'];
+                $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $operatorsSystemPackage);
+            }
+            var_dump($camp_layout);
+            // $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $system_package);
+        }
+    }
 
-    <?php
     $data_secret = $db->setVal('data_secret', 'ADMIN');    
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;
@@ -677,8 +587,111 @@ if(!empty($api_details['data'])) {
     $secret = md5(uniqid(rand(), true));
     $_SESSION['FORM_SECRET'] = $secret;
 
-    // var_dump($modules);
-    ?>
+
+?>
+<style>
+    #crm-create-progress{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(102 102 102);
+        opacity: 0.75;
+        z-index: 100;
+        cursor: progress;
+        display: none;
+    }
+    .pop-up{
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: none;
+        z-index: 122;
+    }
+    .pop-up.show{
+        display: block;
+    }
+    .pop-up-bg{
+        background-color: rgba(76, 78, 100, 0.5);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+    }
+    .pop-up-main{
+        height: 100%;
+    overflow: auto;
+    text-align: center;
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    }
+    .pop-up-content{
+        background: #fff;
+    margin: auto;
+    box-shadow: rgb(76 78 100 / 20%) 0px 6px 6px -3px;
+    border-radius: 10px;
+    padding: 40px;
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+    }
+    .pop-up-content .form-double{
+        display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    }
+    .pop-up-content .form-double .control-group{
+        width: 50%;
+        text-align: left;
+    }
+    .pop-up-content .form-double .control-group input{
+        width: 90% !important;
+    }
+    .pop-up-content form{
+        margin-bottom: 0;
+    }
+    .pop-up-content form .actions{
+        text-align: right;
+    margin-top: 20px;
+    }
+    .pop-up-content form .actions button{
+        margin-left: 5px;
+    }.control-group.mask .controls div{
+        position: relative;
+        overflow: hidden;
+    }
+    .control-group.mask span{
+        position: absolute;
+        left: 0;
+        height: 100%;
+        background: #e4e4e4;
+        border-radius: 10px;
+        padding: 8px;
+        box-sizing: border-box;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .control-group.mask input{
+        /* padding-left: 50px; */
+    }
+
+</style>
     <div class="main">
         <div class="main-inner">
             <div class="container">
@@ -703,6 +716,36 @@ if(!empty($api_details['data'])) {
                                             echo $_SESSION['msg5'];
                                             unset($_SESSION['msg5']);
                                         }
+
+                                    if($user_type == 'ADMIN' || $user_type == 'SADMIN') {
+                                    ?>
+                                    <div class="border card my-4">
+                                        <div class="border-bottom card-header p-4">
+                                            <div class="g-3 row">
+                                                <h4>Select Operator</h4>
+                                            </div>
+                                        </div>
+                                        <form class="row g-3 p-4" method="post">
+                                            <div class="col-md-6">
+                                                <label for="inputState" class="form-label">Operator</label>
+                                                <select id="selected_operator" name="selected_operator" class="form-select">
+                                                    <option value='0'>None</option>
+                                                    <?php 
+                                                        foreach($operators['data'] AS $operator){
+                                                    ?>
+                                                        <option value='<?=$operator['user_distributor']?>' <?=$selected_operator == $operator['user_distributor'] ? 'selected' : '' ?>><?=$operator['full_name']?></option>
+                                                    <?php    
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <button type="submit" id="load_operator" name="load_operator" class="btn btn-primary">Load</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <?php
+                                    }
                                         //if($user_type == 'MNO' || $user_type == 'MVNA' || $user_type == 'MVNE' || $user_type == 'SUPPORT' || $user_type == 'SALES'){
                                         foreach ($modules[$user_type][$script] as $value) {
                                             //echo 'modules/'.$value['module'].'.php';
