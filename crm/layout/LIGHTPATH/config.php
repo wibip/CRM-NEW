@@ -225,7 +225,7 @@ $modules = [
                 "module"=>"pending_mno/1"
             ],
         ]
-    ],,
+    ],
     "SADMIN"=>[
         "crm" => [
             [
