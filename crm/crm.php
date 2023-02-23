@@ -41,6 +41,7 @@
             }
             // var_dump($camp_layout);
             $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $system_package);
+            var_dump($camp_layout);
         }
     }
 
