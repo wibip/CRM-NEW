@@ -34,15 +34,13 @@
             $operatorsSystemPackage = null;
             $selected_operator = $_POST['selected_operator'];
             $operatorsPackage = $CommonFunctions->getSystemPackage($selected_operator);
-            var_dump($operatorsPackage);
             if($operatorsPackage['rowCount'] > 0){
                 $operatorsSystemPackage = $operatorsPackage['data'][0]['f'];
                 $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $operatorsSystemPackage);
-                var_dump($camp_layout);
             }
         }
     }
-    var_dump($camp_layout);
+   
     $data_secret = $db->setVal('data_secret', 'ADMIN');    
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;

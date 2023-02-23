@@ -489,7 +489,7 @@ if ($user_type == "SADMIN" || $user_type == "SMAN" || $user_type == "MNO" || $us
 
 // 	$advanced_features = $db_class1->getValueAsf("SELECT `advanced_features` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 // }
-var_dump($system_package);
+// var_dump($system_package);
 if ($system_package == "N/A" || $system_package == "") {
 	$package_features = "all";
 	$system_package = "N/A";
