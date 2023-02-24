@@ -310,302 +310,193 @@ if (!empty($arrayo)) {
                     <input type="text" name="prod_in_ap_quant" id="prod_in_ap_quant" class="span4 form-control" value="<?php echo $edit===true?$get_prod_in_ap_quant:''?>">
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Is Content Filtering Required? </label>
-                        <div class="controls col-lg-5 form-group">
-                            <select name="prod_content_filter" id="prod_content_filter" class="span4 form-control">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
+                    <label>Is Content Filtering Required? </label>
+                    <select name="prod_content_filter" id="prod_content_filter" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Circuit Type </label>
-                        <div class="controls col-lg-5 form-group">
-                            <select name="prod_circuit_type" id="prod_circuit_type" class="span4 form-control">
-                                <option value="DIA">DIA</option>
-                                <option value="FiOS">FiOS</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                    </div>
+                    <label>Circuit Type </label>
+                    <select name="prod_circuit_type" id="prod_circuit_type" class="span4 form-control">
+                        <option value="DIA">DIA</option>
+                        <option value="FiOS">FiOS</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>QoS For Guest Network </label>
-                        <div class="controls col-lg-5 form-group">
-                            <select name="prod_guest" id="prod_guest" class="span4 form-control">
-                                <option value="">Select product</option>
-
-                                <?php
-                                foreach ($arrayfinal as $value) {
-                                    $product_id = $value['product_id'];
-                                    $product_code = $value['product_code'];
-                                        if ($value['network_type'] == 'GUEST') {
-                                        echo '<option value="'.$product_id.'">'.$product_code.'</option>]';
-                                        }
-                                    } ?>
-                            </select>
-                        </div>
-                    </div>
+                    <label>QoS For Guest Network </label>
+                    <select name="prod_guest" id="prod_guest" class="span4 form-control">
+                        <option value="">Select product</option>
+                        <?php
+                        foreach ($arrayfinal as $value) {
+                            $product_id = $value['product_id'];
+                            $product_code = $value['product_code'];
+                                if ($value['network_type'] == 'GUEST') {
+                                echo '<option value="'.$product_id.'">'.$product_code.'</option>]';
+                                }
+                            } ?>
+                    </select>
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Does the site have a rack where the Telco equipment is installed? </label>
-                        <div class="controls col-lg-5 form-group">
-                            <select name="prod_telco" id="prod_telco" class="span4 form-control">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
+                    <label>Does the site have a rack where the Telco equipment is installed? </label>
+                    <select name="prod_telco" id="prod_telco" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Are the cabling paths from the Telco room into the site where Access Points will be mounted open and accessible? (drop ceiling, open conduit, etc.) </label>
-                        <div class="controls col-lg-5 form-group">
-                            <select name="prod_cabling" id="prod_cabling" class="span4 form-control">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
+                    <label>Are the cabling paths from the Telco room into the site where Access Points will be mounted open and accessible? (drop ceiling, open conduit, etc.) </label>
+                    <select name="prod_cabling" id="prod_cabling" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Please attach a Floor Plan of the property </label>
-                        <div class="controls col-lg-5 form-group">
-                            <input type="file" name="prod_flow_plan" id="prod_flow_plan" value="<?php echo $edit===true?$get_prod_flow_plan:''?>">
-                        </div>
-                    </div>
+                    <label>Please attach a Floor Plan of the property </label>
+                    <input type="file" name="prod_flow_plan" id="prod_flow_plan" class="span4 form-control" value="<?php echo $edit===true?$get_prod_flow_plan:''?>">
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Please attach Pictures of the areas to be covered with WiFi </label>
-                        <div class="controls col-lg-5 form-group">
-                            <input type="file" name="prod_cover_area" id="prod_cover_area" value="<?php echo $edit===true?$get_prod_cover_area:''?>">
-                        </div>
-                    </div>
+                    <label>Please attach Pictures of the areas to be covered with WiFi </label>
+                    <input type="file" name="prod_cover_area" id="prod_cover_area" class="span4 form-control" value="<?php echo $edit===true?$get_prod_cover_area:''?>">
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Indoor Square Footage </label>
-                        <div class="controls col-lg-5 form-group">
-                            <input type="text" name="prod_square_footage" id="prod_square_footage" value="<?php echo $edit===true?$get_prod_square_footage:''?>">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Outdoor AP Required?</label>
-                        <div class="controls col-lg-5 form-group">
-                            <select name="prod_outdoor" id="prod_outdoor" class="span4 form-control">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
+                    <label>Indoor Square Footage </label>
+                    <input type="text" name="prod_square_footage" id="prod_square_footage" class="span4 form-control" value="<?php echo $edit===true?$get_prod_square_footage:''?>">
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Maximum Guest Capacity </label>
-                        <div class="controls col-lg-5 form-group">
-                            <input type="text" name="prod_guest_capacity" id="prod_guest_capacity" value="<?php echo $edit===true?$get_prod_guest_capacity:''?>">
-                        </div>
-                    </div>
+                    <label>Outdoor AP Required?</label>
+                    <select name="prod_outdoor" id="prod_outdoor" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Circuit Size </label>
-                        <div class="controls col-lg-5 form-group">
-                            <input type="text" name="prod_circuit_size" id="prod_circuit_size" value="<?php echo $edit===true?$get_prod_circuit_size:''?>">
-                        </div>
-                    </div>
+                    <label>Maximum Guest Capacity </label>
+                    <input type="text" name="prod_guest_capacity" id="prod_guest_capacity" class="span4 form-control" value="<?php echo $edit===true?$get_prod_guest_capacity:''?>">
                 </div>
-                <div class="controls col-lg-5 form-group">
+                <div class="col-md-6">
+                    <label>Circuit Size </label>
+                    <input type="text" name="prod_circuit_size" id="prod_circuit_size" class="span4 form-control" value="<?php echo $edit===true?$get_prod_circuit_size:''?>">
+                </div>
+                <div class="col-md-6">
                     <label>QoS for Private Network </label>
-                    <div class="controls col-lg-5 form-group">
-                        <select name="prod_private" id="prod_private" class="span4 form-control">
-                            <option value="">Select product</option>
-                            <?php
-                                foreach ($arrayfinal as $value) {
-                                    $product_id = $value['product_id'];
-                                    $product_code = $value['product_code'];
-                                        if ($value['network_type'] == 'PRIVATE') {
-                                        echo '<option value="'.$product_id.'">'.$product_code.'</option>]';
-                                        }
-                                    } ?>
-                        </select>
-                    </div>
+                    <select name="prod_private" id="prod_private" class="span4 form-control">
+                        <option value="">Select product</option>
+                        <?php
+                            foreach ($arrayfinal as $value) {
+                                $product_id = $value['product_id'];
+                                $product_code = $value['product_code'];
+                                    if ($value['network_type'] == 'PRIVATE') {
+                                    echo '<option value="'.$product_id.'">'.$product_code.'</option>]';
+                                    }
+                                } ?>
+                    </select>
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>Does the rack have available space for the new equipment? (Approximately 5 Rack Units) </label>
-                        <div class="controls col-lg-5 form-group">
-                            <select name="prod_rack_space" id="prod_rack_space" class="span4 form-control">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
+                    <label>Does the rack have available space for the new equipment? (Approximately 5 Rack Units) </label>
+                    <select name="prod_rack_space" id="prod_rack_space" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
-                        <div class="controls col-lg-5 form-group">
-                            <select name="prod_wiring_paths" id="prod_wiring_paths" class="span4 form-control">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
+                    <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
+                    <select name="prod_wiring_paths" id="prod_wiring_paths" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
-                <!-- Please attach a Picture of the Telco Room  -->
                 <div class="col-md-6">
-                    <div class="controls col-lg-5 form-group">
-                        <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
-                        <div class="controls col-lg-5 form-group">
-                            <input type="file" name="prod_telco_room" id="prod_telco_room" value="<?php echo $edit===true?$get_prod_telco_room:''?>">
-                        </div>
-                    </div>
+                    <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
+                    <input type="file" name="prod_telco_room" id="prod_telco_room" class="span4 form-control" value="<?php echo $edit===true?$get_prod_telco_room:''?>">
+                </div>
+            </fieldset>
+                <!-- Qualifying Questions   -->
+            <fieldset id="wifi_qualify_info" data-name="Qualifying Questions" class="row">
+                <div class="col-md-6">
+                    <label>Ceiling Heights </label>
+                    <input type="text" name="qq_ceiling_hight" id="qq_ceiling_hight" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ceiling_hight:''?>">
+                </div>
+                <!-- Interior Wall Type  -->
+                <div class="col-md-6">
+                    <label>Interior Wall Type </label>
+                    <input type="text" name="qq_int_wall" id="qq_int_wall" class="span4 form-control" value="<?php echo $edit===true?$get_qq_int_wall:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label>Do you have other networks that need to communicate through this network? (Examples: proprietary IT systems or office network, security system, cameras with a DVR/Video Monitoring System, PMI or POP systems, inventory systems, IoT devices, etc.) </label>
+                    <select name="qq_communicate_other" id="qq_communicate_other" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <!-- Is this site a residential property?  -->
+                <div class="col-md-6">
+                    <label>Is this site a residential property?</label>
+                    <select name="qq_residential" id="qq_residential" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label>Does this site have atmospheric conditioning to control temperature and humidity?</label>
+                    <select name="qq_atmospheric" id="qq_atmospheric" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label>Ceiling Type </label>
+                    <input type="text" name="qq_ceiling_type" id="qq_ceiling_type" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ceiling_type:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label>Exterior Wall Type </label>
+                    <input type="text" name="qq_ext_wall" id="qq_ext_wall" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ext_wall:''?>">
+                </div>
+                <!-- Do you require a fully customizable UI?  -->
+                <div class="col-md-6">
+                    <label>Do you require a fully customizable UI?</label>
+                    <select name="qq_customizable_ui" id="qq_customizable_ui" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <!-- Is this site a warehouse?  -->
+                <div class="col-md-6">
+                    <label>Is this site a warehouse?</label>
+                    <select name="qq_warehouse" id="qq_warehouse" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label>Are there IoT devices that need to be controlled or monitored by the system? </label>
+                    <select name="qq_IoT_devices" id="qq_IoT_devices" class="span4 form-control">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
                 </div>
             </fieldset>
 
-
-                <!-- Qualifying Questions   -->
-                <fieldset id="wifi_qualify_info" data-name="Qualifying Questions ">
-                    <div class="flex">
-                        <div class="create_le">
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label>Ceiling Heights </label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="qq_ceiling_hight" id="qq_ceiling_hight" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ceiling_hight:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Interior Wall Type  -->
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label>Interior Wall Type </label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="qq_int_wall" id="qq_int_wall" class="span4 form-control" value="<?php echo $edit===true?$get_qq_int_wall:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label>Do you have other networks that need to communicate through this network? (Examples: proprietary IT systems or office network, security system, cameras with a DVR/Video Monitoring System, PMI or POP systems, inventory systems, IoT devices, etc.) </label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="qq_communicate_other" id="qq_communicate_other" class="span4 form-control">
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Is this site a residential property?  -->
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label>Is this site a residential property?</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="qq_residential" id="qq_residential" class="span4 form-control">
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label>Does this site have atmospheric conditioning to control temperature and humidity?</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="qq_atmospheric" id="qq_atmospheric" class="span4 form-control">
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="create_re">
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label>Ceiling Type </label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="qq_ceiling_type" id="qq_ceiling_type" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ceiling_type:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label>Exterior Wall Type </label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="qq_ext_wall" id="qq_ext_wall" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ext_wall:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Do you require a fully customizable UI?  -->
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label>Do you require a fully customizable UI?</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="qq_customizable_ui" id="qq_customizable_ui" class="span4 form-control">
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Is this site a warehouse?  -->
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label>Is this site a warehouse?</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="qq_warehouse" id="qq_warehouse" class="span4 form-control">
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label>Are there IoT devices that need to be controlled or monitored by the system? </label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="qq_IoT_devices" id="qq_IoT_devices" class="span4 form-control">
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-
-                    <div class="actions clearfix">
-                        <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
-                            <?php if($activatePopup == true && $get_status == "Completed") {  ?>
-                                <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
-                                <button onmouseover="" class="btn btn-primary pop-up-open">Add Location</button>
-                            <?php } ?>
-                            <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-disabled="true"><button href="javascript:void(0)" data-type="previous" class="btn btn-primary" role="menuitem">Previous</button></li>
-                            <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-hidden="false" aria-disabled="true"><button tabindex="119" href="javascript:void(0)" data-type="next" class="btn btn-primary" role="menuitem">Next</button></li>
-                            <li class="finishStepone" style="display: none; margin-left: 5px;" aria-hidden="true"><a tabindex="120" href="#steponesubmit" class="btn btn-primary" name="location_submit_one" id="location_submit_one" role="menuitem">Update Account Info</a></li>
-                            <li class="finishSteptwo" style="display: none; margin-left: 5px;" aria-hidden="true"><a href="#steptwosubmit" class="btn btn-primary" name="location_submit_two" id="location_submit_two" role="menuitem">Update Controller Info</a></li>
-                            <?php if (!isset($_GET['edit']) && !isset($_GET['property_id'])){ ?>
-                            <li class="finishParent" style="display: none; margin-left: 5px;" aria-hidden="true">
-                                <!-- <a href="#finish" class="btn btn-primary" name="create_location_submit" id="create_location_submit" role="menuitem" >Finish</a></li> -->
-                                <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
-                            </li>
-                            <?php } ?>
-                            <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
-                        </ul>
-                    </div>
+            <div class="col-md-12">
+                <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
+                    <?php if($activatePopup == true && $get_status == "Completed") {  ?>
+                        <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
+                        <button onmouseover="" class="btn btn-primary pop-up-open">Add Location</button>
+                    <?php } ?>
+                    <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-disabled="true"><button href="javascript:void(0)" data-type="previous" class="btn btn-primary" role="menuitem">Previous</button></li>
+                    <li class="{2} disabled" style="display: inline-block;margin-left: 5px;" aria-hidden="false" aria-disabled="true"><button tabindex="119" href="javascript:void(0)" data-type="next" class="btn btn-primary" role="menuitem">Next</button></li>
+                    <li class="finishStepone" style="display: none; margin-left: 5px;" aria-hidden="true"><a tabindex="120" href="#steponesubmit" class="btn btn-primary" name="location_submit_one" id="location_submit_one" role="menuitem">Update Account Info</a></li>
+                    <li class="finishSteptwo" style="display: none; margin-left: 5px;" aria-hidden="true"><a href="#steptwosubmit" class="btn btn-primary" name="location_submit_two" id="location_submit_two" role="menuitem">Update Controller Info</a></li>
+                    <?php if (!isset($_GET['edit']) && !isset($_GET['property_id'])){ ?>
+                    <li class="finishParent" style="display: none; margin-left: 5px;" aria-hidden="true">
+                        <!-- <a href="#finish" class="btn btn-primary" name="create_location_submit" id="create_location_submit" role="menuitem" >Finish</a></li> -->
+                        <button onmouseover="" type="submit" name="<?php if (isset($_GET['edit'])){echo 'update_crm_submit';}else{echo 'create_crm_submit';}?>" id="create_crm_submit" class="btn btn-primary">Save</button>
+                    </li>
+                    <?php } ?>
+                    <li class="cancelform" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a href="/" class="btn btn-primary" role="menuitem">Cancel</a></li>
+                </ul>
+            </div>
 
         </form>
     </div>
