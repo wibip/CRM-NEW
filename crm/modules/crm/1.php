@@ -34,6 +34,9 @@
     .actions.clearfix{
         width: 100%;
     }
+    .radio-controls label{
+        margin-bottom: 0;
+    }
 </style>
 
 <?php
@@ -118,499 +121,358 @@ if (!empty($arrayo)) {
                 <h4><?=$formTitle?></h4>
             </div>
         </div>  
-        <form onkeyup="" onchange="" autocomplete="off" id="crm_form" name="crm_form" method="post" class="row g-3 p-4" action="">
+        <form onkeyup="" onchange="" autocomplete="off" id="crm_form" name="crm_form" method="post" class="g-3 p-4" action="">
         <?php
         echo '<input type="hidden" name="form_secret5" id="form_secret5" value="' . $_SESSION['FORM_SECRET'] . '" />';
         ?>
-                <fieldset id="customer_info" data-name="Customer Information ">
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Business Name</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?php echo $edit===true?$get_business_name:''?>">
-                                    </div>
-                                </div>
-                            </div>
+            <fieldset id="customer_info" data-name="Customer Information" class="row">
+                <div class="col-md-6">
+                    <label for="radiobtns">Business Name</label>
+                    <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?php echo $edit===true?$get_business_name:''?>">
+                </div>
 
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Contact Phone</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="14" class="mobile3_vali" type="text" name="contact_Phone" id="contact_Phone" class="span4 form-control"
-                                        value="<?php echo $edit===true?$get_contact_phone:''?>">
-                                    </div>
-                                </div>
-                            </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Contact Phone</label>
+                    <input placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="14" type="text" name="contact_Phone" id="contact_Phone" class="span4 form-control mobile3_vali" value="<?php echo $edit===true?$get_contact_phone:''?>">
+                </div>
 
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Account Number</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="account_number" id="account_number" class="span4 form-control" value="<?php echo $edit===true?$get_account_number:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Street</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="street" id="street" class="span4 form-control" value="<?php echo $edit===true?$get_street:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">State</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="state" id="state" class="span4 form-control">
-                                        <option value="">Select State</option>
-                                        <?php
-                                        $get_regions = $db->selectDB("SELECT
-                                    `states_code`,
-                                    `description`
-                                    FROM
-                                    `exp_country_states` ORDER BY description ASC");
+                <div class="col-md-6">
+                    <label for="radiobtns">Account Number</label>
+                    <input type="text" name="account_number" id="account_number" class="span4 form-control" value="<?php echo $edit===true?$get_account_number:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Street</label>
+                    <input type="text" name="street" id="street" class="span4 form-control" value="<?php echo $edit===true?$get_street:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">State</label>
+                    <select name="state" id="state" class="span4 form-control">
+                        <option value="">Select State</option>
+                        <?php
+                        $get_regions = $db->selectDB("SELECT
+                                                    `states_code`,
+                                                    `description`
+                                                    FROM
+                                                    `exp_country_states` ORDER BY description ASC");
+                        foreach ($get_regions['data'] as $state) {
+                            if (($edit===true?$get_state:'') == $state['states_code']) {
+                                echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                            } else {
 
+                                echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                            }
+                        }
+                        //echo '<option value="other">Other</option>';
+                        ?>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Service Type</label>
+                    <select name="service_type" id="service_type" class="span4 form-control">
+                        <?php if($serviceTypes != null){ ?>
+                        <option value="0">Please select service type</option>
+                        <?php   foreach($serviceTypes as $serviceType){ ?>
+                            <option value="<?=$serviceType['id']?>"><?=$serviceType['service_type']?></option>
+                        <?php
+                            }
+                        } else { ?>
+                        <option value="0">Service type not found</option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Contact</label>
+                    <input type="text" name="contact" id="contact" class="span4 form-control" value="<?php echo $edit===true?$get_contact_name:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Contact Email</label>
+                    <input type="text" name="contact_email" id="contact_email" class="span4 form-control" value="<?php echo $edit===true?$get_contact_email:''?>">
+                </div>
 
-                                        foreach ($get_regions['data'] as $state) {
-                                            if (($edit===true?$get_state:'') == $state['states_code']) {
-                                                echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                            } else {
+                <div class="col-md-6">
+                    <label for="radiobtns">Order Number</label>
+                    <input type="text" name="order_number" id="order_number" class="span4 form-control" value="<?php echo $edit===true?$get_order_number:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">City</label>
+                    <input type="text" name="city" id="city" class="span4 form-control" value="<?php echo $edit===true?$get_city:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Zip</label>
+                    <input type="text" name="zip" id="zip" class="span4 form-control" value="<?php echo $edit===true?$get_zip:''?>">
+                </div>
+            </fieldset>
 
-                                                echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                            }
-                                        }
-                                        //echo '<option value="other">Other</option>';
-                                        ?>
-                                    </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Service Type</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="service_type" id="service_type" class="span4 form-control">
-                                            <?php if($serviceTypes != null){ ?>
-                                            <option value="0">Please select service type</option>
-                                            <?php   foreach($serviceTypes as $serviceType){ ?>
-                                                <option value="<?=$serviceType['id']?>"><?=$serviceType['service_type']?></option>
-                                            <?php
-                                                }
-                                            } else { ?>
-                                            <option value="0">Service type not found</option>
-                                            <?php
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Contact</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="contact" id="contact" class="span4 form-control" value="<?php echo $edit===true?$get_contact_name:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Contact Email</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="contact_email" id="contact_email" class="span4 form-control" value="<?php echo $edit===true?$get_contact_email:''?>">
-                                    </div>
-                                </div>
-                            </div>
+            <fieldset id="wifi_info" data-name="Wi-Fi Site Information"  class="row">
+                <div class="col-md-6">
+                    <label for="radiobtns">Will this customer have more than one site on the WiFi Now service? </label>
+                    <input type="radio" name="more_than_one_sites" id="more_than_one_sites-yes" class="span4 form-control">&nbsp;Yes 
+                    <input type="radio" name="more_than_one_sites" id="more_than_one_sites-no" class="span4 form-control">&nbsp;No
+                </div>
 
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Order Number</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="order_number" id="order_number" class="span4 form-control" value="<?php echo $edit===true?$get_order_number:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">City</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="city" id="city" class="span4 form-control" value="<?php echo $edit===true?$get_city:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Zip</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="zip" id="zip" class="span4 form-control" value="<?php echo $edit===true?$get_zip:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                </fieldset>
-                <style>
-                    .radio-controls label{
-                        margin-bottom: 0;
-                    }
-                </style>
-                <fieldset id="wifi_info" data-name="Wi-Fi Site Information ">
-                    <div class="flex">
-                        <div class="create_le">
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Will this customer have more than one site on the WiFi Now service? </label>
-                                    <div class="controls col-lg-5 form-group radio-controls" style="display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-align: center;-ms-flex-align: center;align-items: center;">
-                                       <div style="display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-align: center;-ms-flex-align: center;align-items: center;"> <input type="radio" name="more_than_one_sites" id="more_than_one_sites-yes" class="span4 form-control">&nbsp;Yes &nbsp;&nbsp;</div>
-                                        <div  style="display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-align: center;-ms-flex-align: center;align-items: center;"><input type="radio" name="more_than_one_sites" id="more_than_one_sites-no" class="span4 form-control">&nbsp;No</div>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Startup Guest SSID</label>
+                    <input type="text" name="guest_ssid" id="guest_ssid" class="span4 form-control" value="<?php echo $edit===true?$get_guest_ssid:''?>">
+                </div>
 
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Startup Guest SSID</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="guest_ssid" id="guest_ssid" class="span4 form-control" value="<?php echo $edit===true?$get_guest_ssid:''?>">
-                                    </div>
-                                </div>
-                            </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Street</label>
+                    <input type="text" name="wifi_street" id="wifi_street" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_street:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">State</label>
+                    <select name="wifi_state" id="wifi_state" class="span4 form-control">
+                        <option value="">Select State</option>
+                        <?php
+                        $get_regions = $db->selectDB("SELECT
+                                                    `states_code`,
+                                                    `description`
+                                                FROM
+                                                `exp_country_states` ORDER BY description ASC");
+                        foreach ($get_regions['data'] as $state) {
+                            if (($edit===true?$get_wifi_state:'') == $state['states_code']) {
+                                echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                            } else {
 
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Street</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="wifi_street" id="wifi_street" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_street:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">State</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <select name="wifi_state" id="wifi_state" class="span4 form-control">
-                                        <option value="">Select State</option>
-                                        <?php
-                                        $get_regions = $db->selectDB("SELECT
-                              `states_code`,
-                              `description`
-                            FROM
-                            `exp_country_states` ORDER BY description ASC");
+                                echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+                            }
+                        }
+                        //echo '<option value="other">Other</option>';
+                        ?>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Access Contact </label>
+                    <input type="text" name="wifi_contact" id="wifi_contact" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_contact:''?>">
+                </div>
 
+                <div class="col-md-6">
+                    <label for="radiobtns">Contact Email</label>
+                    <input type="text" name="wifi_email" id="wifi_email" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_email:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Reflect a Unique Property ID (Need to Build this logically or just a sequential number like WFN-000001?)</label>
+                    <input type="text" name="wifi_unique" id="wifi_unique" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_unique:''?>">
+                </div>
 
-                                        foreach ($get_regions['data'] as $state) {
-                                            if (($edit===true?$get_wifi_state:'') == $state['states_code']) {
-                                                echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                            } else {
+                <div class="col-md-6">
+                    <label for="radiobtns">Preferred Install Time Slot</label>
+                    <input type="text" name="wifi-ins-time" id="wifi_ins_time" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_ins_time:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns"> Name </label>
+                    <input type="text" name="wifi_site-name" id="wifi_site_name" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_site_name:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Startup Private SSID</label>
+                    <input type="text" name="private_ssid" id="private_ssid" class="span4 form-control" value="<?php echo $edit===true?$get_private_ssid:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">City</label>
+                    <input type="text" name="wifi_city" id="wifi_city" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_city:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">zip</label>
+                    <input type="text" name="wifi_zip" id="wifi_zip" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_zip:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Contact Phone</label>
+                    <input placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="14"  type="text" name="wifi_phone" id="wifi_phone" class="span4 form-control mobile3_vali" value="<?php echo $edit===true?$get_wifi_phone:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Property Type</label>
+                    <input type="text" name="wifi_prop_type" id="wifi_prop_type" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_prop_type:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">Requested Install Date</label>
+                    <input type="text" name="wifi_ins_date" id="wifi_ins_date" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_ins_date:''?>">
+                </div>
+                <div class="col-md-6">
+                    <label for="radiobtns">If After Hours, Please Specify Start Time (Install can be 8+ hours if 4 APs are included)</label>
+                    <input type="text" name="wifi_ins_start" id="wifi_ins_start" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_ins_start:''?>">
+                </div>
+            </fieldset>
 
-                                                echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                            }
-                                        }
-                                        //echo '<option value="other">Other</option>';
-                                        ?>
-                                    </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Access Contact </label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="wifi_contact" id="wifi_contact" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_contact:''?>">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Contact Email</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="wifi_email" id="wifi_email" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_email:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Reflect a Unique Property ID (Need to Build this logically or just a sequential number like WFN-000001?)</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <!-- <input readonly type="text" name="opt_code" id="opt_code" class="span4 form-control" value="< ?php echo $get_opt_code; ?>" style="margin-bottom: 10px"> -->
-                                        <input type="text" name="wifi_unique" id="wifi_unique" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_unique:''?>">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Preferred Install Time Slot</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="wifi-ins-time" id="wifi_ins_time" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_ins_time:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="create_re">
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns"> Name </label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="wifi_site-name" id="wifi_site_name" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_site_name:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Startup Private SSID</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="private_ssid" id="private_ssid" class="span4 form-control" value="<?php echo $edit===true?$get_private_ssid:''?>">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">City</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="wifi_city" id="wifi_city" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_city:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">zip</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="wifi_zip" id="wifi_zip" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_zip:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Contact Phone</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input class="mobile3_vali" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="14"  type="text" name="wifi_phone" id="wifi_phone" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_phone:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Property Type</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="wifi_prop_type" id="wifi_prop_type" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_prop_type:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">Requested Install Date</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="wifi_ins_date" id="wifi_ins_date" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_ins_date:''?>">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="controls col-lg-5 form-group">
-                                    <label for="radiobtns">If After Hours, Please Specify Start Time (Install can be 8+ hours if 4 APs are included)</label>
-                                    <div class="controls col-lg-5 form-group">
-                                        <input type="text" name="wifi_ins_start" id="wifi_ins_start" class="span4 form-control" value="<?php echo $edit===true?$get_wifi_ins_start:''?>">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-
-                <!-- Product Information  -->
-                <fieldset id="wifi_product_info" data-name="Product Information ">
-                    <div class="flex">
-                    <div class="create_le">
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Order Type </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <select name="prod_order_type" id="prod_order_type" class="span4 form-control">
-                                        <option value="new">New</option>
-                                        <option value="replacement">Replacement</option>
-                                        <option value="macd">MACD</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Indoor AP Quantity </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="prod_in_ap_quant" id="prod_in_ap_quant" class="span4 form-control" value="<?php echo $edit===true?$get_prod_in_ap_quant:''?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Is Content Filtering Required? </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <select name="prod_content_filter" id="prod_content_filter" class="span4 form-control">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Circuit Type </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <select name="prod_circuit_type" id="prod_circuit_type" class="span4 form-control">
-                                        <option value="DIA">DIA</option>
-                                        <option value="FiOS">FiOS</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>QoS For Guest Network </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <select name="prod_guest" id="prod_guest" class="span4 form-control">
-                                        <option value="">Select product</option>
-
-                                        <?php
-                                        foreach ($arrayfinal as $value) {
-                                            $product_id = $value['product_id'];
-                                            $product_code = $value['product_code'];
-                                             if ($value['network_type'] == 'GUEST') {
-                                               echo '<option value="'.$product_id.'">'.$product_code.'</option>]';
-                                             }
-                                         } ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Does the site have a rack where the Telco equipment is installed? </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <select name="prod_telco" id="prod_telco" class="span4 form-control">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Are the cabling paths from the Telco room into the site where Access Points will be mounted open and accessible? (drop ceiling, open conduit, etc.) </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <select name="prod_cabling" id="prod_cabling" class="span4 form-control">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Please attach a Floor Plan of the property </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="file" name="prod_flow_plan" id="prod_flow_plan" value="<?php echo $edit===true?$get_prod_flow_plan:''?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Please attach Pictures of the areas to be covered with WiFi </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="file" name="prod_cover_area" id="prod_cover_area" value="<?php echo $edit===true?$get_prod_cover_area:''?>">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="create_re">
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Indoor Square Footage </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="prod_square_footage" id="prod_square_footage" value="<?php echo $edit===true?$get_prod_square_footage:''?>">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Outdoor AP Required?</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <select name="prod_outdoor" id="prod_outdoor" class="span4 form-control">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Maximum Guest Capacity </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="prod_guest_capacity" id="prod_guest_capacity" value="<?php echo $edit===true?$get_prod_guest_capacity:''?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Circuit Size </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="prod_circuit_size" id="prod_circuit_size" value="<?php echo $edit===true?$get_prod_circuit_size:''?>">
-                                </div>
-                            </div>
-                        </div>
+            <!-- Product Information  -->
+            <fieldset id="wifi_product_info" data-name="Product Information" class="row">
+                <div class="col-md-6">
+                    <label for="radiobtns">Order Type </label>
+                    <select name="prod_order_type" id="prod_order_type" class="span4 form-control">
+                        <option value="new">New</option>
+                        <option value="replacement">Replacement</option>
+                        <option value="macd">MACD</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label>Indoor AP Quantity </label>
+                    <input type="text" name="prod_in_ap_quant" id="prod_in_ap_quant" class="span4 form-control" value="<?php echo $edit===true?$get_prod_in_ap_quant:''?>">
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Is Content Filtering Required? </label>
                         <div class="controls col-lg-5 form-group">
-                            <label>QoS for Private Network </label>
-                            <div class="controls col-lg-5 form-group">
-                                <select name="prod_private" id="prod_private" class="span4 form-control">
-                                    <option value="">Select product</option>
-                                    <?php
-                                        foreach ($arrayfinal as $value) {
-                                            $product_id = $value['product_id'];
-                                            $product_code = $value['product_code'];
-                                             if ($value['network_type'] == 'PRIVATE') {
-                                               echo '<option value="'.$product_id.'">'.$product_code.'</option>]';
-                                             }
-                                         } ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>Does the rack have available space for the new equipment? (Approximately 5 Rack Units) </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <select name="prod_rack_space" id="prod_rack_space" class="span4 form-control">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <select name="prod_wiring_paths" id="prod_wiring_paths" class="span4 form-control">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Please attach a Picture of the Telco Room  -->
-                        <div class="col-md-6">
-                            <div class="controls col-lg-5 form-group">
-                                <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="file" name="prod_telco_room" id="prod_telco_room" value="<?php echo $edit===true?$get_prod_telco_room:''?>">
-                                </div>
-                            </div>
+                            <select name="prod_content_filter" id="prod_content_filter" class="span4 form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Circuit Type </label>
+                        <div class="controls col-lg-5 form-group">
+                            <select name="prod_circuit_type" id="prod_circuit_type" class="span4 form-control">
+                                <option value="DIA">DIA</option>
+                                <option value="FiOS">FiOS</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>QoS For Guest Network </label>
+                        <div class="controls col-lg-5 form-group">
+                            <select name="prod_guest" id="prod_guest" class="span4 form-control">
+                                <option value="">Select product</option>
 
-                </fieldset>
+                                <?php
+                                foreach ($arrayfinal as $value) {
+                                    $product_id = $value['product_id'];
+                                    $product_code = $value['product_code'];
+                                        if ($value['network_type'] == 'GUEST') {
+                                        echo '<option value="'.$product_id.'">'.$product_code.'</option>]';
+                                        }
+                                    } ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Does the site have a rack where the Telco equipment is installed? </label>
+                        <div class="controls col-lg-5 form-group">
+                            <select name="prod_telco" id="prod_telco" class="span4 form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Are the cabling paths from the Telco room into the site where Access Points will be mounted open and accessible? (drop ceiling, open conduit, etc.) </label>
+                        <div class="controls col-lg-5 form-group">
+                            <select name="prod_cabling" id="prod_cabling" class="span4 form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Please attach a Floor Plan of the property </label>
+                        <div class="controls col-lg-5 form-group">
+                            <input type="file" name="prod_flow_plan" id="prod_flow_plan" value="<?php echo $edit===true?$get_prod_flow_plan:''?>">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Please attach Pictures of the areas to be covered with WiFi </label>
+                        <div class="controls col-lg-5 form-group">
+                            <input type="file" name="prod_cover_area" id="prod_cover_area" value="<?php echo $edit===true?$get_prod_cover_area:''?>">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Indoor Square Footage </label>
+                        <div class="controls col-lg-5 form-group">
+                            <input type="text" name="prod_square_footage" id="prod_square_footage" value="<?php echo $edit===true?$get_prod_square_footage:''?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Outdoor AP Required?</label>
+                        <div class="controls col-lg-5 form-group">
+                            <select name="prod_outdoor" id="prod_outdoor" class="span4 form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Maximum Guest Capacity </label>
+                        <div class="controls col-lg-5 form-group">
+                            <input type="text" name="prod_guest_capacity" id="prod_guest_capacity" value="<?php echo $edit===true?$get_prod_guest_capacity:''?>">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Circuit Size </label>
+                        <div class="controls col-lg-5 form-group">
+                            <input type="text" name="prod_circuit_size" id="prod_circuit_size" value="<?php echo $edit===true?$get_prod_circuit_size:''?>">
+                        </div>
+                    </div>
+                </div>
+                <div class="controls col-lg-5 form-group">
+                    <label>QoS for Private Network </label>
+                    <div class="controls col-lg-5 form-group">
+                        <select name="prod_private" id="prod_private" class="span4 form-control">
+                            <option value="">Select product</option>
+                            <?php
+                                foreach ($arrayfinal as $value) {
+                                    $product_id = $value['product_id'];
+                                    $product_code = $value['product_code'];
+                                        if ($value['network_type'] == 'PRIVATE') {
+                                        echo '<option value="'.$product_id.'">'.$product_code.'</option>]';
+                                        }
+                                    } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>Does the rack have available space for the new equipment? (Approximately 5 Rack Units) </label>
+                        <div class="controls col-lg-5 form-group">
+                            <select name="prod_rack_space" id="prod_rack_space" class="span4 form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
+                        <div class="controls col-lg-5 form-group">
+                            <select name="prod_wiring_paths" id="prod_wiring_paths" class="span4 form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Please attach a Picture of the Telco Room  -->
+                <div class="col-md-6">
+                    <div class="controls col-lg-5 form-group">
+                        <label>If wiring paths are not open, is surface mounted wire molding is acceptable? </label>
+                        <div class="controls col-lg-5 form-group">
+                            <input type="file" name="prod_telco_room" id="prod_telco_room" value="<?php echo $edit===true?$get_prod_telco_room:''?>">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
 
 
                 <!-- Qualifying Questions   -->
