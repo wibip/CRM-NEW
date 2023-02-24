@@ -22,7 +22,6 @@ $subQuery = "";
 
 $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
 
-// echo $propertyQuery;
 /* get values for filters before filtering */
 $filter_results = $db->selectDB($propertyQuery);
 // var_dump($filter_results);

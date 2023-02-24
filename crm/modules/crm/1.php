@@ -37,6 +37,8 @@
     .radio-controls label{
         margin-bottom: 0;
     }
+
+    .hide{display:none}
 </style>
 
 <?php
@@ -205,7 +207,7 @@ if (!empty($arrayo)) {
                 </div>
             </fieldset>
 
-            <fieldset id="wifi_info" data-name="Wi-Fi Site Information"  class="row">
+            <fieldset id="wifi_info" data-name="Wi-Fi Site Information"  class="row hide">
                 <div class="col-md-6">
                     <label for="radiobtns">Will this customer have more than one site on the WiFi Now service? </label>
                     <input type="radio" name="more_than_one_sites" id="more_than_one_sites-yes" class="span4 form-control">&nbsp;Yes 
@@ -296,7 +298,7 @@ if (!empty($arrayo)) {
             </fieldset>
 
             <!-- Product Information  -->
-            <fieldset id="wifi_product_info" data-name="Product Information" class="row">
+            <fieldset id="wifi_product_info" data-name="Product Information" class="row hide">
                 <div class="col-md-6">
                     <label for="radiobtns">Order Type </label>
                     <select name="prod_order_type" id="prod_order_type" class="span4 form-control">
@@ -413,7 +415,7 @@ if (!empty($arrayo)) {
                 </div>
             </fieldset>
                 <!-- Qualifying Questions   -->
-            <fieldset id="wifi_qualify_info" data-name="Qualifying Questions" class="row">
+            <fieldset id="wifi_qualify_info" data-name="Qualifying Questions" class="row hide">
                 <div class="col-md-6">
                     <label>Ceiling Heights </label>
                     <input type="text" name="qq_ceiling_hight" id="qq_ceiling_hight" class="span4 form-control" value="<?php echo $edit===true?$get_qq_ceiling_hight:''?>">
@@ -558,8 +560,11 @@ if (!empty($arrayo)) {
                     }
 
 
-                    $('.fieldStep').hide();
-                    $('.fieldStep.step' + step).css('display', 'block');
+                    // $('.fieldStep').hide();
+                    // $('.fieldStep.step' + step).css('display', 'block');
+
+                    $('.fieldStep').addClass('hide');
+                    $('.fieldStep.step' + step).removeClass('hide');
 
                     //console.log(bootstrapValidatorSteps);
                     if (step == 1) {
