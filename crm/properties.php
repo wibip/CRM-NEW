@@ -13,27 +13,28 @@ if($client_name == null && $client_name != 'all' && $user_type != 'SADMIN') {
     $issub = 2;
 } 
 
-$today = $show_end  = date('m/d/Y');
-$day_before_week = $show_start = date('m/d/Y', strtotime('-7 days'));
+// $today = $show_end  = date('m/d/Y');
+// $day_before_week = $show_start = date('m/d/Y', strtotime('-7 days'));
 
-$en_date = DateTime::createFromFormat('m/d/Y', $today)->format('Y-m-d');
-$st_date = DateTime::createFromFormat('m/d/Y', $day_before_week)->format('Y-m-d');
+// $en_date = DateTime::createFromFormat('m/d/Y', $today)->format('Y-m-d');
+// $st_date = DateTime::createFromFormat('m/d/Y', $day_before_week)->format('Y-m-d');
 
-$start_date = $st_date . ' 00:00:00';
-$end_date = $en_date . ' 23:59:59';
+// $start_date = $st_date . ' 00:00:00';
+// $end_date = $en_date . ' 23:59:59';
 
-$propertyResult = $CommonFunctions->getProperties($user_type,$user_name,$user_distributor,null,null);
+$client_name = null;
+$business_name = null;
+$status = null;
+$limit = null;
+$start_date = null;
+$end_date = null;
 
 //activity_logs
 if (isset($_POST['filter'])) {
     $client_name = isset($_POST['client_name']) ? $_POST['client_name'] : null;
     $business_name = isset($_POST['business_name']) ? $_POST['business_name'] : null;
     $status = isset($_POST['status']) ? $_POST['status'] : null;
-
-    $userName = (isset($_POST['name']) && $_POST['name'] != '-1') ? $_POST['name'] : null;
     $limit = isset($_POST['limit'])  ? $_POST['limit'] : null;
-    $logType = (isset($_POST['log_type']) && $_POST['log_type'] != '-1') ? $_POST['log_type'] : null;
-    $page = (isset($_POST['pages']) && $_POST['pages'] != '-1') ? $_POST['pages'] : null;
     $start_date = null;
     $end_date = null;
 
@@ -47,52 +48,14 @@ if (isset($_POST['filter'])) {
         $start_date = $st_date . ' 00:00:00';
         $end_date = $en_date . ' 23:59:59';
     }
+} 
 
-    $propertyResult = $CommonFunctions->getProperties($issub,$user_distributor,$start_date,$end_date,$limit,$client_name,$business_name,$status);
-
-}
+$propertyResult = $CommonFunctions->getProperties($issub,$user_distributor,$start_date,$end_date,$limit,$client_name,$business_name,$status);
 
 $query_results = $propertyResult['query_results'];
 $clientArray = $propertyResult['clientArray'];
 $businessArray = $propertyResult['businessArray'];
 
-
-// $subQuery = "";
-
-
-// $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
-
-// /* get values for filters before filtering */
-// $filter_results = $db->selectDB($propertyQuery);
-// // var_dump($filter_results);
-// if ($filter_results['rowCount'] > 0) {
-//     foreach ($filter_results['data'] as $row) {
-//         $clientDetails = $CommonFunctions->getAdminUserDetails('user_name', $row['create_user'], 'full_name');
-//         if (!empty($clientDetails['data'])) {
-//             $clientName = $clientDetails['data'][0]['full_name'];
-//             $clientArray[$row['create_user']] = $clientName;
-//         }
-//         $businessArray[$row['business_name']] = $row['business_name'];
-//     }
-// }
-
-
-// if($client_name != null && $client_name != 'all' && $user_type != 'SADMIN') {
-//     $subQuery .= " WHERE user_distributor='$user_distributor' AND full_name='".$client_name."'";
-// } elseif($client_name != null && $client_name != 'all' && $user_type == 'SADMIN') {
-//     $subQuery .= " WHERE full_name='".$client_name."'";
-// }
-
-// /* Add filtering */
-// if($business_name != null && $business_name != 'all') {
-//     $propertyQuery .= " AND business_name='".$business_name."'";
-// }
-
-// if($status != null && $status != 'all') {
-//     $propertyQuery .= " AND status='".$status."'";
-// }
-
-// $query_results = $db->selectDB($propertyQuery);
 ?>
 <style>
 #live_camp .tablesaw-columntoggle-popup .btn-group > label {
