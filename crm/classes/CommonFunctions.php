@@ -474,21 +474,31 @@ class CommonFunctions{
         return $resultSysPackage;
     }
 
-    public function getProperties($issub,$user_distributor,$start_date,$end_date,$limit=10,$client_name = null,$business_name=null,$status=null) {
+    public function getProperties($user_type,$user_name,$user_distributor,$start_date,$end_date,$limit=10,$client_name = null,$business_name=null,$status=null) {
 		$subQuery = "";        
         $clientArray = [];
         $businessArray = [];
 
         $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
-
-        if($issub == 1) {
-            $subQuery .= " WHERE user_distributor='$user_distributor' AND full_name='".$client_name."'";
-        } elseif($issub == 2) {
-            $subQuery .= " WHERE full_name='".$client_name."'";
-        } else {
-            $propertyQuery .= " AND mno_id='$user_distributor'";
+        switch($user_type ){
+            case 'SADMIN' :
+                $propertyQuery .= "";
+            break;
+            case 'ADMIN' :
+                $propertyQuery .= "";
+            break;
+            case 'MNO' :
+                $propertyQuery .= " AND mno_id='$user_distributor'";
+            break;
+            case 'SMAN' :
+                $propertyQuery .= " AND mno_id='$user_distributor'";
+            break;
+            case 'PROVISIONING' :
+                $propertyQuery .= " AND create_user='$user_name'";
+            break;
         }
-        echo $propertyQuery;
+
+   
         /* get values for filters before filtering */
         $filter_results = $this->db->selectDB($propertyQuery);
         

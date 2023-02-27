@@ -4,16 +4,14 @@ include 'header_new.php';
 $CommonFunctions = new CommonFunctions();
 $page = 'Properties';
 
-var_dump($client_name);
+// var_dump($client_name);
 $issub = 0;
-if($client_name != null && $client_name != 'all' && $user_type != 'SADMIN') {
+
+if($client_name == null && $client_name != 'all' && $user_type != 'SADMIN') {
     $issub = 1;
 } elseif($client_name == null && $client_name != 'all' && $user_type == 'SADMIN') {
     $issub = 2;
 } 
-
-echo '-------------------------------->'.$client_name;
-echo '-------------------------------->'.$issub;
 
 $today = $show_end  = date('m/d/Y');
 $day_before_week = $show_start = date('m/d/Y', strtotime('-7 days'));
@@ -24,7 +22,7 @@ $st_date = DateTime::createFromFormat('m/d/Y', $day_before_week)->format('Y-m-d'
 $start_date = $st_date . ' 00:00:00';
 $end_date = $en_date . ' 23:59:59';
 
-$propertyResult = $CommonFunctions->getProperties($issub,$user_distributor,null,null);
+$propertyResult = $CommonFunctions->getProperties($user_type,$user_name,$user_distributor,null,null);
 
 //activity_logs
 if (isset($_POST['filter'])) {
