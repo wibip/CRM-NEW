@@ -3,56 +3,98 @@ include 'header_new.php';
 
 $CommonFunctions = new CommonFunctions();
 $page = 'Properties';
-// TAB Organization
-if (isset($_GET['t'])) {
-    $variable_tab = 'tab' . $_GET['t'];
-    $$variable_tab = 'set';
-} else {
-    $tab8 = "set";
-}
 
-$clientArray = [];
-$businessArray = [];
-
-$client_name = isset($_POST['client_name']) ? $_POST['client_name'] : null;
-$business_name = isset($_POST['business_name']) ? $_POST['business_name'] : null;
-$status = isset($_POST['status']) ? $_POST['status'] : null;
-
-$subQuery = "";
-
-$propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
-
-/* get values for filters before filtering */
-$filter_results = $db->selectDB($propertyQuery);
-// var_dump($filter_results);
-if ($filter_results['rowCount'] > 0) {
-    foreach ($filter_results['data'] as $row) {
-        $clientDetails = $CommonFunctions->getAdminUserDetails('user_name', $row['create_user'], 'full_name');
-        if (!empty($clientDetails['data'])) {
-            $clientName = $clientDetails['data'][0]['full_name'];
-            $clientArray[$row['create_user']] = $clientName;
-        }
-        $businessArray[$row['business_name']] = $row['business_name'];
-    }
-}
-
-
+var_dump($client_name);
+$issub = 0;
 if($client_name != null && $client_name != 'all' && $user_type != 'SADMIN') {
-    $subQuery .= " WHERE user_distributor='$user_distributor' AND full_name='".$client_name."'";
-} elseif($client_name != null && $client_name != 'all' && $user_type == 'SADMIN') {
-    $subQuery .= " WHERE full_name='".$client_name."'";
+    $issub = 1;
+} elseif($client_name == null && $client_name != 'all' && $user_type == 'SADMIN') {
+    $issub = 2;
+} 
+
+echo '-------------------------------->'.$client_name;
+echo '-------------------------------->'.$issub;
+
+$today = $show_end  = date('m/d/Y');
+$day_before_week = $show_start = date('m/d/Y', strtotime('-7 days'));
+
+$en_date = DateTime::createFromFormat('m/d/Y', $today)->format('Y-m-d');
+$st_date = DateTime::createFromFormat('m/d/Y', $day_before_week)->format('Y-m-d');
+
+$start_date = $st_date . ' 00:00:00';
+$end_date = $en_date . ' 23:59:59';
+
+$propertyResult = $CommonFunctions->getProperties($issub,$user_distributor,null,null);
+
+//activity_logs
+if (isset($_POST['filter'])) {
+    $client_name = isset($_POST['client_name']) ? $_POST['client_name'] : null;
+    $business_name = isset($_POST['business_name']) ? $_POST['business_name'] : null;
+    $status = isset($_POST['status']) ? $_POST['status'] : null;
+
+    $userName = (isset($_POST['name']) && $_POST['name'] != '-1') ? $_POST['name'] : null;
+    $limit = isset($_POST['limit'])  ? $_POST['limit'] : null;
+    $logType = (isset($_POST['log_type']) && $_POST['log_type'] != '-1') ? $_POST['log_type'] : null;
+    $page = (isset($_POST['pages']) && $_POST['pages'] != '-1') ? $_POST['pages'] : null;
+    $start_date = null;
+    $end_date = null;
+
+    if ($_POST['start_date'] != NULL && $_POST['end_date'] != NULL) {
+        $user_mg_end = $_POST['end_date'];
+        $user_mg_start = $_POST['start_date'];
+
+        $en_date = DateTime::createFromFormat('m/d/Y', $user_mg_end)->format('Y-m-d');
+        $st_date = DateTime::createFromFormat('m/d/Y', $user_mg_start)->format('Y-m-d');
+
+        $start_date = $st_date . ' 00:00:00';
+        $end_date = $en_date . ' 23:59:59';
+    }
+
+    $propertyResult = $CommonFunctions->getProperties($issub,$user_distributor,$start_date,$end_date,$limit,$client_name,$business_name,$status);
+
 }
 
-/* Add filtering */
-if($business_name != null && $business_name != 'all') {
-    $propertyQuery .= " AND business_name='".$business_name."'";
-}
+$query_results = $propertyResult['query_results'];
+$clientArray = $propertyResult['clientArray'];
+$businessArray = $propertyResult['businessArray'];
 
-if($status != null && $status != 'all') {
-    $propertyQuery .= " AND status='".$status."'";
-}
 
-$query_results = $db->selectDB($propertyQuery);
+// $subQuery = "";
+
+
+// $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
+
+// /* get values for filters before filtering */
+// $filter_results = $db->selectDB($propertyQuery);
+// // var_dump($filter_results);
+// if ($filter_results['rowCount'] > 0) {
+//     foreach ($filter_results['data'] as $row) {
+//         $clientDetails = $CommonFunctions->getAdminUserDetails('user_name', $row['create_user'], 'full_name');
+//         if (!empty($clientDetails['data'])) {
+//             $clientName = $clientDetails['data'][0]['full_name'];
+//             $clientArray[$row['create_user']] = $clientName;
+//         }
+//         $businessArray[$row['business_name']] = $row['business_name'];
+//     }
+// }
+
+
+// if($client_name != null && $client_name != 'all' && $user_type != 'SADMIN') {
+//     $subQuery .= " WHERE user_distributor='$user_distributor' AND full_name='".$client_name."'";
+// } elseif($client_name != null && $client_name != 'all' && $user_type == 'SADMIN') {
+//     $subQuery .= " WHERE full_name='".$client_name."'";
+// }
+
+// /* Add filtering */
+// if($business_name != null && $business_name != 'all') {
+//     $propertyQuery .= " AND business_name='".$business_name."'";
+// }
+
+// if($status != null && $status != 'all') {
+//     $propertyQuery .= " AND status='".$status."'";
+// }
+
+// $query_results = $db->selectDB($propertyQuery);
 ?>
 <style>
 #live_camp .tablesaw-columntoggle-popup .btn-group > label {
@@ -127,8 +169,21 @@ $query_results = $db->selectDB($propertyQuery);
                                                         <option value='Failed' <?=(($status != null && $status == "Failed") ? "selected" : "")?>>Failed</option>
                                                     </select>
                                                 </div>
+                                                <div class="col-md-4">
+                                                    <label class="control-label" for="radiobtns">Period</label>
+                                                    <input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($user_mg_start)) {
+                                                                                                                                                                                echo $user_mg_start;
+                                                                                                                                                                            } ?>" placeholder="<?=(isset($show_start) ? $show_start : 'mm/dd/yyyy')?>">
+                                                    to
+                                                    <input class="inline_error inline_error_1 span2 form-control" id="end_date" name="end_date" type="text" value="<?php if (isset($user_mg_end)) {
+                                                                                                                                                                            echo $user_mg_end;
+                                                                                                                                                                        } ?>" placeholder="<?=(isset($show_end) ? $show_end : 'mm/dd/yyyy')?>">
+
+                                                    <input type="hidden" name="date3" />
+                                                    <!-- /controls -->
+                                                </div>
                                                 <div class="col-md-12">
-                                                    <button class="btn btn-primary">Filter</button>
+                                                    <button type="submit" class="btn btn-primary" id="filter" name="filter">Filter</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -223,10 +278,32 @@ $query_results = $db->selectDB($propertyQuery);
     <!-- /main-inner -->
 </div>
 <!-- /main -->
-
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
     <script>
     $(document).ready(function () {
         $('#property-table').dataTable();
+
+        $(function() {
+			$("#start_date").datepicker({
+				dateFormat: "mm/dd/yy",
+				dayNamesMin: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+				maxDate: '0'
+			});
+		});
+		$("#start_date").attr("autocomplete", "off");
+
+		$(function() {
+			$("#end_date").datepicker({
+				dateFormat: "mm/dd/yy",
+				dayNamesMin: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+				maxDate: '0'
+			});
+		});
+		$("#end_date").attr("autocomplete", "off");
+
+        $(function() {
+        $('#datepicker').datepicker();
+    });
     });
 </script>
 

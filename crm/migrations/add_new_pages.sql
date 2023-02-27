@@ -14,9 +14,13 @@ VALUES
 UPDATE admin_product_controls SET options='["operators","operator_config","operator_regions","operator_realms","operator_ipscope","property_addressing","operation_list","central_db","api_profile","config","logs","profile","properties", "crm","change_portal","users"]' 
 WHERE product_code='GENERIC_SADMIN_001' AND feature_code='ALLOWED_PAGE';
 
+-----OLD PAGES ------
+UPDATE admin_product_controls SET options='["operators","operator_config","operator_regions","operator_realms","operator_ipscope","property_addressing","operation_list","central_db","api_profile","config","logs","profile","properties", "crm","change_portal","users","clients","operations"]' 
+WHERE product_code='GENERIC_SADMIN_001' AND feature_code='ALLOWED_PAGE';
+
 UPDATE admin_product_controls SET options='["operators","operator_config","operator_regions","operator_realms","operator_ipscope","property_addressing","central_db","api_profile","config","logs","profile","properties","change_portal","users"]' 
 WHERE product_code='GENERIC_ADMIN_001' AND feature_code='ALLOWED_PAGE';
-
+-----OLD PAGES ------
 UPDATE admin_product_controls SET options='["operators","operator_config","operator_regions","operator_realms","operator_ipscope","property_addressing","operations","operation_list","central_db","api_profile","config","users","logs","profile","clients","properties", "crm","change_portal"]' 
 WHERE product_code='GENERIC_ADMIN_001' AND feature_code='ALLOWED_PAGE';
 

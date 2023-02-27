@@ -473,4 +473,52 @@ class CommonFunctions{
         $resultSysPackage =  $this->db->selectDB($sqlSysPackage);
         return $resultSysPackage;
     }
+
+    public function getProperties($issub,$user_distributor,$start_date,$end_date,$limit=10,$client_name = null,$business_name=null,$status=null) {
+		$subQuery = "";        
+        $clientArray = [];
+        $businessArray = [];
+
+        $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
+
+        if($issub == 1) {
+            $subQuery .= " WHERE user_distributor='$user_distributor' AND full_name='".$client_name."'";
+        } elseif($issub == 2) {
+            $subQuery .= " WHERE full_name='".$client_name."'";
+        } else {
+            $propertyQuery .= " AND mno_id='$user_distributor'";
+        }
+        echo $propertyQuery;
+        /* get values for filters before filtering */
+        $filter_results = $this->db->selectDB($propertyQuery);
+        
+        if ($filter_results['rowCount'] > 0) {
+            foreach ($filter_results['data'] as $row) {
+                $clientDetails = $this->getAdminUserDetails('user_name', $row['create_user'], 'full_name');
+                if (!empty($clientDetails['data'])) {
+                    $clientName = $clientDetails['data'][0]['full_name'];
+                    $clientArray[$row['create_user']] = $clientName;
+                }
+                $businessArray[$row['business_name']] = $row['business_name'];
+            }
+        }
+
+        if ($start_date != null && $end_date != null) {
+			$propertyQuery .=" AND create_date BETWEEN '".$start_date."' AND '".$end_date."'";
+		}
+
+        /* Add filtering */
+        if($business_name != null && $business_name != 'all') {
+            $propertyQuery .= " AND business_name='".$business_name."'";
+        }
+
+        if($status != null && $status != 'all') {
+            $propertyQuery .= " AND status='".$status."'";
+        }
+
+        $query_results = $this->db->selectDB($propertyQuery);
+
+        $results = ['query_results'=>$query_results,'clientArray'=>$clientArray,'businessArray'=>$businessArray,];
+        return $results;
+	}
 }

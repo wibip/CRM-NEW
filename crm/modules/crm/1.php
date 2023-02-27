@@ -503,363 +503,363 @@ if (!empty($arrayo)) {
         </form>
     </div>
 </div>
-            <script type="text/javascript">
-                function stepList_crm(index, name) {
-                    var clz = '';
-                    if (index == 1) {
-                        clz = 'current';
-                    }
-                    return '<li data-step="' + index + '" role="tab" class="{index' + index + '}" aria-disabled="false" aria-selected="true"><span>' + name + '</span></li>';
+<script type="text/javascript">
+    function stepList_crm(index, name) {
+        var clz = '';
+        if (index == 1) {
+            clz = 'current';
+        }
+        return '<li data-step="' + index + '" role="tab" class="{index' + index + '}" aria-disabled="false" aria-selected="true"><span>' + name + '</span></li>';
+    }
+
+
+    function stepSetter_crm(step, stepCount, action, stepListFull, edit_account){
+
+        if (stepListFull) {
+            let index = 1;
+            while (index <= stepCount) {
+                if (index < step) {
+                    stepListFull = stepListFull.replace("{index" + index + "}", "done");
+                } else if (index == step) {
+                    stepListFull = stepListFull.replace("{index" + index + "}", "current");
+                } else {
+                    stepListFull = stepListFull.replace("{index" + index + "}", "");
                 }
+                index++;
+            }
 
+        } else {
+            if (action != 'previous') {
 
-                function stepSetter_crm(step, stepCount, action, stepListFull, edit_account){
-
-                    if (stepListFull) {
-                        let index = 1;
-                        while (index <= stepCount) {
-                            if (index < step) {
-                                stepListFull = stepListFull.replace("{index" + index + "}", "done");
-                            } else if (index == step) {
-                                stepListFull = stepListFull.replace("{index" + index + "}", "current");
-                            } else {
-                                stepListFull = stepListFull.replace("{index" + index + "}", "");
-                            }
-                            index++;
-                        }
-
+                try {
+                    $('#crm_form').data('bootstrapValidator').validate();
+                    if (!$('#crm_form').data('bootstrapValidator').isValid()) {
+                        return false;
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+                if (step == 3) {
+                    if (edit_account) {
+                        $("#create_crm_submit").prop("disabled", false);
                     } else {
-                        if (action != 'previous') {
-
-                            try {
-                                $('#crm_form').data('bootstrapValidator').validate();
-                                if (!$('#crm_form').data('bootstrapValidator').isValid()) {
-                                    return false;
-                                }
-                            } catch (e) {
-                                console.log(e);
-                            }
-                            if (step == 3) {
-                                if (edit_account) {
-                                    $("#create_crm_submit").prop("disabled", false);
-                                } else {
-                                    $("#create_crm_submit").prop("disabled", false);
-                                }
-                            }
-                        }
-                        $('.steps.clearfix li').removeClass('current').removeClass('done');
-                        for (let index1 = 1; index1 < step; index1++) {
-                            $('.steps.clearfix li:eq(' + (index1 - 1) + ')').addClass('done');
-                        }
-                        $('.steps.clearfix li:eq(' + (step - 1) + ')').addClass('current');
-                        /*  console.log($('#create_property').offset().top); */
-                        $('html, body').animate({
-                            scrollTop: 100
-                        }, 500);
                         $("#create_crm_submit").prop("disabled", false);
                     }
-
-
-                    // $('.fieldStep').hide();
-                    // $('.fieldStep.step' + step).css('display', 'block');
-
-                    $('.fieldStep').addClass('hide');
-                    $('.fieldStep.step' + step).removeClass('hide');
-
-                    //console.log(bootstrapValidatorSteps);
-                    if (step == 1) {
-                        $('.actions.clearfix').find('button[data-type="previous"]').hide();
-                        if (edit_account) {
-                            $('.actions.clearfix').find('.finishStepone').css('display', 'inline-block');
-                            $('.actions.clearfix').find('.finishSteptwo').hide();
-                            $('.actions.clearfix').find('.cancelform').css('display', 'inline-block');
-                        }
-
-                        //bootstrapValidatorSteps.enableFieldValidators('zone', false);
-                    } else if (step == 2) {
-                        if (previousn_crm != 1) {
-                            var bootstrapValidator = $('#crm_form').data('bootstrapValidator');
-                            try {
-                                bootstrapValidator.enableFieldValidators('groups', false);
-                            } catch (e) {}
-                        }
-                        $('.actions.clearfix').find('button[data-type="previous"]').css('display', 'inline-block');
-                        if (edit_account) {
-                            $('.actions.clearfix').find('.finishStepone').hide();
-                            $('.actions.clearfix').find('.finishSteptwo').css('display', 'inline-block');
-                            $('.actions.clearfix').find('.cancelform').hide();
-                        }
-                        //if(document.getElementById("automation_property").checked){
-
-                        //bootstrapValidatorSteps.enableFieldValidators('zone', true);
-                        //}
-                    } else {
-                        $('.actions.clearfix').find('button[data-type="previous"]').css('display', 'inline-block');
-                        if (edit_account) {
-                            $('.actions.clearfix').find('.finishStepone').hide();
-                            $('.actions.clearfix').find('.finishSteptwo').hide();
-                            $('.actions.clearfix').find('.cancelform').hide();
-                        }
-                        //bootstrapValidatorSteps.enableFieldValidators('zone', false);
-                    }
-
-                    if (step == stepCount) {
-                        $('.actions.clearfix').find('button[data-type="next"]').hide();
-                        $('.actions.clearfix').find('.finishParent').css('display', 'inline-block');
-
-                    } else {
-                        $('.actions.clearfix').find('button[data-type="next"]').css('display', 'inline-block');
-                        $('.actions.clearfix').find('.finishParent').hide();
-
-                    }
-                    //return stepListFull;
-                    if(action=='ready'){
-                        $('#crm_form').prepend(stepListFull);
-                        //$(".finishParent").find('a[href$="#finish"]').replaceWith($('.submit-btn'));
-                    }
                 }
+            }
+            $('.steps.clearfix li').removeClass('current').removeClass('done');
+            for (let index1 = 1; index1 < step; index1++) {
+                $('.steps.clearfix li:eq(' + (index1 - 1) + ')').addClass('done');
+            }
+            $('.steps.clearfix li:eq(' + (step - 1) + ')').addClass('current');
+            /*  console.log($('#create_property').offset().top); */
+            $('html, body').animate({
+                scrollTop: 100
+            }, 500);
+            $("#create_crm_submit").prop("disabled", false);
+        }
 
-                async function setSteps_crm(step, stepCount, action, stepListFull) {
-                    $('#msg27').empty();
-                    var edit_account = "<?php echo $_GET['edit_loc_id']; ?>";
-                    let submit_status;
 
-                    /*if (action == 'next') {
-                        await stepsubmit(step-1).then(function(res){
-                            if(res===true){
-                                stepSetter_crm(step, stepCount, action, stepListFull,edit_account);
-                            }
-                        });
+        // $('.fieldStep').hide();
+        // $('.fieldStep.step' + step).css('display', 'block');
 
-                        return true;
-                    }*/
+        $('.fieldStep').addClass('hide');
+        $('.fieldStep.step' + step).removeClass('hide');
 
-                    stepSetter_crm(step, stepCount, action, stepListFull);
+        //console.log(bootstrapValidatorSteps);
+        if (step == 1) {
+            $('.actions.clearfix').find('button[data-type="previous"]').hide();
+            if (edit_account) {
+                $('.actions.clearfix').find('.finishStepone').css('display', 'inline-block');
+                $('.actions.clearfix').find('.finishSteptwo').hide();
+                $('.actions.clearfix').find('.cancelform').css('display', 'inline-block');
+            }
+
+            //bootstrapValidatorSteps.enableFieldValidators('zone', false);
+        } else if (step == 2) {
+            if (previousn_crm != 1) {
+                var bootstrapValidator = $('#crm_form').data('bootstrapValidator');
+                try {
+                    bootstrapValidator.enableFieldValidators('groups', false);
+                } catch (e) {}
+            }
+            $('.actions.clearfix').find('button[data-type="previous"]').css('display', 'inline-block');
+            if (edit_account) {
+                $('.actions.clearfix').find('.finishStepone').hide();
+                $('.actions.clearfix').find('.finishSteptwo').css('display', 'inline-block');
+                $('.actions.clearfix').find('.cancelform').hide();
+            }
+            //if(document.getElementById("automation_property").checked){
+
+            //bootstrapValidatorSteps.enableFieldValidators('zone', true);
+            //}
+        } else {
+            $('.actions.clearfix').find('button[data-type="previous"]').css('display', 'inline-block');
+            if (edit_account) {
+                $('.actions.clearfix').find('.finishStepone').hide();
+                $('.actions.clearfix').find('.finishSteptwo').hide();
+                $('.actions.clearfix').find('.cancelform').hide();
+            }
+            //bootstrapValidatorSteps.enableFieldValidators('zone', false);
+        }
+
+        if (step == stepCount) {
+            $('.actions.clearfix').find('button[data-type="next"]').hide();
+            $('.actions.clearfix').find('.finishParent').css('display', 'inline-block');
+
+        } else {
+            $('.actions.clearfix').find('button[data-type="next"]').css('display', 'inline-block');
+            $('.actions.clearfix').find('.finishParent').hide();
+
+        }
+        //return stepListFull;
+        if(action=='ready'){
+            $('#crm_form').prepend(stepListFull);
+            //$(".finishParent").find('a[href$="#finish"]').replaceWith($('.submit-btn'));
+        }
+    }
+
+    async function setSteps_crm(step, stepCount, action, stepListFull) {
+        $('#msg27').empty();
+        var edit_account = "<?php echo $_GET['edit_loc_id']; ?>";
+        let submit_status;
+
+        /*if (action == 'next') {
+            await stepsubmit(step-1).then(function(res){
+                if(res===true){
+                    stepSetter_crm(step, stepCount, action, stepListFull,edit_account);
                 }
-
-
-                $(document).ready(function(e) {
-                    $('.mobile3_vali').focus(function() {
-                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                        $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
-                    });
-
-                    $('.mobile3_vali').keyup(function() {
-                        var phone_1 = $(this).val().replace(/[^\d]/g, "");
-                        if (phone_1.length > 9) {
-                        //$('#customer_form').bootstrapValidator().enableFieldValidators('phone', false);
-                        var phone2 = phone_1.length;
-                        if (phone_1.length > 10) {
-                            var phone2 = phone_1.length;
-                            $('#crm_form')
-                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', false);
-                            var phone_1 = phone_1.slice(0,10);
-
-                                    }
-                                    $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
-                                    //console.log(phone_1+'sss');
-                                    if (phone2 == 10) {
-                                        $('#crm_form')
-                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', true);
-                                }
-
-                                    }
-                                    else{
-                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                        $('#crm_form')
-                                    .bootstrapValidator('enableFieldValidators', 'contact_Phone', true)
-                        }
-
-                    $('#crm_form').bootstrapValidator('revalidateField', 'contact_Phone');
-                    });
-
-                    //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
-
-
-                    $(".mobile3_vali").keydown(function(e) {
-
-
-                        var mac = $('.mobile3_vali').val();
-                        var len = mac.length + 1;
-                        //console.log(e.keyCode);
-                        //console.log('len '+ len);
-
-                        if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
-                            mac1 = mac.replace(/[^0-9]/g, '');
-
-
-                            //var valu = mac1.substr(0, 3) + '-' + mac1.substr(3,3) + '-' + mac1.substr(6,4);
-
-                            //console.log(valu);
-                            //$('#phone_num_val').val(valu);
-
-                        } else {
-
-                            if (len == 4) {
-                                $('.mobile3_vali').val(function() {
-                                    return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
-                                    //console.log('mac1 ' + mac);
-
-                                });
-                            } else if (len == 8) {
-                                $('.mobile3_vali').val(function() {
-                                    return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
-                                    //console.log('mac2 ' + mac);
-
-                                });
-                            }
-                        }
-
-
-                        // Allow: backspace, delete, tab, escape, enter, '-' and .
-                        if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                            // Allow: Ctrl+A, Command+A
-                            (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-                            // Allow: Ctrl+C, Command+C
-                            (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
-                            // Allow: Ctrl+x, Command+x
-                            (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
-                            // Allow: Ctrl+V, Command+V
-                            (e.keyCode == 86 && (e.ctrlKey === true || e.metaKey === true)) ||
-                            // Allow: home, end, left, right, down, up
-                            (e.keyCode >= 35 && e.keyCode <= 40)) {
-                            // let it happen, don't do anything
-                            return;
-                        }
-                        // Ensure that it is a number and stop the keypress
-                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                            e.preventDefault();
-
-                        }
-                        $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
-                    });
-
-                    $('.mobile3_vali').focus(function() {
-                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                        $('#crm_form').data('bootstrapValidator').updateStatus('wifi_phone', 'NOT_VALIDATED').validateField('wifi_phone');
-                    });
-
-                    $('.mobile3_vali').keyup(function() {
-                        var phone_1 = $(this).val().replace(/[^\d]/g, "");
-                        if (phone_1.length > 9) {
-                        //$('#customer_form').bootstrapValidator().enableFieldValidators('phone', false);
-                        var phone2 = phone_1.length;
-                        if (phone_1.length > 10) {
-                            var phone2 = phone_1.length;
-                            $('#crm_form')
-                                    .bootstrapValidator('enableFieldValidators', 'wifi_phone', false);
-                            var phone_1 = phone_1.slice(0,10);
-
-                                    }
-                                    $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
-                                    //console.log(phone_1+'sss');
-                                    if (phone2 == 10) {
-                                        $('#crm_form')
-                                    .bootstrapValidator('enableFieldValidators', 'wifi_phone', true);
-                                }
-
-                                    }
-                                    else{
-                        $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-                        $('#crm_form')
-                                    .bootstrapValidator('enableFieldValidators', 'wifi_phone', true)
-                        }
-
-                    $('#crm_form').bootstrapValidator('revalidateField', 'wifi_phone');
-                    });
-
-                    //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
-
-
-                    $(".mobile3_vali").keydown(function(e) {
-
-
-                        var mac = $('.mobile3_vali').val();
-                        var len = mac.length + 1;
-                        //console.log(e.keyCode);
-                        //console.log('len '+ len);
-
-                        if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
-                            mac1 = mac.replace(/[^0-9]/g, '');
-
-
-                            //var valu = mac1.substr(0, 3) + '-' + mac1.substr(3,3) + '-' + mac1.substr(6,4);
-
-                            //console.log(valu);
-                            //$('#phone_num_val').val(valu);
-
-                        } else {
-
-                            if (len == 4) {
-                                $('.mobile3_vali').val(function() {
-                                    return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
-                                    //console.log('mac1 ' + mac);
-
-                                });
-                            } else if (len == 8) {
-                                $('.mobile3_vali').val(function() {
-                                    return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
-                                    //console.log('mac2 ' + mac);
-
-                                });
-                            }
-                        }
-
-
-                        // Allow: backspace, delete, tab, escape, enter, '-' and .
-                        if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-                            // Allow: Ctrl+A, Command+A
-                            (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-                            // Allow: Ctrl+C, Command+C
-                            (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
-                            // Allow: Ctrl+x, Command+x
-                            (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
-                            // Allow: Ctrl+V, Command+V
-                            (e.keyCode == 86 && (e.ctrlKey === true || e.metaKey === true)) ||
-                            // Allow: home, end, left, right, down, up
-                            (e.keyCode >= 35 && e.keyCode <= 40)) {
-                            // let it happen, don't do anything
-                            return;
-                        }
-                        // Ensure that it is a number and stop the keypress
-                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                            e.preventDefault();
-
-                        }
-                        $('#crm_form').data('bootstrapValidator').updateStatus('wifi_phone', 'NOT_VALIDATED').validateField('wifi_phone');
-                    });
-                    //create_crm_submit
-                    $('#create_crm_submit').click(function(){
-                        $("#overlay").css("display","block");
-                    });
-
-                    var stepListFull = '<div class="steps clearfix" style="margin-top:20px"><ul role="tablist">';
-                    var stepCount = 0;
-                    $('#crm_form fieldset').each(function(index, element) {
-                        $(this).addClass('step' + (index + 1)).addClass('fieldStep');
-                        stepListFull += stepList_crm((index + 1), $(this).attr('data-name'));
-                        stepCount++;
-                    });
-                    stepListFull += '</ul></div>';
-
-                    setSteps_crm(1, stepCount, 'ready', stepListFull);
-
-                });
-
-            var previousn_crm;
-            $('.actions.clearfix').find('button[data-type="previous"]').bind('click', function(e) {
-                previousn_crm = 1;
-                setSteps_crm((parseInt($('.steps.clearfix li.current').attr('data-step')) - 1), $('#crm_form fieldset').length, 'previous', undefined);
-                e.preventDefault();
             });
 
-            $('.actions.clearfix').find('button[data-type="next"]').bind('click',async function(e) {
-                let in_html = $(this).html();
-                $(this).attr('disabled','disabled');
-                $(this).html('<img src="img/loading_me.gif">');
-                setSteps_crm((parseInt($('.steps.clearfix li.current').attr('data-step')) + 1), $('#crm_form fieldset').length, 'next', undefined);
-                $(this).attr('disabled',false);
-                $(this).html(in_html);
+            return true;
+        }*/
+
+        stepSetter_crm(step, stepCount, action, stepListFull);
+    }
+
+
+    $(document).ready(function(e) {
+        $('.mobile3_vali').focus(function() {
+            $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+            $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
+        });
+
+        $('.mobile3_vali').keyup(function() {
+            var phone_1 = $(this).val().replace(/[^\d]/g, "");
+            if (phone_1.length > 9) {
+            //$('#customer_form').bootstrapValidator().enableFieldValidators('phone', false);
+            var phone2 = phone_1.length;
+            if (phone_1.length > 10) {
+                var phone2 = phone_1.length;
+                $('#crm_form')
+                        .bootstrapValidator('enableFieldValidators', 'contact_Phone', false);
+                var phone_1 = phone_1.slice(0,10);
+
+                        }
+                        $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
+                        //console.log(phone_1+'sss');
+                        if (phone2 == 10) {
+                            $('#crm_form')
+                        .bootstrapValidator('enableFieldValidators', 'contact_Phone', true);
+                    }
+
+                        }
+                        else{
+            $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+            $('#crm_form')
+                        .bootstrapValidator('enableFieldValidators', 'contact_Phone', true)
+            }
+
+        $('#crm_form').bootstrapValidator('revalidateField', 'contact_Phone');
+        });
+
+        //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
+
+
+        $(".mobile3_vali").keydown(function(e) {
+
+
+            var mac = $('.mobile3_vali').val();
+            var len = mac.length + 1;
+            //console.log(e.keyCode);
+            //console.log('len '+ len);
+
+            if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
+                mac1 = mac.replace(/[^0-9]/g, '');
+
+
+                //var valu = mac1.substr(0, 3) + '-' + mac1.substr(3,3) + '-' + mac1.substr(6,4);
+
+                //console.log(valu);
+                //$('#phone_num_val').val(valu);
+
+            } else {
+
+                if (len == 4) {
+                    $('.mobile3_vali').val(function() {
+                        return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
+                        //console.log('mac1 ' + mac);
+
+                    });
+                } else if (len == 8) {
+                    $('.mobile3_vali').val(function() {
+                        return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
+                        //console.log('mac2 ' + mac);
+
+                    });
+                }
+            }
+
+
+            // Allow: backspace, delete, tab, escape, enter, '-' and .
+            if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
+                // Allow: Ctrl+A, Command+A
+                (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                // Allow: Ctrl+C, Command+C
+                (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                // Allow: Ctrl+x, Command+x
+                (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                // Allow: Ctrl+V, Command+V
+                (e.keyCode == 86 && (e.ctrlKey === true || e.metaKey === true)) ||
+                // Allow: home, end, left, right, down, up
+                (e.keyCode >= 35 && e.keyCode <= 40)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
                 e.preventDefault();
-            });
-    </script>
+
+            }
+            $('#crm_form').data('bootstrapValidator').updateStatus('contact_Phone', 'NOT_VALIDATED').validateField('contact_Phone');
+        });
+
+        $('.mobile3_vali').focus(function() {
+            $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+            $('#crm_form').data('bootstrapValidator').updateStatus('wifi_phone', 'NOT_VALIDATED').validateField('wifi_phone');
+        });
+
+        $('.mobile3_vali').keyup(function() {
+            var phone_1 = $(this).val().replace(/[^\d]/g, "");
+            if (phone_1.length > 9) {
+            //$('#customer_form').bootstrapValidator().enableFieldValidators('phone', false);
+            var phone2 = phone_1.length;
+            if (phone_1.length > 10) {
+                var phone2 = phone_1.length;
+                $('#crm_form')
+                        .bootstrapValidator('enableFieldValidators', 'wifi_phone', false);
+                var phone_1 = phone_1.slice(0,10);
+
+                        }
+                        $(this).val(phone_1.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'))
+                        //console.log(phone_1+'sss');
+                        if (phone2 == 10) {
+                            $('#crm_form')
+                        .bootstrapValidator('enableFieldValidators', 'wifi_phone', true);
+                    }
+
+                        }
+                        else{
+            $(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+            $('#crm_form')
+                        .bootstrapValidator('enableFieldValidators', 'wifi_phone', true)
+            }
+
+        $('#crm_form').bootstrapValidator('revalidateField', 'wifi_phone');
+        });
+
+        //$('#phone_number').val($('#phone_number').val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3'));
+
+
+        $(".mobile3_vali").keydown(function(e) {
+
+
+            var mac = $('.mobile3_vali').val();
+            var len = mac.length + 1;
+            //console.log(e.keyCode);
+            //console.log('len '+ len);
+
+            if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
+                mac1 = mac.replace(/[^0-9]/g, '');
+
+
+                //var valu = mac1.substr(0, 3) + '-' + mac1.substr(3,3) + '-' + mac1.substr(6,4);
+
+                //console.log(valu);
+                //$('#phone_num_val').val(valu);
+
+            } else {
+
+                if (len == 4) {
+                    $('.mobile3_vali').val(function() {
+                        return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
+                        //console.log('mac1 ' + mac);
+
+                    });
+                } else if (len == 8) {
+                    $('.mobile3_vali').val(function() {
+                        return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
+                        //console.log('mac2 ' + mac);
+
+                    });
+                }
+            }
+
+
+            // Allow: backspace, delete, tab, escape, enter, '-' and .
+            if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
+                // Allow: Ctrl+A, Command+A
+                (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                // Allow: Ctrl+C, Command+C
+                (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                // Allow: Ctrl+x, Command+x
+                (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                // Allow: Ctrl+V, Command+V
+                (e.keyCode == 86 && (e.ctrlKey === true || e.metaKey === true)) ||
+                // Allow: home, end, left, right, down, up
+                (e.keyCode >= 35 && e.keyCode <= 40)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+
+            }
+            $('#crm_form').data('bootstrapValidator').updateStatus('wifi_phone', 'NOT_VALIDATED').validateField('wifi_phone');
+        });
+        //create_crm_submit
+        $('#create_crm_submit').click(function(){
+            $("#overlay").css("display","block");
+        });
+
+        var stepListFull = '<div class="steps clearfix" style="margin-top:20px"><ul role="tablist">';
+        var stepCount = 0;
+        $('#crm_form fieldset').each(function(index, element) {
+            $(this).addClass('step' + (index + 1)).addClass('fieldStep');
+            stepListFull += stepList_crm((index + 1), $(this).attr('data-name'));
+            stepCount++;
+        });
+        stepListFull += '</ul></div>';
+
+        setSteps_crm(1, stepCount, 'ready', stepListFull);
+
+    });
+
+    var previousn_crm;
+    $('.actions.clearfix').find('button[data-type="previous"]').bind('click', function(e) {
+        previousn_crm = 1;
+        setSteps_crm((parseInt($('.steps.clearfix li.current').attr('data-step')) - 1), $('#crm_form fieldset').length, 'previous', undefined);
+        e.preventDefault();
+    });
+
+    $('.actions.clearfix').find('button[data-type="next"]').bind('click',async function(e) {
+        let in_html = $(this).html();
+        $(this).attr('disabled','disabled');
+        $(this).html('<img src="img/loading_me.gif">');
+        setSteps_crm((parseInt($('.steps.clearfix li.current').attr('data-step')) + 1), $('#crm_form fieldset').length, 'next', undefined);
+        $(this).attr('disabled',false);
+        $(this).html(in_html);
+        e.preventDefault();
+    });
+</script>
