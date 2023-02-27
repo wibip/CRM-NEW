@@ -498,7 +498,7 @@ class CommonFunctions{
             break;
         }
 
-   
+        echo $propertyQuery;
         /* get values for filters before filtering */
         $filter_results = $this->db->selectDB($propertyQuery);
         

@@ -123,7 +123,7 @@ $businessArray = $propertyResult['businessArray'];
                                         <div class="border card my-4">
                                             <div class="border-bottom card-header p-4">
                                                 <div class="g-3 row">
-                                                    <span class="fs-5">Property Filters2</span>
+                                                    <span class="fs-5">Property Filters</span>
                                                 </div>
                                             </div>
                                             <form method="post" class="row g-3 p-4">
