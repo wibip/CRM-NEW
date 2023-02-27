@@ -49,8 +49,8 @@ if (isset($_POST['filter'])) {
         $end_date = $en_date . ' 23:59:59';
     }
 } 
-
-$propertyResult = $CommonFunctions->getProperties($issub,$user_distributor,$start_date,$end_date,$limit,$client_name,$business_name,$status);
+// var_dump($business_name);
+$propertyResult = $CommonFunctions->getProperties($user_type,$user_name,$user_distributor,$start_date,$end_date,$limit,$client_name,$business_name,$status);
 
 $query_results = $propertyResult['query_results'];
 $clientArray = $propertyResult['clientArray'];

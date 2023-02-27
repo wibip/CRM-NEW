@@ -479,6 +479,8 @@ class CommonFunctions{
         $clientArray = [];
         $businessArray = [];
 
+        // var_dump($business_name);
+
         $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
         switch($user_type ){
             case 'SADMIN' :
@@ -498,7 +500,6 @@ class CommonFunctions{
             break;
         }
 
-        echo $propertyQuery;
         /* get values for filters before filtering */
         $filter_results = $this->db->selectDB($propertyQuery);
         
@@ -525,7 +526,7 @@ class CommonFunctions{
         if($status != null && $status != 'all') {
             $propertyQuery .= " AND status='".$status."'";
         }
-
+        // echo $propertyQuery;
         $query_results = $this->db->selectDB($propertyQuery);
 
         $results = ['query_results'=>$query_results,'clientArray'=>$clientArray,'businessArray'=>$businessArray,];
