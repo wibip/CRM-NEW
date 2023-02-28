@@ -808,7 +808,7 @@ if (isset($_POST['submit_mno_form'])) { //6
             $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
             header('Location: operations.php');
         }
-    }
+}
 
      elseif (isset($_GET['edit_mno_id'])) {
         // if ($_SESSION['FORM_SECRET'] == $_GET['token10']) {
