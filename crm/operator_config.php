@@ -20,9 +20,7 @@ include 'header_new.php';
                                         <h1 class="head">Operator Config</h1>
                                         <br/>
                                         <h5 class="head">QoS Profile</h5>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-  Open modal
-</button>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#qosprofile">Add QoS Profile</button>
                                         <table class="table table-striped" style="width:100%" id="qos-table">
                                             <thead>
                                                 <tr>
@@ -64,6 +62,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">BusinessID Scope</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#business_id_scope">Add BusinessID Scope</button>
                                         <table class="table table-striped" style="width:100%" id="bid-scope-table">
                                             <thead>
                                                 <tr>
@@ -99,6 +98,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">ServiceType Map</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#service_type_map">Add Service Type Map</button>
                                         <table class="table table-striped" style="width:100%" id="service-type-table">
                                             <thead>
                                                 <tr>
@@ -138,29 +138,194 @@ include 'header_new.php';
 </div>
 <!-- /main -->
 
-<!-- The Modal -->
-<div class="modal" id="myModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Modal Heading</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        Modal body..
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-      </div>
-
+<!-- The Modal qosProfile-->
+<div class="modal" id="qosprofile">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="border card my-4">
+                    <div class="border-bottom card-header p-4">
+                        <div class="g-3 row">
+                            <h4>Create QoS Profile</h4>
+                        </div>
+                    </div>
+                    <form class="row g-3 p-4">
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ATL</option>
+                                <option value="2">FRT</option>
+                                <option value="2">MCOM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Qos Profile</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">28K</option>
+                                <option value="2">10X10M</option>
+                                <option value="3">150x150M</option>
+                                <option value="1">1X1G</option>
+                                <option value="2">10X10M</option>
+                                <option value="3">150x150M</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">Qos Profile ID</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">vSZ Mapping</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">WAG Magic</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">Product Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Group</label>
+                            <select id="inputState" class="form-select">
+                                <option value="">None</option>
+                                <option value="Att">Att</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Account Template</label>
+                            <select id="inputState" class="form-select">
+                                <option value="">None</option>
+                                <option value="East">att-account-template</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Service Profile</label>
+                            <select id="inputState" class="form-select">
+                                <option value="">None</option>
+                                <option value="1">QoS-Profile-128K</option>
+                                <option value="2">QoS-Profile-10x10</option>
+                                <option value="3">QoS-Profile-100x100</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
+
+<!-- The Modal business ID Scope-->
+<div class="modal" id="business_id_scope">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="border card my-4">
+                    <div class="border-bottom card-header p-4">
+                        <div class="g-3 row">
+                            <h4>Create BusinessID Scope</h4>
+                        </div>
+                    </div>
+                    <form class="row g-3 p-4">
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ATL</option>
+                                <option value="2">FRT</option>
+                                <option value="2">MCOM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Sub Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">SDL</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Service Type</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ENT-SMB-NON-AP-MERAKI</option>
+                                <option value="2">ENT-SMB-NON-AP-MERAKI</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">Business Type</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">Business Prefix</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">BusinessID From</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">BusinessID To</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal business ID Scope-->
+<div class="modal" id="service_type_map">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="border card my-4">
+                    <div class="border-bottom card-header p-4">
+                        <div class="g-3 row">
+                            <h4>Create ServiceType Map</h4>
+                        </div>
+                    </div>
+                    <form class="row g-3 p-4">
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ATL</option>
+                                <option value="2">FRT</option>
+                                <option value="2">MCOM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Sub Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">SDL</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Service Type</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ENT-SMB-NON-AP-MERAKI</option>
+                                <option value="2">ENT-SMB-NON-AP-MERAKI</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>

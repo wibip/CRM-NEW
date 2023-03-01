@@ -19,6 +19,7 @@ include 'header_new.php';
                                         <h1 class="head">Operator IP Scope</h1>
                                         <br/>
                                         <h5 class="head">Operator Management IP Scope</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#opt_mgt_ip_scope">Add Management IP Scope</button>
                                         <table class="table table-striped" style="width:100%" id="oip-table">
                                             <thead>
                                                 <tr>
@@ -51,6 +52,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">Property IP Scope</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#property_ip_scope">Add Property IP Scope</button>
                                         <table class="table table-striped" style="width:100%" id="pip-table">
                                             <thead>
                                                 <tr>
@@ -83,6 +85,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">Property IP Scope :: Public</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#public_property_ip_scope">Add Public Property IP Scope</button>
                                         <table class="table table-striped" style="width:100%" id="pips-public-table">
                                             <thead>
                                                 <tr>
@@ -121,6 +124,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">Property IP Scope :: Private</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#private_property_ip_scope">Add Private Property IP Scope</button>
                                         <table class="table table-striped" style="width:100%" id="pips-private-table">
                                         <thead>
                                                 <tr>
@@ -171,6 +175,249 @@ include 'header_new.php';
     <!-- /main-inner -->
 </div>
 <!-- /main -->
+
+<!-- The Modal opt_mgt_ip_scope-->
+<div class="modal" id="opt_mgt_ip_scope">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="border card my-4">
+                    <div class="border-bottom card-header p-4">
+                        <div class="g-3 row">
+                            <h4>Create Operator Management IP Scope</h4>
+                        </div>
+                    </div>
+                    <form class="row g-3 p-4">
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ATL</option>
+                                <option value="2">FRT</option>
+                                <option value="2">MCOM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Sub Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">SDL</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">IP Range: From</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">IP Range: To</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">Region</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">Central</option>
+                                <option value="2">East</option>
+                                <option value="3">Midwest</option>
+                                <option value="3">West</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Netmask</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal property_ip_scope-->
+<div class="modal" id="property_ip_scope">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="border card my-4">
+                    <div class="border-bottom card-header p-4">
+                        <div class="g-3 row">
+                            <h4>Create Property IP Scope</h4>
+                        </div>
+                    </div>
+                    <form class="row g-3 p-4">
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ATL</option>
+                                <option value="2">FRT</option>
+                                <option value="2">MCOM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Sub Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">SDL</option>
+                            </select>
+                        </div>                        
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Property</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">Full Gospel</option>
+                                <option value="2">Creekside</option>
+                                <option value="2">MPM Bio Impact</option>
+                                <option value="2">Rio Del Sol Needles</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Customer Peer ID</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">IP Network</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Netmask</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal public_property_ip_scope-->
+<div class="modal" id="public_property_ip_scope">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="border card my-4">
+                    <div class="border-bottom card-header p-4">
+                        <div class="g-3 row">
+                            <h4>Create Public Property IP Scope</h4>
+                        </div>
+                    </div>
+                    <form class="row g-3 p-4">
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ATL</option>
+                                <option value="2">FRT</option>
+                                <option value="2">MCOM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Sub Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">SDL</option>
+                            </select>
+                        </div>      
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Property Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Customer Peer ID</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Firewall Public Net</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Firewall Public IP</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Firewall VLAN50 Net</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Firewall Serial No</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal private_property_ip_scope-->
+<div class="modal" id="private_property_ip_scope">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="border card my-4">
+                    <div class="border-bottom card-header p-4">
+                        <div class="g-3 row">
+                            <h4>Create Public Property IP Scope</h4>
+                        </div>
+                    </div>
+                    <form class="row g-3 p-4">
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ATL</option>
+                                <option value="2">FRT</option>
+                                <option value="2">MCOM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Sub Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">SDL</option>
+                            </select>
+                        </div>      
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Property Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Customer Peer ID</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">VLAN Static IP</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Underlay Net</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">VLAN DHCP AP IP</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {
