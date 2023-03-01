@@ -1,3 +1,4 @@
+<link href="css/multi-select.css" media="screen" rel="stylesheet" type="text/css">
 <?php
 include 'header_new.php';
 
@@ -809,11 +810,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                             </div>
                                             <form onkeyup="submit_mno_formfn();" onchange="submit_mno_formfn();" id="mno_form" name="mno_form" class="row g-3 p-4" method="POST" action="operators.php?<?php if($mno_edit==1){echo "t=8&mno_edit=1&mno_edit_id=$edit_mno_id";}else{echo "t=6";}?>" >
                                                 <input type="hidden" name="form_secret6" id="form_secret6" value="<?=$_SESSION['FORM_SECRET']?>" />
-                                                <style type="text/css">
-                                                    .ms-container{
-                                                        display: inline-block !important;
-                                                    }
-                                                </style>
                                                 <div class="col-md-6">
                                                     <label class="control-label" for="api_profile">BI API Profile</label>
                                                     <select onchange="add_module(this)" multiple="multiple" name="api_profile[]" id="api_profile" class="span4 form-control" required>
@@ -1085,3 +1081,10 @@ if (isset($_POST['submit_mno_form'])) { //6
         window.location = "?";
     }
 </script>
+
+<script src="js/jquery.multi-select.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#api_profile').multiSelect();  
+    });
+  </script>
