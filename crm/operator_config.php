@@ -20,6 +20,9 @@ include 'header_new.php';
                                         <h1 class="head">Operator Config</h1>
                                         <br/>
                                         <h5 class="head">QoS Profile</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+  Open modal
+</button>
                                         <table class="table table-striped" style="width:100%" id="qos-table">
                                             <thead>
                                                 <tr>
@@ -134,6 +137,31 @@ include 'header_new.php';
     <!-- /main-inner -->
 </div>
 <!-- /main -->
+
+<!-- The Modal -->
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        Modal body..
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <script>
     $(document).ready(function () {
