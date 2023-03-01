@@ -137,7 +137,7 @@ include 'header_new.php';
                                                     <label for="inputPassword4" class="form-label">Realm Prefix</label>
                                                     <input type="text" class="form-control">
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="col-md-12">
                                                     <label for="inputEmail4" class="form-label">Notes</label>
                                                     <textarea class="form-control" placeholder="" id="floatingTextarea"></textarea>
                                                 </div>

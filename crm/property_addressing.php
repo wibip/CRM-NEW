@@ -19,6 +19,7 @@ include 'header_new.php';
                                         <h1 class="head">Property Addressing</h1>
                                         <br/>
                                         <h5 class="head">Properties</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#property">Add Property</button>
                                         <table class="table table-striped" style="width:100%" id="property-addressing-table">
                                             <thead>
                                                 <tr>
@@ -57,6 +58,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">Property IP Addressing</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#property_ip_addressing">Add IP Addressing</button>
                                         <table class="table table-striped" style="width:100%" id="pip-addressing-table">
                                             <thead>
                                                 <tr>
@@ -110,6 +112,140 @@ include 'header_new.php';
     <!-- /main-inner -->
 </div>
 <!-- /main -->
+
+<!-- The Modal property-->
+<div class="modal" id="property">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="border card my-4">
+                    <div class="border-bottom card-header p-4">
+                        <div class="g-3 row">
+                            <h4>Create Property</h4>
+                        </div>
+                    </div>
+                    <form class="row g-3 p-4">
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ATL</option>
+                                <option value="2">FRT</option>
+                                <option value="2">MCOM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Sub Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">SDL</option>
+                            </select>
+                        </div>    
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Vertical</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">ENT</option>
+                                <option value="2">HOS</option>
+                            </select>
+                        </div>   
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Property Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Realm</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Type</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">AC</option>
+                            </select>
+                        </div>  
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">CLLI</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Property Short Name</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal property_ip_addressing-->
+<div class="modal" id="property_ip_addressing">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="border card my-4">
+                    <div class="border-bottom card-header p-4">
+                        <div class="g-3 row">
+                            <h4>Create Property IP Addressing</h4>
+                        </div>
+                    </div>
+                    <form class="row g-3 p-4">
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Operator Code</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">ATL</option>
+                                <option value="2">FRT</option>
+                                <option value="2">MCOM</option>
+                            </select>
+                        </div>    
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Vertical</label>
+                            <select id="inputState" class="form-select">
+                                <option value="1">None</option>
+                                <option value="2">ENT</option>
+                                <option value="2">HOS</option>
+                            </select>
+                        </div>   
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Node Type</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Model Number</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Host Name</label>
+                            <input type="text" class="form-control">
+                        </div> 
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">IP</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">VLAN-Type-Network-Netmask-Gateway</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Notes</label>
+                            <textarea class="form-control" placeholder="" id="floatingTextarea"></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {
