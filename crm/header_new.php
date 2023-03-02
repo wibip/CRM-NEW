@@ -1303,6 +1303,29 @@ else{
 
 
 <style>
+	.btn-div{
+		display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+    -webkit-box-pack: end;
+        -ms-flex-pack: end;
+            justify-content: end;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+	}
+	.btn-div button{
+		margin-right: 15px;
+	}
+	h5.head{
+		margin-bottom: 15px;
+	}
+	div.dataTables_wrapper div.dataTables_filter{
+		text-align: left !important;
+	}
+	div.dataTables_wrapper div.dataTables_filter input{
+		margin-left: 0 !important;
+	}
 	<?php if ($style_type == 'light') { ?>.navbar .nav .dropdown-toggle .caret,
 	.navbar .nav .open.dropdown .caret {
 		border-top-color: <?php echo $camp_theme_color; ?>;

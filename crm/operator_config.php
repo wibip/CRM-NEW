@@ -20,7 +20,6 @@ include 'header_new.php';
                                         <h1 class="head">Operator Config</h1>
                                         <br/>
                                         <h5 class="head">QoS Profile</h5>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#qosprofile">Add QoS Profile</button>
                                         <table class="table table-striped" style="width:100%" id="qos-table">
                                             <thead>
                                                 <tr>
@@ -62,7 +61,6 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">BusinessID Scope</h5>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#business_id_scope">Add BusinessID Scope</button>
                                         <table class="table table-striped" style="width:100%" id="bid-scope-table">
                                             <thead>
                                                 <tr>
@@ -98,7 +96,6 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">ServiceType Map</h5>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#service_type_map">Add Service Type Map</button>
                                         <table class="table table-striped" style="width:100%" id="service-type-table">
                                             <thead>
                                                 <tr>
@@ -330,8 +327,47 @@ include 'header_new.php';
 
 <script>
     $(document).ready(function () {
-        $('#qos-table').dataTable();
-        $('#bid-scope-table').dataTable();
-        $('#service-type-table').dataTable();
+        $('#qos-table').dataTable({
+            "initComplete": function(settings, json) {
+                $('#qos-table_filter').find('input').removeClass('form-control-sm');
+                $('#qos-table_wrapper').find('.btn-div').prepend('<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#qosprofile">Add QoS Profile</button>');
+            },
+            "dom": "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'<'btn-div'l>>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        "language": {
+            "lengthMenu": "_MENU_",
+            "search": "_INPUT_",
+        "searchPlaceholder": "Search..."
+        }
+        });
+        $('#bid-scope-table').dataTable({
+            "initComplete": function(settings, json) {
+                $('#bid-scope-table_filter').find('input').removeClass('form-control-sm');
+                $('#bid-scope-table_wrapper').find('.btn-div').prepend('<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#qosprofile">Add QoS Profile</button>');
+           },
+            "dom": "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'<'btn-div'l>>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        "language": {
+            "lengthMenu": "_MENU_",
+            "search": "_INPUT_",
+        "searchPlaceholder": "Search..."
+        }
+        });
+        $('#service-type-table').dataTable({
+            "initComplete": function(settings, json) {
+                $('#service-type-table_filter').find('input').removeClass('form-control-sm');
+                $('#service-type-table_wrapper').find('.btn-div').prepend('<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#qosprofile">Add QoS Profile</button>');
+           },
+            "dom": "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'<'btn-div'l>>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        "language": {
+            "lengthMenu": "_MENU_",
+            "search": "_INPUT_",
+        "searchPlaceholder": "Search..."
+        }
+        });
     });
 </script>
