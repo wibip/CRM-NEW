@@ -1637,17 +1637,15 @@ input[type=checkbox] {
 }
 input[type=radio] {
     position: absolute;
-    width: 26px;
-    height: 26px;
+    width: 26px !important;
+    height: 27px !important;
     overflow: hidden;
     margin: 0;
     padding: 0;
     outline: 0;
     opacity: 0;
     z-index: 2;
-}
-input[type=radio]:not(.hide_rad){
-    margin-top: 6px;
+    cursor: pointer;
 }
 input[type=checkbox]{
     margin-top: 5px

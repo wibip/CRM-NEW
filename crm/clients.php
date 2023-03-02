@@ -1,42 +1,5 @@
-<?php ob_start(); ?>
-<!DOCTYPE html>
-<html lang="en">
 <?php
-session_start();
-include 'header_top.php';
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
-/* No cache*/
-header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
-header("Pragma: no-cache"); // HTTP 1.0.
-header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
-
-/*classes & libraries*/
-require_once 'classes/dbClass.php';
-require_once './classes/CommonFunctions.php';
-$db = new db_functions();
-require_once dirname(__FILE__) . '/models/userMainModel.php';
-$user_model = new userMainModel();
-require_once dirname(__FILE__) . '/models/clientUserModel.php';
-$client_model = new clientUserModel();
-$url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
-$CommonFunctions = new CommonFunctions();
-
-require_once 'src/CRM/functions.php';
-/*Get selected API profiles*/
-// $apiIds = $CommonFunctions->getSelectedApis($_SESSION['user_distributor']);
-// $api_profiles = null;
-// if (!empty($apiIds)) {
-// 	$api_profiles = $CommonFunctions->getApiProfiles($apiIds);
-// }
-$is_edit = false;
-$showProperty = false;
-$showLocation = false;
-if(isset($_GET['property_id']) && $_GET['property_id'] > 0){
-	$showProperty = true;
-}
+include 'header_new.php';
 //load countries
 $country_sql="SELECT * FROM (SELECT `country_code` AS a,`country_name` AS b FROM `exp_mno_country` WHERE `default_select`=1 ORDER BY `country_name` ASC) AS a
                             UNION ALL
@@ -55,140 +18,105 @@ foreach ($get_regions['data'] as $state) {
 
 $utc = new DateTimeZone('UTC');
 $dt = new DateTime('now', $utc);
-
-$page = 'Client';
-
 ?>
 
-<head>
-	<meta charset="utf-8">
-	<title>Clients Management</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<link href="css/bootstrap.min.css" rel="stylesheet">
-	<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
-	<link href="css/multi-select.css" media="screen" rel="stylesheet" type="text/css">
-	<link href="css/fonts/css.css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
-	<link href="css/font-awesome.css" rel="stylesheet">
-	<link href="css/style.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="css/formValidation.css">
-	<!--Alert message css-->
-	<link rel="stylesheet" href="css/jquery-ui-alert.css" type="text/css" />
-	<!-- tool tip css -->
-	<link rel="stylesheet" type="text/css" href="css/tooltipster-shadow.css" />
-	<link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
-	<!--toggle column-->
-	<link rel="stylesheet" href="css/tablesaw.css">
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-	<!-- tool tip js -->
-	<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
+<style>
+	.disabled {
+		background-color: #eee;
+		color: #aaa;
+		cursor: text;
+	}
 
-	<style>
-		.disabled {
-			background-color: #eee;
-			color: #aaa;
-			cursor: text;
-		}
-
-		.pop-up{
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: none;
-            z-index: 122;
-        }
-        .pop-up.show{
-            display: block;
-        }
-        .pop-up-bg{
-            background-color: rgba(76, 78, 100, 0.5);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            bottom: 0;
-            z-index: -1;
-        }
-        .pop-up-main{
-            height: 100%;
-        overflow: auto;
-        text-align: center;
-        width: 100%;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-pack: center;
-            -ms-flex-pack: center;
-                justify-content: center;
-        }
-        .pop-up-content{
-            background: #fff;
-        margin: auto;
-        box-shadow: rgb(76 78 100 / 20%) 0px 6px 6px -3px;
-        border-radius: 10px;
-        padding: 40px;
-        max-width: 800px;
-        width: 100%;
-        box-sizing: border-box;
-        }
-        .pop-up-content .form-double{
-            display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-            -ms-flex-flow: row wrap;
-                flex-flow: row wrap;
-        -webkit-box-pack: justify;
-            -ms-flex-pack: justify;
-                justify-content: space-between;
-        }
-        .pop-up-content .form-double .control-group{
-            width: 50%;
-            text-align: left;
-        }
-        .pop-up-content .form-double .control-group input{
-            width: 90% !important;
-        }
-        .pop-up-content form{
-            margin-bottom: 0;
-        }
-        .pop-up-content form .actions{
-            text-align: right;
-        margin-top: 20px;
-        }
-        .pop-up-content form .actions button{
-            margin-left: 5px;
-        }.control-group.mask .controls div{
-            position: relative;
-            overflow: hidden;
-        }
-        .control-group.mask span{
-            position: absolute;
-            left: 0;
-            height: 100%;
-            background: #e4e4e4;
-            border-radius: 10px;
-            padding: 8px;
-            box-sizing: border-box;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-        .control-group.mask input{
-            /* padding-left: 50px; */
-        }
-	</style>
-	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-	<!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-	<!--table colimn show hide-->
-	<script type="text/javascript" src="js/tablesaw.js"></script>
-	<script type="text/javascript" src="js/tablesaw-init.js"></script>
-	<script type="text/javascript">
+	.pop-up{
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		display: none;
+		z-index: 122;
+	}
+	.pop-up.show{
+		display: block;
+	}
+	.pop-up-bg{
+		background-color: rgba(76, 78, 100, 0.5);
+		position: fixed;
+		width: 100%;
+		top: 0;
+		bottom: 0;
+		z-index: -1;
+	}
+	.pop-up-main{
+		height: 100%;
+	overflow: auto;
+	text-align: center;
+	width: 100%;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+		-ms-flex-pack: center;
+			justify-content: center;
+	}
+	.pop-up-content{
+		background: #fff;
+	margin: auto;
+	box-shadow: rgb(76 78 100 / 20%) 0px 6px 6px -3px;
+	border-radius: 10px;
+	padding: 40px;
+	max-width: 800px;
+	width: 100%;
+	box-sizing: border-box;
+	}
+	.pop-up-content .form-double{
+		display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+		-ms-flex-flow: row wrap;
+			flex-flow: row wrap;
+	-webkit-box-pack: justify;
+		-ms-flex-pack: justify;
+			justify-content: space-between;
+	}
+	.pop-up-content .form-double .control-group{
+		width: 50%;
+		text-align: left;
+	}
+	.pop-up-content .form-double .control-group input{
+		width: 90% !important;
+	}
+	.pop-up-content form{
+		margin-bottom: 0;
+	}
+	.pop-up-content form .actions{
+		text-align: right;
+	margin-top: 20px;
+	}
+	.pop-up-content form .actions button{
+		margin-left: 5px;
+	}.control-group.mask .controls div{
+		position: relative;
+		overflow: hidden;
+	}
+	.control-group.mask span{
+		position: absolute;
+		left: 0;
+		height: 100%;
+		background: #e4e4e4;
+		border-radius: 10px;
+		padding: 8px;
+		box-sizing: border-box;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+	.control-group.mask input{
+		/* padding-left: 50px; */
+	}
+</style>
+<script type="text/javascript">
 
 		var country_arr = new Array( "United States of America","Afghanistan", "Albania", "Algeria", "American Samoa", "Angola", "Anguilla", "Antartica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Ashmore and Cartier Island", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burma", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Clipperton Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo, Democratic Republic of the", "Congo, Republic of the", "Cook Islands", "Costa Rica", "Cote d'Ivoire", "Croatia", "Cuba", "Cyprus", "Czeck Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Europa Island", "Falkland Islands (Islas Malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern and Antarctic Lands", "Gabon", "Gambia, The", "Gaza Strip", "Georgia", "Germany", "Ghana", "Gibraltar", "Glorioso Islands", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and McDonald Islands", "Holy See (Vatican City)", "Honduras", "Hong Kong", "Howland Island", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Ireland, Northern", "Israel", "Italy", "Jamaica", "Jan Mayen", "Japan", "Jarvis Island", "Jersey", "Johnston Atoll", "Jordan", "Juan de Nova Island", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia, Former Yugoslav Republic of", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Man, Isle of", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia, Federated States of", "Midway Islands", "Moldova", "Monaco", "Mongolia", "Montserrat", "Morocco", "Mozambique", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcaim Islands", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romainia", "Russia", "Rwanda", "Saint Helena", "Saint Kitts and Nevis", "Saint Lucia", "Saint Pierre and Miquelon", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Scotland", "Senegal", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia and South Sandwich Islands", "Spain", "Spratly Islands", "Sri Lanka", "Sudan", "Suriname", "Svalbard", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Tobago", "Toga", "Tokelau", "Tonga", "Trinidad", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Virgin Islands", "Wales", "Wallis and Futuna", "West Bank", "Western Sahara", "Yemen", "Yugoslavia", "Zambia", "Zimbabwe");
 
@@ -739,17 +667,44 @@ $page = 'Client';
 			}
 		}
     </script>
-	<?php
+<?php
 
-	// echo 'Safe-01';
-	include 'header.php';
-	// echo 'Safe-02';
+$CommonFunctions = new CommonFunctions();
+
+require_once 'src/CRM/functions.php';
+// }
+$is_edit = false;
+$showProperty = false;
+$showLocation = false;
+if(isset($_GET['property_id']) && $_GET['property_id'] > 0){
+	$showProperty = true;
+}
+//load countries
+$country_sql="SELECT * FROM (SELECT `country_code` AS a,`country_name` AS b FROM `exp_mno_country` WHERE `default_select`=1 ORDER BY `country_name` ASC) AS a
+                            UNION ALL
+                            SELECT * FROM (SELECT `country_code`,`country_name` FROM `exp_mno_country` WHERE `default_select`=0 ORDER BY `country_name` ASC) AS b";
+$country_result = $db->selectDB($country_sql);
+
+//load country states
+$regions_sql="SELECT `states_code`, `description` FROM `exp_country_states` ORDER BY description";
+$get_regions = $db->selectDB($regions_sql);
+$s_a = '';
+$s_a_val = '';
+foreach ($get_regions['data'] as $state) {
+    $s_a .= $state['description'].'|';
+    $s_a_val .= $state['states_code'].'|';
+}
+
+$utc = new DateTimeZone('UTC');
+$dt = new DateTime('now', $utc);
+
+$page = 'Client';
 	/*Get selected API profiles*/
 	$apiIds = $CommonFunctions->getSelectedApis($user_distributor);
 	$api_profiles = null;
-	if (!empty($apiIds)) {
-		$api_profiles = $CommonFunctions->getApiProfiles($apiIds);
-	}
+	// if (!empty($apiIds)) {
+	$api_profiles = $CommonFunctions->getApiProfiles($apiIds);
+	// }
 	// die;
 	require_once 'layout/' . $camp_layout . '/config.php';
 
@@ -761,7 +716,8 @@ $page = 'Client';
 		$$variable_tab = 'set';
 	} else {
 		//initially page loading///
-		$tab1 = "set";
+		$tab2 = "set";
+		$tab1 = null;
 	}
 
 	$priority_zone_array = array(
@@ -1372,32 +1328,16 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 					<div class="row">
 						<div class="span12">
 							<div class="widget ">
-								<div class="widget-header">
-									<!-- <i class="icon-user"></i> -->
-									<h3>Client Management</h3>
-								</div>
-								<!-- /widget-header -->
 								<div class="widget-content">
 									<div class="tabbable">
-										<ul class="nav nav-tabs newTabs">
-											<?php if ($showProperty == false && $showLocation == false ) { ?>
-											<li <?php if (isset($tab1)) { ?>class="active" <?php } ?>><a href="#show_clients" data-toggle="tab">Manage Clients</a></li>
-											<li <?php if (isset($tab2)) { ?>class="active" <?php } ?>><a href="#create_clients" data-toggle="tab"> <?=(isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? "Update" : "Create") ?> Clients</a></li>
-											<?php } elseif($showProperty == true && $showLocation == false ) { ?>
-											<li <?php if (isset($tab3) ) { ?>class="active" <?php } ?>><a href="#show_proprty" data-toggle="tab">Show Property</a></li>
-											<?php } ?>
-											<?php if($showLocation == true) { ?>
-											<li <?php if (isset($tab4) ) { ?>class="active" <?php } ?>><a href="#show_location" data-toggle="tab">Show Location</a></li>
-											<?php } ?>
+										<ul class="nav nav-tabs">
+											<li class="nav-item" role="presentation">
+												<button class="nav-link active" id="create_order" data-bs-toggle="tab" data-bs-target="#create_order-tab-pane" type="button" role="tab" aria-controls="create_order" aria-selected="true">Create Clients</button>
+											</li>
 										</ul>
-										<br>
 										<div class="tab-content">
-											<!-- +++++++++++++++++++++++++++++ client list ++++++++++++++++++++++++++++++++ -->
-											<div <?php if (isset($tab1)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="show_clients">
-												<h1 class="head">Manage Clients</h1>	
-												<div id="response_d3"></div>
+											<div div class="tab-pane fade show active" id="create_order-tab-pane" role="tabpanel" aria-labelledby="create_order" tabindex="0">
 												<?php
-													if(isset($tab1)){
 														if (isset($_SESSION['msg5'])) {
 															echo $_SESSION['msg5'];
 															unset($_SESSION['msg5']);
@@ -1422,153 +1362,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 															echo $_SESSION['msg6'];
 															unset($_SESSION['msg6']);
 														}
-													}
-
-// 													echo '-----------------'.$user_type;
-// echo '-----------------'.$user_distributor;
-												?>
-												<div class="widget widget-table action-table">
-													<div class="widget-header">
-														<!-- <i class="icon-th-list"></i> -->
-														<h3>Active Clients</h3>
-													</div>
-													<!-- /widget-header -->
-													<div class="widget-content table_response">
-														<div style="overflow-x:auto;">
-															<table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
-																<thead>
-																	<tr>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Username</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Full Name</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Email</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="10">Created By</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Edit</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="6">Disable</th>
-																		<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="7">Remove</th>
-																	</tr>
-																</thead>
-																<tbody>
-																	<?php
-																	$query_results = $client_model->get_activeClients($user_distributor);
-																	if(isset($query_results['rowCount']) && $query_results['rowCount'] > 0) {
-																		foreach ($query_results['data'] as $row) {
-																			$id = $row['id'];
-																			$user_name1 = $row['user_name'];
-																			$full_name = $row['full_name'];
-																			$access_role = $row['access_role'];
-																			$access_role_desc = $row['description'];
-																			$user_distributor1 = $row['user_distributor'];
-																			$email = $row['email'];
-																			$is_enable = $row['is_enable'];
-																			$create_user = $row['create_user'];
-
-																			if ($is_enable == '1' || $is_enable == '2') {
-																				$btn_icon = 'thumbs-down';
-																				$show_value = '<font color="#00CC00"><strong>Enable</strong></font>';
-																				$btn_color = 'warning';
-																				$btn_title = 'disable';
-																				$action_status = 0;
-																			} else {
-																				$btn_icon = 'thumbs-up';
-																				$show_value = '<font color="#FF0000"><strong>Disable</strong></font>';
-																				$btn_color = 'success';
-																				$btn_title = 'enable';
-																				$action_status = 1;
-																			}
-
-																			echo '<tr>
-																					<td> ' . $user_name1 . ' </td>
-																					<td> ' . $full_name . ' </td>
-																					<td> ' . $email . ' </td>
-																					<td> ' . $create_user . ' </td>';
-
-																			echo '<td><a href="javascript:void();" id="APE_' . $id . '"  class="btn btn-small btn-primary">
-																					<i class="btn-icon-only icon-wrench"></i>&nbsp;Edit</a><script type="text/javascript">
-																					$(document).ready(function() {
-																					$(\'#APE_' . $id . '\').easyconfirm({locale: {
-																							title: \'Edit Client\',
-																							text: \'Are you sure you want to edit this client?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																							button: [\'Cancel\',\' Confirm\'],
-																							closeText: \'close\'
-																							}});
-																						$(\'#APE_' . $id . '\').click(function() {
-																							window.location = "?token=' . $secret . '&t=2&edit_id=' . $id . '&'.$sadminBind.'"
-																						});
-																						});
-																					</script></td><td><a href="javascript:void();" id="LS_' . $id . '"  class="btn btn-small btn-' . $btn_color . '">
-																					<i class="btn-icon-only icon-' . $btn_icon . '"></i>&nbsp;' . ucfirst($btn_title) . '</a><script type="text/javascript">
-																					$(document).ready(function() {
-																					$(\'#LS_' . $id . '\').easyconfirm({locale: {
-																							title: \'' . ucfirst($btn_title) . ' Client\',
-																							text: \'Are you sure you want to ' . $btn_title . ' this client?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																							button: [\'Cancel\',\' Confirm\'],
-																							closeText: \'close\'
-																							}});
-																						$(\'#LS_' . $id . '\').click(function() {
-																							window.location = "?token=' . $secret . '&t=1&status_change_id=' . $id . '&action_sts=' . $action_status . '&'.$sadminBind.'"
-																						});
-																						});
-																					</script></td><td><a href="javascript:void();" id="RU_' . $id . '"  class="btn btn-small btn-danger">
-																					<i class="btn-icon-only icon-trash"></i>&nbsp;Remove</a><script type="text/javascript">
-																					$(document).ready(function() {
-																					$(\'#RU_' . $id . '\').easyconfirm({locale: {
-																							title: \'Remove Client\',
-																							text: \'Are you sure you want to remove [' . $user_name1 . '] client?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-																							button: [\'Cancel\',\' Confirm\'],
-																							closeText: \'close\'
-																							}});
-																						$(\'#RU_' . $id . '\').click(function() {
-																							window.location = "?token=' . $secret . '&t=1&user_rm_id=' . $id . '&'.$sadminBind.'"
-																						});
-																						});
-																					</script></td>';		
-																			echo '</tr>';
-																		}
-																	} else {
-																		echo '<tr><td colspan="6" style="text-align: center;">Results not found</td></tr>';
-																	}
-																	
-																	?>
-																</tbody>
-															</table>
-														</div>
-													</div>
-													<!-- /widget-content -->
-												</div>
-												<!-- /widget -->
-											</div>
-
-											<!-- +++++++++++++++++++++++++++++ create / update clients ++++++++++++++++++++++++++++++++ -->
-											<div <?php if (isset($tab2)) { ?>class="tab-pane fade in active" <?php } else { ?> class="tab-pane fade" <?php } ?> id="create_clients">
-												<h1 class="head"> <?=(isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? "Update": "Create")?> Clients</h1>
-												<div id="response_d3"></div>
-												<?php
-													if(isset($tab2)){
-														if (isset($_SESSION['msg5'])) {
-															echo $_SESSION['msg5'];
-															unset($_SESSION['msg5']);
-														}
-
-														if (isset($_SESSION['msg1'])) {
-															echo $_SESSION['msg1'];
-															unset($_SESSION['msg1']);
-														}
-
-														if (isset($_SESSION['msg2'])) {
-															echo $_SESSION['msg2'];
-															unset($_SESSION['msg2']);
-														}
-
-														if (isset($_SESSION['msg3'])) {
-															echo $_SESSION['msg3'];
-															unset($_SESSION['msg3']);
-														}
-
-														if (isset($_SESSION['msg6'])) {
-															echo $_SESSION['msg6'];
-															unset($_SESSION['msg6']);
-														}
-													}
 												
 														$id = (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['id'] : 0);
 														$user_name =  (isset($_GET['edit_id']) && $_GET['edit_id'] > 0 ? $edit_user_data[0]['user_name'] : "");
@@ -1590,17 +1383,21 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 														$actionUrl = "clients.php?show=".$_REQUEST['show']."&ud=".$_REQUEST['ud']."&ut=".$_REQUEST['ut'];
 													}
 												?>
+												<div class="border card">
+													<div class="border-bottom card-header p-4">
+														<div class="g-3 row">
+															<span class="fs-5">Create Client</span>
+														</div>
+													</div>
 												<!-- action="controller/User_Controller.php" -->
-												<form autocomplete="off" id="edit_profile" action="<?=$actionUrl?>" method="post" class="form-horizontal">
-													<fieldset>
-														<input type="hidden" name="id" id="id" value="<?=$edit_id?>">
-														<input type="hidden" name="user_type" id="user_type1" value="<?=$user_type?>">
-														<input type="hidden" name="loation" id="loation1" value="<?=$user_distributor?>">
-														<input type="hidden" name="is_edit" id="is_edit" value="<?=$is_edit?>">
-														<!-- /control-group -->
-														<div class="control-group">
-															<label class="control-label" for="language_1">API profile</label>
-															<div class="controls form-group col-lg-5">
+													<form autocomplete="off" id="edit_profile" action="<?=$actionUrl?>" method="post" class="row g-3 p-4">
+															<input type="hidden" name="id" id="id" value="<?=$edit_id?>">
+															<input type="hidden" name="user_type" id="user_type1" value="<?=$user_type?>">
+															<input type="hidden" name="loation" id="loation1" value="<?=$user_distributor?>">
+															<input type="hidden" name="is_edit" id="is_edit" value="<?=$is_edit?>">
+															
+															<div class="col-md-6">
+																<label class="control-label" for="language_1">API profile</label>
 																<select class="form-control span4" name="api_profile" id="api_profile">
 																	<option value="">Select API profile</option>
 																	<?php
@@ -1616,30 +1413,19 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	?>
 																</select>
 															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<div class="control-group">
-															<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls col-lg-5 form-group">
+															
+															<div class="col-md-6">
+																<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
 																<input class="form-control span4" id="full_name_1" name="full_name_1" maxlength="25" type="text" value="<?=$full_name?>">
 															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-												
-														<div class="control-group">
-															<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls form-group col-lg-5">
+													
+															<div class="col-md-6">
+																<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
 																<input class="form-control span4" id="email_1" name="email_1" placeholder="name@mycompany.com" value="<?=$email?>">
 															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
 
-														<div class="control-group">
-															<label class="control-label" for="language_1">Language</label>
-															<div class="controls form-group col-lg-5">
+															<div class="col-md-6">
+																<label class="control-label" for="language_1">Language</label>
 																<select class="form-control span4" name="language_1" id="language_1">
 																	<?php
 																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
@@ -1656,12 +1442,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	?>
 																</select>
 															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<div class="control-group">
-                                                            <label class="control-label" for="timezone_1">Time Zone<sup><font color="#FF0000"></font></sup></label>
-                                                        	<div class="controls col-lg-5 form-group">
+															
+															<div class="col-md-6">
+																<label class="control-label" for="timezone_1">Time Zone<sup><font color="#FF0000"></font></sup></label>
 																<select class="span4 form-control" id="timezone_1" name="timezone_1" autocomplete="off">
 																	<option value="">Select Time Zone</option>
 																	<?php
@@ -1699,79 +1482,25 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	}
 																	?>
 																</select>
-                                                             </div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<div class="control-group">
-															<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls form-group col-lg-5">
+															</div>
+															
+															<div class="col-md-6">
+																<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
 																<input class="form-control span4" id="mobile_1" name="mobile_1" type="text" placeholder="xxx-xxx-xxxx" maxlength="12" value="<?=$mobile?>">
 															</div>
-															<!-- /controls -->
-														</div>
-														<!-- /control-group -->
-														<script type="text/javascript">
-															$(document).ready(function() {
-																$("#mobile_1").keypress(function(event) {
-																	var ew = event.which;
-																	//alert(ew);
-																	//if(ew == 8||ew == 0||ew == 46||ew == 45)
-																	//if(ew == 8||ew == 0||ew == 45)
-																	if (ew == 8 || ew == 0)
-																		return true;
-																	if (48 <= ew && ew <= 57)
-																		return true;
-																	return false;
-																});
-
-																$('#mobile_1').focus(function() {
-																	$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-																	$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
-																});
-
-																$('#mobile_1').keyup(function() {
-																	$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-																	$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
-																});
-
-																$("#mobile_1").keydown(function(e) {
-																	var mac = $('#mobile_1').val();
-																	var len = mac.length + 1;
-																	if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
-																		mac1 = mac.replace(/[^0-9]/g, '');
-																	} else {
-																		if (len == 4) {
-																			$('#mobile_1').val(function() {
-																				return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
-																			});
-																		} else if (len == 8) {
-																			$('#mobile_1').val(function() {
-																				return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
-																				//console.log('mac2 ' + mac);
-
-																			});
-																		}
-																	}
-																	$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
-																});
-															});
-														</script>
-														<div class="control-group">
-															<label class="control-label" for="address_1">Address<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls col-lg-5 form-group">
+															
+															<div class="col-md-6">
+																<label class="control-label" for="address_1">Address<sup><font color="#FF0000"></font></sup></label>
 																<input class="span4 form-control" id="address_1" placeholder="Address" name="address_1" type="text" value="<?=$bussiness_address1?>" autocomplete="off">
 															</div>
-														</div>
-														<div class="control-group">
-															<label class="control-label" for="address_2">City<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls col-lg-5 form-group">
+
+															<div class="col-md-6">
+																<label class="control-label" for="address_2">City<sup><font color="#FF0000"></font></sup></label>
 																<input class="span4 form-control" id="address_2" placeholder="City" name="address_2" type="text" value="<?=$bussiness_address2?>" autocomplete="off">
 															</div>
-														</div>
-														<div class="control-group">
-															<label class="control-label" for="country" >Country<font color="#FF0000"></font></sup></label>
-															<div class="controls col-lg-5 form-group">
+
+															<div class="col-md-6">
+																<label class="control-label" for="country" >Country<font color="#FF0000"></font></sup></label>
 																<select name="country" id="country" class="span4 form-control" autocomplete="off">
 																	<option value="">Select Country</option>
 																	<?php
@@ -1786,77 +1515,47 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	?>
 																</select>
 															</div>
-														</div>
-														<script language="javascript">
-															populateCountries("country", "state");
-														</script>
-														<div class="control-group">
-															<label class="control-label" for="state">State/Region<font color="#FF0000"></font></sup></label>
-															<div class="controls col-lg-5 form-group">
-															<select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="state" placeholder="State or Region" name="state" required autocomplete="off">
-																<?php
-																	echo '<option value="">Select State</option>';
-																	// var_dump($get_regions['data']);
-																	foreach ($get_regions['data'] AS $state) {
-																		//edit_state_region , get_edit_state_region
-																		if($get_edit_state_region == 'N/A') {
-																			echo '<option selected value="N/A">Others</option>';
-																		} else {
-																			if ($state_region == $state['states_code']) {
-																				echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+
+															<script language="javascript">
+																populateCountries("country", "state");
+															</script>
+															<div class="col-md-6">
+																<label class="control-label" for="state">State/Region<font color="#FF0000"></font></sup></label>
+																<select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="state" placeholder="State or Region" name="state" required autocomplete="off">
+																	<?php
+																		echo '<option value="">Select State</option>';
+																		// var_dump($get_regions['data']);
+																		foreach ($get_regions['data'] AS $state) {
+																			//edit_state_region , get_edit_state_region
+																			if($get_edit_state_region == 'N/A') {
+																				echo '<option selected value="N/A">Others</option>';
 																			} else {
-																				echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+																				if ($state_region == $state['states_code']) {
+																					echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+																				} else {
+																					echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+																				}
 																			}
+																			
 																		}
-																		
-																	}
-																?>
+																	?>
 																</select>
 															</div>
-														</div>
-														<div class="control-group">
-															<label class="control-label" for="region">ZIP Code<sup><font color="#FF0000"></font></sup></label>
-															<div class="controls col-lg-5 form-group">
+
+															<div class="col-md-6">
+																<label class="control-label" for="region">ZIP Code<sup><font color="#FF0000"></font></sup></label>
 																<input class="span4 form-control" id="zip_code" maxlength="5" placeholder="XXXXX" name="zip_code" type="text" value="<?=$zip?>" autocomplete="off">
 															</div>
-														</div>
-														<script type="text/javascript">
-															$(document).ready(function() {
-																$("#zip_code").keydown(function (e) {
-																	var mac = $('#zip_code').val();
-																	var len = mac.length + 1;
-																	// Allow: backspace, delete, tab, escape, enter, '-' and .
-																	if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
-																				// Allow: Ctrl+A, Command+A
-																			(e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-																				// Allow: Ctrl+C, Command+C
-																			(e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-																				// Allow: Ctrl+x, Command+x
-																			(e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-																				// Allow: Ctrl+V, Command+V
-																			(e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
-																				// Allow: home, end, left, right, down, up
-																			(e.keyCode >= 35 && e.keyCode <= 40)) {
-																		// let it happen, don't do anything
-																		return;
-																	}
-																	// Ensure that it is a number and stop the keypress
-																	if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-																		e.preventDefault();
-																	}
-																});
-															});
-														</script>
 
-														<div class="form-actions">
-															<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary"><?=(isset($_GET['edit_id']) ? "Update" : "Create")?> Account</button>&nbsp; <strong>
-																<font color="#FF0000"></font><small></small>
-															</strong>
-															<?php if($is_edit == true){ ?> <button type="button" class="btn btn-info inline-btn"  onclick="goto();" class="btn btn-danger">Cancel</button> <?php } ?>
-														</div>
-														<!-- /form-actions -->
-													</fieldset>
-												</form>
+															<div class="col-md-12">
+																<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary"><?=(isset($_GET['edit_id']) ? "Update" : "Create")?> Order</button>&nbsp; <strong>
+																	<font color="#FF0000"></font><small></small>
+																</strong>
+																<?php if($is_edit == true){ ?> <button type="button" class="btn btn-info inline-btn"  onclick="goto();" class="btn btn-danger">Cancel</button> <?php } ?>
+															</div>
+															<!-- /form-actions -->
+													</form>
+												</div>
 												<script type="text/javascript">
 													$(document).ready(function() {
 														var editClient = <?php echo ($is_edit == true ? "true" : "false"); ?>;
@@ -2313,6 +2012,73 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$("#mobile_1").keypress(function(event) {
+				var ew = event.which;
+				//alert(ew);
+				//if(ew == 8||ew == 0||ew == 46||ew == 45)
+				//if(ew == 8||ew == 0||ew == 45)
+				if (ew == 8 || ew == 0)
+					return true;
+				if (48 <= ew && ew <= 57)
+					return true;
+				return false;
+			});
+
+			$('#mobile_1').focus(function() {
+				$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+				$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
+			});
+
+			$('#mobile_1').keyup(function() {
+				$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
+				$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
+			});
+
+			$("#mobile_1").keydown(function(e) {
+				var mac = $('#mobile_1').val();
+				var len = mac.length + 1;
+				if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
+					mac1 = mac.replace(/[^0-9]/g, '');
+				} else {
+					if (len == 4) {
+						$('#mobile_1').val(function() {
+							return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
+						});
+					} else if (len == 8) {
+						$('#mobile_1').val(function() {
+							return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
+							//console.log('mac2 ' + mac);
+
+						});
+					}
+				}
+				$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
+			});
+
+			$("#zip_code").keydown(function (e) {
+				var mac = $('#zip_code').val();
+				var len = mac.length + 1;
+				// Allow: backspace, delete, tab, escape, enter, '-' and .
+				if ($.inArray(e.keyCode, [8, 9, 27, 13, 110]) !== -1 ||
+							// Allow: Ctrl+A, Command+A
+						(e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+							// Allow: Ctrl+C, Command+C
+						(e.keyCode == 67 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+							// Allow: Ctrl+x, Command+x
+						(e.keyCode == 88 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+							// Allow: Ctrl+V, Command+V
+						(e.keyCode == 86 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
+							// Allow: home, end, left, right, down, up
+						(e.keyCode >= 35 && e.keyCode <= 40)) {
+					// let it happen, don't do anything
+					return;
+				}
+				// Ensure that it is a number and stop the keypress
+				if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+					e.preventDefault();
+				}
+			});
+
 			//create user form validation
 			$('#edit_profile').bootstrapValidator({
 				framework: 'bootstrap',

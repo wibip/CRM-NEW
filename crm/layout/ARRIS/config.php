@@ -228,15 +228,15 @@ $modules = [
     ],
     "SADMIN"=>[
         "crm" => [
-            [
-                "id"=>"crm_manage",
-                "name"=>"Manage",
-                "module"=>"crm_manage/1"
-            ],
+            // [
+            //     "id"=>"crm_manage",
+            //     "name"=>"Manage",
+            //     "module"=>"crm_manage/1"
+            // ],
             [
                 "id" => "crm_create",
                 "name" => "Create",
-                "module" => "crm/simple"
+                "module" => "crm/1"
             ]
         ]
     ],
@@ -263,7 +263,7 @@ $modules = [
             [
                 "id" => "crm_create",
                 "name" => "Create",
-                "module" => "crm/simple"
+                "module" => "crm/1"
             ]
         ]
     ]

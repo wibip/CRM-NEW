@@ -279,9 +279,29 @@ class db_functions extends dbTasks
 		
 	}
 
+	public function getDataFromApiLogsField($field, $groupBy = null){
+		$sql = "SELECT DISTINCT ".$field." FROM crm_api_logs";
+		if($groupBy != null) {
+			$sql .= " GROUP BY ".$groupBy;
+		}
+		// echo $sql;
+		$result = $this->selectDB($sql);
+		// var_dump($result['data']);
+		if($result['rowCount'] > 0) {
+			return $result['data'];
+		} else {
+			return false;
+		}
+		
+	}
+
 	public function getLogsByFilters($start_date,$end_date,$limit=10,$userName = null,$logType=null,$page=null) {
 		$sql = "SELECT user_name,log_type,page,log_details,create_date FROM crm_user_logs 
-				WHERE create_date BETWEEN '".$start_date."' AND '".$end_date."'";
+				WHERE TRUE ";
+
+		if ($start_date != null && $end_date != null) {
+			$sql.=" AND create_date BETWEEN '".$start_date."' AND '".$end_date."'";
+		}
 
 		if($userName != null) {
 			$sql.=" AND user_name='".$userName."'";
@@ -299,6 +319,33 @@ class db_functions extends dbTasks
 
 		return $data['data'];
 	}
+
+
+	public function getApiLogsByFilters($start_date,$end_date,$limit=10,$name = null,$logType=null,$section=null) {
+		$sql = "SELECT name,section,log_type,description,create_date FROM crm_api_logs 
+				WHERE TRUE ";
+
+		if ($start_date != null && $end_date != null) {
+			$sql.=" AND create_date BETWEEN '".$start_date."' AND '".$end_date."'";
+		}
+		if($name != null) {
+			$sql.=" AND `name`='".$name."'";
+		}
+		if($logType != null) {
+			$sql.=" AND log_type='".$logType."'";
+		}
+		if($section != null) {
+			$sql.=" AND section='".$section."'";
+		}
+
+		$sql.=" ORDER BY id DESC";
+        $sql.=" LIMIT ".$limit;
+
+		$data = $this->selectDB($sql);
+
+		return $data['data'];
+	}
+
 
 	private static function recurse_copy($src, $dst)
 	{

@@ -1544,11 +1544,11 @@ switch($user_type){
 									}
 
 
-									foreach($valuem['module'] as $key=>$checkVal){
-										if(in_array( "Switch Accounts" ,$checkVal)){
-											unset($valuem['module'][$key]);
-										}
-									}
+									// foreach($valuem['module'] as $key=>$checkVal){
+									// 	if(in_array( "Switch Accounts" ,$checkVal)){
+									// 		unset($valuem['module'][$key]);
+									// 	}
+									// }
 
 									if ($main_menu_clickble == "NO") {
 

@@ -393,11 +393,12 @@ class CommonFunctions{
 
     public function getApiProfiles($api_ids){
         $result = null;
+        $sql = "SELECT id,api_profile FROM exp_locations_ap_controller";
         if(!empty($api_ids)) {
             $ids = implode(",", $api_ids);
-            $sql = "SELECT id,api_profile FROM exp_locations_ap_controller WHERE id IN (".$ids.")";
-            $result =  $this->db->selectDB($sql);
+            $sql .= " WHERE id IN (".$ids.")";
         }
+        $result =  $this->db->selectDB($sql);
         return $result;
     }
 
@@ -460,4 +461,75 @@ class CommonFunctions{
         $result =  $this->db->selectDB($sqlProperties);
         return $result;
     }
+
+    public function getAllOperators(){
+        $sqlOperators = "SELECT full_name,user_distributor FROM crm_portal.admin_users WHERE user_type='MNO' AND is_enable=1";
+        $result =  $this->db->selectDB($sqlOperators);
+        return $result;
+    }
+
+    public function getSystemPackage($mno_id){
+        $sqlSysPackage = "SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$mno_id'";
+        $resultSysPackage =  $this->db->selectDB($sqlSysPackage);
+        return $resultSysPackage;
+    }
+
+    public function getProperties($user_type,$user_name,$user_distributor,$start_date,$end_date,$limit=10,$client_name = null,$business_name=null,$status=null) {
+		$subQuery = "";        
+        $clientArray = [];
+        $businessArray = [];
+
+        // var_dump($business_name);
+
+        $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
+        switch($user_type ){
+            case 'SADMIN' :
+                $propertyQuery .= "";
+            break;
+            case 'ADMIN' :
+                $propertyQuery .= "";
+            break;
+            case 'MNO' :
+                $propertyQuery .= " AND mno_id='$user_distributor'";
+            break;
+            case 'SMAN' :
+                $propertyQuery .= " AND mno_id='$user_distributor'";
+            break;
+            case 'PROVISIONING' :
+                $propertyQuery .= " AND create_user='$user_name'";
+            break;
+        }
+
+        /* get values for filters before filtering */
+        $filter_results = $this->db->selectDB($propertyQuery);
+        
+        if ($filter_results['rowCount'] > 0) {
+            foreach ($filter_results['data'] as $row) {
+                $clientDetails = $this->getAdminUserDetails('user_name', $row['create_user'], 'full_name');
+                if (!empty($clientDetails['data'])) {
+                    $clientName = $clientDetails['data'][0]['full_name'];
+                    $clientArray[$row['create_user']] = $clientName;
+                }
+                $businessArray[$row['business_name']] = $row['business_name'];
+            }
+        }
+
+        if ($start_date != null && $end_date != null) {
+			$propertyQuery .=" AND create_date BETWEEN '".$start_date."' AND '".$end_date."'";
+		}
+
+        /* Add filtering */
+        if($business_name != null && $business_name != 'all') {
+            $propertyQuery .= " AND business_name='".$business_name."'";
+        }
+
+        if($status != null && $status != 'all') {
+            $propertyQuery .= " AND status='".$status."'";
+        }
+        // echo $propertyQuery;
+        $query_results = $this->db->selectDB($propertyQuery);
+
+        $results = ['query_results'=>$query_results,'clientArray'=>$clientArray,'businessArray'=>$businessArray,];
+        return $results;
+	}
 }

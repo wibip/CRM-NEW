@@ -1,191 +1,47 @@
-<?php ob_start(); ?>
-<!DOCTYPE html>
-<html lang="en">
-<?php
-session_start();
-include 'header_top.php';
+<?php 
+    include 'header_new.php';
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+    /*classes & libraries*/
+    $db = new db_functions();
+    $package_functions = new package_functions();
+    $CommonFunctions = new CommonFunctions();
+    /*Encryption script*/
+    include_once 'classes/cryptojs-aes.php';
+    require_once dirname(__FILE__) . '/models/clientUserModel.php';
+    // echo 'Username= ';
+    require_once 'src/CRM/functions.php';
+    $client_model = new clientUserModel();
+    $client_data = $client_model->getClient($_SESSION['user_id'], 'user_id');
+    $api_id = $client_data[0]['api_profile'];
+    $api_details = $CommonFunctions->getApiDetails($api_id);
 
-/* No cache*/
-//header("Cache-Control: no-cache, must-revalidate");
-header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
-header("Pragma: no-cache"); // HTTP 1.0.
-header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
+    $page = "CRM";
+    $apiVersion = 0;
+    $apiUrl = '';
+    $apiUsername = '';
+    $apiPassword = '';
 
-/*classes & libraries*/
-require_once 'classes/dbClass.php';
-$db = new db_functions();
-require_once 'classes/systemPackageClass.php';
-$package_functions = new package_functions();
+    if(!empty($api_details['data'])) {
+        $apiVersion = $api_details['data'][0]['controller_name'];
+        $apiUrl = $api_details['data'][0]['api_url'];
+        $apiUsername = $api_details['data'][0]['api_username'];
+        $apiPassword = $api_details['data'][0]['api_password'];
+    }
 
-require_once './classes/CommonFunctions.php';
-$CommonFunctions = new CommonFunctions();
-/*Encryption script*/
-include_once 'classes/cryptojs-aes.php';
-require_once dirname(__FILE__) . '/models/clientUserModel.php';
-// echo 'Username= ';
-require_once 'src/CRM/functions.php';
-$client_model = new clientUserModel();
-$client_data = $client_model->getClient($_SESSION['user_id'], 'user_id');
-$api_id = $client_data[0]['api_profile'];
-$api_details = $CommonFunctions->getApiDetails($api_id);
-
-$page = "CRM";
-$apiVersion = 0;
-$apiUrl = '';
-$apiUsername = '';
-$apiPassword = '';
-
-if(!empty($api_details['data'])) {
-    $apiVersion = $api_details['data'][0]['controller_name'];
-    $apiUrl = $api_details['data'][0]['api_url'];
-    $apiUsername = $api_details['data'][0]['api_username'];
-    $apiPassword = $api_details['data'][0]['api_password'];
-}
-?>
-
-<head>
-    <meta charset="utf-8">
-    <title>CRM</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="css/fonts/css.css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
-    <link href="css/font-awesome.css" rel="stylesheet">
-    <link href="css/style.css?v=1" rel="stylesheet">
-    <link href="css/multi-select.css" media="screen" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="js/select2-3.5.2/select2.css" />
-    <link rel="stylesheet" href="css/select2-bootstrap/select2-bootstrap.css" />
-    <link href="css/bootstrap-colorpicker.css?v=19" rel="stylesheet">
-    <link href="plugins/img_upload/assets/css/croppic.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/bootstrap-toggle.min.css" />
-    <link rel="stylesheet" href="css/tablesaw.css?v1.2">
-
-    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-    <script src="js/locationpicker.jquery.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap-toggle.min.js"></script>
-    <!--Ajax File Uploading Function-->
-    <!--table colimn show hide-->
-    <script type="text/javascript" src="js/tablesawNew.js"></script>
-    <!--Encryption -->
-    <script type="text/javascript" src="js/aes.js"></script>
-    <script type="text/javascript" src="js/aes-json-format.js"></script>
-
-    <link rel="stylesheet" href="css/bootstrapValidator.css" />
-
-    <style>
-        #crm-create-progress{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgb(102 102 102);
-            opacity: 0.75;
-            z-index: 100;
-            cursor: progress;
-            display: none;
+    if($user_type == 'ADMIN' || $user_type == 'SADMIN') {
+        $operators = $CommonFunctions->getAllOperators();
+        if(isset($_POST['load_operator'])) {
+            $operatorsSystemPackage = null;
+            $selected_operator = $_POST['selected_operator'];
+            $operatorsPackage = $CommonFunctions->getSystemPackage($selected_operator);
+            if($operatorsPackage['rowCount'] > 0){
+                $operatorsSystemPackage = $operatorsPackage['data'][0]['f'];
+                $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $operatorsSystemPackage);
+            }
         }
-        .pop-up{
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: none;
-            z-index: 122;
-        }
-        .pop-up.show{
-            display: block;
-        }
-        .pop-up-bg{
-            background-color: rgba(76, 78, 100, 0.5);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            bottom: 0;
-            z-index: -1;
-        }
-        .pop-up-main{
-            height: 100%;
-        overflow: auto;
-        text-align: center;
-        width: 100%;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-pack: center;
-            -ms-flex-pack: center;
-                justify-content: center;
-        }
-        .pop-up-content{
-            background: #fff;
-        margin: auto;
-        box-shadow: rgb(76 78 100 / 20%) 0px 6px 6px -3px;
-        border-radius: 10px;
-        padding: 40px;
-        max-width: 800px;
-        width: 100%;
-        box-sizing: border-box;
-        }
-        .pop-up-content .form-double{
-            display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-            -ms-flex-flow: row wrap;
-                flex-flow: row wrap;
-        -webkit-box-pack: justify;
-            -ms-flex-pack: justify;
-                justify-content: space-between;
-        }
-        .pop-up-content .form-double .control-group{
-            width: 50%;
-            text-align: left;
-        }
-        .pop-up-content .form-double .control-group input{
-            width: 90% !important;
-        }
-        .pop-up-content form{
-            margin-bottom: 0;
-        }
-        .pop-up-content form .actions{
-            text-align: right;
-        margin-top: 20px;
-        }
-        .pop-up-content form .actions button{
-            margin-left: 5px;
-        }.control-group.mask .controls div{
-            position: relative;
-            overflow: hidden;
-        }
-        .control-group.mask span{
-            position: absolute;
-            left: 0;
-            height: 100%;
-            background: #e4e4e4;
-            border-radius: 10px;
-            padding: 8px;
-            box-sizing: border-box;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-        .control-group.mask input{
-            /* padding-left: 50px; */
-        }
-
-    </style>
-
-    <?php
-    $data_secret = $db->setVal('data_secret', 'ADMIN');
-    include 'header.php';
-    
+    }
+   
+    $data_secret = $db->setVal('data_secret', 'ADMIN');    
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;
     $opt_q = $package_functions->getSectionType("OPT_CODE", $system_package);
@@ -202,7 +58,7 @@ if(!empty($api_details['data'])) {
 
     $view_type = isset($_GET['t']) ? $_GET['t'] : null;
 
-    $formTitle = "Create";
+    $formTitle = "Create Orders";
     $activatePopup = false;
 
     switch($view_type) {
@@ -728,22 +584,124 @@ if(!empty($api_details['data'])) {
     $secret = md5(uniqid(rand(), true));
     $_SESSION['FORM_SECRET'] = $secret;
 
-    // var_dump($modules);
-    ?>
+
+?>
+<style>
+    #crm-create-progress{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(102 102 102);
+        opacity: 0.75;
+        z-index: 100;
+        cursor: progress;
+        display: none;
+    }
+    .pop-up{
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: none;
+        z-index: 122;
+    }
+    .pop-up.show{
+        display: block;
+    }
+    .pop-up-bg{
+        background-color: rgba(76, 78, 100, 0.5);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+    }
+    .pop-up-main{
+        height: 100%;
+    overflow: auto;
+    text-align: center;
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    }
+    .pop-up-content{
+        background: #fff;
+    margin: auto;
+    box-shadow: rgb(76 78 100 / 20%) 0px 6px 6px -3px;
+    border-radius: 10px;
+    padding: 40px;
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+    }
+    .pop-up-content .form-double{
+        display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    }
+    .pop-up-content .form-double .control-group{
+        width: 50%;
+        text-align: left;
+    }
+    .pop-up-content .form-double .control-group input{
+        width: 90% !important;
+    }
+    .pop-up-content form{
+        margin-bottom: 0;
+    }
+    .pop-up-content form .actions{
+        text-align: right;
+    margin-top: 20px;
+    }
+    .pop-up-content form .actions button{
+        margin-left: 5px;
+    }.control-group.mask .controls div{
+        position: relative;
+        overflow: hidden;
+    }
+    .control-group.mask span{
+        position: absolute;
+        left: 0;
+        height: 100%;
+        background: #e4e4e4;
+        border-radius: 10px;
+        padding: 8px;
+        box-sizing: border-box;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .control-group.mask input{
+        /* padding-left: 50px; */
+    }
+
+</style>
     <div class="main">
-        <div class="custom-tabs"></div>
         <div class="main-inner">
             <div class="container">
                 <div class="row">
                     <div class="span12">
-                        <br class="hideBr"><br class="hideBr">
                         <div class="widget ">
-                            <div class="widget-header">
-                                <h3>View and Manage Properties</h3>
-                            </div><!-- /widget-header -->
                             <div class="widget-content">
                                 <div class="tabbable">
-                                    <?php require_once 'modules/' . $modules['tab_menu']['module'] . '.php'; ?>
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="create_orders" data-bs-toggle="tab" data-bs-target="#create_orders-tab-pane" type="button" role="tab" aria-controls="create_orders" aria-selected="true">Create Orders</button>
+                                        </li>
+                                    </ul>
                                     <div class="tab-content">
                                     <?php
 
@@ -755,187 +713,45 @@ if(!empty($api_details['data'])) {
                                             echo $_SESSION['msg5'];
                                             unset($_SESSION['msg5']);
                                         }
+
+                                    if($user_type == 'ADMIN' || $user_type == 'SADMIN') {
+                                    ?>
+                                    <div class="border card my-4">
+                                        <div class="border-bottom card-header p-4">
+                                            <div class="g-3 row">
+                                                <h4>Select Operator</h4>
+                                            </div>
+                                        </div>
+                                        <form class="row g-3 p-4" method="post">
+                                            <div class="col-md-6">
+                                                <label for="inputState" class="form-label">Operator</label>
+                                                <select id="selected_operator" name="selected_operator" class="form-select">
+                                                    <option value='0'>None</option>
+                                                    <?php 
+                                                        foreach($operators['data'] AS $operator){
+                                                    ?>
+                                                        <option value='<?=$operator['user_distributor']?>' <?=$selected_operator == $operator['user_distributor'] ? 'selected' : '' ?>><?=$operator['full_name']?></option>
+                                                    <?php    
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <button type="submit" id="load_operator" name="load_operator" class="btn btn-primary">Load</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <?php
+                                    }
                                         //if($user_type == 'MNO' || $user_type == 'MVNA' || $user_type == 'MVNE' || $user_type == 'SUPPORT' || $user_type == 'SALES'){
                                         foreach ($modules[$user_type][$script] as $value) {
                                             //echo 'modules/'.$value['module'].'.php';
                                             include_once 'modules/' . $value['module'] . '.php';
                                         }
-                                        //}                                    
-                                
-                                        if (isset($_GET['edit']) && $get_status == "Completed") {
-                                        ?>
-                                        <div class="widget widget-table action-table" style="padding-top: 35px;">
-                                            <div class="widget-header">
-                                                <i class="icon-th-list"></i>
-                                                <h3>Active Profiles</h3>
-                                            </div>
-                                            <!-- /widget-header -->
-                                            <div class="widget-content table_response ">
-                                                <div style="overflow-x:auto;" >
-                                                    <table class="table table-striped table-bordered tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Contact Name</th>
-                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">City</th>
-                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Zip</th>
-                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Status</th>
-                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Edit</th> 
-                                                                <?php if($_SESSION['SADMIN'] == true) { ?>
-                                                                <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Remove</th>
-                                                                <?php } ?>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php
-                                                                $key_query="SELECT ceml.*,ec.business_id FROM crm_exp_mno_locations AS ceml INNER JOIN exp_crm AS ec ON ec.id = ceml.crm_id 
-                                                                WHERE ceml.crm_id='".$id."' ORDER BY ceml.id DESC";
-                                                                $query_results = $db->selectDB($key_query);
-                                                                if($query_results['rowCount'] > 0) {
-                                                                    foreach($query_results['data'] AS $row){
-                                                                        $contact_name = $row['contact_name'];
-                                                                        $city = $row['city'];
-                                                                        $zip = $row['zip'];
-                                                                        $businessID = $row['business_id'];
-                                                                        $locationUnique = $row['location_unique'];
-
-                                                                        switch($row['is_enable'] ) {
-                                                                            case 0 :
-                                                                                $is_enable = "Inactive";
-                                                                            break;
-                                                                            case 1 :
-                                                                                $is_enable = "Active";
-                                                                            break;
-                                                                            case 2 :
-                                                                                $is_enable = "Processing";
-                                                                            break;
-                                                                            default :
-                                                                                $is_enable = "Inactive";
-                                                                        }
-
-                                                                        $locationId = $row['id'];
-
-                                                                        echo '<tr>
-                                                                        <td> '.$contact_name.' </td>
-                                                                        <td> '.$city.' </td>
-                                                                        <td> '.$zip.' </td>
-                                                                        <td> '.$is_enable.' </td>';
-                                                                        echo '<td><a href="javascript:void();" id="AP_'.$locationId.'"  class="btn btn-small btn-info">
-                                                                            <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
-                                                                            $(document).ready(function() {
-                                                                            $(\'#AP_'.$locationId.'\').easyconfirm({locale: {
-                                                                                    title: \'API Location\',
-                                                                                    text: \'Are you sure you want to edit this API Location?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                                    button: [\'Cancel\',\' Confirm\'],
-                                                                                    closeText: \'close\'
-                                                                                    }});
-                                                                                $(\'#AP_'.$locationId.'\').click(function() {
-                                                                                        $("#overlay").css("display","block");
-                                                                                        $(".pop-up .head").html("Update location");
-                                                                                        $(".pop-up").addClass("show");
-                                                                                        $.ajax({
-                                                                                            type: "POST",
-                                                                                            url: "ajax/load_location_details.php",
-                                                                                            data: {
-                                                                                                api_id: "'.$api_id.'",
-                                                                                                system_package: "'.$system_package.'",
-                                                                                                business_id: "'.$businessID.'",
-                                                                                                location_id: "'.$locationUnique.'"
-                                                                                            },
-                                                                                            success: function(data) {
-                                                                                                data = JSON.parse(data);
-                                                                                                console.log(data);
-                                                                                                if(data == false){
-                                                                                                    $("#overlay").css("display","none");
-                                                                                                    $(".pop-up").removeClass("show");
-                                                                                                    $("body").css("overflow","auto");                                                                                                    
-                                                                                                } else {
-                                                                                                    
-                                                                                                    $("#locationForm #wifi_unique").attr("value","'.$wifi_unique.'");
-                                                                                                    $("#locationForm #business_id").attr("value","'.$get_business_id.'");
-                                                                                                    $("#locationForm #location_name").attr("value", data["locations"]["0"]["name"]);
-                                                                                                    $("#locationForm #location_unique").attr("value", data["locations"]["0"]["id"]);
-                                                                                                    $("#locationForm #location_unique").attr("name", "location_unique_display");
-                                                                                                    $("#locationForm input[name=location_unique_display]").attr("id", "location_unique_display");
-                                                                                                    $("#locationForm #location_unique_display").attr("disabled", true) ;
-                                                                                                    $("<input>").attr({
-                                                                                                        type: "hidden",
-                                                                                                        id: "location_id",
-                                                                                                        name: "location_id",
-                                                                                                        value: "'.$locationId.'"
-                                                                                                    }).appendTo("#locationForm");
-                                                                                                    $("<input>").attr({
-                                                                                                        type: "hidden",
-                                                                                                        id: "location_unique",
-                                                                                                        name: "location_unique",
-                                                                                                        value: data["locations"]["0"]["id"]
-                                                                                                    }).appendTo("#locationForm");
-
-                                                                                                    $("#locationForm #contact").attr("value", data["locations"]["0"]["contact"]["name"]);
-                                                                                                    $("#locationForm #contact_email").attr("value",data["locations"]["0"]["contact"]["email"]);
-                                                                                                    $("#locationForm #street").attr("value",data["locations"]["0"]["address"]["street"]);
-                                                                                                    $("#locationForm #city").attr("value",data["locations"]["0"]["address"]["city"]);
-                                                                                                    $("#locationForm #state option[value="+data["locations"]["0"]["address"]["state"]+"]").attr("selected", "selected");
-                                                                                                    $("#locationForm #zip").attr("value",data["locations"]["0"]["address"]["zip"]);
-                                                                                                    $(".popup_submit").html("Update");
-                                                                                                    $(".popup_submit").attr("name", "update_location_submit");
-                                                                                                    $(".popup_submit").attr("id", "update_location_submit");
-                                                                                                    $("#overlay").css("display","none");
-                                                                                                }
-                                                                                            },
-                                                                                            error: function() {
-                                                                                                $("#overlay").css("display","none");
-                                                                                                $(".pop-up").removeClass("show");
-                                                                                                $("body").css("overflow","auto"); 
-                                                                                            }
-                                                                                        });
-                                                                                        $("body").css("overflow","hidden");
-                                                                                });
-                                                                                });
-                                                                            </script></td>';
-                                                                        
-                                                                        if($_SESSION['SADMIN'] == true) {
-                                                                            echo '<td><a href="javascript:void();" id="remove_api_'.$locationId.'"  class="btn btn-small btn-danger">
-                                                                            <i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
-                                                                            <script type="text/javascript">
-                                                                                $(document).ready(function() {
-                                                                                    $(\'#remove_api_'.$locationId.'\').easyconfirm({locale: {
-                                                                                            title: \'API Location\',
-                                                                                            text: \'Are you sure you want to remove this API Location?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                                            button: [\'Cancel\',\' Confirm\'],
-                                                                                            closeText: \'close\'
-                                                                                    }});
-                                                                                    $(\'#remove_api_'.$locationId.'\').click(function() {                                                                                        
-                                                                                        $("#overlay").css("display","block");
-                                                                                        window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'"
-                                                                                    });
-                                                                                });
-                                                                            </script></td>';
-                                                                        }
-                                                                        echo '</tr>';
-                                                                    }
-                                                                } else {
-                                                                ?>
-                                                                <tr>
-                                                                    <td colspan="6" style="text-align: center;">Locations not found</td>
-                                                                </tr>
-                                                                <?php
-                                                                }	
-                                                                
-                                                                ?>		
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-												<!-- /widget-content -->
-										</div>
-                                        <?php
-                                        }
-                                        ?>
-
+                                    ?>
                                     </div>
                                 </div>
                             </div>
-
                             <!-- /widget-content -->
                         </div>
                         <!-- /widget -->
@@ -949,108 +765,7 @@ if(!empty($api_details['data'])) {
         <!-- /main-inner -->
     </div>
     
-    <div class="pop-up">
-        <div class="pop-up-bg"></div>
-        <div class="pop-up-main">
-            <div class="pop-up-content">
-            <h1 class="head">Add a location</h1>
-                <form method="post" id="locationForm" action="">
-                    <input type="hidden" name="crm_id" id="crm_id" value="<?=$id?>" />
-                    <input type="hidden" name="wifi_unique" id="wifi_unique" value="<?=$wifi_unique?>" />
-                    <input type="hidden" name="business_id" id="business_id" value="<?=$get_business_id?>" />
-                    <div class="form-double">
-                        <div class="control-group mask">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Unique Location ID</label>
-                                <div class="controls col-lg-5 form-group">
-                                <input type="text" name="location_unique" id="location_unique" class="span4 form-control" value="" data-bv-field="location_unique">                                       
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Location Name</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="location_name" id="location_name" class="span4 form-control" value="<?=$get_location_name?>" data-bv-field="location_name">                                       
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Contact Name</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="contact" id="contact" class="span4 form-control" value="" data-bv-field="contact" required>                                       
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Contact Email</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="contact_email" id="contact_email" class="span4 form-control" value="" data-bv-field="contact" required>                                       
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Address</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="street" id="street" class="span4 form-control" value="" data-bv-field="street" required>                                       
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">City</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="city" id="city" class="span4 form-control" value="" data-bv-field="city" required>                                       
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">State</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <select name="state" id="state" class="span4 form-control" required>
-                                        <option value="">Select State</option>
-                                        <?php
-                                            $get_regions = $db->selectDB("SELECT
-                                                                        `states_code`,
-                                                                        `description`
-                                                                        FROM
-                                                                        `exp_country_states` ORDER BY description ASC");
-
-                                            foreach ($get_regions['data'] as $state) {
-                                                if (($edit===true?$get_state:'') == $state['states_code']) {
-                                                    echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                } else {
-
-                                                    echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                }
-                                            }
-                                        ?>
-                                    </select>                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls col-lg-5 form-group">
-                                <label for="radiobtns">Zip</label>
-                                <div class="controls col-lg-5 form-group">
-                                    <input type="text" name="zip" id="zip" class="span4 form-control" value="" data-bv-field="zip" required>                                       
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <button class="btn btn-secondary">Cancel</button>
-                        <button class="btn btn-primary popup_submit" type="submit" name="create_location_submit" id="create_location_submit">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    
     <script type="text/javascript" src="js/bootstrapValidator.js"></script>
     <script type="text/javascript" src="js/bootstrapValidator_new.js?v=1"></script>
 

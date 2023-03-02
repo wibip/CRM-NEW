@@ -83,31 +83,38 @@ include 'header_new.php';
                                             <form class="row g-3 p-4">
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">Operator Code</label>
-                                                    <input type="email" class="form-control">
+                                                    <select id="inputState" class="form-select">
+                                                        <option value="1">ATL</option>
+                                                        <option value="2">FRT</option>
+                                                        <option value="2">MCOM</option>
+                                                    </select>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="inputPassword4" class="form-label">Deployment Type</label>
+                                                    <label for="inputPassword4" class="form-label">Environment</label>
                                                     <select id="inputState" class="form-select">
                                                         <option value="1">None</option>
-                                                        <option value="2">Simple</option>
-                                                        <option value="3">Complex</option>
-                                                        <option value="4">Hosted</option>
+                                                        <option value="2">Hosted</option>
+                                                        <option value="3">Simple (SMB)</option>
+                                                        <option value="4">Complex</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">State</label>
                                                     <select id="inputState" class="form-select">
                                                         <option value="1">None</option>
-                                                        <option value="2">Reseller</option>
-                                                        <option value="3">Property Manager</option>
+                                                        <option value="2">WI</option>
+                                                        <option value="3">AK</option>
+                                                        <option value="2">CA</option>
+                                                        <option value="3">AR</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputPassword4" class="form-label">Region</label>
                                                     <select id="inputState" class="form-select">
-                                                        <option value="1">Active</option>
-                                                        <option value="2">InActive</option>
-                                                        <option value="3">Maintenance</option>
+                                                        <option value="1">Central</option>
+                                                        <option value="2">East</option>
+                                                        <option value="3">Midwest</option>
+                                                        <option value="3">West</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
@@ -118,7 +125,7 @@ include 'header_new.php';
                                                     <label for="inputEmail4" class="form-label">City</label>
                                                     <input type="text" class="form-control">
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="col-md-12">
                                                     <label for="inputEmail4" class="form-label">Notes</label>
                                                     <textarea class="form-control" placeholder="" id="floatingTextarea"></textarea>
                                                 </div>
