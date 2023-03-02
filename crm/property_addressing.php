@@ -19,8 +19,8 @@ include 'header_new.php';
                                         <h1 class="head">Property Addressing</h1>
                                         <br/>
                                         <h5 class="head">Properties</h5>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#property">Add Property</button>
-                                        <table class="table table-striped" style="width:100%" id="property-addressing-table">
+                                        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#property">Add Property</button> -->
+                                        <table class="table table-striped" style="width:100%" id="property-addressing-table" data-modal-target="#property" data-modal-btn-txt="Add Property">
                                             <thead>
                                                 <tr>
                                                     <th>Operator Code</th>
@@ -58,8 +58,8 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">Property IP Addressing</h5>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#property_ip_addressing">Add IP Addressing</button>
-                                        <table class="table table-striped" style="width:100%" id="pip-addressing-table">
+                                        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#property_ip_addressing">Add IP Addressing</button> -->
+                                        <table class="table table-striped" style="width:100%" id="pip-addressing-table" data-modal-target="#property_ip_addressing" data-modal-btn-txt="Add IP Addressing">
                                             <thead>
                                                 <tr>
                                                     <th>Property Name</th>

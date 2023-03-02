@@ -14,7 +14,6 @@ include 'header_new.php';
                                         <button class="nav-link active" id="operators" data-bs-toggle="tab" data-bs-target="#operators-tab-pane" type="button" role="tab" aria-controls="operators" aria-selected="true">Operator Config</button>
                                     </li>
                                 </ul>
-
                                 <div class="tab-content">
                                     <div div class="tab-pane fade show active" id="operators-tab-pane" role="tabpanel" aria-labelledby="operators" tabindex="0">
                                         <h1 class="head">Operator Config</h1>
