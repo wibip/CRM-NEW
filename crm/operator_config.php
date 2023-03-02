@@ -61,7 +61,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">BusinessID Scope</h5>
-                                        <table class="table table-striped" style="width:100%" id="bid-scope-table">
+                                        <table class="table table-striped" style="width:100%" id="bid-scope-table" data-modal-target="#business_id_scope" data-modal-btn-txt="Add BusinessID Scope">
                                             <thead>
                                                 <tr>
                                                     <th>Operator Code</th>
@@ -96,7 +96,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">ServiceType Map</h5>
-                                        <table class="table table-striped" style="width:100%" id="service-type-table">
+                                        <table class="table table-striped" style="width:100%" id="service-type-table" data-modal-target="#service_type_map" data-modal-btn-txt="Add ServiceType Map">
                                             <thead>
                                                 <tr>
                                                     <th>Operator Code</th>
