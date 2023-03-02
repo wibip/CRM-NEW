@@ -32,7 +32,7 @@ class AccessFeature{
 class AccessController {
 
     private $db;
-    private $user;
+    private AccessUser $user;
     private $accessedModule;
     private $accessedUser;
     private $globalURL;
