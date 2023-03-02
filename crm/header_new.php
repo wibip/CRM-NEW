@@ -1,4 +1,4 @@
-<?php ob_start();?>
+<?php ob_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <?php
@@ -43,13 +43,33 @@ if (!$fileOut || $out) {
 <link rel="stylesheet" href="css/custom.css?v=4">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
 <link href="css/fontawesome/css/fontawesome.min.css" rel="stylesheet">
-  <link href="css/fontawesome/css/brands.css" rel="stylesheet">
-  <link href="css/fontawesome/css/solid.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/dataTables.bootstrap5.min.css">
+<link href="css/fontawesome/css/brands.css" rel="stylesheet">
+<link href="css/fontawesome/css/solid.css" rel="stylesheet">
+<link rel="stylesheet" href="css/dataTables.bootstrap5.min.css">
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
 <script src="js/dataTables.bootstrap5.min.js"></script>
+<script>
+	$.extend(true, $.fn.dataTable.defaults, {
+		initComplete: function(settings, json) {
+			var modal_target = $(this).data("modal-target");
+			var btn_txt = $(this).data("modal-btn-txt");
+			$(this).closest('.dataTables_wrapper').find('input').removeClass('form-control-sm');
+			if(modal_target || btn_txt){
+				$(this).closest('.dataTables_wrapper').find('.btn-div').prepend('<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="'+modal_target+'">'+btn_txt+'</button>');
+			}
+		},
+		dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'<'btn-div'l>>>" +
+			"<'row'<'col-sm-12'tr>>" +
+			"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+		language: {
+			"lengthMenu": "_MENU_",
+			"search": "_INPUT_",
+			"searchPlaceholder": "Search..."
+		}
+	});
+</script>
 <?php
 // GET PAGE SCRIPT
 $script = basename($_SERVER['PHP_SELF'], ".php");
@@ -113,7 +133,7 @@ if ($_GET['back_sup'] == 'true') {
 
 	//$user_name = $_SESSION['user_name'];
 
-	
+
 
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT', $system_package);
@@ -234,7 +254,7 @@ if ($_GET['log_other'] == '1') {
 		//Sync SSID,AP
 		$exec_cmd = 'php -f' . __DIR__ . '/ajax/syncAP.php ' . $user_distributor . ' > /dev/null &';
 		exec($exec_cmd);
-		
+
 		if ($user_details['user_type'] == 'MVNO_ADMIN') {
 
 			$realm_query = "SELECT `system_package`,parent_id AS verification_number  FROM mno_distributor_parent WHERE `parent_id`='$user_distributor'";
@@ -308,11 +328,11 @@ if ($_GET['log_other'] == '2') {
 		$user_type = $db_class1->getValueAsf("SELECT  user_type AS f  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
 
 		$user_distributor = $db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
-		
+
 		//Sync SSID,AP
 		$exec_cmd = 'php -f' . __DIR__ . '/ajax/syncAP.php ' . $user_distributor . ' > /dev/null &';
 		exec($exec_cmd);
-		
+
 		if ($user_type == "SADMIN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN") {
 			$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 		} else if ($user_type == "MVNO_ADMIN") {
@@ -447,7 +467,7 @@ if ($_SESSION['remote'] == 'yes') {
 // echo '-----------------<<<<<<<'.$_REQUEST['show'];
 // echo '-----------------<<<<<<<'.$_REQUEST['ud'];
 /* change user_distributor if conditions applied */
-if($_SESSION['SADMIN'] && isset($_REQUEST['show']) && $_REQUEST['show'] == 'clients'){
+if ($_SESSION['SADMIN'] && isset($_REQUEST['show']) && $_REQUEST['show'] == 'clients') {
 	$user_distributor = $_REQUEST['ud'];
 	$_SESSION['ud'] = $_REQUEST['ud'];
 	$user_type = $_REQUEST['ut'];
@@ -481,7 +501,7 @@ if ($user_type == "SADMIN" || $user_type == "SMAN" || $user_type == "MNO" || $us
 		$fearuresjson = $db_class1->getValueAsf("SELECT features as f FROM `exp_mno` WHERE mno_id='$user_distributor'");
 		$mno_feature = json_decode($fearuresjson);
 	}
-} 
+}
 // else if ($user_type == "MVNO_ADMIN") {
 // 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
 // } else if ($user_type == "MVNO" || $user_type == "MVNE" || $user_type == "MVNA") {
@@ -497,7 +517,7 @@ if ($system_package == "N/A" || $system_package == "") {
 	$features_array = array();
 	$features_tab = $package_functions->getOptions('ALLOWED_TAB', $system_package);
 	$result1 = json_decode($features_tab, true);
-	$features_array = array_merge($features_array, $result1); 
+	$features_array = array_merge($features_array, $result1);
 }
 
 $advanced_features = json_decode($advanced_features, true);
@@ -631,16 +651,16 @@ foreach ($x as $keyX => $valueX) {
 		try {
 			unset($x[$keyX]);
 		} catch (Exception $e) {
-		}	
+		}
 	}
 }
 
 // echo '------------<br/>';
 // var_dump($x);
 
-if($_SESSION['SADMIN'] == true) {
-	array_push($x,"operation_list");
-	array_push($x,"change_portal");
+if ($_SESSION['SADMIN'] == true) {
+	array_push($x, "operation_list");
+	array_push($x, "change_portal");
 }
 
 
@@ -711,7 +731,7 @@ $restricted_pages = $package_functions->getOptions("RESTRICTED_PAGES", $system_p
 $tmp_0 = '';
 $main_mod_array = array();
 foreach ($query_results_mod['data'] as $row1) {
-	
+
 	$menu_item_row = $row1['menu_item']; // Retuns base access.
 	$main_module_order = $row1['main_module_order'];
 	$main_module = $row1['main_module'];
@@ -866,7 +886,6 @@ foreach ($query_results_mod['data'] as $row1) {
 			$main_mod_array[$main_module_order]['module'][$order]['link'] = $module_name;
 			$main_mod_array[$main_module_order]['module'][$order]['name'] = $name_group;
 			$main_mod_array[$main_module_order]['module'][$order]['menu_item'] = $menu_item_row;
-
 		} else if ($menu_item_row == '2') {
 
 			//echo "<br>".$main_module." "."2";
@@ -1107,7 +1126,7 @@ if ($suspended) {
 		//else{
 		//echo $script;
 		$db_class1->userLog($user_name, $script, 'Browse', 'N/A');
-		
+
 		$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
 		// $db->addLogs($user_name, 'ERROR',$user_type, 'login', 'Browse',0,'2001','');
 		// $log_query = "INSERT INTO admin_user_logs (`user_name`,`module`,`create_date`,`unixtimestamp`)
@@ -1127,7 +1146,6 @@ if ($suspended) {
 <?php
 		exit();
 	}
-	
 }
 /////////////////////////////////////////////////////////
 // End SECURITY POINT -- Verify the customer is correct
@@ -1146,7 +1164,7 @@ if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
 	$dist_name = $user_type;
 	$camp_theme_color = '#00ba8b';
 
-	$abc_q = "SELECT * FROM `exp_mno` WHERE `mno_id` = '".$dist_name."'";
+	$abc_q = "SELECT * FROM `exp_mno` WHERE `mno_id` = '" . $dist_name . "'";
 	$row = $db_class1->select1DB($abc_q);
 	//while($row = mysql_fetch_array($def_r)){
 
@@ -1303,29 +1321,34 @@ else{
 
 
 <style>
-	.btn-div{
+	.btn-div {
 		display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-    -webkit-box-pack: end;
-        -ms-flex-pack: end;
-            justify-content: end;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-pack: end;
+		-ms-flex-pack: end;
+		justify-content: end;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
 	}
-	.btn-div button{
+
+	.btn-div button {
 		margin-right: 15px;
 	}
-	h5.head{
+
+	h5.head {
 		margin-bottom: 15px;
 	}
-	div.dataTables_wrapper div.dataTables_filter{
+
+	div.dataTables_wrapper div.dataTables_filter {
 		text-align: left !important;
 	}
-	div.dataTables_wrapper div.dataTables_filter input{
+
+	div.dataTables_wrapper div.dataTables_filter input {
 		margin-left: 0 !important;
 	}
+
 	<?php if ($style_type == 'light') { ?>.navbar .nav .dropdown-toggle .caret,
 	.navbar .nav .open.dropdown .caret {
 		border-top-color: <?php echo $camp_theme_color; ?>;
@@ -1626,97 +1649,106 @@ else{
 	}
 
 	.ring {
-		position:absolute;
-		top:50%;
-		left:50%;
-		transform:translate(-50%,-50%);
-		width:150px;
-		height:150px;
-		background:transparent;
-		border:3px solid #3c3c3c;
-		border-radius:50%;
-		text-align:center;
-		line-height:150px;
-		font-family:sans-serif;
-		font-size:15px;
-		color:#fff000;
-		letter-spacing:4px;
-		text-transform:uppercase;
-		text-shadow:0 0 10px #fff000;
-		box-shadow:0 0 20px rgba(0,0,0,.5);
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 150px;
+		height: 150px;
+		background: transparent;
+		border: 3px solid #3c3c3c;
+		border-radius: 50%;
+		text-align: center;
+		line-height: 150px;
+		font-family: sans-serif;
+		font-size: 15px;
+		color: #fff000;
+		letter-spacing: 4px;
+		text-transform: uppercase;
+		text-shadow: 0 0 10px #fff000;
+		box-shadow: 0 0 20px rgba(0, 0, 0, .5);
 		z-index: 150;
 	}
+
 	.ring:before {
-		content:'';
-		position:absolute;
-		top:-3px;
-		left:-3px;
-		width:100%;
-		height:100%;
-		border:3px solid transparent;
-		border-top:3px solid #fff000;
-		border-right:3px solid #fff000;
-		border-radius:50%;
-		animation:animateC 2s linear infinite;
+		content: '';
+		position: absolute;
+		top: -3px;
+		left: -3px;
+		width: 100%;
+		height: 100%;
+		border: 3px solid transparent;
+		border-top: 3px solid #fff000;
+		border-right: 3px solid #fff000;
+		border-radius: 50%;
+		animation: animateC 2s linear infinite;
 	}
-	.ring > span{
-		display:block;
-		position:absolute;
-		top:calc(50% - 2px);
-		left:50%;
-		width:50%;
-		height:4px;
-		background:transparent;
-		transform-origin:left;
-		animation:animate 2s linear infinite;
+
+	.ring>span {
+		display: block;
+		position: absolute;
+		top: calc(50% - 2px);
+		left: 50%;
+		width: 50%;
+		height: 4px;
+		background: transparent;
+		transform-origin: left;
+		animation: animate 2s linear infinite;
 	}
-	.ring > span:before{
-		content:'';
-		position:absolute;
-		width:16px;
-		height:16px;
-		border-radius:50%;
-		background:#fff000;
-		top:-6px;
-		right:-8px;
-		box-shadow:0 0 20px #fff000;
+
+	.ring>span:before {
+		content: '';
+		position: absolute;
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		background: #fff000;
+		top: -6px;
+		right: -8px;
+		box-shadow: 0 0 20px #fff000;
 	}
-	@keyframes animateC{
-		0%
-		{
-			transform:rotate(0deg);
+
+	@keyframes animateC {
+		0% {
+			transform: rotate(0deg);
 		}
-		100%
-		{
-			transform:rotate(360deg);
+
+		100% {
+			transform: rotate(360deg);
 		}
 	}
-	@keyframes animate{
-		0%
-		{
-			transform:rotate(45deg);
+
+	@keyframes animate {
+		0% {
+			transform: rotate(45deg);
 		}
-		100%
-		{
-			transform:rotate(405deg);
+
+		100% {
+			transform: rotate(405deg);
 		}
 	}
 
 	#overlay {
-		position: fixed; /* Sit on top of the page content */
-		display: none; /* Hidden by default */
-		width: 100%; /* Full width (cover the whole page) */
-		height: 100%; /* Full height (cover the whole page) */
+		position: fixed;
+		/* Sit on top of the page content */
+		display: none;
+		/* Hidden by default */
+		width: 100%;
+		/* Full width (cover the whole page) */
+		height: 100%;
+		/* Full height (cover the whole page) */
 		top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-		z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-		cursor: pointer; /* Add a pointer on hover */
+		background-color: rgba(0, 0, 0, 0.5);
+		/* Black background with opacity */
+		z-index: 2;
+		/* Specify a stack order in case you're using a different order for other elements */
+		cursor: pointer;
+		/* Add a pointer on hover */
 		z-index: 150;
 	}
-  
 </style>
 
 <title><?php
@@ -1725,8 +1757,9 @@ else{
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#overlay').css('display','none');
+		$('#overlay').css('display', 'none');
 	});
+
 	function setCookie() {
 		let cname = "timeout";
 		let cvalue = Math.floor(Date.now() / 1000);
@@ -1759,7 +1792,6 @@ else{
 	</style>
 
 	<script>
-
 		function dropdown() {
 			var w = window.innerWidth;
 			if (w < 980) {
@@ -1852,9 +1884,9 @@ else{
 		//}
 
 		$logo_top = 'top_logo.png';
-			if (file_exists("layout/" . $camp_layout . "/img/" . $logo_top)) {
-				$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="layout/' . $camp_layout . '/img/' . $logo_top . '?v=3" border="0" />&nbsp;';
-			}
+		if (file_exists("layout/" . $camp_layout . "/img/" . $logo_top)) {
+			$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="layout/' . $camp_layout . '/img/' . $logo_top . '?v=3" border="0" />&nbsp;';
+		}
 
 		//echo $db_class1->setVal("site_title",$dist_name);
 		$logo_title = "<a class='brand' href='javascript:void(0);' style='text-decoration:none !important'>";
@@ -1948,21 +1980,20 @@ else{
 
 			$vert = $property_business_type;
 
-			if($user_type=="MVNO_ADMIN"){
+			if ($user_type == "MVNO_ADMIN") {
 				$dis_Q = "SELECT d.wired,d.gateway_type,d.private_gateway_type,d.bussiness_type,d.network_type,d.other_settings,d.is_enable,m.system_package as mno_sys FROM exp_mno_distributor d JOIN exp_mno m ON d.mno_id=m.mno_id WHERE d.parent_id='" . $user_distributor . "'";
 				$dist_details = $db_class1->selectDB($dis_Q);
 				$vert = $dist_details['data'][0]['bussiness_type'];
 			}
 			$logo_top = 'top_logo.png';
-			$business_logo = "logo_" . strtolower($vert).".png";
-			if(file_exists("layout/" . $camp_layout . "/img/".$business_logo)){
+			$business_logo = "logo_" . strtolower($vert) . ".png";
+			if (file_exists("layout/" . $camp_layout . "/img/" . $business_logo)) {
 				$logo_top = $business_logo;
 			}
-				
-				if (file_exists("layout/" . $camp_layout . "/img/" . $logo_top)) {
-					$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="layout/' . $camp_layout . '/img/' . $logo_top . '?v=3" border="0" />&nbsp;';
-				}
-			
+
+			if (file_exists("layout/" . $camp_layout . "/img/" . $logo_top)) {
+				$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="layout/' . $camp_layout . '/img/' . $logo_top . '?v=3" border="0" />&nbsp;';
+			}
 		}
 
 		//echo $site_title;
@@ -2006,26 +2037,26 @@ else{
 		$page_intro = 'YES';
 	}
 
-	
-$loggedMessage = 'You are logged in as ';
 
-switch($user_type){
-	case 'ADMIN':
-		$loggedMessage .= 'Admin';
-	break;
-	case 'MNO':
-		$loggedMessage .= 'Operation Admin';
-	break;
-	case 'PROVISIONING':
-		$loggedMessage .= 'Client';
-	break;
-	case 'SMAN':
-		$loggedMessage .= 'Sales Manager';
-	break;
-	case 'SADMIN':
-		$loggedMessage .= 'Super Admin';
-	break;
-}
+	$loggedMessage = 'You are logged in as ';
+
+	switch ($user_type) {
+		case 'ADMIN':
+			$loggedMessage .= 'Admin';
+			break;
+		case 'MNO':
+			$loggedMessage .= 'Operation Admin';
+			break;
+		case 'PROVISIONING':
+			$loggedMessage .= 'Client';
+			break;
+		case 'SMAN':
+			$loggedMessage .= 'Sales Manager';
+			break;
+		case 'SADMIN':
+			$loggedMessage .= 'Super Admin';
+			break;
+	}
 
 
 	$navbar = 'layout/ARRIS/views/header_navbar_new.php';

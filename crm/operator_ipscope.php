@@ -19,8 +19,7 @@ include 'header_new.php';
                                         <h1 class="head">Operator IP Scope</h1>
                                         <br/>
                                         <h5 class="head">Operator Management IP Scope</h5>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#opt_mgt_ip_scope">Add Management IP Scope</button>
-                                        <table class="table table-striped" style="width:100%" id="oip-table">
+                                        <table class="table table-striped" style="width:100%" id="oip-table" data-modal-target="#opt_mgt_ip_scope" data-modal-btn-txt="Add Management IP Scope">
                                             <thead>
                                                 <tr>
                                                     <th>Operator Code</th>
@@ -52,8 +51,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">Property IP Scope</h5>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#property_ip_scope">Add Property IP Scope</button>
-                                        <table class="table table-striped" style="width:100%" id="pip-table">
+                                        <table class="table table-striped" style="width:100%" id="pip-table" data-modal-target="#property_ip_scope" data-modal-btn-txt="Add Property IP Scope">
                                             <thead>
                                                 <tr>
                                                     <th>Operator Code</th>
@@ -85,8 +83,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">Property IP Scope :: Public</h5>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#public_property_ip_scope">Add Public Property IP Scope</button>
-                                        <table class="table table-striped" style="width:100%" id="pips-public-table">
+                                        <table class="table table-striped" style="width:100%" id="pips-public-table"  data-modal-target="#public_property_ip_scope" data-modal-btn-txt="Add Public Property IP Scope">
                                             <thead>
                                                 <tr>
                                                     <th>Operator Code</th>
@@ -124,8 +121,7 @@ include 'header_new.php';
                                         </table>
                                         <br>
                                         <h5 class="head">Property IP Scope :: Private</h5>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#private_property_ip_scope">Add Private Property IP Scope</button>
-                                        <table class="table table-striped" style="width:100%" id="pips-private-table">
+                                        <table class="table table-striped" style="width:100%" id="pips-private-table"   data-modal-target="#private_property_ip_scope" data-modal-btn-txt="Add Private Property IP Scope">
                                         <thead>
                                                 <tr>
                                                     <th>Operator Code</th>
