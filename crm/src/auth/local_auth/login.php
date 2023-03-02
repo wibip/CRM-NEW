@@ -83,9 +83,9 @@ if (isset($username)) {
 
 	///////////////////////////////////////////////////////
 	
-	$key_query0 = sprintf("SELECT  id,`access_role`, user_type, user_distributor,`group`,`level` 
+	$key_query0 = sprintf("SELECT  id,`access_role`, user_type, user_distributor 
 	FROM  admin_users WHERE user_name = %s LIMIT 1",$dbT->GetSQLValueString($user_name, "text"));
-
+	
 	$query_results=$dbT->selectDB($key_query0);
 	foreach($query_results['data'] AS $row){
 		$_SESSION['user_id']  = $row['id'];
@@ -94,8 +94,6 @@ if (isset($username)) {
 		$user_distributor = $row['user_distributor'];
 		$_SESSION['user_distributor']  = $row['user_distributor'];
 		$access_role=strtolower($access_role);
-		$user_group = $row['group'];
-		$user_level = $row['level'];
 	}
 	
 	if(($user_type=="SADMIN") && !isset($_GET['auto_login'])){
@@ -189,16 +187,12 @@ if (isset($username)) {
 		$_SESSION['current_profile'] = $full_name;
 		$_SESSION['user_distributor'] = $user_distributor;
 
-		require_once __DIR__.'/../../../classes/AccessUser.php';
-		$access_user = new AccessUser($user_group,$user_level);
-		$_SESSION['access_user'] = serialize($access_user);
-
-		require_once __DIR__.'/../../../classes/AccessController.php';
-		$acc_cont = new AccessController($dbT,$access_user);
-
 		if(!$suspended){
 
-			
+			if($user_type=="MVNO" || $user_type=="MVNE" || $user_type=="MVNA"){
+				$exec_cmd = 'php -f'.__DIR__.'/../../../ajax/syncAP.php '.$user_distributor.' > /dev/null &';
+				exec($exec_cmd);
+			}
 			
 			$dbT->userLog($user_name,'login','Login','N/A'); 
 
@@ -227,18 +221,41 @@ if (isset($username)) {
 
 			$_SESSION['theme_text'] = $theme_text;
 
-			$acc_cont->loginSuccess();
-				
+			if($package_features=="all"||$system_package=="N/A"){
+				$redirect_url .= "/home".$extension;
+				header( "Location: $redirect_url");
+			}else{
+				$m_n = json_decode($package_functions->getOptions('ALLOWED_PAGE',$system_package));
+					// var_dump($m_n);
+					// var_dump($query_results);
+					// die;
+				foreach($query_results['data'] AS $row){
+					$module_name = $row['module_name'];	
+					// var_dump($module_name);
+					// var_dump($m_n);
+					// var_dump(in_array($module_name,$m_n));
+					// die;
+					if($module_name != 'profile' && in_array($module_name,$m_n)) {
+							// var_dump($module_name);
+						$redirect_url .= '/'.$module_name.$extension;
+						setcookie("system_package", $system_package, time() + (86400 * 30), "/");
+						setcookie("load_login_design", $login_design, time() + (86400 * 30), "/");
+							// var_dump($redirect_url);
+							// die;
+						header( "Location: $redirect_url");		
+						exit();
+					}
+				}
+			}
 		}else{
 			$redirect_url .= '/suspend'.$extension;
 		
-				
+				setcookie("system_package", $system_package, time() + (86400 * 30), "/");
+				setcookie("load_login_design", $login_design, time() + (86400 * 30), "/");
 				
 				header( "Location: $redirect_url");		
 				exit();
-		}   
-		setcookie("system_package", $system_package, time() + (86400 * 30), "/");
-		setcookie("load_login_design", $login_design, time() + (86400 * 30), "/"); 	
+		}    	
 	}
 	else{
 			$log_query = sprintf("INSERT INTO admin_user_logs (user_name,module,create_date,unixtimestamp)

@@ -69,10 +69,6 @@ if($_SESSION['login'] == 'yes' && !isset($_GET['auto_login'])){
 
 
 	$user_name = $_SESSION['user_name'];
-    require_once __DIR__.'/classes/AccessUser.php';
-    $access_user = unserialize($_SESSION['access_user']);
-    require_once __DIR__.'/classes/AccessController.php';
-	$acc_cont = new AccessController($dbT,$access_user);
 	
 //////////////////////////////////////////////////////////////////////////
 
@@ -93,8 +89,50 @@ if($_SESSION['login'] == 'yes' && !isset($_GET['auto_login'])){
 	}
 
 	
+	
+	
+if($user_type=="MNO"){
 $system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
+}
+else if($user_type=="MVNO_ADMIN"){
 
+  $token_id= uniqid();
+  $_SESSION['security_token'] = $token_id;
+
+  $system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
+
+$queryString = "SELECT d.par_default_login,d.bussiness_address1,d.bussiness_address2,d.bussiness_address3,d.`verification_number`,d.`property_id`,a.`user_name`,a.`full_name`,d.`id`, a.is_enable 
+                                                        FROM `exp_mno_distributor` d LEFT JOIN `admin_users` a ON d.distributor_code = a.user_distributor 
+                                                        WHERE parent_id='$user_distributor'";
+$queryResult=$dbT->selectDB($queryString);
+if ($queryResult['rowCount']>0) {
+  foreach($queryResult['data'] AS $row){
+    $par_default_login = $row['par_default_login'];
+    $pa_user_name = $row['user_name'];
+    $pa_full_name = $row['full_name'];
+    $a_role = $row['par_default_login'];
+
+    $string_pass = 'uname='.$pa_user_name.'&fname='.$pa_full_name.'&urole='.$a_role;
+    $encript_resetkey = $app->encrypt_decrypt('encrypt',$string_pass);
+
+    if($par_default_login=='1' && $auto_login_feature=='1'){
+      header('location:properties'.$extension.'?log_other=2&key='.$encript_resetkey.'&security_token='.$token_id);
+      exit();
+    }
+
+  }
+}
+
+
+}
+else if($user_type=="MVNO" || $user_type=="MVNE" || $user_type=="MVNA"){
+    $_SESSION['network_sync'] = 'true';
+    $_SESSION['pr_network_sync'] = 'true';
+$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
+}
+else{
+    $system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
+}
 if($system_package=="N/A" || $system_package=="") {
     $package_features="all";
      $system_package="N/A";
@@ -121,8 +159,49 @@ if(empty($theme_text) || $theme_text ==''){
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	$acc_cont->loginSuccess();
 
+	if($access_role == 'admin'){
+		 $user_query = "SELECT module_name FROM admin_access_modules WHERE user_type = '$user_type' AND `order` IS NOT NULL AND NOT module_name = 'venue_support' AND NOT module_name = 'support' ORDER BY `order`";
+		
+	}
+	else{
+		 $user_query = "SELECT module_name FROM admin_access_roles_modules WHERE access_role = '$access_role'";
+
+	}
+
+ 
+  $query_results=$dbT->selectDB($user_query);
+
+
+    $m_n = json_decode($package_functions->getOptions('ALLOWED_PAGE',$system_package));
+
+	foreach( $query_results['data'] as $row ){
+
+	
+		$module_name = $row['module_name'];
+		
+
+    if(($network_type=='PRIVATE' && $module_name=='network') || ($network_type=='PRIVATE' && $module_name=='campaign') || ($network_type=='PRIVATE' && $module_name=='theme') || ($network_type=='PRIVATE' && $module_name=='add_tenant') || ($network_type=='PRIVATE' && $module_name=='manage_tenant') || ($network_type=='PRIVATE' && $module_name=='communicate') ){
+      continue;
+    }elseif (($network_type=='GUEST' && $module_name=='network_pr') || ($network_type=='GUEST' && $module_name=='add_tenant') || ($network_type=='GUEST' && $module_name=='manage_tenant') || ($network_type=='GUEST' && $module_name=='communicate') ){
+      continue;
+    }elseif(($network_type=='VT-PRIVATE' && $module_name=='network') || ($network_type=='VT-PRIVATE' && $module_name=='campaign') || ($network_type=='VT-PRIVATE' && $module_name=='theme') ){
+        continue;
+    }elseif ($network_type=='VT-GUEST' && $module_name=='network_pr'){
+        continue;
+    }elseif(($network_type=='VT' && $module_name=='network_pr') || ($network_type=='VT' && $module_name=='network') || ($network_type=='VT' && $module_name=='campaign') || ($network_type=='VT' && $module_name=='theme') || ($network_type=='VT' && $module_name=='intro') || ($network_type=='VT' && $module_name=='home') ){
+        continue;
+    }elseif(($network_type=='BOTH' && $module_name=='add_tenant') || ($network_type=='BOTH' && $module_name=='manage_tenant') || ($network_type=='BOTH' && $module_name=='communicate')  ){
+        continue;
+    }
+
+	if(in_array($module_name,$m_n)){
+		$redirect_url = $global_base_url."/".$module_name.$extension;
+		header( "Location: $redirect_url");
+		exit();
+	}
+
+	}
 }
 
 $robot_verify_method = $package_functions->getOptions("ROBOT_VERIFY_PROFILE", $admin_system_package);
