@@ -28,10 +28,38 @@ define('ACCESS',[
                     'actions'=>['edit','delete']
                 ],
             ],
-            'user'=>[],
-            'api_profile'=>[],
-            'config'=>[],
-            'logs'=>[],
+            'user'=>[
+                'create' =>[
+                    'actions'=>['create']
+                ],
+                'manage'=>[
+                    'actions'=>['edit','delete']
+                ],
+            ],
+            'api_profile'=>[
+                'create' =>[
+                    'actions'=>['create']
+                ],
+                'manage'=>[
+                    'actions'=>['edit','delete']
+                ],
+            ],
+            'config'=>[
+                'create' =>[
+                    'actions'=>['create']
+                ],
+                'manage'=>[
+                    'actions'=>['edit','delete']
+                ],
+            ],
+            'logs'=>[
+                'create' =>[
+                    'actions'=>['create']
+                ],
+                'manage'=>[
+                    'actions'=>['edit','delete']
+                ],
+            ],
         ],
         'home' => 'operations'
     ],
