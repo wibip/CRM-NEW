@@ -34,7 +34,7 @@ class AccessController {
     private $db;
     private $user;
     private $accessedModule;
-    private $accessedUser;
+    private $accessedUser=[];
     private $globalURL;
 
     /* Contorlls */
