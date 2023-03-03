@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__.'/Access.php';
 
 class AccessFeature{
 
@@ -38,88 +38,8 @@ class AccessController {
     private $globalURL;
 
     /* Contorlls */
-    private $controlls = array(
-        'admin' => array(
-            'modules'=>array(
-                'operations'=>array(
-                    'create' =>array(
-                        'actions'=>array('create')
-                    ),
-                    'manage'=>array(
-                        'actions'=>array('edit','delete')
-                    ),
-                ),
-                'user'=>array(),
-                'api_profile'=>array(),
-                'config'=>array(),
-                'logs'=>array(),
-            ),
-            'home' => 'operations'
-        ),
-        'super_admin' => array(
-            'modules'=>array(
-                'operations'=>array(
-                    'create' =>array(
-                        'actions'=>array('create')
-                    ),
-                    'manage'=>array(
-                        'actions'=>array('edit','delete')
-                    ),
-                ),
-                'user'=>array(),
-                'api_profile'=>array(),
-                'config'=>array(),
-                'logs'=>array(),
-            ),
-            'home' => 'operations'
-        ),
-        'operation' => array(
-            'modules'=>array(
-                'crm'=>array(
-                    'create' =>array(
-                        'actions'=>array('create')
-                    ),
-                    'manage'=>array(
-                        'actions'=>array('edit','delete')
-                    ),
-                ),
-                'properties'=>array(),
-            ),
-            'home' => 'properties'
-        ),
-        
-        'sales_mng' => array(
-            'modules'=>array(
-                'crm'=>array(
-                    'create' =>array(
-                        'actions'=>array('create')
-                    ),
-                    'manage'=>array(
-                        'actions'=>array('edit','delete')
-                    ),
-                ),
-                'user'=>array(),
-                'api_profile'=>array(),
-                'config'=>array(),
-                'logs'=>array(),
-            ),
-            'home' => 'operations'
-        ),
-        'client' => array(
-            'modules'=>array(
-                'crm'=>array(
-                    'create' =>array(
-                        'actions'=>array('create')
-                    ),
-                    'manage'=>array(
-                        'actions'=>array('edit','delete')
-                    ),
-                ),
-                'properties'=>array(),
-            ),
-            'home' => 'crm'
-        ),
-    );
+    
+    private $controlls = ACCESS;
     /*  */
 
     public function __construct($db,AccessUser $user){
