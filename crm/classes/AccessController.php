@@ -127,11 +127,10 @@ class AccessController {
         $this->user = $user;
     }
 
-    public function getAccessedUsers():array{
-        if(is_null($this->accessedUser)){
+    public function getAccessedUser():array{
+        if(empty($this->accessedUser)){
             $this->accessedUser = $this->controlls[$this->user->getGroup()];
         }
-
         return $this->accessedUser;
     }
 
@@ -145,7 +144,7 @@ class AccessController {
         }
 
 
-        if(!array_key_exists($module,$this->getAccessedUsers()['modules']))
+        if(!array_key_exists($module,$this->getAccessedUser()['modules']))
         {
             return false;
         }
@@ -179,8 +178,8 @@ class AccessController {
     }
 
     public function loginSuccess(){
-        $redirect_url = trim($this->getGlobalUrl(),'/').'/'.$this->getAccessedUsers()['home'];
-        header( "Location: $redirect_url");		
+        $redirect_url = trim($this->getGlobalUrl(),'/').'/'.$this->getAccessedUser()['home'];
+        header( "Location: $redirect_url");	
         exit();
     }
 
