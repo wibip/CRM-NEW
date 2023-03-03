@@ -52,6 +52,13 @@ RUN cp -f /var/www/html/db_config.php /var/www/html/crm/db/
 # Remove conf and ini from doc root
 RUN rm -rf /var/www/html/000-default.conf /var/www/html/php.ini-production /var/www/html/Dockerfile /var/www/html/.dockerignore /var/www/html/db_config.php
 
+# Setting ENV variables
+ENV DB_SERVER = 10.1.6.60
+ENV DB_SERVER_USERNAME = crm
+ENV DB_SERVER_PASSWORD = Arrisportal@1
+ENV DB_DATABASE = crm_portal_cicd
+
+
 # expose port 80
 EXPOSE 80
 EXPOSE 443
