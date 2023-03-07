@@ -903,15 +903,14 @@ if ($system_package == 'N/A') {
 									<div class="tabbable">
 										<ul class="nav nav-tabs">
 											<li class="nav-item" role="presentation">
-												<button class="nav-link active" id="users" data-bs-toggle="tab" data-bs-target="#users-tab-pane" type="button" role="tab" aria-controls="users" aria-selected="true">Manage Users</button>
+												<button class="nav-link active" id="users" data-bs-toggle="tab" data-bs-target="#users-tab-pane" type="button" role="tab" aria-controls="users" aria-selected="true">Users</button>
 											</li>
-												<li class="nav-item" role="">
+											<!-- <li class="nav-item" role="">
 												<button class="nav-link" id="roles" data-bs-toggle="tab" data-bs-target="#roles-tab-pane" type="button" role="tab" aria-controls="roles" aria-selected="false">Manage Roles</button>
-											</li>
+											</li> -->
 										</ul>
 										<div class="tab-content">
 											<div div class="tab-pane fade show active" id="users-tab-pane" role="tabpanel" aria-labelledby="users" tabindex="0">
-												<h1 class="head">Manage Users</h1>
 												<?php
 													if (isset($_SESSION['msg5'])) {
 														echo $_SESSION['msg5'];
@@ -966,126 +965,126 @@ if ($system_package == 'N/A') {
 													}
 												?>
 												<!-- action="controller/User_Controller.php" -->
-											<div class="border card">
-												<div class="border-bottom card-header p-4">
-													<div class="g-3 row">
-														<span class="fs-5">Create User</span>
+												<div class="border card">
+													<div class="border-bottom card-header p-4">
+														<div class="g-3 row">
+															<span class="fs-5">Create User</span>
+														</div>
 													</div>
-												</div>
-												<form autocomplete="off" id="edit_profile" action="users.php" method="post" class="row g-3 p-4">
-													<div class="col-md-6">
-													<?php
-													echo '<input type="hidden" name="user_type" id="user_type1" value="' . $user_type . '">';
-													echo '<input type="hidden" name="loation" id="loation1" value="' . $user_distributor . '">';
-													echo '<input type="hidden" name="id" id="id" value="' . $id . '">';
-													?>
-														<label class="control-label" for="access_role_1">Access Role<sup><font color="#FF0000"></font></sup></label>
-														<select class="span4 form-control" name="access_role_1" id="access_role_1">
-															<option value="">Select Access Role</option>
-															<?php
-															$key_query = "SELECT `access_role` ,description
-																			FROM `admin_access_roles`";
-															if($user_type != 'SADMIN') {
-																$key_query .= " WHERE `create_user`='$user_name' ";
-															}
-
-															$key_query .= " ORDER BY description";
-															
-															$query_results=$db->selectDB($key_query);
-															foreach($query_results['data'] AS $row){	
-																$access_role = $row['access_role'];
-																$description = $row['description'];
-																if ($access_role == $access_role_set) {
-																	echo '<option value="' . $access_role . '" selected>' . $description . '</option>';
-																} else {
-																	echo '<option value="' . $access_role . '">' . $description . '</option>';
+													<form autocomplete="off" id="edit_profile" action="users.php" method="post" class="row g-3 p-4">
+														<div class="col-md-6">
+														<?php
+														echo '<input type="hidden" name="user_type" id="user_type1" value="' . $user_type . '">';
+														echo '<input type="hidden" name="loation" id="loation1" value="' . $user_distributor . '">';
+														echo '<input type="hidden" name="id" id="id" value="' . $id . '">';
+														?>
+															<label class="control-label" for="access_role_1">Access Role<sup><font color="#FF0000"></font></sup></label>
+															<select class="span4 form-control" name="access_role_1" id="access_role_1">
+																<option value="">Select Access Role</option>
+																<?php
+																$key_query = "SELECT `access_role` ,description
+																				FROM `admin_access_roles`";
+																if($user_type != 'SADMIN') {
+																	$key_query .= " WHERE `create_user`='$user_name' ";
 																}
-															}
-															?>
-														</select>
-													</div>
-													
-													<div class="col-md-6">
-														<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
-														<input class="form-control span4" id="full_name_1" name="full_name_1" maxlength="25" type="text" value="<?php echo $full_name ?>">
-													</div>
-											
-													<div class="col-md-6">
-														<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
-														<input class="form-control span4" id="email_1" name="email_1"  value="<?php echo $email ?>">
-													</div>
 
-													<div class="col-md-6">
-														<label class="control-label" for="language_1">Language</label>
-														<select class="form-control span4" name="language_1" id="language_1">
-															<?php
-																$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
+																$key_query .= " ORDER BY description";
+																
 																$query_results=$db->selectDB($key_query);
-																foreach($query_results['data'] AS $row){
-																	$language_code = $row['language_code'];
-																	$language = $row['language'];
-																	if ($language_code == $language_set) {
-																		echo '<option value="' . $language_code . '" selected>' . $language . '</option>';
+																foreach($query_results['data'] AS $row){	
+																	$access_role = $row['access_role'];
+																	$description = $row['description'];
+																	if ($access_role == $access_role_set) {
+																		echo '<option value="' . $access_role . '" selected>' . $description . '</option>';
 																	} else {
-																		echo '<option value="' . $language_code . '">' . $language . '</option>';
+																		echo '<option value="' . $access_role . '">' . $description . '</option>';
 																	}
 																}
-															?>
-														</select>
-													</div>
-													
-													<?php if ($user_type=='ADMIN') { ?>
-													<div class="col-md-6">
-														<label class="control-label" for="timezone_1">Time Zone<sup><font color="#FF0000"></font></sup></label>
-														<select class="span4 form-control" id="timezone_1" name="timezone_1" autocomplete="off">
-															<option value="">Select Time Zone</option>
-															<?php
-																$utc = new DateTimeZone('UTC');
-																$dt = new DateTime('now', $utc);
-																foreach ($priority_zone_array as $tz){
-																	$current_tz = new DateTimeZone($tz);
-																	$offset =  $current_tz->getOffset($dt);
-																	$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-																	$abbr = $transition[0]['abbr'];
-																	if($timezone_set==$tz){
-																		$select="selected";
-																	}else{
-																		$select="";
-																	}
-																	echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-																}
-																foreach(DateTimeZone::listIdentifiers() as $tz) {
-																	//Skip
-																	if(in_array($tz,$priority_zone_array))
-																		continue;
+																?>
+															</select>
+														</div>
+														
+														<div class="col-md-6">
+															<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
+															<input class="form-control span4" id="full_name_1" name="full_name_1" maxlength="25" type="text" value="<?php echo $full_name ?>">
+														</div>
+												
+														<div class="col-md-6">
+															<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
+															<input class="form-control span4" id="email_1" name="email_1"  value="<?php echo $email ?>">
+														</div>
 
-																	$current_tz = new DateTimeZone($tz);
-																	$offset =  $current_tz->getOffset($dt);
-																	$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-																	$abbr = $transition[0]['abbr'];
-																	
-																	if($timezone_set==$tz){
-																		$select="selected";
-																	}else{
-																		$select="";
+														<div class="col-md-6">
+															<label class="control-label" for="language_1">Language</label>
+															<select class="form-control span4" name="language_1" id="language_1">
+																<?php
+																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
+																	$query_results=$db->selectDB($key_query);
+																	foreach($query_results['data'] AS $row){
+																		$language_code = $row['language_code'];
+																		$language = $row['language'];
+																		if ($language_code == $language_set) {
+																			echo '<option value="' . $language_code . '" selected>' . $language . '</option>';
+																		} else {
+																			echo '<option value="' . $language_code . '">' . $language . '</option>';
+																		}
 																	}
-																	echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-																}
-															?>
-														</select>
-													</div>
-													
-													<?php } ?>
-													<div class="col-md-6">
-														<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
-														<input class="form-control span4" id="mobile_1" name="mobile_1" type="text" placeholder="xxx-xxx-xxxx" value="<?php echo $mobile ?>" maxlength="12">
-													</div>
-													
-													<div class="col-md-12">
-														<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary">Save</button>
-													</div>
-												</form>
-											</div>
+																?>
+															</select>
+														</div>
+														
+														<?php if ($user_type=='ADMIN') { ?>
+														<div class="col-md-6">
+															<label class="control-label" for="timezone_1">Time Zone<sup><font color="#FF0000"></font></sup></label>
+															<select class="span4 form-control" id="timezone_1" name="timezone_1" autocomplete="off">
+																<option value="">Select Time Zone</option>
+																<?php
+																	$utc = new DateTimeZone('UTC');
+																	$dt = new DateTime('now', $utc);
+																	foreach ($priority_zone_array as $tz){
+																		$current_tz = new DateTimeZone($tz);
+																		$offset =  $current_tz->getOffset($dt);
+																		$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+																		$abbr = $transition[0]['abbr'];
+																		if($timezone_set==$tz){
+																			$select="selected";
+																		}else{
+																			$select="";
+																		}
+																		echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+																	}
+																	foreach(DateTimeZone::listIdentifiers() as $tz) {
+																		//Skip
+																		if(in_array($tz,$priority_zone_array))
+																			continue;
+
+																		$current_tz = new DateTimeZone($tz);
+																		$offset =  $current_tz->getOffset($dt);
+																		$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+																		$abbr = $transition[0]['abbr'];
+																		
+																		if($timezone_set==$tz){
+																			$select="selected";
+																		}else{
+																			$select="";
+																		}
+																		echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+																	}
+																?>
+															</select>
+														</div>
+														
+														<?php } ?>
+														<div class="col-md-6">
+															<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
+															<input class="form-control span4" id="mobile_1" name="mobile_1" type="text" placeholder="xxx-xxx-xxxx" value="<?php echo $mobile ?>" maxlength="12">
+														</div>
+														
+														<div class="col-md-12">
+															<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary">Save</button>
+														</div>
+													</form>
+												</div>
 												<br/>
 												<?php if (isset($_GET['edit_id']) && $edit_user_data != null) { ?>
 												<div class="border card">
@@ -1123,20 +1122,6 @@ if ($system_package == 'N/A') {
 												</div>
 												<?php } ?>
 												<script type="text/javascript">
-												function footer_submitfn1() {
-														$("#edit-submita-pass").prop('disabled', false);
-													}
-
-													// function newus_ck() {
-													// 	var name = document.getElementById('full_name_1').value;
-													// 	var email = document.getElementById('email_1').value;
-													// 	var numb = document.getElementById('mobile_1').value;
-													// 	if (name == '' || email == '' || numb == '') {
-													// 		document.getElementById("submit_1").disabled = true;
-													// 	} else {
-													// 		document.getElementById("submit_1").disabled = false;
-													// 	}
-													// }
 												</script>
 												<br/>
 												<h5 class="head">Users</h5>
@@ -1518,6 +1503,10 @@ if ($system_package == 'N/A') {
 	<script type="text/javascript" src="js/bootstrapValidator_new.js?v=14"></script>
 
 	<script type="text/javascript">
+
+		function footer_submitfn1() {
+			$("#edit-submita-pass").prop('disabled', false);
+		}
 		$(document).ready(function() {
 			$('#manage_users-table').dataTable();//role-table
 			$('#role-table').dataTable();
