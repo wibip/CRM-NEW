@@ -56,6 +56,21 @@ $query_results = $propertyResult['query_results'];
 $clientArray = $propertyResult['clientArray'];
 $businessArray = $propertyResult['businessArray'];
 
+
+$serviceTypes = null;
+$baseUrl = $apiUrl.'/api/'.$apiVersion;
+//generating api call to get Token
+
+$data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
+$tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
+//generating api call to get Service Types
+if($tokenReturn['status'] == 'success') {
+    $token = $tokenReturn['data']['token'];
+    $serviceTypesReturn = json_decode($CommonFunctions->getServiceTypes($baseUrl.'/service-types',$token),true);
+    if($serviceTypesReturn['status'] == 'success') {
+        $serviceTypes = $serviceTypesReturn['data'];
+    }
+}
 ?>
 <style>
 #live_camp .tablesaw-columntoggle-popup .btn-group > label {
@@ -91,21 +106,6 @@ $businessArray = $propertyResult['businessArray'];
                                             </div>
                                             <form method="post" class="row g-3 p-4">
                                                 <div class="col-md-4">
-                                                    <label>Client Name</label>
-                                                    <select id="client_name" name="client_name">
-                                                        <option value='all' <?=(($client_name == null) ? "selected" : "")?>>All</option>
-                                                        <?php 
-                                                            if(!empty($clientArray)){
-                                                                foreach($clientArray AS $key=>$value) {
-                                                        ?>
-                                                                <option value='<?=$key?>' <?=(($client_name != null && $client_name == $key) ? "selected" : "")?>><?=$value?></option>
-                                                        <?php
-                                                                }
-                                                            }
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-4">
                                                     <label>Business Name</label>
                                                     <select id="business_name" name="business_name">
                                                         <option value='all' <?=(($business_name == null) ? "selected" : "")?>>All</option>
@@ -121,6 +121,22 @@ $businessArray = $propertyResult['businessArray'];
                                                     </select> 
                                                 </div>
                                                 <div class="col-md-4">
+                                                    <label for="radiobtns">Service Type</label>
+                                                    <select name="service_type" id="service_type" class="span4 form-control">
+                                                        <?php if($serviceTypes != null){ ?>
+                                                        <option value="0">Please select service type</option>
+                                                        <?php   foreach($serviceTypes as $serviceType){ ?>
+                                                            <option value="<?=$serviceType['id']?>"><?=$serviceType['service_type']?></option>
+                                                        <?php
+                                                            }
+                                                        } else { ?>
+                                                        <option value="0">Service type not found</option>
+                                                        <?php
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-4">
                                                     <label>Status</label>
                                                     <select id="status" name="status">
                                                         <option value='all' <?=(($status == null) ? "selected" : "")?>>All</option>
@@ -131,15 +147,34 @@ $businessArray = $propertyResult['businessArray'];
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label class="control-label" for="radiobtns">Period</label>
-                                                    <input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($user_mg_start)) {
-                                                                                                                                                                                echo $user_mg_start;
+                                                    <label>Order Raise By</label>
+                                                    <select id="client_name" name="client_name">
+                                                        <option value='all' <?=(($client_name == null) ? "selected" : "")?>>All</option>
+                                                        <?php 
+                                                            if(!empty($clientArray)){
+                                                                foreach($clientArray AS $key=>$value) {
+                                                        ?>
+                                                                <option value='<?=$key?>' <?=(($client_name != null && $client_name == $key) ? "selected" : "")?>><?=$value?></option>
+                                                        <?php
+                                                                }
+                                                            }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="col-md-5">
+                                                        <label class="control-label" for="radiobtns">Period</label>
+                                                        <input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($user_mg_start)) {
+                                                                                                                                                                                    echo $user_mg_start;
                                                                                                                                                                             } ?>" placeholder="<?=(isset($show_start) ? $show_start : 'mm/dd/yyyy')?>">
-                                                    to
-                                                    <input class="inline_error inline_error_1 span2 form-control" id="end_date" name="end_date" type="text" value="<?php if (isset($user_mg_end)) {
-                                                                                                                                                                            echo $user_mg_end;
+                                                    </div> 
+                                                    <div class="col-md-2"> to </div> 
+                                                    <div class="col-md-5">
+                                                        <input class="inline_error inline_error_1 span2 form-control" id="end_date" name="end_date" type="text" value="<?php if (isset($user_mg_end)) {
+                                                                                                                                                                                echo $user_mg_end;
                                                                                                                                                                         } ?>" placeholder="<?=(isset($show_end) ? $show_end : 'mm/dd/yyyy')?>">
 
+                                                    </div> 
                                                     <input type="hidden" name="date3" />
                                                     <!-- /controls -->
                                                 </div>

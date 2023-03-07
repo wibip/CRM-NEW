@@ -20,7 +20,7 @@ define('ACCESS',[
     ],
     'super_admin' => [
         'modules'=>[
-            'operations'=>[
+            'user'=>[
                 'create' =>[
                     'actions'=>['create']
                 ],
@@ -28,7 +28,7 @@ define('ACCESS',[
                     'actions'=>['edit','delete']
                 ],
             ],
-            'user'=>[
+            'operations'=>[
                 'create' =>[
                     'actions'=>['create']
                 ],
@@ -61,7 +61,7 @@ define('ACCESS',[
                 ],
             ],
         ],
-        'home' => 'operations'
+        'home' => 'users'
     ],
     'operation' => [
         'modules'=>[
