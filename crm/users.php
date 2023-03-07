@@ -594,25 +594,22 @@ if ($system_package == 'N/A') {
 					$edit_result = $db->execDB($edit_query);
 
 					if ($edit_result===true) {
-						$message_response = $message_functions->showNameMessage('role_role_remove_success', $user_full_name);
+						$message_response = $message_functions->showNameMessage('user_remove_success', $user_full_name);
 						$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Remove User',$user_rm_id,'3001',$message_response);
-						// $create_log->save('3001', $message_functions->showNameMessage('role_role_remove_success', $user_full_name), '');
 						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 
 						//Activity log
 						// $db->userLog($user_name, $script, 'Remove User', $usr_name);
 					} else {
-						$message_response = $message_functions->showMessage('role_role_remove_failed', '2002');
+						$message_response = $message_functions->showMessage('user_remove_fail', '2002');
 						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Remove User',$user_rm_id,'2002',$message_response);
 						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						// $create_log->save('2002', $message_functions->showMessage('role_role_remove_failed', '2002'), '');
 						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 					}
 				} else {
-					$message_response = $message_functions->showMessage('role_role_remove_failed', '2002');
+					$message_response = $message_functions->showMessage('user_remove_fail', '2002');
 					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Remove User',$user_rm_id,'2002',$message_response);
 					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-					// $create_log->save('2002', $message_functions->showMessage('role_role_remove_failed', '2002'), '');
 					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 				}
 		} else {
