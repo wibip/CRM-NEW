@@ -1,7 +1,7 @@
 <link href="css/multi-select.css" media="screen" rel="stylesheet" type="text/css">
 <?php
 include 'header_new.php';
-
+$page = "Operators";
 $priority_zone_array = array(
     "America/New_York",
     "America/Chicago",

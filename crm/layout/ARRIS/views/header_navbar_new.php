@@ -124,7 +124,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 	<span class="footer"></span>
 </div>
 <div class="top-bar">
-	<div class="title"><i class="icon-reorder show"></i><?php echo $active_title; ?></div>
+	<div class="title"><i class="icon-reorder show"></i><?php //echo $active_title; ?></div>
 	<div class="nav-right">
 	<?php if($_SESSION['SADMIN'] == true) { ?>
 		<li class="dropdown" style="margin-right: 20px;">

@@ -15,7 +15,7 @@
     $api_id = $client_data[0]['api_profile'];
     $api_details = $CommonFunctions->getApiDetails($api_id);
 
-    $page = "CRM";
+    $page = "ORDER";
     $apiVersion = 0;
     $apiUrl = '';
     $apiUsername = '';
@@ -719,7 +719,7 @@
                                     <div class="border card my-4">
                                         <div class="border-bottom card-header p-4">
                                             <div class="g-3 row">
-                                                <h4>Select Operator</h4>
+                                                <h4>Select Operator to load order creation form</h4>
                                             </div>
                                         </div>
                                         <form class="row g-3 p-4" method="post">
@@ -737,7 +737,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-12">
-                                                <button type="submit" id="load_operator" name="load_operator" class="btn btn-primary">Load</button>
+                                                <button type="submit" id="load_operator" name="load_operator" class="btn btn-primary">Load order form</button>
                                             </div>
                                         </form>
                                     </div>

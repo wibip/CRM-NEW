@@ -1,5 +1,6 @@
 <?php
 include 'header_new.php';
+$page = "Operator Config";
 ?>
 <div class="main">
     <div class="main-inner">

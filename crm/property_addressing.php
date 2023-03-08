@@ -1,5 +1,6 @@
 <?php
 include 'header_new.php';
+$page = "Property Addressing";
 ?>
 <div class="main">
     <div class="main-inner">

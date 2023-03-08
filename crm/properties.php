@@ -162,20 +162,22 @@ if($tokenReturn['status'] == 'success') {
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div class="col-md-5">
-                                                        <label class="control-label" for="radiobtns">Period</label>
-                                                        <input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($user_mg_start)) {
-                                                                                                                                                                                    echo $user_mg_start;
-                                                                                                                                                                            } ?>" placeholder="<?=(isset($show_start) ? $show_start : 'mm/dd/yyyy')?>">
-                                                    </div> 
-                                                    <div class="col-md-2"> to </div> 
-                                                    <div class="col-md-5">
-                                                        <input class="inline_error inline_error_1 span2 form-control" id="end_date" name="end_date" type="text" value="<?php if (isset($user_mg_end)) {
-                                                                                                                                                                                echo $user_mg_end;
-                                                                                                                                                                        } ?>" placeholder="<?=(isset($show_end) ? $show_end : 'mm/dd/yyyy')?>">
+                                                    <div>
+                                                        <div class="col-md-5">
+                                                            <label class="control-label" for="radiobtns">Period</label>
+                                                            <input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($user_mg_start)) {
+                                                                                                                                                                                        echo $user_mg_start;
+                                                                                                                                                                                } ?>" placeholder="<?=(isset($show_start) ? $show_start : 'mm/dd/yyyy')?>">
+                                                        </div> 
+                                                        <div class="col-md-2"> to </div> 
+                                                        <div class="col-md-5">
+                                                            <input class="inline_error inline_error_1 span2 form-control" id="end_date" name="end_date" type="text" value="<?php if (isset($user_mg_end)) {
+                                                                                                                                                                                    echo $user_mg_end;
+                                                                                                                                                                            } ?>" placeholder="<?=(isset($show_end) ? $show_end : 'mm/dd/yyyy')?>">
 
-                                                    </div> 
-                                                    <input type="hidden" name="date3" />
+                                                        </div> 
+                                                        <input type="hidden" name="date3" />
+                                                    </div>
                                                     <!-- /controls -->
                                                 </div>
                                                 <div class="col-md-12">
