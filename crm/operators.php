@@ -40,7 +40,7 @@ $mno_form_type = $query_result2['settings_value'];
 $mno_operator_check="SELECT p.product_code,p.`product_name`,c.options
                         FROM `admin_product` p LEFT JOIN admin_product_controls c ON p.product_code=c.product_code AND c.feature_code='VTENANT_MODULE'
                         WHERE `is_enable` = '1' AND p.`user_type` = 'MNO'";
-$mno_op=$db->selectDB($mno_operator_check);
+$mno_op = $db->selectDB($mno_operator_check);
 
 $key_query="SELECT c.controller_name,c.description,c.brand,c.api_profile,c.id FROM `exp_locations_ap_controller` c ";
 $query_results=$db->selectDB($key_query);
@@ -907,7 +907,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                         }
                                                 ?>
                                                     <tr>
-                                                        <td></td>
+                                                        <td><?=$mno_id?></td>
                                                         <td><?=$full_name?></td>
                                                         <td></td>
                                                         <td></td>
