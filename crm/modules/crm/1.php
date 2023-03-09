@@ -124,9 +124,8 @@ if (!empty($arrayo)) {
             </div>
         </div>  
         <form onkeyup="" onchange="" autocomplete="off" id="crm_form" name="crm_form" method="post" class="g-3 p-4" action="">
-        <?php
-        echo '<input type="hidden" name="form_secret5" id="form_secret5" value="' . $_SESSION['FORM_SECRET'] . '" />';
-        ?>
+            <input type="hidden" name="form_secret5" id="form_secret5" value="<?=$_SESSION['FORM_SECRET']?>" />
+            <input type="hidden" name="api_id" id="api_id" value="<?=$api_id?>" />
             <fieldset id="customer_info" data-name="Customer Information" class="row">
                 <div class="col-md-6">
                     <label for="radiobtns">Property Name</label>

@@ -10,23 +10,13 @@
     require_once dirname(__FILE__) . '/models/clientUserModel.php';
     // echo 'Username= ';
     require_once 'src/CRM/functions.php';
-    $client_model = new clientUserModel();
-    $client_data = $client_model->getClient($_SESSION['user_id'], 'user_id');
-    $api_id = $client_data[0]['api_profile'];
-    $api_details = $CommonFunctions->getApiDetails($api_id);
-
+    
+    $api_id = 0;
     $page = "ORDER";
     $apiVersion = 0;
     $apiUrl = '';
     $apiUsername = '';
     $apiPassword = '';
-
-    if(!empty($api_details['data'])) {
-        $apiVersion = $api_details['data'][0]['controller_name'];
-        $apiUrl = $api_details['data'][0]['api_url'];
-        $apiUsername = $api_details['data'][0]['api_username'];
-        $apiPassword = $api_details['data'][0]['api_password'];
-    }
 
     if($user_type == 'ADMIN' || $user_type == 'SADMIN') {
         $operators = $CommonFunctions->getAllOperators();
@@ -35,8 +25,17 @@
             $selected_operator = $_POST['selected_operator'];
             $operatorsPackage = $CommonFunctions->getSystemPackage($selected_operator);
             if($operatorsPackage['rowCount'] > 0){
-                $operatorsSystemPackage = $operatorsPackage['data'][0]['f'];
+                $operatorsSystemPackage = $operatorsPackage['data'][0]['system_package'];
+                $api_id = $operatorsPackage['data'][0]['features'];
                 $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $operatorsSystemPackage);
+                /*get API details related to Operator*/
+                $api_details = $CommonFunctions->getApiDetails($api_id);
+                if(!empty($api_details['data'])) {
+                    $apiVersion = $api_details['data'][0]['controller_name'];
+                    $apiUrl = $api_details['data'][0]['api_url'];
+                    $apiUsername = $api_details['data'][0]['api_username'];
+                    $apiPassword = $api_details['data'][0]['api_password'];
+                }
             }
         }
     }
@@ -75,7 +74,7 @@
         break;
     }
 
-    $crm = new crm($api_id, $system_package);
+    
 
     if (isset($_GET['edit'])) {
         $edit = true;
@@ -254,6 +253,9 @@
 
     if (isset($_POST['create_crm_submit'])) {
         if ($_SESSION['FORM_SECRET'] == $_POST['form_secret5']) {
+            $api_id = $_POST['api_id'];
+            $crm = new crm($api_id, $system_package);
+
             $business_name = $_POST['business_name'];
             $contact_name = $_POST['contact'];
             $contact_phone = $_POST['contact_Phone'];

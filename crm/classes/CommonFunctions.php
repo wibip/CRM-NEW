@@ -469,7 +469,7 @@ class CommonFunctions{
     }
 
     public function getSystemPackage($mno_id){
-        $sqlSysPackage = "SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$mno_id'";
+        $sqlSysPackage = "SELECT `system_package`, features FROM `exp_mno` WHERE `mno_id`='$mno_id'";
         $resultSysPackage =  $this->db->selectDB($sqlSysPackage);
         return $resultSysPackage;
     }

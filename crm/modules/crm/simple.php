@@ -3,10 +3,10 @@
 $api = $api_details['data'][0];
 // var_dump($api);
 $serviceTypes = null;
-$baseUrl = $api['api_url'] . '/api/v1_0';//'http://bi-development.arrisi.com/api/v1_0';
+$baseUrl = $apiUrl. '/api/'.$apiVersion;//'http://bi-development.arrisi.com/api/v1_0';
 //generating api call to get Token
-$apiUsername = $api['api_username'];//'dev_hosted_api_user';
-$apiPassword = $api['api_password'];//'development@123!';
+// $apiUsername = $api['api_username'];//'dev_hosted_api_user';
+// $apiPassword = $api['api_password'];//'development@123!';
 $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
 $tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
 //generating api call to get Service Types
@@ -112,9 +112,8 @@ if (!empty($arrayo)) {
             </div>
         </div> 
         <form onkeyup="" onchange="" autocomplete="off" id="crm_form" name="crm_form" method="post" class="row g-3 p-4" action="">
-            <?php
-            echo '<input type="hidden" name="form_secret5" id="form_secret5" value="' . $_SESSION['FORM_SECRET'] . '" />';
-            ?>
+            <input type="hidden" name="form_secret5" id="form_secret5" value="<?=$_SESSION['FORM_SECRET']?>" />
+            <input type="hidden" name="api_id" id="api_id" value="<?=$api_id?>" />
             <div class="col-md-6">
                 <label for="radiobtns">Property Name</label>
                 <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?php echo $edit===true?$get_business_name:''?>">
