@@ -58,17 +58,17 @@ if($tokenReturn['status'] == 'success') {
 }
 
 $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
-                                                        FROM exp_products
-                                                        WHERE (network_type='GUEST' || network_type='PRIVATE' || network_type='VTENANT') AND mno_id='$user_distributor' AND (default_value='1' || default_value IS NULL)";
-    $query_results = $db->selectDB($q1);
-    $arraym = array();
-    $arrayk = array();
-    $arrayo = array();
-    $guest_product_arr = array();
-    $pvt_product_arr = array();
-    $vt_product_arr = array();
+        FROM exp_products
+        WHERE (network_type='GUEST' || network_type='PRIVATE' || network_type='VTENANT') AND mno_id='$user_distributor' AND (default_value='1' || default_value IS NULL)";
+$query_results = $db->selectDB($q1);
+$arraym = array();
+$arrayk = array();
+$arrayo = array();
+$guest_product_arr = array();
+$pvt_product_arr = array();
+$vt_product_arr = array();
 
-    foreach ($query_results['data'] as $row) {
+foreach ($query_results['data'] as $row) {
     $dis_code = $row['product_code'];
     $QOS = $row['QOS'];
     $QOSLast = strtolower(substr($QOS, -1));

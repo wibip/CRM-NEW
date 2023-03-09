@@ -1,12 +1,7 @@
 <?php
-
-$api = $api_details['data'][0];
-// var_dump($api);
 $serviceTypes = null;
-$baseUrl = $apiUrl. '/api/'.$apiVersion;//'http://bi-development.arrisi.com/api/v1_0';
+$baseUrl = $apiUrl. '/api/'.$apiVersion;
 //generating api call to get Token
-// $apiUsername = $api['api_username'];//'dev_hosted_api_user';
-// $apiPassword = $api['api_password'];//'development@123!';
 $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
 $tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
 //generating api call to get Service Types

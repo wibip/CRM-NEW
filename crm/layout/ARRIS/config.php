@@ -236,7 +236,7 @@ $modules = [
             [
                 "id" => "crm_create",
                 "name" => "Create",
-                "module" => "crm/1"
+                "module" => "crm/simple"
             ]
         ]
     ],
@@ -263,7 +263,7 @@ $modules = [
             [
                 "id" => "crm_create",
                 "name" => "Create",
-                "module" => "crm/1"
+                "module" => "crm/simple"
             ]
         ]
     ]
