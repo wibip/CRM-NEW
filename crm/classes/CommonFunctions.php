@@ -474,14 +474,15 @@ class CommonFunctions{
         return $resultSysPackage;
     }
 
-    public function getProperties($user_type,$user_name,$user_distributor,$start_date,$end_date,$limit=10,$client_name = null,$business_name=null,$status=null) {
+    public function getProperties($user_type,$user_name,$user_distributor,$city,$state,$zip,$start_date,$end_date,$limit=10,$client_name = null,$business_name=null,$status=null) {
 		$subQuery = "";        
         $clientArray = [];
         $businessArray = [];
-
-        // var_dump($business_name);
-
-        $propertyQuery = "SELECT id,property_id,business_name,status,create_user FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
+        $cityArray = [];
+        $stateArray = [];
+        $zipArray = [];
+        
+        $propertyQuery = "SELECT id,property_id,business_name,status,city,state,zip,create_user,create_date FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
         switch($user_type ){
             case 'SADMIN' :
                 $propertyQuery .= "";
@@ -511,6 +512,9 @@ class CommonFunctions{
                     $clientArray[$row['create_user']] = $clientName;
                 }
                 $businessArray[$row['business_name']] = $row['business_name'];
+                $cityArray[$row['city']] = $row['city'];
+                $stateArray[$row['state']] = $row['state'];
+                $zipArray[$row['zip']] = $row['zip'];
             }
         }
 
@@ -523,13 +527,25 @@ class CommonFunctions{
             $propertyQuery .= " AND business_name='".$business_name."'";
         }
 
+        if($city != null && $city != 'all') {
+            $propertyQuery .= " AND city='".$city."'";
+        }
+
+        if($state != null && $state != 'all') {
+            $propertyQuery .= " AND `state`='".$state."'";
+        }
+
+        if($zip != null && $zip != 'all') {
+            $propertyQuery .= " AND zip='".$zip."'";
+        }
+
         if($status != null && $status != 'all') {
             $propertyQuery .= " AND status='".$status."'";
         }
         // echo $propertyQuery;
         $query_results = $this->db->selectDB($propertyQuery);
 
-        $results = ['query_results'=>$query_results,'clientArray'=>$clientArray,'businessArray'=>$businessArray,];
+        $results = ['query_results'=>$query_results,'clientArray'=>$clientArray,'businessArray'=>$businessArray,'cityArray'=>$cityArray,'stateArray'=>$stateArray,'zipArray'=>$zipArray];
         return $results;
 	}
 }

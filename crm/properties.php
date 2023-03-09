@@ -28,11 +28,17 @@ $status = null;
 $limit = null;
 $start_date = null;
 $end_date = null;
+$property_city = null;
+$property_state = null;
+$property_zip = null;
 
 //activity_logs
 if (isset($_POST['filter'])) {
     $client_name = isset($_POST['client_name']) ? $_POST['client_name'] : null;
     $business_name = isset($_POST['business_name']) ? $_POST['business_name'] : null;
+    $property_city = isset($_POST['property_city']) ? $_POST['property_city'] : null;
+    $property_state = isset($_POST['property_state']) ? $_POST['property_state'] : null;
+    $property_zip = isset($_POST['property_zip']) ? $_POST['property_zip'] : null;
     $status = isset($_POST['status']) ? $_POST['status'] : null;
     $limit = isset($_POST['limit'])  ? $_POST['limit'] : null;
     $start_date = null;
@@ -50,14 +56,23 @@ if (isset($_POST['filter'])) {
     }
 } 
 // var_dump($business_name);
-$propertyResult = $CommonFunctions->getProperties($user_type,$user_name,$user_distributor,$start_date,$end_date,$limit,$client_name,$business_name,$status);
+$propertyResult = $CommonFunctions->getProperties($user_type,$user_name,$user_distributor,$property_city,$property_state,$property_zip,$start_date,$end_date,$limit,$client_name,$business_name,$status);
 
 $query_results = $propertyResult['query_results'];
 $clientArray = $propertyResult['clientArray'];
 $businessArray = $propertyResult['businessArray'];
+$cityArray = $propertyResult['cityArray'];
+$stateArray = $propertyResult['stateArray'];
+$zipArray = $propertyResult['zipArray'];
 
 
+$api = $api_details['data'][0];
+// var_dump($api);
 $serviceTypes = null;
+$baseUrl = $api['api_url'] . '/api/v1_0';//'http://bi-development.arrisi.com/api/v1_0';
+//generating api call to get Token
+$apiUsername = $api['api_username'];//'dev_hosted_api_user';
+$apiPassword = $api['api_password'];//'development@123!';
 $baseUrl = $apiUrl.'/api/'.$apiVersion;
 //generating api call to get Token
 
@@ -71,6 +86,7 @@ if($tokenReturn['status'] == 'success') {
         $serviceTypes = $serviceTypesReturn['data'];
     }
 }
+// var_dump($serviceTypes);
 ?>
 <style>
 #live_camp .tablesaw-columntoggle-popup .btn-group > label {
@@ -105,8 +121,8 @@ if($tokenReturn['status'] == 'success') {
                                                 </div>
                                             </div>
                                             <form method="post" class="row g-3 p-4">
-                                                <div class="col-md-4">
-                                                    <label>Business Name</label>
+                                                <div class="col-md-3">
+                                                    <label>Property Name</label>
                                                     <select id="business_name" name="business_name">
                                                         <option value='all' <?=(($business_name == null) ? "selected" : "")?>>All</option>
                                                         <?php 
@@ -120,23 +136,68 @@ if($tokenReturn['status'] == 'success') {
                                                         ?>
                                                     </select> 
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
+                                                    <label>Property City</label>
+                                                    <select id="property_city" name="property_city">
+                                                        <option value='all' <?=(($property_city == null) ? "selected" : "")?>>All</option>
+                                                        <?php 
+                                                            if(!empty($cityArray)){
+                                                                foreach($cityArray AS $key=>$value) {
+                                                        ?>
+                                                                <option value='<?=$key?>' <?=(($property_city != null && $property_city == $key) ? "selected" : "")?>><?=$value?></option>
+                                                        <?php
+                                                                }
+                                                            }
+                                                        ?>
+                                                    </select> 
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label>Property State</label>
+                                                    <select id="property_state" name="property_state">
+                                                        <option value='all' <?=(($property_state == null) ? "selected" : "")?>>All</option>
+                                                        <?php 
+                                                            if(!empty($stateArray)){
+                                                                foreach($stateArray AS $key=>$value) {
+                                                        ?>
+                                                                <option value='<?=$key?>' <?=(($property_state != null && $property_state == $key) ? "selected" : "")?>><?=$value?></option>
+                                                        <?php
+                                                                }
+                                                            }
+                                                        ?>
+                                                    </select> 
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label>Property Zip</label>
+                                                    <select id="property_zip" name="property_zip">
+                                                        <option value='all' <?=(($property_zip == null) ? "selected" : "")?>>All</option>
+                                                        <?php 
+                                                            if(!empty($zipArray)){
+                                                                foreach($zipArray AS $key=>$value) {
+                                                        ?>
+                                                                <option value='<?=$key?>' <?=(($property_zip != null && $property_zip == $key) ? "selected" : "")?>><?=$value?></option>
+                                                        <?php
+                                                                }
+                                                            }
+                                                        ?>
+                                                    </select> 
+                                                </div>
+                                                <!-- <div class="col-md-4">
                                                     <label for="radiobtns">Service Type</label>
                                                     <select name="service_type" id="service_type" class="span4 form-control">
-                                                        <?php if($serviceTypes != null){ ?>
+                                                        < ?php if($serviceTypes != null){ ?>
                                                         <option value="0">Please select service type</option>
-                                                        <?php   foreach($serviceTypes as $serviceType){ ?>
-                                                            <option value="<?=$serviceType['id']?>"><?=$serviceType['service_type']?></option>
-                                                        <?php
+                                                        < ?php   foreach($serviceTypes as $serviceType){ ?>
+                                                            <option value="< ?=$serviceType['id']?>">< ?=$serviceType['service_type']?></option>
+                                                        < ?php
                                                             }
                                                         } else { ?>
                                                         <option value="0">Service type not found</option>
-                                                        <?php
+                                                        < ?php
                                                         }
                                                         ?>
                                                     </select>
-                                                </div>
-                                                <div class="col-md-4">
+                                                </div> -->
+                                                <div class="col-md-3">
                                                     <label>Status</label>
                                                     <select id="status" name="status">
                                                         <option value='all' <?=(($status == null) ? "selected" : "")?>>All</option>
@@ -146,7 +207,7 @@ if($tokenReturn['status'] == 'success') {
                                                         <option value='Failed' <?=(($status != null && $status == "Failed") ? "selected" : "")?>>Failed</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label>Order Raise By</label>
                                                     <select id="client_name" name="client_name">
                                                         <option value='all' <?=(($client_name == null) ? "selected" : "")?>>All</option>
@@ -161,10 +222,10 @@ if($tokenReturn['status'] == 'success') {
                                                         ?>
                                                     </select>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <div>
                                                         <div class="col-md-5">
-                                                            <label class="control-label" for="radiobtns">Period</label>
+                                                            <label class="control-label" for="radiobtns">Order Raise from</label>
                                                             <input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($user_mg_start)) {
                                                                                                                                                                                         echo $user_mg_start;
                                                                                                                                                                                 } ?>" placeholder="<?=(isset($show_start) ? $show_start : 'mm/dd/yyyy')?>">
@@ -190,9 +251,13 @@ if($tokenReturn['status'] == 'success') {
                                             <thead>
                                                 <tr>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Unique Property ID</th>
-                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Client Name</th>
-                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Business Name</th>
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Property Name</th>
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Property City</th>
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Property State</th>
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Property Zip</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Status</th>
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Order Raise At</th>
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Order Raise By</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Show Details</th>
                                                     <!-- <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">Remove</th> -->
                                                 </tr>
@@ -208,24 +273,28 @@ if($tokenReturn['status'] == 'success') {
                                                             
                                                             echo '<tr>
                                                             <td> '.$row['property_id'].' </td>
-                                                            <td> '.$clientName.' </td>
                                                             <td> '.$row['business_name'].' </td>
-                                                            <td> '.$row['status'].' </td>';
+                                                            <td> '.$row['city'].' </td>
+                                                            <td> '.$row['state'].' </td>
+                                                            <td> '.$row['zip'].' </td>
+                                                            <td> '.$row['status'].' </td>
+                                                            <td> '.date('d-m-Y',strtotime($row['create_date'])).' </td>
+                                                            <td> '.$clientName.' </td>';
                                                             echo '<td><a href="javascript:void();" id="VIEWACC_'.$row['id'].'"  class="btn btn-small btn-info">
                                                                 <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
-                                                                // $(document).ready(function() {
-                                                                //     $(\'#VIEWACC_' .$row['id'].'\').easyconfirm({
-                                                                //         locale: {
-                                                                //             title: \'Property View\',
-                                                                //             text: \'Are you sure you want to view this property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                //             button: [\'Cancel\', \' Confirm\'],
-                                                                //             closeText: \'close\'
-                                                                //         }
-                                                                //     });
-                                                                //     $(\'#VIEWACC_'.$row['id'].'\').click(function () {
-                                                                //         window.location = "?t=3&token='. $secret.'&property_edit&property_id='.$row['id'].'&client_id='.$_GET['edit_id'].'";
-                                                                //     });
-                                                                // });
+                                                                $(document).ready(function() {
+                                                                    $(\'#VIEWACC_' .$row['id'].'\').easyconfirm({
+                                                                        locale: {
+                                                                            title: \'Property View\',
+                                                                            text: \'Are you sure you want to view this property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                            button: [\'Cancel\', \' Confirm\'],
+                                                                            closeText: \'close\'
+                                                                        }
+                                                                    });
+                                                                    $(\'#VIEWACC_'.$row['id'].'\').click(function () {
+                                                                        window.location = "?t=3&token='. $secret.'&property_edit&property_id='.$row['id'].'&client_id='.$_GET['edit_id'].'";
+                                                                    });
+                                                                });
                                                                 </script></td>';
                                                             
                                                             // if($_SESSION['SADMIN'] == true) {

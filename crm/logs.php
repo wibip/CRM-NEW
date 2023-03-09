@@ -8,14 +8,14 @@ $logTypes = $db->getDataFromLogsField('log_type');
 $sections = $db->getDataFromApiLogsField('section','section');
 $logNames = $db->getDataFromApiLogsField('name','name');
 
-$today = $show_end  = date('m/d/Y');
-$day_before_week = $show_start = date('m/d/Y', strtotime('-7 days'));
+// $today = $show_end  = date('m/d/Y');
+// $day_before_week = $show_start = date('m/d/Y', strtotime('-7 days'));
 
-$en_date = DateTime::createFromFormat('m/d/Y', $today)->format('Y-m-d');
-$st_date = DateTime::createFromFormat('m/d/Y', $day_before_week)->format('Y-m-d');
+// $en_date = DateTime::createFromFormat('m/d/Y', $today)->format('Y-m-d');
+// $st_date = DateTime::createFromFormat('m/d/Y', $day_before_week)->format('Y-m-d');
 
-$start_date = $st_date . ' 00:00:00';
-$end_date = $en_date . ' 23:59:59';
+$start_date = null;
+$end_date = null;
 
 $query_results1_user = $db->getLogsByFilters($start_date,$end_date);
 
@@ -46,7 +46,7 @@ if (isset($_POST['activity_lg'])) {
 	}
 }
 
-
+// var_dump($query_results1_user);
 if (isset($_POST['api_lg'])) {
 	if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) {
 		$name = (isset($_POST['name']) && $_POST['name'] != '-1') ? $_POST['name'] : null;
@@ -162,7 +162,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<label class="control-label" for="limit">Limit</label>
 												<?php
 												if (!isset($limit)) {
-													$limit = 10;
+													$limit = 50;
 												}
 												?>
 												<?php echo '<input class="span2 form-control limit_log" id="limit" name="limit" value="' . $limit . '" type="text"  title="Set the upper limit of how many log records you want to be displayed in the table below." placeholder="10">' ?>
@@ -286,7 +286,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 												<label class="control-label" for="api_limit">Limit</label>
 												<?php
 												if (!isset($api_limit)) {
-													$api_limit = 10;
+													$api_limit = 50;
 												}
 												?>
 												<?php echo '<input class="span2 form-control limit_log" id="api_limit" name="api_limit" value="' . $api_limit . '" type="text"  title="Set the upper limit of how many log records you want to be displayed in the table below." placeholder="10">' ?>

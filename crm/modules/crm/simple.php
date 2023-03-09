@@ -116,7 +116,7 @@ if (!empty($arrayo)) {
             echo '<input type="hidden" name="form_secret5" id="form_secret5" value="' . $_SESSION['FORM_SECRET'] . '" />';
             ?>
             <div class="col-md-6">
-                <label for="radiobtns">Business Name</label>
+                <label for="radiobtns">Property Name</label>
                 <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?php echo $edit===true?$get_business_name:''?>">
             </div>
             <div class="col-md-6">

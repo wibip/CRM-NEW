@@ -295,7 +295,7 @@ class db_functions extends dbTasks
 		
 	}
 
-	public function getLogsByFilters($start_date,$end_date,$limit=10,$userName = null,$logType=null,$page=null) {
+	public function getLogsByFilters($start_date,$end_date,$limit=50,$userName = null,$logType=null,$page=null) {
 		$sql = "SELECT user_name,log_type,page,log_details,create_date FROM crm_user_logs 
 				WHERE TRUE ";
 
@@ -321,7 +321,7 @@ class db_functions extends dbTasks
 	}
 
 
-	public function getApiLogsByFilters($start_date,$end_date,$limit=10,$name = null,$logType=null,$section=null) {
+	public function getApiLogsByFilters($start_date,$end_date,$limit=50,$name = null,$logType=null,$section=null) {
 		$sql = "SELECT name,section,log_type,description,create_date FROM crm_api_logs 
 				WHERE TRUE ";
 
