@@ -601,7 +601,7 @@ if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 function isModuleAccess($access_role, $module, $db_function)
 {
 	$sql1 = "SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role` = '$access_role' AND `module_name` = '$module' LIMIT 1";
-	var_dump($sql1);
+	// var_dump($sql1);
 	$result = $db_function->selectDB($sql1);
 	// print_r($result);
 	//$row_count = mysql_num_rows($result);
@@ -644,8 +644,6 @@ foreach ($x as $keyX => $valueX) {
 		
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
 			try {
-				echo $valueX;
-		echo '-----------------------001<br/>';
 				unset($x[$keyX]);
 			} catch (Exception $e) {}
 		}
@@ -653,6 +651,8 @@ foreach ($x as $keyX => $valueX) {
 	
 	if ($package_functions->getPageFeature($valueX, $system_package) == '0') {
 		try {
+			echo $valueX;
+		echo '-----------------------001<br/>';
 			unset($x[$keyX]);
 		} catch (Exception $e) {}
 	}
