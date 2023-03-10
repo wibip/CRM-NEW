@@ -631,15 +631,18 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row['module_name']; // Retuns base access
 	}
 }
-// echo '------------<br/>';
-// var_dump($x);
+echo '----------------01<br/>';
+var_dump($x);
+// echo $access_role.'---';
 // echo '------------<br/>';
 
 foreach ($x as $keyX => $valueX) {
+	// echo '----------------------------'.$system_package;
+	// echo '------------<br/>';
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
-		// echo $access_role.'---';
-		// echo $valueX;
-		// echo '------------<br/>';
+		
+		echo $valueX;
+		echo '------------<br/>';
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
 			try {
 				unset($x[$keyX]);
@@ -647,6 +650,7 @@ foreach ($x as $keyX => $valueX) {
 			}
 		}
 	}
+	echo $package_functions->getPageFeature($valueX, $system_package);
 	if ($package_functions->getPageFeature($valueX, $system_package) == '0') {
 		try {
 			unset($x[$keyX]);
@@ -655,8 +659,8 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-// echo '------------<br/>';
-// var_dump($x);
+echo '------------------02<br/>';
+var_dump($x);
 
 if ($_SESSION['SADMIN'] == true) {
 	array_push($x, "operation_list");
@@ -674,8 +678,8 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-// echo '------------<br/>';
-// var_dump($x);
+echo '-----------------03<br/>';
+var_dump($x);
 // echo "<<<<<<  Step 06 >>>>>";
 // die;
 $allowed_pages = $x;
