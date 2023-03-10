@@ -601,9 +601,9 @@ if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 function isModuleAccess($access_role, $module, $db_function)
 {
 	$sql1 = "SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role` = '$access_role' AND `module_name` = '$module' LIMIT 1";
-	var_dump($sql1);
+	// var_dump($sql1);
 	$result = $db_function->selectDB($sql1);
-	print_r($result);
+	// print_r($result);
 	//$row_count = mysql_num_rows($result);
 	if ($result['rowCount'] > 0) {
 		return true;
@@ -631,37 +631,36 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row['module_name']; // Retuns base access
 	}
 }
-echo '----------------01<br/>';
-var_dump($x);
+// echo '------------<br/>';
+// var_dump($x);
 // echo $access_role.'---';
-echo '----------------------<br/>';
+// echo '------------<br/>';
 
 foreach ($x as $keyX => $valueX) {
+	echo '----------------------------'.$system_package;
+	echo '------------<br/>';
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		
-		
+		echo $valueX;
+		echo '------------<br/>';
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
 			try {
-				echo '----------------------------'.$valueX.'------------<br/>';
 				unset($x[$keyX]);
-			} catch (Exception $e) {}
+			} catch (Exception $e) {
+			}
 		}
 	}
-
-	echo '----------------001<br/>';
-var_dump($x);
-	
+	echo $package_functions->getPageFeature($valueX, $system_package);
 	if ($package_functions->getPageFeature($valueX, $system_package) == '0') {
 		try {
 			unset($x[$keyX]);
-		} catch (Exception $e) {}
+		} catch (Exception $e) {
+		}
 	}
-// 	echo '----------------002<br/>';
-// var_dump($x);
 }
 
-echo '------------------02<br/>';
-var_dump($x);
+// echo '------------<br/>';
+// var_dump($x);
 
 if ($_SESSION['SADMIN'] == true) {
 	array_push($x, "operation_list");
@@ -679,8 +678,8 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-echo '-----------------03<br/>';
-var_dump($x);
+// echo '------------<br/>';
+// var_dump($x);
 // echo "<<<<<<  Step 06 >>>>>";
 // die;
 $allowed_pages = $x;
