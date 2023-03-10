@@ -634,28 +634,27 @@ foreach ($query_results_drop1['data'] as $row) {
 echo '----------------01<br/>';
 var_dump($x);
 // echo $access_role.'---';
-// echo '------------<br/>';
+echo '----------------------<br/>';
 
 foreach ($x as $keyX => $valueX) {
 	// echo '----------------------------'.$system_package;
 	// echo '------------<br/>';
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		
-		echo $valueX;
-		echo '------------<br/>';
+		
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
 			try {
+				echo $valueX;
+		echo '-----------------------001<br/>';
 				unset($x[$keyX]);
-			} catch (Exception $e) {
-			}
+			} catch (Exception $e) {}
 		}
 	}
-	echo $package_functions->getPageFeature($valueX, $system_package);
+	
 	if ($package_functions->getPageFeature($valueX, $system_package) == '0') {
 		try {
 			unset($x[$keyX]);
-		} catch (Exception $e) {
-		}
+		} catch (Exception $e) {}
 	}
 }
 
