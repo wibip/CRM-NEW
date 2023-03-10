@@ -637,8 +637,7 @@ var_dump($x);
 echo '----------------------<br/>';
 
 foreach ($x as $keyX => $valueX) {
-	// echo '----------------------------'.$system_package;
-	// echo '------------<br/>';
+	echo '----------------------------'.$valueX.'------------<br/>';
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		
 		
