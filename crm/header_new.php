@@ -637,12 +637,12 @@ var_dump($x);
 echo '----------------------<br/>';
 
 foreach ($x as $keyX => $valueX) {
-	echo '----------------------------'.$valueX.'------------<br/>';
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 		
 		
 		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
 			try {
+				echo '----------------------------'.$valueX.'------------<br/>';
 				unset($x[$keyX]);
 			} catch (Exception $e) {}
 		}
@@ -656,8 +656,8 @@ var_dump($x);
 			unset($x[$keyX]);
 		} catch (Exception $e) {}
 	}
-	echo '----------------002<br/>';
-var_dump($x);
+// 	echo '----------------002<br/>';
+// var_dump($x);
 }
 
 echo '------------------02<br/>';
