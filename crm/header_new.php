@@ -648,14 +648,17 @@ foreach ($x as $keyX => $valueX) {
 			} catch (Exception $e) {}
 		}
 	}
+
+	echo '----------------001<br/>';
+var_dump($x);
 	
 	if ($package_functions->getPageFeature($valueX, $system_package) == '0') {
 		try {
-			echo $valueX;
-		echo '-----------------------001<br/>';
 			unset($x[$keyX]);
 		} catch (Exception $e) {}
 	}
+	echo '----------------002<br/>';
+var_dump($x);
 }
 
 echo '------------------02<br/>';
