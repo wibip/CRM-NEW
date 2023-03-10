@@ -601,7 +601,7 @@ if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 function isModuleAccess($access_role, $module, $db_function)
 {
 	$sql1 = "SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role` = '$access_role' AND `module_name` = '$module' LIMIT 1";
-	// var_dump($sql1);
+	var_dump($sql1);
 	$result = $db_function->selectDB($sql1);
 	// print_r($result);
 	//$row_count = mysql_num_rows($result);
