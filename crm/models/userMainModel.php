@@ -66,41 +66,9 @@ class userMainModel
 
     public function getUser($id)
     {
-
-        $q = sprintf("SELECT *
-                      FROM admin_users WHERE id =%s",  $this->connection->GetSQLValueString($id, "text"));
-
-
-        $data = $this->connection->selectDB($q);
-
-        require_once dirname(__FILE__) . '/../entity/admin_users.php';
-
-        $data_array = array();
-        foreach ($data['data'] as $row) {
-            $row_data = new admin_users(
-                $row['id'],
-                $row['user_name'],
-                '',
-                $row['access_role'],
-                $row['user_type'],
-                $row['user_distributor'],
-                $row['full_name'],
-                $row['email'],
-                $row['language'],
-                $row['timezone'],
-                $row['mobile'],
-                $row['verification_number'],
-                $row['is_enable'],
-                $row['global_user_id'],
-                $row['create_date'],
-                $row['create_user'],
-                $row['last_update'],
-                $row['activation_date']
-            );
-            array_push($data_array, $row_data);
-        }
-
-        return $data_array;
+        $sql = "SELECT * FROM admin_users WHERE id =$id";
+        $data = $this->connection->selectDB($sql);
+        return $data;
     }
 
     public function deleteUser($id)
@@ -341,61 +309,14 @@ class userMainModel
     }
 
     //get active useres(users.php)
-    function get_activeUseres(User $data)
+    function get_activeUseres()
     {
-        $user_type = $data->user_type;
-        $user_name = $data->user_name;
-
-        if ($user_type == 'SADMIN') {
-            $q = "SELECT au.id,au.user_name,au.full_name, au.access_role, au.user_type, au.user_distributor, au.email,au.is_enable,au.create_user
+            $q = "SELECT au.id,au.user_name,au.full_name, au.group, au.email,au.is_enable,au.create_user
                             ,IF(!ISNULL(aar.description),aar.description,IF(au.access_role='admin','Admin','')) AS description
                             FROM admin_users au LEFT JOIN admin_access_roles aar ON au.access_role = aar.access_role";
-        } elseif ($user_type == 'ADMIN') {
-            $q = "SELECT au.id,au.user_name,au.full_name, au.access_role, au.user_type, au.user_distributor, au.email,au.is_enable,au.create_user
-                            ,IF(!ISNULL(aar.description),aar.description,IF(au.access_role='admin','Admin','')) AS description
-                            FROM admin_users au LEFT JOIN admin_access_roles aar ON au.access_role = aar.access_role
-                            WHERE (user_type = '$user_type' OR user_type = 'SADMIN' OR user_type = 'SMAN') AND user_name<>'admin' AND au.is_enable=1";
-        } elseif ($user_type == 'SUPPORT' || $user_type == 'MNO') {
-            $user_distributor = $data->user_distributor;
 
-            $q = "SELECT a.id,a.user_name,a.full_name, a.access_role, a.user_type, a.user_distributor, a.email,a.is_enable ,a.create_user
-              ,IF(!ISNULL(aar.description),aar.description,IF(a.access_role='admin','Admin','')) AS description
-                FROM admin_users a LEFT JOIN admin_access_roles aar ON a.access_role=aar.access_role, `admin_access_roles_modules` b
-                WHERE user_distributor = '$user_distributor' AND a.`access_role`=b.`access_role` AND b.`module_name`='support' OR user_distributor = '$user_distributor' AND a.`user_type`='SUPPORT' AND a.`access_role`<>'admin' AND user_name<>'$user_name'  AND au.is_enable=1
-                GROUP BY `user_name`";
-        } else {
-            $user_distributor = $data->user_distributor;
-
-            $q = "SELECT au.id,au.user_name,au.full_name, au.access_role, au.user_type, au.user_distributor, au.email,au.is_enable,au.create_user
-            ,IF(!ISNULL(aar.description),aar.description,IF(au.access_role='admin','Admin','')) AS description
-            FROM admin_users au LEFT JOIN admin_access_roles aar ON au.access_role = aar.access_role where user_type IN ('$user_type','SUPPORT','TECH','PROVISIONING') AND user_distributor = '$user_distributor' AND user_name<>'$user_name'  AND au.is_enable=1";
-        }
-
-        // var_dump($q);
         $data = $this->connection->selectDB($q);
-
-        $data_array = array();
-        foreach ($data['data'] as $row) {
-
-            $row_data = new User();
-
-            $row_data->id = $row['id'];
-            $row_data->user_name = $row['user_name'];
-            $row_data->full_name = $row['full_name'];
-            $row_data->access_role = $row['access_role'];
-            $row_data->description = $row['description'];
-            $row_data->user_type = $row['user_type'];
-            $row_data->user_distributor = $row['user_distributor'];
-            $row_data->is_enable = $row['is_enable'];
-            $row_data->email = $row['email'];
-            $row_data->create_user = $row['create_user'];
-
-            array_push($data_array, $row_data);
-        }
-
-
-      
-        return $data_array;
+        return $data;
     }
 
 

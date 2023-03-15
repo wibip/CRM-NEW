@@ -9,9 +9,6 @@ $user_model = new userMainModel();
 $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 $page = 'User';
 
-foreach(ACCESS as $key => $value){
-	var_dump($key);
-}
 ?>
 
 <style>
@@ -858,17 +855,14 @@ if ($system_package == 'N/A') {
 	elseif (isset($_GET['edit_id'])) {
 		if ($_SESSION['FORM_SECRET'] == $_GET['token']) {
 			$edit_id = $_GET['edit_id'];
-			$edit_user_data = $user_model->getUser($edit_id);
-			// var_dump($edit_user_data);
-			$tab2 = "set";
-			$tab5 = "not";
+			$userData = $user_model->getUser($edit_id);
+			if($userData['rowCount'] > 0){
+				$edit_user_data = $userData['data'][0];
+			}
 		} else {
 			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Load User',$_GET['edit_id'],'2004','Oops, It seems you have refreshed the page. Please try again');
 			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
 			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Oops, It seems you have refreshed the page. Please try again</strong></div>";
-			//header('Location: location.php?t=3');
-			$tab2 = "set";
-			$tab5 = "not";
 		}
 	}
 	//edit user
@@ -1511,39 +1505,13 @@ if ($system_package == 'N/A') {
 													if (isset($_SESSION['msg6'])) {
 														echo $_SESSION['msg6'];
 														unset($_SESSION['msg6']);
-													}
-
-													$id = 0;
-													if(isset($_GET['edit_id']) && $edit_user_data != null){
-														$id = $edit_user_data[0]->getId();
-														// $user_name =  $edit_user_data[0]->getUserName();
-														$access_role_set = $edit_user_data[0]->getAccessRole();
-														$full_name = $edit_user_data[0]->getFullName();
-														$email = $edit_user_data[0]->getEmail();
-														$language_set = $edit_user_data[0]->getLanguage();
-														$user_type_set = $edit_user_data[0]->getUserType();
-														$timezone_set = $edit_user_data[0]->getTimezones();
-														$mobile = $edit_user_data[0]->getMobile(); 
-
-														if ($access_role_set=='admin' && $user_type_set =='SUPPORT') {
-															$access_role_s="Master Support Admin";
-														}
-														elseif ($access_role_set=='admin' && $user_type_set =='TECH') {
-															$access_role_s='Master Tech Admin';
-														}
-														elseif ($access_role_set=='admin') {
-															$access_role_s='Master Admin Peer';
-														}
-														else{
-															$access_role_s='Admin';
-														}
-													}
+													} 	
 												?>
 												<!-- action="controller/User_Controller.php" -->
 												<div class="border card">
 													<div class="border-bottom card-header p-4">
 														<div class="g-3 row">
-															<span class="fs-5">Create User</span>
+															<span class="fs-5"><?=(isset($_GET['edit_id'])? "Update" : "Create")?> User</span>
 														</div>
 													</div>
 													<form autocomplete="off" id="edit_profile" action="users.php" method="post" class="row g-3 p-4">
@@ -1558,8 +1526,9 @@ if ($system_package == 'N/A') {
 																<?php 
 																foreach(ACCESS as $key => $value){
 																	$userGroupName = strtoupper(str_replace("_"," ",$key));
+																	$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $key == $edit_user_data['group']) ? "checked" : "";
 																?>
-																<input type="radio" class="btn-check" name="user_group" id="user_group" id="<?=$key?>" autocomplete="off">
+																<input type="radio" class="btn-check" name="user_group" id="user_group" id="<?=$key?>" autocomplete="off" <?=$selected?>>
 																<label class="btn btn-outline-primary" for="<?=$key?>"><?=$userGroupName?></label>
 																<?php
 																}
@@ -1580,36 +1549,35 @@ if ($system_package == 'N/A') {
 														
 														<div class="col-md-6">
 															<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="full_name_1" name="full_name_1" maxlength="25" type="text" value="<?php echo $full_name ?>">
+															<input class="form-control span4" id="full_name_1" name="full_name_1" maxlength="25" type="text" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['full_name'] : ''?>">
 														</div>
 												
 														<div class="col-md-6">
 															<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="email_1" name="email_1"  value="<?php echo $email ?>">
+															<input class="form-control span4" id="email_1" name="email_1"  value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['email'] : ''?>">
 														</div>
 
 														<div class="col-md-6">
-															<label class="control-label" for="language_1">Language</label>
-															<select class="form-control span4" name="language_1" id="language_1">
+															<label class="control-label" for="language">Language</label>
+															<select class="form-control span4" name="language" id="language">
 																<?php
 																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
 																	$query_results=$db->selectDB($key_query);
 																	foreach($query_results['data'] AS $row){
 																		$language_code = $row['language_code'];
 																		$language = $row['language'];
-																		if ($language_code == $language_set) {
-																			echo '<option value="' . $language_code . '" selected>' . $language . '</option>';
-																		} else {
-																			echo '<option value="' . $language_code . '">' . $language . '</option>';
-																		}
+																		$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $language_code == $edit_user_data['language']) ? "selected" : "";
+																?>
+																	<option value='<?=$language_code?>' <?=$selected?>><?=$language?></option>
+																<?php
 																	}
 																?>
 															</select>
 														</div>
 														
 														<div class="col-md-6">
-															<label class="control-label" for="timezone_1">Time Zone<sup><font color="#FF0000"></font></sup></label>
-															<select class="span4 form-control" id="timezone_1" name="timezone_1" autocomplete="off">
+															<label class="control-label" for="timezone">Time Zone<sup><font color="#FF0000"></font></sup></label>
+															<select class="span4 form-control" id="timezone" name="timezone" autocomplete="off">
 																<option value="">Select Time Zone</option>
 																<?php
 																	$utc = new DateTimeZone('UTC');
@@ -1619,12 +1587,8 @@ if ($system_package == 'N/A') {
 																		$offset =  $current_tz->getOffset($dt);
 																		$transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
 																		$abbr = $transition[0]['abbr'];
-																		if($timezone_set==$tz){
-																			$select="selected";
-																		}else{
-																			$select="";
-																		}
-																		echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+																		$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $tz == $edit_user_data['timezone']) ? "selected" : "";
+																		echo '<option '.$selected.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
 																	}
 																	foreach(DateTimeZone::listIdentifiers() as $tz) {
 																		//Skip
@@ -1647,17 +1611,14 @@ if ($system_package == 'N/A') {
 															</select>
 														</div>
 														<div class="col-md-6">
-															<label class="control-label" for="mno_country" >Country<font color="#FF0000"></font></sup></label>
-															<select name="mno_country" id="mno_country" class="span4 form-control" autocomplete="off" required>
+															<label class="control-label" for="country" >Country<font color="#FF0000"></font></sup></label>
+															<select name="country" id="country" class="span4 form-control" autocomplete="off" required>
 																<option value="">Select Country</option>
 																<?php
 																	if($country_result['rowCount']>1) {
 																		foreach ($country_result['data'] as $row) {
-																			$select="";
-																			if($row['a']==$get_edit_mno_country){
-																				$select="selected";
-																			}
-																			echo '<option value="'.$row['a'].'" '.$select.'>'.$row['b'].'</option>';
+																			$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $row['a'] == $edit_user_data['country']) ? "selected" : "";
+																			echo '<option value="'.$row['a'].'" '.$selected.'>'.$row['b'].'</option>';
 																		}
 																	}
 																?>
@@ -1673,15 +1634,13 @@ if ($system_package == 'N/A') {
 																<?php
 																	if($get_regions['rowCount']>1) {
 																		foreach ($get_regions['data'] AS $state) {
-																			//edit_state_region , get_edit_mno_state_region
-																			if($get_edit_mno_state_region == 'N/A') {
+																			if($edit_user_data['state_region'] == 'N/A') {
 																				echo '<option selected value="N/A">Others</option>';
 																			} else {
-																				if ($get_edit_mno_state_region == $state['states_code']) {
-																					echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-																				} else {
-																					echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-																				}
+																				$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $state['states_code'] == $edit_user_data['state_region']) ? "selected" : "";
+		
+																				echo '<option '.$selected.' value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+
 																			}
 																		}
 																	}
@@ -1689,17 +1648,17 @@ if ($system_package == 'N/A') {
 															</select>
 														</div>
 														<div class="col-md-6">
-															<label class="control-label" for="mno_region">ZIP Code</label>
-															<input class="span4 form-control" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $get_edit_mno_zip?>" autocomplete="off" required>
+															<label class="control-label" for="zip">ZIP Code</label>
+															<input class="span4 form-control" id="zip" maxlength="5" placeholder="XXXXX" name="zip" type="text" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null ) ? $edit_user_data['zip'] : ''?>" autocomplete="off" required>
 														</div>
 														
 														<div class="col-md-6">
-															<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="mobile_1" name="mobile_1" type="text" placeholder="xxx-xxx-xxxx" value="<?php echo $mobile ?>" maxlength="12">
+															<label class="control-label" for="mobile">Phone Number<sup><font color="#FF0000"></font></sup></label>
+															<input class="form-control span4" id="mobile" name="mobile" type="text" placeholder="xxx-xxx-xxxx" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null ) ? $edit_user_data['mobile'] : ''?>" maxlength="12">
 														</div>
 														
 														<div class="col-md-12">
-															<button type="submit" name="submit_user" id="submit_user" class="btn btn-primary">Save</button>
+															<button type="submit" name="submit_user" id="submit_user" class="btn btn-primary"><?=(isset($_GET['edit_id'])? "Update" : "Save")?></button>
 														</div>
 													</form>
 												</div>
@@ -1747,7 +1706,7 @@ if ($system_package == 'N/A') {
 													<thead>
 														<tr>
 															<th>Username</th>																		
-															<th>Access Role</th>
+															<th>User Group</th>
 															<th>Full Name</th>
 															<th>Email</th>
 															<th>Created By</th>
@@ -1758,28 +1717,15 @@ if ($system_package == 'N/A') {
 													</thead>
 													<tbody>
 														<?php
-														require_once dirname(__FILE__) . '/DTO/User.php';
-														$data = new User();
-														$data->user_type = $user_type;
-														$data->user_distributor = $user_distributor;
-														$data->user_name = $user_name;
 														$query_results = $user_model->get_activeUseres($data);
-														foreach ($query_results as $row) {
-															$id = $row->id; //$row[id];
-															$user_name1 = $row->user_name; //$row[user_name];
-															$full_name = $row->full_name; //$row[full_name];
-															$access_role = $row->access_role; //$row[access_role];
-															$access_role_desc = $row->description; //$row['description'];
-															$user_type1 = $row->user_type; //$row[user_type];
-															$user_distributor1 = $row->user_distributor; //$row[user_distributor];
-															$email = $row->email; //$row[email];
-															$is_enable = $row->is_enable; //$row[is_enable];
-															$create_user = $row->create_user; //$row[create_user];
-															if ($user_type1 == 'TECH') {
-																$access_role_desc = 'Tech Admin';
-															} else if ($user_type1 == 'SUPPORT' && $access_role=='admin') {
-																$access_role_desc = 'Support Admin';
-															}
+														foreach ($query_results['data'] as $row) {
+															$id = $row['id'];
+															$user_name = $row['user_name'];
+															$full_name = $row['full_name'];
+															$group = $row['group'];
+															$email = $row['email'];
+															$is_enable = $row['is_enable'];
+															$create_user =$row['create_user'];
 
 															if ($is_enable == '1' || $is_enable == '2') {
 																$btn_icon = 'thumbs-down';
@@ -1796,8 +1742,8 @@ if ($system_package == 'N/A') {
 															}
 
 															echo '<tr>
-																	<td> ' . $user_name1 . ' </td>
-																	<td> ' . $access_role_desc . ' </td>
+																	<td> ' . $user_name . ' </td>
+																	<td> ' . $group . ' </td>
 																	<td> ' . $full_name . ' </td>
 																	<td> ' . $email . ' </td>
 																	<td> ' . $create_user . ' </td>';
