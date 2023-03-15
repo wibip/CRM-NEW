@@ -2068,14 +2068,6 @@ if ($system_package == 'N/A') {
 	<script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$.validator.setDefaults({
-				focusCleanup: true,
-				errorClass: "alert alert-danger",
-				errorElement: "span",
-				highlight: function ( element, errorClass, validClass ) {
-					$( element ).next( "span" ).addClass( "alert alert-danger" );
-				}
-			});
 			
 			$("#submit_user").click(function(){
 				let dataName = $(this).attr("data-name");

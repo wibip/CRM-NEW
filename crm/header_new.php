@@ -53,6 +53,14 @@ if (!$fileOut || $out) {
 <script src="js/dataTables.bootstrap5.min.js"></script>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script>
+	$.validator.setDefaults({
+		focusCleanup: true,
+		errorClass: "alert alert-danger",
+		errorElement: "span",
+		highlight: function ( element, errorClass, validClass ) {
+			$( element ).next( "span" ).addClass( "alert alert-danger" );
+		}
+	});
 	$.extend(true, $.fn.dataTable.defaults, {
 		initComplete: function(settings, json) {
 			var modal_target = $(this).data("modal-target");
