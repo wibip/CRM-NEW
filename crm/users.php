@@ -1515,11 +1515,9 @@ if ($system_package == 'N/A') {
 														</div>
 													</div>
 													<form autocomplete="off" id="edit_profile" action="users.php" method="post" class="row g-3 p-4">
-														<?php
-														echo '<input type="hidden" name="user_type" id="user_type1" value="' . $user_type . '">';
-														echo '<input type="hidden" name="loation" id="loation1" value="' . $user_distributor . '">';
-														echo '<input type="hidden" name="id" id="id" value="' . $id . '">';
-														?>
+														<input type="hidden" name="user_type" id="user_type" value="<?=$user_type?>" />
+														<input type="hidden" name="loation" id="loation1" value="<?=$user_distributor?>" />
+														<input type="hidden" name="id" id="id" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['id'] : 0?>" />
 														<div class="col-md-12">
 															<label class="control-label" for="access_role_1">User Group<sup><font color="#FF0000"></font></sup></label><br/>
 															<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -1534,17 +1532,6 @@ if ($system_package == 'N/A') {
 																}
 																?>
 															</div>
-															<!-- <select class="span4 form-control" name="access_role_1" id="access_role_1">
-																<option value="">Select User Group</option>
-																< ?php
-																	$userRoleArray = ['Super Admin', 'Admin', 'Operator', 'Sales Manager', 'Service Delivery'];
-																	foreach($userRoleArray AS $row){	
-																?>
-																		<option value='< ?=$row?>'>< #mobile_1?=$row?></option>
-																< ?php																	
-																	}
-																?>
-															</select> -->
 														</div>
 														
 														<div class="col-md-6">
