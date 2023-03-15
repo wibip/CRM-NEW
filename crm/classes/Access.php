@@ -78,7 +78,7 @@ define('ACCESS',[
         'home' => 'properties'
     ],
     
-    'sales_mng' => [
+    'sales_manager' => [
         'modules'=>[
             'crm'=>[
                 'create' =>[

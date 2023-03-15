@@ -15,6 +15,7 @@ header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 /*classes & libraries*/
 require_once 'classes/dbClass.php';
 $db = new db_functions();
+require_once 'classes/Access.php';
 
 $load_login_design = $_SESSION['logout_design'];
 // echo '------>>>';die;
