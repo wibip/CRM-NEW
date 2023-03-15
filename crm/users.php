@@ -1514,7 +1514,7 @@ if ($system_package == 'N/A') {
 															<span class="fs-5"><?=(isset($_GET['edit_id'])? "Update" : "Create")?> User</span>
 														</div>
 													</div>
-													<form autocomplete="off" id="edit_profile" action="users.php" method="post" class="row g-3 p-4">
+													<form autocomplete="off" name="user_profile" id="user_profile" action="users.php" method="post" class="row g-3 p-4">
 														<input type="hidden" name="user_type" id="user_type" value="<?=$user_type?>" />
 														<input type="hidden" name="loation" id="loation1" value="<?=$user_distributor?>" />
 														<input type="hidden" name="id" id="id" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['id'] : 0?>" />
@@ -1535,13 +1535,13 @@ if ($system_package == 'N/A') {
 														</div>
 														
 														<div class="col-md-6">
-															<label class="control-label" for="full_name_1">Full Name<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="full_name_1" name="full_name_1" maxlength="25" type="text" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['full_name'] : ''?>">
+															<label class="control-label" for="full_name">Full Name<sup><font color="#FF0000"></font></sup></label>
+															<input class="form-control span4" id="full_name" name="full_name" maxlength="25" type="text" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['full_name'] : ''?>">
 														</div>
 												
 														<div class="col-md-6">
-															<label class="control-label" for="email_1">Email<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="email_1" name="email_1"  value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['email'] : ''?>">
+															<label class="control-label" for="email">Email<sup><font color="#FF0000"></font></sup></label>
+															<input class="form-control span4" id="email" name="email"  value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['email'] : ''?>">
 														</div>
 
 														<div class="col-md-6">
@@ -1645,7 +1645,7 @@ if ($system_package == 'N/A') {
 														</div>
 														
 														<div class="col-md-12">
-															<button type="submit" name="submit_user" id="submit_user" class="btn btn-primary"><?=(isset($_GET['edit_id'])? "Update" : "Save")?></button>
+															<button type="submit" name="submit_user" id="submit_user" data-name="<?=(isset($_GET['edit_id'])? "update" : "save")?>" class="btn btn-primary"><?=(isset($_GET['edit_id'])? "Update" : "Save")?></button>
 														</div>
 													</form>
 												</div>
@@ -2052,148 +2052,6 @@ if ($system_package == 'N/A') {
 	<script type="text/javascript" src="js/formValidation.js"></script>
 	<script type="text/javascript" src="js/bootstrap_form.js"></script>
 	<script type="text/javascript" src="js/bootstrapValidator_new.js?v=14"></script>
-
-	<script type="text/javascript">
-
-		function footer_submitfn1() {
-			$("#edit-submita-pass").prop('disabled', false);
-		}
-		$(document).ready(function() {
-			$('#manage_users-table').dataTable();//role-table
-			$('#role-table').dataTable();
-
-			$("#mobile_1").keypress(function(event) {
-				var ew = event.which;
-				//alert(ew);
-				//if(ew == 8||ew == 0||ew == 46||ew == 45)
-				//if(ew == 8||ew == 0||ew == 45)
-				if (ew == 8 || ew == 0)
-					return true;
-				if (48 <= ew && ew <= 57)
-					return true;
-				return false;
-			});
-
-			$('#mobile_1').focus(function() {
-				$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-				$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
-			});
-
-			$('#mobile_1').keyup(function() {
-				$(this).val($(this).val().replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3'));
-				$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
-			});
-
-			$("#mobile_1").keydown(function(e) {
-				var mac = $('#mobile_1').val();
-				var len = mac.length + 1;
-				if ((e.keyCode == 8 && len == 8) || (e.keyCode == 8 && len == 4)) {
-					mac1 = mac.replace(/[^0-9]/g, '');
-				} else {
-					if (len == 4) {
-						$('#mobile_1').val(function() {
-							return $(this).val().substr(0, 3) + '-' + $(this).val().substr(3, 3);
-						});
-					} else if (len == 8) {
-						$('#mobile_1').val(function() {
-							return $(this).val().substr(0, 7) + '-' + $(this).val().substr(7, 4);
-							//console.log('mac2 ' + mac);
-
-						});
-					}
-				}
-				$('#edit_profile').data('bootstrapValidator').updateStatus('mobile_1', 'NOT_VALIDATED').validateField('mobile_1');
-			});
-
-			//create user form validation
-			$('#edit_profile').bootstrapValidator({
-				framework: 'bootstrap',
-				xcluded: [':disabled', '[readonly]',':hidden', ':not(:visible)'],
-				feedbackIcons: {
-					valid: 'glyphicon glyphicon-ok',
-					invalid: 'glyphicon glyphicon-remove',
-					validating: 'glyphicon glyphicon-refresh'
-				},
-				fields: {
-					full_name_1: {
-						validators: {
-							<?php echo $db->validateField('person_full_name'); ?>,
-							<?php echo $db->validateField('not_require_special_character'); ?>
-						}
-					},
-					email_1: {
-						validators: {
-							<?php echo $db->validateField('email_cant_upper'); ?>,
-							<?php echo $db->validateField('email'); ?>
-						}
-					},
-					timezone_1: {
-						validators: {
-							<?php echo $db->validateField('notEmpty'); ?>
-						}
-					},
-					mobile_1: {
-						validators: {
-							<?php echo $db->validateField('mobile'); ?>
-						}
-					}
-				}
-			}).on('status.field.bv', function(e, data) {
-				if ($('#edit_profile').data('bootstrapValidator').isValid()) {
-					data.bv.disableSubmitButtons(false);
-				} else {
-					data.bv.disableSubmitButtons(true);
-				}
-			});
-			$('#edit-user-profile').bootstrapValidator({
-				framework: 'bootstrap',
-				xcluded: [':disabled', '[readonly]',':hidden', ':not(:visible)'],
-				feedbackIcons: {
-					valid: 'glyphicon glyphicon-ok',
-					invalid: 'glyphicon glyphicon-remove',
-					validating: 'glyphicon glyphicon-refresh'
-				},
-				fields: {
-					access_role_2: {
-						validators: {
-							<?php echo $db -> validateField('dropdown'); ?>
-						}
-					},
-					full_name_2: {
-						validators: {
-							<?php echo $db -> validateField('person_full_name'); ?> ,
-							<?php echo $db -> validateField('not_require_special_character'); ?>
-						}
-					},
-					email_2: {
-						validators: {
-							<?php echo $db -> validateField('email_cant_upper'); ?>,
-							<?php echo $db->validateField('email'); ?>
-						}
-					},
-					timezone_2: {
-						validators: {
-							<?php echo $db -> validateField('notEmpty'); ?>
-						}
-					},
-					mobile_2: {
-						validators: {
-							<?php echo $db -> validateField('mobile'); ?>
-						}
-					}
-				}
-			}).bootstrapValidator('validate').on('status.field.bv', function(e, data) {
-				if ($('#edit-user-profile').data('bootstrapValidator').isValid()) {
-					data.bv.disableSubmitButtons(false);
-				} else {
-					data.bv.disableSubmitButtons(true);
-				}
-			});
-
-
-		});
-	</script>
-
 	<?php
 	include 'footer.php';
 	?>
@@ -2210,25 +2068,60 @@ if ($system_package == 'N/A') {
 	<script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$("#submit_user").easyconfirm({
-				locale: {
-					title: 'New User Account',
-					text: 'Are you sure you want to create user?',
-					button: ['Cancel', ' Confirm'],
-					closeText: 'close'
+			$.validator.setDefaults({
+				focusCleanup: true,
+				errorClass: "alert alert-danger",
+				errorElement: "span",
+				highlight: function ( element, errorClass, validClass ) {
+					$( element ).next( "span" ).addClass( "alert alert-danger" );
 				}
 			});
-			$("#submit_user").click(function() {});
+			
+			$("#submit_user").click(function(){
+				let dataName = $(this).attr("data-name");
+				$("form[name='user_profile']").validate({
+					rules: {
+						user_group: "required",
+						full_name: "required",
+						email: {
+							required: true,
+							email: true
+						},
+						password: {
+							required: true,
+							minlength: 5
+						}
+					},
+					messages: {
+						user_group: "Please select User Group",
+						full_name: "Please enter your Full Name",
+						password: {
+							required: "Please provide a password",
+							minlength: "Your password must be at least 5 characters long"
+						},
+						email: "Please enter a valid email address"
+					},
+					submitHandler: function(form) {
+						if(dataName == 'save'){
+							var title = 'New User Account';
+							var text = 'Are you sure you want to create user?';
+						} else {
+							var title = 'Edit User';
+							var text = 'Are you sure you want to update this user?';
+						}
 
-			$("#edit-submita").easyconfirm({
-				locale: {
-					title: 'Edit User',
-					text: 'Are you sure you want to update this profile?',
-					button: ['Cancel', ' Confirm'],
-					closeText: 'close'
-				}
+						$("#submit_user").easyconfirm({
+							locale: {
+								title: title,
+								text: text,
+								button: ['Cancel', ' Confirm'],
+								closeText: 'close'
+							}
+						});
+						$("#submit_user").click(function() {});
+					}
+				});
 			});
-			$("#edit-submita").click(function() {});
 
 			$("#edit-submita-pass").easyconfirm({
 				locale: {

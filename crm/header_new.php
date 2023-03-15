@@ -51,6 +51,7 @@ if (!$fileOut || $out) {
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
 <script src="js/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script>
 	$.extend(true, $.fn.dataTable.defaults, {
 		initComplete: function(settings, json) {
@@ -405,6 +406,7 @@ if ($_SESSION['login'] != 'yes' && $script != 'verification') {
 		header('location: ' . $redirect_url);
 	?>
 		<meta http-equiv="refresh" content="0;URL='<?php echo $redirect_url; ?>'">
+		<meta charset="utf-8">
 	<?php
 		//exit();
 	}
