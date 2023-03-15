@@ -3,8 +3,6 @@ include 'header_new.php';
 
 $CommonFunctions = new CommonFunctions();
 $page = 'Properties';
-
-// var_dump($client_name);
 $issub = 0;
 
 if($client_name == null && $client_name != 'all' && $user_type != 'SADMIN') {
@@ -12,15 +10,6 @@ if($client_name == null && $client_name != 'all' && $user_type != 'SADMIN') {
 } elseif($client_name == null && $client_name != 'all' && $user_type == 'SADMIN') {
     $issub = 2;
 } 
-
-// $today = $show_end  = date('m/d/Y');
-// $day_before_week = $show_start = date('m/d/Y', strtotime('-7 days'));
-
-// $en_date = DateTime::createFromFormat('m/d/Y', $today)->format('Y-m-d');
-// $st_date = DateTime::createFromFormat('m/d/Y', $day_before_week)->format('Y-m-d');
-
-// $start_date = $st_date . ' 00:00:00';
-// $end_date = $en_date . ' 23:59:59';
 
 $client_name = null;
 $business_name = null;
@@ -55,7 +44,41 @@ if (isset($_POST['filter'])) {
         $end_date = $en_date . ' 23:59:59';
     }
 } 
-// var_dump($business_name);
+
+if (isset($_GET['remove_id']) && isset($_GET['remove_property'])) {
+    var_dump($_GET['token']);
+    if ($_GET['token'] == $_SESSION['FORM_SECRET']) { 
+        $remove_id = $_GET['remove_id'];
+        $api_id = $_GET['api_id'];
+        $businessId = 0;
+        $property_details = $CommonFunctions->getPropertyDetails($remove_id,'business_id');
+        if(!empty($property_details['data'])) {
+            $businessId = $property_details['data'][0]['business_id'];
+        }
+
+        $crm = new crm($api_id, $system_package);
+        $response = $crm->deleteParent($businessId);
+var_dump($response);
+        if($response == 200) {   
+            $delete = $db->execDB("DELETE FROM exp_crm WHERE id='$remove_id'");
+            if ($delete === true) {
+                $success_msg = "CRM Property is deleted successfully.";
+                $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Property',$remove_id,'3001',$success_msg);
+                //delete form user
+                $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
+            } else {                    
+                $success_msg = "CRM Property deleting is failed.";
+                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
+                $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
+            }
+        } else {
+            $success_msg = "CRM Property deleting is failed. ".$response["data"]["message"];
+            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
+            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
+        }
+    }
+}
+
 $propertyResult = $CommonFunctions->getProperties($user_type,$user_name,$user_distributor,$property_city,$property_state,$property_zip,$start_date,$end_date,$limit,$client_name,$business_name,$status);
 
 $query_results = $propertyResult['query_results'];
@@ -64,7 +87,7 @@ $businessArray = $propertyResult['businessArray'];
 $cityArray = $propertyResult['cityArray'];
 $stateArray = $propertyResult['stateArray'];
 $zipArray = $propertyResult['zipArray'];
-
+$clientApiArray = $propertyResult['client_api'];
 
 $api = $api_details['data'][0];
 // var_dump($api);
@@ -86,7 +109,7 @@ if($tokenReturn['status'] == 'success') {
         $serviceTypes = $serviceTypesReturn['data'];
     }
 }
-// var_dump($serviceTypes);
+
 ?>
 <style>
 #live_camp .tablesaw-columntoggle-popup .btn-group > label {
@@ -281,40 +304,41 @@ if($tokenReturn['status'] == 'success') {
                                                             <td> '.date('d-m-Y',strtotime($row['create_date'])).' </td>
                                                             <td> '.$clientName.' </td>';
                                                             echo '<td><a href="javascript:void();" id="VIEWACC_'.$row['id'].'"  class="btn btn-small btn-info">
-                                                                <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
-                                                                $(document).ready(function() {
-                                                                    $(\'#VIEWACC_' .$row['id'].'\').easyconfirm({
-                                                                        locale: {
-                                                                            title: \'Property View\',
-                                                                            text: \'Are you sure you want to view this property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                            button: [\'Cancel\', \' Confirm\'],
-                                                                            closeText: \'close\'
-                                                                        }
+                                                                    <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
+                                                                    $(document).ready(function() {
+                                                                        $(\'#VIEWACC_' .$row['id'].'\').easyconfirm({
+                                                                            locale: {
+                                                                                title: \'Property View\',
+                                                                                text: \'Are you sure you want to view this property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                                button: [\'Cancel\', \' Confirm\'],
+                                                                                closeText: \'close\'
+                                                                            }
+                                                                        });
+                                                                        $(\'#VIEWACC_'.$row['id'].'\').click(function () {
+                                                                            window.location = "?t=3&token='. $secret.'&property_edit&property_id='.$row['id'].'&client_id='.$_GET['edit_id'].'";
+                                                                        });
                                                                     });
-                                                                    $(\'#VIEWACC_'.$row['id'].'\').click(function () {
-                                                                        window.location = "?t=3&token='. $secret.'&property_edit&property_id='.$row['id'].'&client_id='.$_GET['edit_id'].'";
-                                                                    });
-                                                                });
-                                                                </script></td>';
+                                                                    </script>
+                                                                </td>';
                                                             
-                                                            // if($_SESSION['SADMIN'] == true) {
-                                                            // 	echo '<td><a href="javascript:void();" id="remove_api_'.$row['id'].'"  class="btn btn-small btn-danger">
-                                                            // 	<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
-                                                            // 	<script type="text/javascript">
-                                                            // 		$(document).ready(function() {
-                                                            // 			$(\'#remove_api_'.$row['id'].'\').easyconfirm({locale: {
-                                                            // 					title: \'Remove Property\',
-                                                            // 					text: \'Are you sure you want to remove this Property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                            // 					button: [\'Cancel\',\' Confirm\'],
-                                                            // 					closeText: \'close\'
-                                                            // 			}});
-                                                            // 			$(\'#remove_api_'.$row['id'].'\').click(function() {                                                                                        
-                                                            // 				$("#overlay").css("display","block");
-                                                            // 				window.location = "?token='.$secret.'&id='.$id.'&remove_location&location_id='.$locationId.'&location_unique='.$locationUnique.'&business_id='.$businessID.'"
-                                                            // 			});
-                                                            // 		});
-                                                            // 	</script></td>';
-                                                            // }
+                                                                if($_SESSION['SADMIN'] == true) {
+                                                                	echo '<td><a href="javascript:void();" id="remove_api_'.$row['id'].'"  class="btn btn-small btn-danger">
+                                                                	<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
+                                                                	<script type="text/javascript">
+                                                                		$(document).ready(function() {
+                                                                			$(\'#remove_api_'.$row['id'].'\').easyconfirm({locale: {
+                                                                					title: \'Remove Property'.$clientApiArray[$row['id']].'\',
+                                                                					text: \'Are you sure you want to remove this Property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                					button: [\'Cancel\',\' Confirm\'],
+                                                                					closeText: \'close\'
+                                                                			}});
+                                                                			$(\'#remove_api_'.$row['id'].'\').click(function() {                                                                                        
+                                                                				$("#overlay").css("display","block");
+                                                                				window.location = "?token='.$secret.'&remove_id='.$row['id'].'&api_id='.$clientApiArray[$row['id']].'&remove_property"
+                                                                			});
+                                                                		});
+                                                                	</script></td>';
+                                                                }
                                                             echo '</tr>';
                                                         }
                                                     } else {
@@ -324,7 +348,6 @@ if($tokenReturn['status'] == 'success') {
                                                     </tr>
                                                     <?php
                                                     }	
-                                                    
                                                     ?>		
                                             </tbody>
                                         </table>
@@ -345,8 +368,10 @@ if($tokenReturn['status'] == 'success') {
     <!-- /main-inner -->
 </div>
 <!-- /main -->
+<!-- Alert messages js-->
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-    <script>
+<script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
+<script>
     $(document).ready(function () {
         $('#property-table').dataTable();
 

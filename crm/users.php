@@ -10,20 +10,19 @@ $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 $page = 'User';
 ?>
 
-	<style>
-		.disabled {
-			background-color: #eee;
-			color: #aaa;
-			cursor: text;
-		}
-		.fieldgroup{
-			float: left;
-			width: auto;
-			margin-right: 3em;
-		}
-	</style>
-
-	<?php
+<style>
+	.disabled {
+		background-color: #eee;
+		color: #aaa;
+		cursor: text;
+	}
+	.fieldgroup{
+		float: left;
+		width: auto;
+		margin-right: 3em;
+	}
+</style>
+<?php
 	// TAB Organization
 	if (isset($_GET['t'])) {
 		$variable_tab = 'tab' . $_GET['t'];
@@ -33,6 +32,23 @@ $page = 'User';
 		$tab1 = "set";
 	}
 
+	$country_sql="SELECT * FROM (SELECT `country_code` AS a,`country_name` AS b FROM `exp_mno_country` WHERE `default_select`=1 ORDER BY `country_name` ASC) AS a
+	UNION ALL
+	SELECT * FROM (SELECT `country_code`,`country_name` FROM `exp_mno_country` WHERE `default_select`=0 ORDER BY `country_name` ASC) AS b";
+	$country_result = $db->selectDB($country_sql);
+	//load country states
+	$regions_sql="SELECT `states_code`, `description` FROM `exp_country_states` ORDER BY description";
+	$get_regions = $db->selectDB($regions_sql);
+	$s_a = '';
+	$s_a_val = '';
+	foreach ($get_regions['data'] as $state) {
+		$s_a .= $state['description'].'|';
+		$s_a_val .= $state['states_code'].'|';
+	}
+
+	$utc = new DateTimeZone('UTC');
+	$dt = new DateTime('now', $utc);
+
 	$priority_zone_array = array(
 									"America/New_York",
 									"America/Chicago",
@@ -41,7 +57,565 @@ $page = 'User';
 									"America/Anchorage",
 									"Pacific/Honolulu",
 								);
+?>
+<<script language="javascript">
+  // Countries
+    var country_arr = new Array( "United States of America","Afghanistan", "Albania", "Algeria", "American Samoa", "Angola", "Anguilla", "Antartica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Ashmore and Cartier Island", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burma", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Clipperton Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo, Democratic Republic of the", "Congo, Republic of the", "Cook Islands", "Costa Rica", "Cote d'Ivoire", "Croatia", "Cuba", "Cyprus", "Czeck Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Europa Island", "Falkland Islands (Islas Malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern and Antarctic Lands", "Gabon", "Gambia, The", "Gaza Strip", "Georgia", "Germany", "Ghana", "Gibraltar", "Glorioso Islands", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and McDonald Islands", "Holy See (Vatican City)", "Honduras", "Hong Kong", "Howland Island", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Ireland, Northern", "Israel", "Italy", "Jamaica", "Jan Mayen", "Japan", "Jarvis Island", "Jersey", "Johnston Atoll", "Jordan", "Juan de Nova Island", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia, Former Yugoslav Republic of", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Man, Isle of", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia, Federated States of", "Midway Islands", "Moldova", "Monaco", "Mongolia", "Montserrat", "Morocco", "Mozambique", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcaim Islands", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romainia", "Russia", "Rwanda", "Saint Helena", "Saint Kitts and Nevis", "Saint Lucia", "Saint Pierre and Miquelon", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Scotland", "Senegal", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia and South Sandwich Islands", "Spain", "Spratly Islands", "Sri Lanka", "Sudan", "Suriname", "Svalbard", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Tobago", "Toga", "Tokelau", "Tonga", "Trinidad", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Virgin Islands", "Wales", "Wallis and Futuna", "West Bank", "Western Sahara", "Yemen", "Yugoslavia", "Zambia", "Zimbabwe");
 
+    // States
+    var s_a = new Array();
+    var s_a_val = new Array();
+    s_a[0] = "";
+    s_a_val[0] = "";
+    <?php
+    $s_a = rtrim($s_a,"|");
+    $s_a_val = rtrim($s_a_val,"|");
+
+    ?>
+    s_a[1] = "<?php echo $s_a; ?>";
+    s_a_val[1] = "<?php echo $s_a_val; ?>";
+    s_a[2] = "Others";
+    s_a[3] = "Others";
+    s_a[4] = "Others";
+    s_a[5] = "Others";
+    s_a[6] = "Others";
+    s_a[7] = "Others";
+    s_a[8] = "Others";
+    s_a[9] = "Others";
+    s_a[10] = "Others";
+    s_a[11] = "Others";
+    s_a[12] = "Others";
+    s_a[13] = "Others";
+    s_a[14] = "Others";
+    s_a[15] = "Others";
+    s_a[16] = "Others";
+    s_a[17] = "Others";
+    s_a[18] = "Others";
+    s_a[19] = "Others";
+    s_a[20] = "Others";
+    s_a[21] = "Others";
+    s_a[22] = "Others";
+    s_a[23] = "Others";
+    s_a[24] = "Others";
+    s_a[25] = "Others";
+    s_a[26] = "Others";
+    s_a[27] = "Others";
+    s_a[28] = "Others";
+    s_a[29] = "Others";
+    s_a[30] = "Others";
+    s_a[31] = "Others";
+    s_a[32] = "Others";
+    s_a[33] = "Others";
+    s_a[34] = "Others";
+    s_a[35] = "Others";
+    s_a[36] = "Others";
+    s_a[37] = "Others";
+    s_a[38] = "Others";
+    s_a[39] = "Others";
+    s_a[40] = "Others";
+    s_a[41] = "Others";
+    s_a[42] = "Others";
+    s_a[43] = "Others";
+    s_a[44] = "Others";
+    s_a[45] = "Others";
+    s_a[46] = "Others";
+    s_a[47] = "Others";
+    s_a[48] = "Others";
+    // <!-- -->
+    s_a[49] = "Others";
+    s_a[50] = "Others";
+    s_a[51] = "Others";
+    s_a[52] = "Others";
+    s_a[53] = "Others";
+    s_a[54] = "Others";
+    s_a[55] = "Others";
+    s_a[56] = "Others";
+    s_a[57] = "Others";
+    s_a[58] = "Others";
+    s_a[59] = "Others";
+    s_a[60] = "Others";
+    s_a[61] = "Others";
+    s_a[62] = "Others";
+    // <!-- -->
+    s_a[63] = "Others";
+    s_a[64] = "Others";
+    s_a[65] = "Others";
+    s_a[66] = "Others";
+    s_a[67] = "Others";
+    s_a[68] = "Others";
+    s_a[69] = "Others";
+    s_a[70] = "Others";
+    s_a[71] = "Others";
+    s_a[72] = "Others";
+    s_a[73] = "Others";
+    s_a[74] = "Others";
+    s_a[75] = "Others";
+    s_a[76] = "Others";
+    s_a[77] = "Others";
+    s_a[78] = "Others";
+    s_a[79] = "Others";
+    s_a[80] = "Others";
+    s_a[81] = "Others";
+    s_a[82] = "Others";
+    s_a[83] = "Others";
+    s_a[84] = "Others";
+    s_a[85] = "Others";
+    s_a[86] = "Others";
+    s_a[87] = "Others";
+    s_a[88] = "Others";
+    s_a[89] = "Others";
+    s_a[90] = "Others";
+    s_a[91] = "Others";
+    s_a[92] = "Others";
+    s_a[93] = "Others";
+    s_a[94] = "Others";
+    s_a[95] = "Others";
+    s_a[96] = "Others";
+    s_a[97] = "Others";
+    s_a[98] = "Others";
+    s_a[99] = "Others";
+    s_a[100] = "Others";
+    s_a[101] = "Others";
+    s_a[102] = "Others";
+    s_a[103] = "Others";
+    s_a[104] = "Others";
+    s_a[105] = "Others";
+    s_a[106] = "Others";
+    s_a[107] = "Others";
+    s_a[108] = "Others";
+    s_a[109] = "Others";
+    s_a[110] = "Others";
+    s_a[111] = "Others";
+    s_a[112] = "Others";
+    s_a[113] = "Others";
+    s_a[114] = "Others";
+    s_a[115] = "Others";
+    s_a[116] = "Others";
+    s_a[117] = "Others";
+    s_a[118] = "Others";
+    s_a[119] = "Others";
+    s_a[120] = "Others";
+    s_a[121] = "Others";
+    s_a[122] = "Others";
+    s_a[123] = "Others";
+    s_a[124] = "Others";
+    s_a[125] = "Others";
+    s_a[126] = "Others";
+    s_a[127] = "Others";
+    s_a[128] = "Others";
+    s_a[129] = "Others";
+    s_a[130] = "Others";
+    s_a[131] = "Others";
+    s_a[132] = "Others";
+    s_a[133] = "Others";
+    s_a[134] = "Others";
+    s_a[135] = "Others";
+    s_a[136] = "Others";
+    s_a[137] = "Others";
+    s_a[138] = "Others";
+    s_a[139] = "Others";
+    s_a[140] = "Others";
+    s_a[141] = "Others";
+    s_a[142] = "Others";
+    s_a[143] = "Others";
+    s_a[144] = "Others";
+    s_a[145] = "Others";
+    s_a[146] = "Others";
+    s_a[147] = "Others";
+    s_a[148] = "Others";
+    s_a[149] = "Others";
+    s_a[150] = "Others";
+    s_a[151] = "Others";
+    s_a[152] = "Others";
+    s_a[153] = "Others";
+    s_a[154] = "Others";
+    s_a[155] = "Others";
+    s_a[156] = "Others";
+    s_a[157] = "Others";
+    s_a[158] = "Others";
+    s_a[159] = "Others";
+    s_a[160] = "Others";
+    s_a[161] = "Others";
+    s_a[162] = "Others";
+    s_a[163] = "Others";
+    s_a[164] = "Others";
+    s_a[165] = "Others";
+    s_a[166] = "Others";
+    s_a[167] = "Others";
+    s_a[168] = "Others";
+    s_a[169] = "Others";
+    s_a[170] = "Others";
+    s_a[171] = "Others";
+    s_a[172] = "Others";
+    s_a[173] = "Others";
+    s_a[174] = "Others";
+    s_a[175] = "Others";
+    s_a[176] = "Others";
+    s_a[177] = "Others";
+    s_a[178] = "Others";
+    s_a[179] = "Others";
+    s_a[180] = "Others";
+    s_a[181] = "Others";
+    s_a[182] = "Others";
+    s_a[183] = "Others";
+    s_a[184] = "Others";
+    s_a[185] = "Others";
+    s_a[186] = "Others";
+    s_a[187] = "Others";
+    s_a[188] = "Others";
+    s_a[189] = "Others";
+    s_a[190] = "Others";
+    s_a[191] = "Others";
+    s_a[192] = "Others";
+    s_a[193] = "Others";
+    s_a[194] = "Others";
+    s_a[195] = "Others";
+    s_a[196] = "Others";
+    s_a[197] = "Others";
+    s_a[198] = "Others";
+    s_a[199] = "Others";
+    s_a[200] = "Others";
+    s_a[201] = "Others";
+    s_a[202] = "Others";
+    s_a[203] = "Others";
+    s_a[204] = "Others";
+    s_a[205] = "Others";
+    s_a[206] = "Others";
+    s_a[207] = "Others";
+    s_a[208] = "Others";
+    s_a[209] = "Others";
+    s_a[210] = "Others";
+    s_a[211] = "Others";
+    s_a[212] = "Others";
+    s_a[213] = "Others";
+    s_a[214] = "Others";
+    s_a[215] = "Others";
+    s_a[216] = "Others";
+    s_a[217] = "Others";
+    s_a[218] = "Others";
+    s_a[219] = "Others";
+    s_a[220] = "Others";
+    s_a[221] = "Others";
+    s_a[222] = "Others";
+    s_a[223] = "Others";
+    s_a[224] = "Others";
+    s_a[225] = "Others";
+    s_a[226] = "Others";
+    s_a[227] = "Others";
+    s_a[228] = "Others";
+    s_a[229] = "Others";
+    s_a[230] = "Others";
+    s_a[231] = "Others";
+    s_a[232] = "Others";
+    s_a[233] = "Others";
+    s_a[234] = "Others";
+    s_a[235] = "Others";
+    s_a[236] = "Others";
+    s_a[237] = "Others";
+    s_a[238] = "Others";
+    s_a[239] = "Others";
+    s_a[240] = "Others";
+    s_a[241] = "Others";
+    s_a[242] = "Others";
+    s_a[243] = "Others";
+    s_a[244] = "Others";
+    s_a[245] = "Others";
+    s_a[246] = "Others";
+    s_a[247] = "Others";
+    s_a[248] = "Others";
+    s_a[249] = "Others";
+    s_a[250] = "Others";
+    s_a[251] = "Others";
+    s_a[252] = "Others";
+    
+    s_a_val[2] = "N/A";
+    s_a_val[3] = "N/A";
+    s_a_val[4] = "N/A";
+    s_a_val[5] = "N/A";
+    s_a_val[6] = "N/A";
+    s_a_val[7] = "N/A";
+    s_a_val[8] = "N/A";
+    s_a_val[9] = "N/A";
+    s_a_val[10] = "N/A";
+    s_a_val[11] = "N/A";
+    s_a_val[12] = "N/A";
+    s_a_val[13] = "N/A";
+    s_a_val[14] = "N/A";
+    s_a_val[15] = "N/A";
+    s_a_val[16] = "N/A";
+    s_a_val[17] = "N/A";
+    s_a_val[18] = "N/A";
+    s_a_val[19] = "N/A";
+    s_a_val[20] = "N/A";
+    s_a_val[21] = "N/A";
+    s_a_val[22] = "N/A";
+    s_a_val[23] = "N/A";
+    s_a_val[24] = "N/A";
+    s_a_val[25] = "N/A";
+    s_a_val[26] = "N/A";
+    s_a_val[27] = "N/A";
+    s_a_val[28] = "N/A";
+    s_a_val[29] = "N/A";
+    s_a_val[30] = "N/A";
+    s_a_val[31] = "N/A";
+    s_a_val[32] = "N/A";
+    s_a_val[33] = "N/A";
+    s_a_val[34] = "N/A";
+    s_a_val[35] = "N/A";
+    s_a_val[36] = "N/A";
+    s_a_val[37] = "N/A";
+    s_a_val[38] = "N/A";
+    s_a_val[39] = "N/A";
+    s_a_val[40] = "N/A";
+    s_a_val[41] = "N/A";
+    s_a_val[42] = "N/A";
+    s_a_val[43] = "N/A";
+    s_a_val[44] = "N/A";
+    s_a_val[45] = "N/A";
+    s_a_val[46] = "N/A";
+    s_a_val[47] = "N/A";
+    s_a_val[48] = "N/A";
+    // <!-- -->
+    s_a_val[49] = "N/A";
+    s_a_val[50] = "N/A";
+    s_a_val[51] = "N/A";
+    s_a_val[52] = "N/A";
+    s_a_val[53] = "N/A";
+    s_a_val[54] = "N/A";
+    s_a_val[55] = "N/A";
+    s_a_val[56] = "N/A";
+    s_a_val[57] = "N/A";
+    s_a_val[58] = "N/A";
+    s_a_val[59] = "N/A";
+    s_a_val[60] = "N/A";
+    s_a_val[61] = "N/A";
+    s_a_val[62] = "N/A";
+    // <!-- -->
+    s_a_val[63] = "N/A";
+    s_a_val[64] = "N/A";
+    s_a_val[65] = "N/A";
+    s_a_val[66] = "N/A";
+    s_a_val[67] = "N/A";
+    s_a_val[68] = "N/A";
+    s_a_val[69] = "N/A";
+    s_a_val[70] = "N/A";
+    s_a_val[71] = "N/A";
+    s_a_val[72] = "N/A";
+    s_a_val[73] = "N/A";
+    s_a_val[74] = "N/A";
+    s_a_val[75] = "N/A";
+    s_a_val[76] = "N/A";
+    s_a_val[77] = "N/A";
+    s_a_val[78] = "N/A";
+    s_a_val[79] = "N/A";
+    s_a_val[80] = "N/A";
+    s_a_val[81] = "N/A";
+    s_a_val[82] = "N/A";
+    s_a_val[83] = "N/A";
+    s_a_val[84] = "N/A";
+    s_a_val[85] = "N/A";
+    s_a_val[86] = "N/A";
+    s_a_val[87] = "N/A";
+    s_a_val[88] = "N/A";
+    s_a_val[89] = "N/A";
+    s_a_val[90] = "N/A";
+    s_a_val[91] = "N/A";
+    s_a_val[92] = "N/A";
+    s_a_val[93] = "N/A";
+    s_a_val[94] = "N/A";
+    s_a_val[95] = "N/A";
+    s_a_val[96] = "N/A";
+    s_a_val[97] = "N/A";
+    s_a_val[98] = "N/A";
+    s_a_val[99] = "N/A";
+    s_a_val[100] = "N/A";
+    s_a_val[101] = "N/A";
+    s_a_val[102] = "N/A";
+    s_a_val[103] = "N/A";
+    s_a_val[104] = "N/A";
+    s_a_val[105] = "N/A";
+    s_a_val[106] = "N/A";
+    s_a_val[107] = "N/A";
+    s_a_val[108] = "N/A";
+    s_a_val[109] = "N/A";
+    s_a_val[110] = "N/A";
+    s_a_val[111] = "N/A";
+    s_a_val[112] = "N/A";
+    s_a_val[113] = "N/A";
+    s_a_val[114] = "N/A";
+    s_a_val[115] = "N/A";
+    s_a_val[116] = "N/A";
+    s_a_val[117] = "N/A";
+    s_a_val[118] = "N/A";
+    s_a_val[119] = "N/A";
+    s_a_val[120] = "N/A";
+    s_a_val[121] = "N/A";
+    s_a_val[122] = "N/A";
+    s_a_val[123] = "N/A";
+    s_a_val[124] = "N/A";
+    s_a_val[125] = "N/A";
+    s_a_val[126] = "N/A";
+    s_a_val[127] = "N/A";
+    s_a_val[128] = "N/A";
+    s_a_val[129] = "N/A";
+    s_a_val[130] = "N/A";
+    s_a_val[131] = "N/A";
+    s_a_val[132] = "N/A";
+    s_a_val[133] = "N/A";
+    s_a_val[134] = "N/A";
+    s_a_val[135] = "N/A";
+    s_a_val[136] = "N/A";
+    s_a_val[137] = "N/A";
+    s_a_val[138] = "N/A";
+    s_a_val[139] = "N/A";
+    s_a_val[140] = "N/A";
+    s_a_val[141] = "N/A";
+    s_a_val[142] = "N/A";
+    s_a_val[143] = "N/A";
+    s_a_val[144] = "N/A";
+    s_a_val[145] = "N/A";
+    s_a_val[146] = "N/A";
+    s_a_val[147] = "N/A";
+    s_a_val[148] = "N/A";
+    s_a_val[149] = "N/A";
+    s_a_val[150] = "N/A";
+    s_a_val[151] = "N/A";
+    s_a_val[152] = "N/A";
+    s_a_val[153] = "N/A";
+    s_a_val[154] = "N/A";
+    s_a_val[155] = "N/A";
+    s_a_val[156] = "N/A";
+    s_a_val[157] = "N/A";
+    s_a_val[158] = "N/A";
+    s_a_val[159] = "N/A";
+    s_a_val[160] = "N/A";
+    s_a_val[161] = "N/A";
+    s_a_val[162] = "N/A";
+    s_a_val[163] = "N/A";
+    s_a_val[164] = "N/A";
+    s_a_val[165] = "N/A";
+    s_a_val[166] = "N/A";
+    s_a_val[167] = "N/A";
+    s_a_val[168] = "N/A";
+    s_a_val[169] = "N/A";
+    s_a_val[170] = "N/A";
+    s_a_val[171] = "N/A";
+    s_a_val[172] = "N/A";
+    s_a_val[173] = "N/A";
+    s_a_val[174] = "N/A";
+    s_a_val[175] = "N/A";
+    s_a_val[176] = "N/A";
+    s_a_val[177] = "N/A";
+    s_a_val[178] = "N/A";
+    s_a_val[179] = "N/A";
+    s_a_val[180] = "N/A";
+    s_a_val[181] = "N/A";
+    s_a_val[182] = "N/A";
+    s_a_val[183] = "N/A";
+    s_a_val[184] = "N/A";
+    s_a_val[185] = "N/A";
+    s_a_val[186] = "N/A";
+    s_a_val[187] = "N/A";
+    s_a_val[188] = "N/A";
+    s_a_val[189] = "N/A";
+    s_a_val[190] = "N/A";
+    s_a_val[191] = "N/A";
+    s_a_val[192] = "N/A";
+    s_a_val[193] = "N/A";
+    s_a_val[194] = "N/A";
+    s_a_val[195] = "N/A";
+    s_a_val[196] = "N/A";
+    s_a_val[197] = "N/A";
+    s_a_val[198] = "N/A";
+    s_a_val[199] = "N/A";
+    s_a_val[200] = "N/A";
+    s_a_val[201] = "N/A";
+    s_a_val[202] = "N/A";
+    s_a_val[203] = "N/A";
+    s_a_val[204] = "N/A";
+    s_a_val[205] = "N/A";
+    s_a_val[206] = "N/A";
+    s_a_val[207] = "N/A";
+    s_a_val[208] = "N/A";
+    s_a_val[209] = "N/A";
+    s_a_val[210] = "N/A";
+    s_a_val[211] = "N/A";
+    s_a_val[212] = "N/A";
+    s_a_val[213] = "N/A";
+    s_a_val[214] = "N/A";
+    s_a_val[215] = "N/A";
+    s_a_val[216] = "N/A";
+    s_a_val[217] = "N/A";
+    s_a_val[218] = "N/A";
+    s_a_val[219] = "N/A";
+    s_a_val[220] = "N/A";
+    s_a_val[221] = "N/A";
+    s_a_val[222] = "N/A";
+    s_a_val[223] = "N/A";
+    s_a_val[224] = "N/A";
+    s_a_val[225] = "N/A";
+    s_a_val[226] = "N/A";
+    s_a_val[227] = "N/A";
+    s_a_val[228] = "N/A";
+    s_a_val[229] = "N/A";
+    s_a_val[230] = "N/A";
+    s_a_val[231] = "N/A";
+    s_a_val[232] = "N/A";
+    s_a_val[233] = "N/A";
+    s_a_val[234] = "N/A";
+    s_a_val[235] = "N/A";
+    s_a_val[236] = "N/A";
+    s_a_val[237] = "N/A";
+    s_a_val[238] = "N/A";
+    s_a_val[239] = "N/A";
+    s_a_val[240] = "N/A";
+    s_a_val[241] = "N/A";
+    s_a_val[242] = "N/A";
+    s_a_val[243] = "N/A";
+    s_a_val[244] = "N/A";
+    s_a_val[245] = "N/A";
+    s_a_val[246] = "N/A";
+    s_a_val[247] = "N/A";
+    s_a_val[248] = "N/A";
+    s_a_val[249] = "N/A";
+    s_a_val[250] = "N/A";
+    s_a_val[251] = "N/A";
+    s_a_val[252] = "N/A";
+
+    function populateStates(countryElementId, stateElementId) {
+
+        var selectedCountryIndex = document.getElementById(countryElementId).selectedIndex;
+
+
+        var stateElement = document.getElementById(stateElementId);
+
+        stateElement.length = 0; // Fixed by Julian Woods
+        stateElement.options[0] = new Option('Select State', '');
+        stateElement.selectedIndex = 0;
+
+        var state_arr = s_a[selectedCountryIndex].split("|");
+        var state_arr_val = s_a_val[selectedCountryIndex].split("|");
+
+        if(selectedCountryIndex != 0){
+        for (var i = 0; i < state_arr.length; i++) {
+            stateElement.options[stateElement.length] = new Option(state_arr[i], state_arr_val[i]);
+        }
+        }
+
+    }
+
+    function populateCountries(countryElementId, stateElementId) {
+
+        var countryElement = document.getElementById(countryElementId);
+
+        if (stateElementId) {
+            countryElement.onchange = function () {
+                populateStates(countryElementId, stateElementId);
+            };
+        }
+    }
+    </script>
+<?php
 $role_edit_id  = 0;
 $role_array = [];
 $other_array = [];
@@ -107,7 +681,7 @@ if ($system_package == 'N/A') {
 	$modules = $modules1['data'];
 }
 
-	if (isset($_POST['submit_1'])) {
+	if (isset($_POST['submit_user'])) {
 		if($_POST['id'] != 0) {
 			$id = $_POST['id'];
 			$access_role = $_POST['access_role_2'];
@@ -969,34 +1543,22 @@ if ($system_package == 'N/A') {
 														</div>
 													</div>
 													<form autocomplete="off" id="edit_profile" action="users.php" method="post" class="row g-3 p-4">
-														<div class="col-md-6">
 														<?php
 														echo '<input type="hidden" name="user_type" id="user_type1" value="' . $user_type . '">';
 														echo '<input type="hidden" name="loation" id="loation1" value="' . $user_distributor . '">';
 														echo '<input type="hidden" name="id" id="id" value="' . $id . '">';
 														?>
-															<label class="control-label" for="access_role_1">Access Role<sup><font color="#FF0000"></font></sup></label>
+														<div class="col-md-6">
+															<label class="control-label" for="access_role_1">User Group<sup><font color="#FF0000"></font></sup></label>
 															<select class="span4 form-control" name="access_role_1" id="access_role_1">
-																<option value="">Select Access Role</option>
+																<option value="">Select User Group</option>
 																<?php
-																$key_query = "SELECT `access_role` ,description
-																				FROM `admin_access_roles`";
-																if($user_type != 'SADMIN') {
-																	$key_query .= " WHERE `create_user`='$user_name' ";
-																}
-
-																$key_query .= " ORDER BY description";
-																
-																$query_results=$db->selectDB($key_query);
-																foreach($query_results['data'] AS $row){	
-																	$access_role = $row['access_role'];
-																	$description = $row['description'];
-																	if ($access_role == $access_role_set) {
-																		echo '<option value="' . $access_role . '" selected>' . $description . '</option>';
-																	} else {
-																		echo '<option value="' . $access_role . '">' . $description . '</option>';
+																	$userRoleArray = ['Super Admin', 'Admin', 'Operator', 'Sales Manager', 'Service Delivery'];
+																	foreach($userRoleArray AS $row){	
+																?>
+																		<option value='<?=$row?>'><?=$row?></option>
+																<?php																	
 																	}
-																}
 																?>
 															</select>
 														</div>
@@ -1030,7 +1592,6 @@ if ($system_package == 'N/A') {
 															</select>
 														</div>
 														
-														<?php if ($user_type=='ADMIN') { ?>
 														<div class="col-md-6">
 															<label class="control-label" for="timezone_1">Time Zone<sup><font color="#FF0000"></font></sup></label>
 															<select class="span4 form-control" id="timezone_1" name="timezone_1" autocomplete="off">
@@ -1070,15 +1631,60 @@ if ($system_package == 'N/A') {
 																?>
 															</select>
 														</div>
+														<div class="col-md-6">
+															<label class="control-label" for="mno_country" >Country<font color="#FF0000"></font></sup></label>
+															<select name="mno_country" id="mno_country" class="span4 form-control" autocomplete="off" required>
+																<option value="">Select Country</option>
+																<?php
+																	if($country_result['rowCount']>1) {
+																		foreach ($country_result['data'] as $row) {
+																			$select="";
+																			if($row['a']==$get_edit_mno_country){
+																				$select="selected";
+																			}
+																			echo '<option value="'.$row['a'].'" '.$select.'>'.$row['b'].'</option>';
+																		}
+																	}
+																?>
+															</select>
+														</div>
+														<script language="javascript">
+															populateCountries("mno_country", "mno_state");
+														</script>
+														<div class="col-md-6">
+															<label class="control-label" for="mno_state">State/Region<font color="#FF0000"></font></sup></label>
+															<select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_state" placeholder="State or Region" name="mno_state" required autocomplete="off">
+																<option value="">Select State</option>
+																<?php
+																	if($get_regions['rowCount']>1) {
+																		foreach ($get_regions['data'] AS $state) {
+																			//edit_state_region , get_edit_mno_state_region
+																			if($get_edit_mno_state_region == 'N/A') {
+																				echo '<option selected value="N/A">Others</option>';
+																			} else {
+																				if ($get_edit_mno_state_region == $state['states_code']) {
+																					echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+																				} else {
+																					echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
+																				}
+																			}
+																		}
+																	}
+																?>
+															</select>
+														</div>
+														<div class="col-md-6">
+															<label class="control-label" for="mno_region">ZIP Code</label>
+															<input class="span4 form-control" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $get_edit_mno_zip?>" autocomplete="off" required>
+														</div>
 														
-														<?php } ?>
 														<div class="col-md-6">
 															<label class="control-label" for="mobile_1">Phone Number<sup><font color="#FF0000"></font></sup></label>
 															<input class="form-control span4" id="mobile_1" name="mobile_1" type="text" placeholder="xxx-xxx-xxxx" value="<?php echo $mobile ?>" maxlength="12">
 														</div>
 														
 														<div class="col-md-12">
-															<button type="submit" name="submit_1" id="submit_1" class="btn btn-primary">Save</button>
+															<button type="submit" name="submit_user" id="submit_user" class="btn btn-primary">Save</button>
 														</div>
 													</form>
 												</div>
@@ -1656,16 +2262,15 @@ if ($system_package == 'N/A') {
 	<script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-
-			$("#submit_1").easyconfirm({
+			$("#submit_user").easyconfirm({
 				locale: {
-					title: 'New Admin Account',
-					text: 'Are you sure you want to save this information?',
+					title: 'New User Account',
+					text: 'Are you sure you want to create user?',
 					button: ['Cancel', ' Confirm'],
 					closeText: 'close'
 				}
 			});
-			$("#submit_1").click(function() {});
+			$("#submit_user").click(function() {});
 
 			$("#edit-submita").easyconfirm({
 				locale: {

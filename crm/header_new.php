@@ -133,8 +133,6 @@ if ($_GET['back_sup'] == 'true') {
 
 	//$user_name = $_SESSION['user_name'];
 
-
-
 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT', $system_package);
 	$theme_text = $package_functions->getMessageOptions('THEME_TEXT', $system_package);
@@ -646,7 +644,7 @@ foreach ($x as $keyX => $valueX) {
 			}
 		}
 	}
-	echo $package_functions->getPageFeature($valueX, $system_package);
+	// echo $package_functions->getPageFeature($valueX, $system_package);
 	if ($package_functions->getPageFeature($valueX, $system_package) == '0') {
 		try {
 			unset($x[$keyX]);

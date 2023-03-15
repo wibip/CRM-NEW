@@ -481,6 +481,7 @@ class CommonFunctions{
         $cityArray = [];
         $stateArray = [];
         $zipArray = [];
+        $clientApiArray = [];
         
         $propertyQuery = "SELECT id,property_id,business_name,status,city,state,zip,create_user,create_date FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
         switch($user_type ){
@@ -506,10 +507,16 @@ class CommonFunctions{
         
         if ($filter_results['rowCount'] > 0) {
             foreach ($filter_results['data'] as $row) {
-                $clientDetails = $this->getAdminUserDetails('user_name', $row['create_user'], 'full_name');
+                $clientDetails = $this->getAdminUserDetails('user_name', $row['create_user']);
                 if (!empty($clientDetails['data'])) {
                     $clientName = $clientDetails['data'][0]['full_name'];
                     $clientArray[$row['create_user']] = $clientName;
+
+                    $mno_id = $clientDetails['data'][0]['user_distributor'];
+                    $apiResult = $this->getApi($mno_id);
+                    if($apiResult != null){
+                        $clientApiArray[$row['id']] = $apiResult['data'][0]['features'];
+                    }
                 }
                 $businessArray[$row['business_name']] = $row['business_name'];
                 $cityArray[$row['city']] = $row['city'];
@@ -545,7 +552,13 @@ class CommonFunctions{
         // echo $propertyQuery;
         $query_results = $this->db->selectDB($propertyQuery);
 
-        $results = ['query_results'=>$query_results,'clientArray'=>$clientArray,'businessArray'=>$businessArray,'cityArray'=>$cityArray,'stateArray'=>$stateArray,'zipArray'=>$zipArray];
+        $results = ['query_results'=>$query_results,'client_api' => $clientApiArray,'clientArray'=>$clientArray,'businessArray'=>$businessArray,'cityArray'=>$cityArray,'stateArray'=>$stateArray,'zipArray'=>$zipArray];
         return $results;
 	}
+
+    public function getApi($mno_id) {
+        $sql = "SELECT features FROM `exp_mno` WHERE `mno_id`='$mno_id'";
+        $results = $this->db->selectDB($sql);
+        return $results;
+    }
 }

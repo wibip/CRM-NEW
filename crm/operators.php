@@ -946,14 +946,6 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                         }
                                                         ?>
                                                     </select>
-                                                </div>                                                
-                                                <div class="col-md-6">
-                                                    <label class="control-label" for="mno_first_name">Operator Code</label>
-                                                    <input class="span4 form-control" id="product_code" maxlength="12" placeholder="Operator Code" name="product_code" type="text" value="<?php echo$get_edit_mno_first_name;?>" autocomplete="off" required>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="control-label" for="mno_account_name">Operations Name</label>
-                                                    <input class="span4 form-control form-control" id="mno_account_name" placeholder="Frontier" name="mno_account_name" type="text" value="<?php echo $get_edit_mno_description;?>" required>
                                                 </div>                                                    
                                                 <div class="col-md-6">
                                                     <label class="control-label" for="mno_sys_package">Operations Type</label>
@@ -972,7 +964,23 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                             }
                                                         ?>
                                                     </select>
+                                                </div>                                              
+                                                <div class="col-md-6">
+                                                    <label class="control-label" for="operator_code">Operator Code</label>
+                                                    <input class="span4 form-control" id="operator_code" name="operator_code" maxlength="12" placeholder="Operator Code" name="product_code" type="text" value="<?php echo$get_edit_mno_first_name;?>" autocomplete="off" required>
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <label class="control-label" for="operator_name">Operator Name</label>
+                                                    <input class="span4 form-control form-control" id="operator_name" name="operator_name" placeholder="Frontier" name="mno_account_name" type="text" value="<?php echo $get_edit_mno_description;?>" required>
+                                                </div>                                               
+                                                <div class="col-md-6">
+                                                    <label class="control-label" for="sub_operator_code">Sub Operator Code</label>
+                                                    <input class="span4 form-control" id="sub_operator_code" name="sub_operator_code" maxlength="12" placeholder="Operator Code" name="product_code" type="text" value="<?php echo$get_edit_mno_first_name;?>" autocomplete="off" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="control-label" for="sub_operator_name">Sub Operator Name</label>
+                                                    <input class="span4 form-control form-control" id="sub_operator_name" name="sub_operator_name" placeholder="Frontier" name="mno_account_name" type="text" value="<?php echo $get_edit_mno_description;?>" required>
+                                                </div> 
                                                 <div class="col-md-6">
                                                     <label class="control-label" for="mno_first_name">Admin First Name</label>
                                                     <input class="span4 form-control" id="mno_first_name" maxlength="12" placeholder="First Name" name="mno_first_name" type="text" value="<?php echo$get_edit_mno_first_name;?>" autocomplete="off" required>
