@@ -55,11 +55,15 @@ if (!$fileOut || $out) {
 <script>
 	$.validator.setDefaults({
 		focusCleanup: true,
-		errorClass: "alert alert-danger",
+		errorClass: "text-danger",
 		errorElement: "span",
 		highlight: function ( element, errorClass, validClass ) {
-			$( element ).next( "span" ).addClass( "alert alert-danger" );
-		}
+			$( element ).addClass( "border border-danger" );
+			$( element ).next( "span" ).addClass( "text-danger" );
+		},
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('border border-danger');
+        }
 	});
 	$.extend(true, $.fn.dataTable.defaults, {
 		initComplete: function(settings, json) {
