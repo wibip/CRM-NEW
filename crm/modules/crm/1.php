@@ -832,7 +832,7 @@ if (!empty($arrayo)) {
             $("#overlay").css("display","block");
         });
 
-        var stepListFull = '<div class="steps clearfix" style="margin-top:20px"><ul role="tablist">';
+        var stepListFull = '<div class="steps clearfix" style="margin-top:20px;margin-bottom: 50px;"><ul role="tablist">';
         var stepCount = 0;
         $('#crm_form fieldset').each(function(index, element) {
             $(this).addClass('step' + (index + 1)).addClass('fieldStep');
