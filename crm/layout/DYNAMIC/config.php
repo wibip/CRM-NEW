@@ -198,6 +198,18 @@ $modules = [
                 "name" => "Blacklist",
                 "module" => "blacklist_mac/1"
             ]
+        ],
+        "crm" => [
+            [
+                "id"=>"crm_manage",
+                "name"=>"Manage",
+                "module"=>"crm_manage/1"
+            ],
+            [
+                "id" => "crm_create",
+                "name" => "Create",
+                "module" => "crm/1"
+            ]
         ]
     ],
     "SUPPORT" => [

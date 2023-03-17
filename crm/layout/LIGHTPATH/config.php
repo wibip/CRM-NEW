@@ -224,6 +224,18 @@ $modules = [
                 "name"=>"Pending Account Activation Operations",
                 "module"=>"pending_mno/1"
             ],
+        ],
+        "crm" => [
+            // [
+            //     "id"=>"crm_manage",
+            //     "name"=>"Manage",
+            //     "module"=>"crm_manage/1"
+            // ],
+            [
+                "id" => "crm_create",
+                "name" => "Create",
+                "module" => "crm/simple"
+            ]
         ]
     ],
     "SADMIN"=>[
