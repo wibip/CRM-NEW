@@ -418,7 +418,7 @@ class CommonFunctions{
         $sql = "SELECT role_type FROM admin_access_roles WHERE access_role='".$access_role."'"; 
         $result =  $this->db->selectDB($sql);
         $userType = null;
-        if(count($result) > 0){
+        if(count($result) > 0) {
             $roleType = $result['data'][0]['role_type'];
             switch($roleType) {
                 case 'sadmin':
@@ -435,7 +435,6 @@ class CommonFunctions{
                 break;
             }
         }
-
         return $userType;
     }
 
@@ -560,5 +559,28 @@ class CommonFunctions{
         $sql = "SELECT features FROM `exp_mno` WHERE `mno_id`='$mno_id'";
         $results = $this->db->selectDB($sql);
         return $results;
+    }
+
+    public function userDistributors($userGroup) {
+        $user_distributor = null;
+        switch($userGroup) {
+            case 'super_admin':
+                $user_distributor = 'SADMIN';
+            break;
+            case 'admin':
+                $user_distributor = 'ADMIN';
+            break;
+            case 'operation':
+                $user_distributor = 'OPERATOR';
+            break;
+            case 'sales_manager':
+                $user_distributor = 'SMAN';
+            break;
+            case 'client':
+                $user_distributor = 'CLIENT';
+            break;
+        }
+
+        return $user_distributor;
     }
 }
