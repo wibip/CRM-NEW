@@ -23,7 +23,7 @@ class Users{
     }
 
     public function getAllOperatorUsers($active=false){
-        $sqlOperators = "SELECT id,full_name,user_distributor FROM admin_users WHERE `group`='operation'";
+        $sqlOperators = "SELECT id,full_name,user_distributor FROM admin_users WHERE `group`='operation' AND is_enable=1";
         if($active == true){
             $sqlOperators .= " AND is_enable=1";
         }

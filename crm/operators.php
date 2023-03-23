@@ -75,18 +75,18 @@ if (isset($_POST['submit_mno_form'])) { //6
             $mno_system_package = $mno_sys_package;
 
             //$mno_customer_type = trim($_POST['mno_customer_type']);
-            $mno_first_name = $db->escapeDB(trim($_POST['mno_first_name']));
-            $mno_last_name = $db->escapeDB(trim($_POST['mno_last_name']));
-            $mno_full_name = $mno_first_name . ' ' . $mno_last_name;
-            $mno_email = trim($_POST['mno_email']);
-            $mno_address_1 = $db->escapeDB(trim($_POST['mno_address_1']));
-            $mno_address_2 = $db->escapeDB(trim($_POST['mno_address_2']));
-            $mno_address_3 = $db->escapeDB(trim($_POST['mno_address_3']));
-            $mno_mobile_1 = $db->escapeDB(trim($_POST['mno_mobile_1']));
-            $mno_country = trim($_POST['mno_country']);
-            $mno_state = $db->escapeDB(trim($_POST['mno_state']));
-            $mno_zip_code = trim($_POST['mno_zip_code']);
-            $mno_time_zone = $_POST['mno_time_zone'];
+            // $mno_first_name = $db->escapeDB(trim($_POST['mno_first_name']));
+            // $mno_last_name = $db->escapeDB(trim($_POST['mno_last_name']));
+            // $mno_full_name = $mno_first_name . ' ' . $mno_last_name;
+            // $mno_email = trim($_POST['mno_email']);
+            // $mno_address_1 = $db->escapeDB(trim($_POST['mno_address_1']));
+            // $mno_address_2 = $db->escapeDB(trim($_POST['mno_address_2']));
+            // $mno_address_3 = $db->escapeDB(trim($_POST['mno_address_3']));
+            // $mno_mobile_1 = $db->escapeDB(trim($_POST['mno_mobile_1']));
+            // $mno_country = trim($_POST['mno_country']);
+            // $mno_state = $db->escapeDB(trim($_POST['mno_state']));
+            // $mno_zip_code = trim($_POST['mno_zip_code']);
+            // $mno_time_zone = $_POST['mno_time_zone'];
             $dtz = new DateTimeZone($mno_time_zone);
             $time_in_sofia = new DateTime('now', $dtz);
             $offset = $dtz->getOffset($time_in_sofia) / 3600;
@@ -967,120 +967,9 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                     <label class="control-label" for="sub_operator_name">Sub Operator Name</label>
                                                     <input class="span4 form-control form-control" id="sub_operator_name" name="sub_operator_name" placeholder="Frontier" name="mno_account_name" type="text" value="<?php echo $get_edit_mno_description;?>" required>
                                                 </div> 
-                                                <div class="col-md-6">
-                                                    <label class="control-label" for="mno_first_name">Admin First Name</label>
-                                                    <input class="span4 form-control" id="mno_first_name" maxlength="12" placeholder="First Name" name="mno_first_name" type="text" value="<?php echo$get_edit_mno_first_name;?>" autocomplete="off" required>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="control-label" for="mno_last_name">Admin Last Name</label>
-                                                    <input class="span4 form-control" id="mno_last_name" maxlength="12" placeholder="Last Name" name="mno_last_name" type="text" value="<?php echo$get_edit_mno_last_name;?>" autocomplete="off" required>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="control-label" for="mno_email">Admin Email</label>
-                                                    <input class="span4 form-control" id="mno_email" name="mno_email" type="text" placeholder="wifi@company.com" value="<?php echo$get_edit_mno_email;?>" autocomplete="off" required>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="control-label" for="mno_address_1">Address</label>
-                                                    <input class="span4 form-control" id="mno_address_1" placeholder="Address" name="mno_address_1" type="text" value="<?php echo$get_edit_mno_ad1;?>" autocomplete="off" required>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="control-label" for="mno_address_2">City</label>
-                                                    <input class="span4 form-control" id="mno_address_2" placeholder="City" name="mno_address_2" type="text" value="<?php echo $get_edit_mno_ad2;?>" autocomplete="off" required>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="control-label" for="mno_country" >Country<font color="#FF0000"></font></sup></label>
-                                                    <select name="mno_country" id="mno_country" class="span4 form-control" autocomplete="off" required>
-                                                        <option value="">Select Country</option>
-                                                        <?php
-                                                            if($country_result['rowCount']>1) {
-                                                                foreach ($country_result['data'] as $row) {
-                                                                    $select="";
-                                                                    if($row['a']==$get_edit_mno_country){
-                                                                        $select="selected";
-                                                                    }
-                                                                    echo '<option value="'.$row['a'].'" '.$select.'>'.$row['b'].'</option>';
-                                                                }
-                                                            }
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                                <script language="javascript">
-                                                    populateCountries("mno_country", "mno_state");
-                                                </script>
-                                                    <div class="col-md-6">
-                                                        <label class="control-label" for="mno_state">State/Region<font color="#FF0000"></font></sup></label>
-                                                        <select <?php if($field_array['region']=="mandatory" || $package_features=="all"){ ?>required<?php } ?> class="span4 form-control" id="mno_state" placeholder="State or Region" name="mno_state" required autocomplete="off">
-                                                            <option value="">Select State</option>
-                                                            <?php
-                                                                if($get_regions['rowCount']>1) {
-                                                                    foreach ($get_regions['data'] AS $state) {
-                                                                        //edit_state_region , get_edit_mno_state_region
-                                                                        if($get_edit_mno_state_region == 'N/A') {
-                                                                            echo '<option selected value="N/A">Others</option>';
-                                                                        } else {
-                                                                            if ($get_edit_mno_state_region == $state['states_code']) {
-                                                                                echo '<option selected value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                                            } else {
-                                                                                echo '<option value="' . $state['states_code'] . '">' . $state['description'] . '</option>';
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="control-label" for="mno_region">ZIP Code</label>
-                                                        <input class="span4 form-control" id="mno_zip_code" maxlength="5" placeholder="XXXXX" name="mno_zip_code" type="text" value="<?php echo $get_edit_mno_zip?>" autocomplete="off" required>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="control-label" for="mno_mobile">Phone Number</label>
-                                                        <input class="span4 form-control" id="mno_mobile_1" name="mno_mobile_1" type="text" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" oninvalid="setCustomValidity('Invalid mobile number format')" oninput="setCustomValidity('')" onfocus="setCustomValidity('')" maxlength="12" value="<?php echo $get_edit_mno_mobile?>" autocomplete="off" required>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="control-label" for="mno_timezone">Time Zone</label>
-                                                        <select class="span4 form-control" id="mno_time_zone" name="mno_time_zone" autocomplete="off" required>
-                                                            <option value="">Select Time Zone</option>
-                                                            <?php
-                                                                foreach ($priority_zone_array as $tz){
-                                                                    $current_tz = new DateTimeZone($tz);
-                                                                    $offset =  $current_tz->getOffset($dt);
-                                                                    $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-                                                                    $abbr = $transition[0]['abbr'];
-                                                                    if($get_edit_mno_timezones==$tz){
-                                                                        $select="selected";
-                                                                    }else{
-                                                                        $select="";
-                                                                    }
-                                                                    echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-                                                                }
-
-                                                                foreach(DateTimeZone::listIdentifiers() as $tz) {
-                                                                    //Skip
-                                                                    if(in_array($tz,$priority_zone_array))
-                                                                        continue;
-
-                                                                    $current_tz = new DateTimeZone($tz);
-                                                                    $offset =  $current_tz->getOffset($dt);
-                                                                    $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-                                                                    $abbr = $transition[0]['abbr'];
-                                                                    /*if($abbr=="EST" || $abbr=="CT" || $abbr=="MT" || $abbr=="PST" || $abbr=="AKST" || $abbr=="HST" || $abbr=="EDT"){
-                                                                    echo $get_edit_mno_timezones;*/
-                                                                    if($get_edit_mno_timezones==$tz){
-                                                                        $select="selected";
-                                                                    }else{
-                                                                        $select="";
-                                                                    }
-                                                                    echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
-                                                                    // $select="";
-                                                                    /*}*/
-                                                                }
-
-                                                            ?>
-                                                        </select>
-                                                    </div>
+                                                
                                                     <div  class="col-md-12">
-                                                        <button type="submit" id="submit_mno_form" name="submit_mno_form" class="btn btn-primary"><?= ($mno_edit==1 ? "Update" : "Create")?> Account</button>
+                                                        <button type="submit" id="submit_mno_form" name="submit_mno_form" class="btn btn-primary"><?= ($mno_edit==1 ? "Update" : "Create")?> Operator</button>
                                                         <?php if($mno_edit==1){ ?> <button type="button" class="btn btn-info inline-btn"  onclick="goto();" class="btn btn-danger">Cancel</button> <?php } ?>
                                                     </div>
                                             </form>
