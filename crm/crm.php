@@ -8,6 +8,8 @@
     /*Encryption script*/
     include_once 'classes/cryptojs-aes.php';
     require_once dirname(__FILE__) . '/models/clientUserModel.php';
+    require_once 'classes/userClass.php';
+    $usersData = new Users();
     // echo 'Username= ';
     require_once 'src/CRM/functions.php';
     
@@ -19,7 +21,7 @@
     $apiPassword = '';
 
     if($user_type == 'ADMIN' || $user_type == 'SADMIN') {
-        $operators = $CommonFunctions->getAllOperators();
+        $operators = $usersData->getAllOperatorUsers();
         if(isset($_POST['load_operator'])) {
             $operatorsSystemPackage = null;
             $selected_operator = $_POST['selected_operator'];

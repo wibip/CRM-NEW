@@ -561,26 +561,11 @@ class CommonFunctions{
         return $results;
     }
 
-    public function userDistributors($userGroup) {
-        $user_distributor = null;
-        switch($userGroup) {
-            case 'super_admin':
-                $user_distributor = 'SADMIN';
-            break;
-            case 'admin':
-                $user_distributor = 'ADMIN';
-            break;
-            case 'operation':
-                $user_distributor = 'OPERATOR';
-            break;
-            case 'sales_manager':
-                $user_distributor = 'SMAN';
-            break;
-            case 'client':
-                $user_distributor = 'CLIENT';
-            break;
-        }
-
-        return $user_distributor;
+    public function getCategories($operator_id) {
+        $sql = "SELECT * FROM `crm_user_categories` WHERE `operator_id`='$operator_id'";
+        $results = $this->db->selectDB($sql);
+        return $results;
     }
+
+    
 }

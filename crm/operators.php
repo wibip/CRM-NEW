@@ -97,7 +97,7 @@ if (isset($_POST['submit_mno_form'])) { //6
             $br = $db->select1DB("SHOW TABLE STATUS LIKE 'exp_mno'");
 
             $auto_inc = $br['Auto_increment'];
-            $mno_id = "MNO" . $auto_inc;
+            $mno_id = "OPERATION" . $auto_inc;
             $u_id = str_pad($auto_inc, 8, "0", STR_PAD_LEFT);
             $unique_id = '1' . $u_id;
 
@@ -546,18 +546,11 @@ if (isset($_POST['submit_mno_form'])) { //6
                             `mno_id`,
                             `unique_id`,
                             `mno_description`,
-                            `bussiness_address1`,
-                            `bussiness_address2`,
-                            `bussiness_address3`,
                             `features`,
-                            `country`,
-                            `state_region`,
-                            `zip`,
-                            `phone1`,
                             `timezones`,
                             `is_enable`,
                             `create_date`,
-                            create_user,
+                            `create_user`,
                             `system_package`,
                             `mno_type`,
                             `default_campaign_id`)
@@ -565,14 +558,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                             ( '$mno_id',
                                 '$unique_id',
                                 '$mno_account_name',
-                                '$mno_address_1',
-                                '$mno_address_2',
-                                '$mno_address_3',
                                 '$api_profile',
-                                '$mno_country',
-                                '$mno_state',
-                                '$mno_zip_code',
-                                '$mno_mobile_1',
                                 '$mno_time_zone',
                                 '1',
                                 NOW(),
@@ -750,7 +736,7 @@ if (isset($_POST['submit_mno_form'])) { //6
             header('Location: operations.php');
         }
 } elseif (isset($_GET['edit_mno_id'])) {
-    var_dump('ssssssss');
+    // var_dump('ssssssss');
     $edit_mno_id = $_GET['edit_mno_id'];
     $get_edit_mno_details_q = "SELECT * FROM `exp_mno` WHERE `mno_id`='$edit_mno_id'";
     $mno_data = $db->select1DB($get_edit_mno_details_q);

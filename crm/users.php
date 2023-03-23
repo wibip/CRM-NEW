@@ -4,11 +4,18 @@ include 'header_new.php';
 
 require_once 'classes/CommonFunctions.php';
 $common_functions = new CommonFunctions();
-require_once dirname(__FILE__) . '/models/userMainModel.php';
-$user_model = new userMainModel();
+require_once 'classes/userClass.php';
+$usersData = new Users();
 $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 $page = 'User';
 
+// Get languages
+$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
+$language_results=$db->selectDB($key_query);
+
+// Get active operators
+$activeOperators = $usersData->getAllOperators();
+// var_dump($activeOperators);
 ?>
 
 <style>
@@ -22,6 +29,9 @@ $page = 'User';
 		width: auto;
 		margin-right: 3em;
 	}
+	.custom-tooltip {
+  --bs-tooltip-bg: var(--bs-primary);
+}
 </style>
 <?php
 	// TAB Organization
@@ -60,6 +70,11 @@ $page = 'User';
 								);
 ?>
 <script language="javascript">
+$(function () {
+ $('[data-bs-toggle="tooltip"]').tooltip()
+//   document.getElementById('tt').setAttribute('data-bs-original-title', 'New Tooltip Title');
+})
+
   // Countries
     var country_arr = new Array( "United States of America","Afghanistan", "Albania", "Algeria", "American Samoa", "Angola", "Anguilla", "Antartica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Ashmore and Cartier Island", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burma", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Clipperton Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo, Democratic Republic of the", "Congo, Republic of the", "Cook Islands", "Costa Rica", "Cote d'Ivoire", "Croatia", "Cuba", "Cyprus", "Czeck Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Europa Island", "Falkland Islands (Islas Malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern and Antarctic Lands", "Gabon", "Gambia, The", "Gaza Strip", "Georgia", "Germany", "Ghana", "Gibraltar", "Glorioso Islands", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and McDonald Islands", "Holy See (Vatican City)", "Honduras", "Hong Kong", "Howland Island", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Ireland, Northern", "Israel", "Italy", "Jamaica", "Jan Mayen", "Japan", "Jarvis Island", "Jersey", "Johnston Atoll", "Jordan", "Juan de Nova Island", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia, Former Yugoslav Republic of", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Man, Isle of", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia, Federated States of", "Midway Islands", "Moldova", "Monaco", "Mongolia", "Montserrat", "Morocco", "Mozambique", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcaim Islands", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romainia", "Russia", "Rwanda", "Saint Helena", "Saint Kitts and Nevis", "Saint Lucia", "Saint Pierre and Miquelon", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Scotland", "Senegal", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia and South Sandwich Islands", "Spain", "Spratly Islands", "Sri Lanka", "Sudan", "Suriname", "Svalbard", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Tobago", "Toga", "Tokelau", "Tonga", "Trinidad", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Virgin Islands", "Wales", "Wallis and Futuna", "West Bank", "Western Sahara", "Yemen", "Yugoslavia", "Zambia", "Zimbabwe");
 
@@ -672,16 +687,19 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	if (isset($_POST['submit_user'])) {
 		$userId = $_POST['id'];
 		$full_name = $_POST['full_name'];
-		$group = $_POST['group']; 
+		$group = $_POST['user_group']; 
 		$email = $_POST['email'];
 		$language = $_POST['language'];
 		$timezone = $_POST['timezone'];
+		$address = $_POST['address'];
 		$country = $_POST['country'];
 		$state = $_POST['state'];
 		$zip = $_POST['zip'];
 		$mobile = $_POST['mobile'];
 		$user_type = $group;
-		$user_distributor = $common_functions->userDistributors($group);
+		$user_distributor = $usersData->userDistributors($group);
+		// var_dump($group);
+		// var_dump($user_distributor);
 
 		if($_POST['id'] != 0) {
 			$id = $_POST['id'];
@@ -814,9 +832,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			$password  = CommonFunctions::randomPassword();
 
 			// $user_type = $common_functions->getUserTypeFromAccessType($group);
-
 			// $user_distributor = $db->getValueAsf("SELECT u.distributor AS f FROM admin_access_roles u WHERE u.access_role='$access_role' LIMIT 1");
-			
 
 			$pw_query = "SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1(\"$password\"))))) AS f";
 			$updated_pw='';
@@ -825,9 +841,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				$updated_pw = strtoupper($row['f']);
 			}
 
-			$query = "INSERT INTO admin_users(user_name, `password`, user_type, user_distributor, full_name, email, `language`, `timezone`, mobile, is_enable, create_date,create_user)
-					VALUES ('$new_user_name','$updated_pw','$user_type','$user_distributor','$full_name','$email', '$language' ,'$timezone', '$mobile','1',now(),'".$user_name."')";
+			$query = "INSERT INTO admin_users(user_name, `password`, user_type, `group`, user_distributor, full_name, email,`address`,`country`,`state_region`,`zip`, `language`, `timezone`, mobile, is_enable, create_date,create_user)
+					VALUES ('$new_user_name','$updated_pw','$user_type', '$group','$user_distributor','$full_name','$email','$address','$country','$state','$zip', '$language' ,'$timezone', '$mobile','1',now(),'".$user_name."')";
 			// echo $query;
+			// die;
 			$ex =$db->execDB($query);
 			if ($ex ==true) {
 				$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
@@ -846,7 +863,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	elseif (isset($_GET['edit_id'])) {
 		if ($_SESSION['FORM_SECRET'] == $_GET['token']) {
 			$edit_id = $_GET['edit_id'];
-			$userData = $user_model->getUser($edit_id);
+			$userData = $usersData->getUser($edit_id);
 			if($userData['rowCount'] > 0){
 				$edit_user_data = $userData['data'][0];
 			}
@@ -1258,31 +1275,47 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	$userGroupName = strtoupper(str_replace("_"," ",$key));
 																	$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $key == $edit_user_data['group']) ? "checked" : "";
 																?>
-																<input type="radio" class="btn-check" name="user_group" id="user_group" id="<?=$key?>" autocomplete="off" <?=$selected?>>
+																<input type="radio" class="btn-check" name="user_group" id="<?=$key?>" value="<?=$key?>" autocomplete="off" <?=$selected?>>
 																<label class="btn btn-outline-primary" for="<?=$key?>"><?=$userGroupName?></label>
 																<?php
 																}
 																?>
 															</div>
 														</div>
-														
+														<div class="col-md-6" id="operator_div">
+															<label class="control-label" for="full_name">Operator<sup><font color="#FF0000"></font></sup></label>
+															<select class="form-control span4" name="operator" id="operator">
+																<option value="">Select Operator</option>
+																<?php 
+																	if($activeOperators['rowCount'] > 0){
+																		foreach($activeOperators['data'] AS $operator){ 
+																			$selected = '';
+																?>
+																			<option value='<?=$operator['mno_id']?>' <?=$selected?>><?=$operator['mno_description']?></option>
+																<?php 	}
+																	} 
+																?>
+															</select>
+														</div>												
+														<div class="col-md-6" id="parent_div">
+															<label class="control-label" for="email">Parent Category<sup><font color="#FF0000"></font></sup></label>
+															<select class="form-control span4" name="category" id="category" >
+																<option value="">Select Category</option>
+															</select>
+														</div>														
 														<div class="col-md-6">
 															<label class="control-label" for="full_name">Full Name<sup><font color="#FF0000"></font></sup></label>
 															<input class="form-control span4" id="full_name" name="full_name" maxlength="25" type="text" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['full_name'] : ''?>">
-														</div>
-												
+														</div>												
 														<div class="col-md-6">
 															<label class="control-label" for="email">Email<sup><font color="#FF0000"></font></sup></label>
 															<input class="form-control span4" id="email" name="email"  value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['email'] : ''?>">
 														</div>
-
 														<div class="col-md-6">
 															<label class="control-label" for="language">Language</label>
 															<select class="form-control span4" name="language" id="language">
 																<?php
-																	$key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
-																	$query_results=$db->selectDB($key_query);
-																	foreach($query_results['data'] AS $row){
+																	foreach($language_results['data'] AS $row){
 																		$language_code = $row['language_code'];
 																		$language = $row['language'];
 																		$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $language_code == $edit_user_data['language']) ? "selected" : "";
@@ -1292,8 +1325,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	}
 																?>
 															</select>
-														</div>
-														
+														</div>														
 														<div class="col-md-6">
 															<label class="control-label" for="timezone">Time Zone<sup><font color="#FF0000"></font></sup></label>
 															<select class="span4 form-control" id="timezone" name="timezone" autocomplete="off">
@@ -1328,6 +1360,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	}
 																?>
 															</select>
+														</div>														
+														<div class="col-md-6">
+															<label class="control-label" for="address">Address<sup><font color="#FF0000"></font></sup></label>
+															<input class="form-control span4" id="address" name="address" maxlength="25" type="text" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['address'] : ''?>">
 														</div>
 														<div class="col-md-6">
 															<label class="control-label" for="country" >Country<font color="#FF0000"></font></sup></label>
@@ -1436,8 +1472,8 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 													</thead>
 													<tbody>
 														<?php
-														$query_results = $user_model->get_activeUseres($data);
-														foreach ($query_results['data'] as $row) {
+														$active_users = $usersData->get_activeUseres($data);
+														foreach ($active_users['data'] as $row) {
 															$id = $row['id'];
 															$user_name = $row['user_name'];
 															$full_name = $row['full_name'];
@@ -1539,25 +1575,73 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	?>
 	<script src="js/base.js"></script>
 	<script src="js/jquery.chained.js"></script>
-	<script type="text/javascript" charset="utf-8">
-		$(document).ready(function() {
-			$("#loation").chained("#user_type");
-		});
-	</script>
 
 	<!-- Alert messages js-->
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$('#operator_div').hide();
+			$('#parent_div').hide();
+			$("#category").prop("disabled", true);
+			$("#loation").chained("#user_type");
+			$("input[name='user_group']").change(function(){
+				var groupName = $(this).val();
+				if(groupName != 'super_admin' && groupName != 'admin' && groupName != 'operation') {
+					$('#operator_div').show();//parent_div
+					$('#parent_div').show();
+				} else {
+					$('#operator_div').hide();
+					$('#parent_div').hide();
+				}
+			});
+
+			// $("#parent_div").click(function(){
+				
+			// });
+
+			$("#operator").change(function(){
+				var operatorValue = $(this).val();
+				if(operatorValue != ""){
+					$.ajax({	
+						type: "POST",
+						url: "ajax/load_categories.php",
+						data: {
+							operator_id: operatorValue,
+						},
+						success: function(responseData) {
+							responseData = JSON.parse(responseData);
+							// console.log(responseData);
+							if(responseData['rowCount'] > 0){
+								$("#category").empty();
+								$.each(responseData['data'], function (i, item) {
+									// console.log(item.category);
+									$('#category').append($('<option>', { 
+										value: item.id,
+										text : item.category 
+									}));
+								});
+								$("#category").prop("disabled", false);
+							} else {
+
+							}
+						},
+						error: function() {
+						}
+					});
+				}
+			});
+
 			$("#submit_user").click(function(){
 				let dataName = $(this).attr("data-name");
 				$("form[name='user_profile']").validate({
 					rules: {
-						// user_group: { 
-						// 	required: true
-						// },
+						user_group: { 
+							required: true
+						},
+						operator: { 
+							required: true
+						},
 						full_name: "required",
 						email: {
 							required: true,
@@ -1565,6 +1649,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						},
 						language: "required",
 						timezone: "required",
+						address: "required",
 						country: "required",
 						state: "required",
 						zip: "required",
@@ -1575,9 +1660,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						}
 					},
 					messages: {
-						// user_group: { 
-						// 	required: "Please select User Group"
-						// },
+						user_group: { 
+							required: "Please select User Group"
+						},
 						full_name: "Please enter your Full Name",
 						email: {
 							required: "Please enter email address",
@@ -1585,6 +1670,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						},
 						language: "Please select Language",
 						timezone: "Please select Time Zone",
+						address: "Please enter Address",
 						country: "Please select Country",
 						state: "Please select State/Region",
 						zip: "Please enter Zip code",
@@ -1595,7 +1681,8 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						}
 					},
 					submitHandler: function(form) {
-						alert(dataName);
+						form.submit();
+						// alert(dataName);
 						if(dataName == 'save'){
 							var title = 'New User Account';
 							var text = 'Are you sure you want to create user?';
@@ -1604,15 +1691,15 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 							var text = 'Are you sure you want to update this user?';
 						}
 
-						$(this).easyconfirm({
-							locale: {
-								title: title,
-								text: text,
-								button: ['Cancel', ' Confirm'],
-								closeText: 'close'
-							}
-						});
-						$(this).click(function() {});
+						// $(form).easyconfirm({
+						// 	locale: {
+						// 		title: title,
+						// 		text: text,
+						// 		button: ['Cancel', ' Confirm'],
+						// 		closeText: 'close'
+						// 	}
+						// });
+						// $(form).click(function() {});
 					},
 					// errorPlacement: function(error, element) {
 					// 	console.log(error);

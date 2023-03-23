@@ -53,6 +53,11 @@ if (!$fileOut || $out) {
 <script src="js/dataTables.bootstrap5.min.js"></script>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script>
+	// var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+	// var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+	// 	return new bootstrap.Tooltip(tooltipTriggerEl)
+	// });
+
 	$.validator.setDefaults({
 		focusCleanup: true,
 		errorClass: "text-danger",
@@ -2499,14 +2504,6 @@ else{
 	<?php
 
 	}
-
-
-	/* require_once dirname(__FILE__).'/DTO/User.php';
-require_once dirname(__FILE__).'/models/userMainModel.php';
-$User = new User();
-$user_model = new userMainModel();
-$un =$_SESSION['user_name'];
-$_SESSION['login_user'] = serialize($user_model->loginUser_Data($un)); */
 	?>
 
 	<script type="text/javascript">

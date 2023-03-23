@@ -76,8 +76,7 @@ define('ACCESS',[
             'properties'=>[],
         ],
         'home' => 'properties'
-    ],
-    
+    ],    
     'sales_manager' => [
         'modules'=>[
             'crm'=>[
@@ -95,7 +94,7 @@ define('ACCESS',[
         ],
         'home' => 'operations'
     ],
-    'client' => [
+    'ordering_agent' => [
         'modules'=>[
             'crm'=>[
                 'create' =>[
