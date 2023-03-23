@@ -1,23 +1,6 @@
 <?php
 
 define('ACCESS',[
-    'admin' => [
-        'modules'=>[
-            'operations'=>[
-                'create' =>[
-                    'actions'=>['create']
-                ],
-                'manage'=>[
-                    'actions'=>['edit','delete']
-                ],
-            ],
-            'user'=>[],
-            'api_profile'=>[],
-            'config'=>[],
-            'logs'=>[],
-        ],
-        'home' => 'operations'
-    ],
     'super_admin' => [
         'modules'=>[
             'user'=>[
@@ -62,6 +45,23 @@ define('ACCESS',[
             ],
         ],
         'home' => 'users'
+    ],
+    'admin' => [
+        'modules'=>[
+            'operations'=>[
+                'create' =>[
+                    'actions'=>['create']
+                ],
+                'manage'=>[
+                    'actions'=>['edit','delete']
+                ],
+            ],
+            'user'=>[],
+            'api_profile'=>[],
+            'config'=>[],
+            'logs'=>[],
+        ],
+        'home' => 'operations'
     ],
     'operation' => [
         'modules'=>[
