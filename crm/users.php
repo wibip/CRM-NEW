@@ -1603,6 +1603,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			$("#operator").change(function(){
 				var operatorValue = $(this).val();
 				if(operatorValue != ""){
+					$("#overlay").css("display","block");
 					$.ajax({	
 						type: "POST",
 						url: "ajax/load_categories.php",
@@ -1625,8 +1626,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 							} else {
 
 							}
+							$("#overlay").css("display","none");
 						},
 						error: function() {
+							$("#overlay").css("display","none");
 						}
 					});
 				}

@@ -394,8 +394,8 @@ if($tokenReturn['status'] == 'success') {
 		$("#end_date").attr("autocomplete", "off");
 
         $(function() {
-        $('#datepicker').datepicker();
-    });
+            $('#datepicker').datepicker();
+        });
     });
 </script>
 
