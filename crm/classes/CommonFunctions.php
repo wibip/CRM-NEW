@@ -383,8 +383,8 @@ class CommonFunctions{
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization )); // Inject the token into the header
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
         $output=curl_exec($ch);
-        
-        return $output;
+        var_dump($output);
+        // return $output;
         curl_close($ch);
     }
 
