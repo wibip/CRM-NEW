@@ -48,6 +48,7 @@ $baseUrl = $apiUrl.'/api/'.$apiVersion;
 
 $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
 $tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
+var_dump($api_details);
 //generating api call to get Service Types
 if($tokenReturn['status'] == 'success') {
     $token = $tokenReturn['data']['token'];
