@@ -377,6 +377,9 @@ class CommonFunctions{
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL,$url);
         $authorization = "Authorization: Bearer ".$token; // Prepare the authorisation token
+        var_dump($url);
+        echo '<br/>';
+        var_dump($token);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization )); // Inject the token into the header
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
         $output=curl_exec($ch);
