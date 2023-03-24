@@ -26,10 +26,12 @@
             $operatorsSystemPackage = null;
             $selected_operator = $_POST['selected_operator'];
             $operatorsPackage = $CommonFunctions->getSystemPackage($selected_operator);
+            // var_dump($operatorsPackage);
             if($operatorsPackage['rowCount'] > 0){
                 $operatorsSystemPackage = $operatorsPackage['data'][0]['system_package'];
                 $api_id = $operatorsPackage['data'][0]['features'];
                 $camp_layout = $package_functions->getSectionType("CAMP_LAYOUT", $operatorsSystemPackage);
+                // var_dump($camp_layout);
                 /*get API details related to Operator*/
                 $api_details = $CommonFunctions->getApiDetails($api_id);
                 if(!empty($api_details['data'])) {
@@ -776,6 +778,10 @@
     <script type="text/javascript">
    
         $(document).ready(function() {
+            $('#load_operator').click(function (){
+                $("#overlay").css("display","block");
+            });
+
             $('.pop-up .actions button:nth-child(1)').click(function (e) {                 
                 $('#locationForm').children('input').val('');
                 e.preventDefault();                

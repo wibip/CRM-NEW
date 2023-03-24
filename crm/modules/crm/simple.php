@@ -114,6 +114,22 @@ if (!empty($arrayo)) {
                 <input type="text" name="business_name" id="business_name" class="span4 form-control" value="<?php echo $edit===true?$get_business_name:''?>">
             </div>
             <div class="col-md-6">
+                <label for="radiobtns">Service Type</label>
+                <select name="service_type" id="service_type" class="span4 form-control">
+                    <?php if($serviceTypes != null){ ?>
+                    <option value="0">Please select service type</option>
+                    <?php   foreach($serviceTypes as $serviceType){ ?>
+                        <option value="<?=$serviceType['id']?>"><?=$serviceType['service_type']?></option>
+                    <?php
+                        }
+                    } else { ?>
+                    <option value="0">Service type not found</option>
+                    <?php
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="col-md-6">
                 <label for="radiobtns">Contact Name</label>
                 <input type="text" name="contact" id="contact" class="span4 form-control" value="<?php echo $edit===true?$get_contact_name:''?>">
             </div>
