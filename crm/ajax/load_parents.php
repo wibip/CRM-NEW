@@ -5,8 +5,9 @@ session_start();
 require_once '../classes/hierarchyClass.php';
 $hierarchy = new Hierarchy();
 $operator_id = $_POST['operator_id'];
+$category_id = $_POST['category_id'];
 
-$response = $hierarchy->getCategories($operator_id);
+$response = $hierarchy->getParents($operator_id,$category_id );
 if($response != false){
     echo json_encode($response);
 } else {

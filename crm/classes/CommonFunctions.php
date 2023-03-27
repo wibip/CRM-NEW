@@ -377,14 +377,14 @@ class CommonFunctions{
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL,$url);
         $authorization = "Authorization: Bearer ".$token; // Prepare the authorisation token
-        var_dump($url);
-        echo '<br/>';
-        var_dump($token);
+        // var_dump($url);
+        // echo '<br/>';
+        // var_dump($token);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization )); // Inject the token into the header
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
         $output=curl_exec($ch);
-        var_dump($output);
-        // return $output;
+        // var_dump($output);
+        return $output;
         curl_close($ch);
     }
 
@@ -562,13 +562,5 @@ class CommonFunctions{
         $sql = "SELECT features FROM `exp_mno` WHERE `mno_id`='$mno_id'";
         $results = $this->db->selectDB($sql);
         return $results;
-    }
-
-    public function getCategories($operator_id) {
-        $sql = "SELECT * FROM `crm_user_categories` WHERE `operator_id`='$operator_id'";
-        $results = $this->db->selectDB($sql);
-        return $results;
-    }
-
-    
+    } 
 }

@@ -1297,12 +1297,18 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																?>
 															</select>
 														</div>												
-														<div class="col-md-6" id="parent_div">
-															<label class="control-label" for="email">Parent Category<sup><font color="#FF0000"></font></sup></label>
+														<div class="col-md-6" id="parent_cat_div">
+															<label class="control-label" for="category">Parent Category<sup><font color="#FF0000"></font></sup></label>
 															<select class="form-control span4" name="category" id="category" >
 																<option value="">Select Category</option>
 															</select>
-														</div>														
+														</div>		
+														<div class="col-md-6" id="parent_div">
+															<label class="control-label" for="parent">Parent<sup><font color="#FF0000"></font></sup></label>
+															<select class="form-control span4" name="parent" id="parent" >
+																<option value="">Select Parent</option>
+															</select>
+														</div>												
 														<div class="col-md-6">
 															<label class="control-label" for="full_name">Full Name<sup><font color="#FF0000"></font></sup></label>
 															<input class="form-control span4" id="full_name" name="full_name" maxlength="25" type="text" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['full_name'] : ''?>">
@@ -1582,23 +1588,60 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#operator_div').hide();
+			$('#parent_cat_div').hide();
 			$('#parent_div').hide();
 			$("#category").prop("disabled", true);
+			$("#parent").prop("disabled", true);
 			$("#loation").chained("#user_type");
 			$("input[name='user_group']").change(function(){
 				var groupName = $(this).val();
 				if(groupName != 'super_admin' && groupName != 'admin' && groupName != 'operation') {
 					$('#operator_div').show();//parent_div
-					$('#parent_div').show();
+					$('#parent_cat_div').show();
+					// $('#parent_div').show();
 				} else {
 					$('#operator_div').hide();
+					$('#parent_cat_div').hide();
 					$('#parent_div').hide();
 				}
 			});
 
-			// $("#parent_div").click(function(){
-				
-			// });
+			$('#category').on('change', function() {
+				var operatorValue = $('#operator').val();
+				var categoryValue = $(this).val();
+
+				if(operatorValue != "" && categoryValue != ""){
+					$("#overlay").css("display","block");
+					$.ajax({	
+						type: "POST",
+						url: "ajax/load_parents.php",
+						data: {
+							operator_id: operatorValue,
+							category_id: categoryValue,
+						},
+						success: function(responseData) {
+							responseData = JSON.parse(responseData);
+							// console.log(responseData);
+							if(responseData['rowCount'] > 0){
+								$("#category").empty();
+								$.each(responseData['data'], function (i, item) {
+									// console.log(item.category);
+									$('#parent').append($('<option>', { 
+										value: item.id,
+										text : item.full_name 
+									}));
+								});
+								$("#parent").prop("disabled", false);								
+								$('#parent_div').show();
+							} else {}
+							$("#overlay").css("display","none");
+						},
+						error: function() {
+							$("#overlay").css("display","none");
+						}
+					});
+				}
+			});
 
 			$("#operator").change(function(){
 				var operatorValue = $(this).val();
@@ -1642,20 +1685,19 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						user_group: { 
 							required: true
 						},
-						operator: { 
-							required: true
-						},
-						full_name: "required",
+						operator: { required: true },
+						category: { required: true },
+						full_name: { required: true },
 						email: {
 							required: true,
 							email: true
 						},
-						language: "required",
-						timezone: "required",
-						address: "required",
-						country: "required",
-						state: "required",
-						zip: "required",
+						language: { required: true },
+						timezone: { required: true },
+						address: { required: true },
+						country: { required: true },
+						state: { required: true },
+						zip: { required: true },
 						mobile: {
 							required: true,
 							digits: true,
@@ -1666,17 +1708,37 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						user_group: { 
 							required: "Please select User Group"
 						},
-						full_name: "Please enter your Full Name",
+						operator: { 
+							required: "Please select Operator"
+						},
+						category: { 
+							required: "Please select Parent Category"
+						},
+						full_name: { 
+							required: "Please enter your Full Name"
+						},
 						email: {
 							required: "Please enter email address",
 							email: "Please enter a valid email address"
 						},
-						language: "Please select Language",
-						timezone: "Please select Time Zone",
-						address: "Please enter Address",
-						country: "Please select Country",
-						state: "Please select State/Region",
-						zip: "Please enter Zip code",
+						language: { 
+							required: "Please select Language"
+						},
+						timezone: { 
+							required: "Please select Time Zone"
+						},
+						address: { 
+							required: "Please enter Address"
+						},
+						country: { 
+							required: "Please select Country"
+						},
+						state: { 
+							required: "Please select State/Region"
+						},
+						zip: { 
+							required: "Please enter Zip code"
+						},
 						mobile: {
 							required: "Please enter Phone Number",
 							digits: "Please enter valid Phone Number",

@@ -35,7 +35,7 @@
                 /*get API details related to Operator*/
                 $api_details = $CommonFunctions->getApiDetails($api_id);
 
-                var_dump($api_details);
+                // var_dump($api_details);
                 if(!empty($api_details['data'])) {
                     $apiVersion = $api_details['data'][0]['controller_name'];
                     $apiUrl = $api_details['data'][0]['api_url'];
