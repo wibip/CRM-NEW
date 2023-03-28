@@ -734,7 +734,7 @@
                                             </div>
                                         </div>
                                         <form class="row g-3 p-4" method="post">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label for="inputState" class="form-label">Operator</label>
                                                 <select id="selected_operator" name="selected_operator" class="form-select">
                                                     <option value='0'>None</option>
@@ -747,8 +747,8 @@
                                                     ?>
                                                 </select>
                                             </div>
-                                            <div class="col-md-12">
-                                                <button type="submit" id="load_operator" name="load_operator" class="btn btn-primary">Load order form</button>
+                                            <div class="col-md-8">
+                                                <button type="submit" id="load_operator" name="load_operator" class="btn btn-primary" style="margin-top: 30px;">Load order form</button>
                                             </div>
                                         </form>
                                     </div>
