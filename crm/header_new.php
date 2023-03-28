@@ -58,6 +58,12 @@ if (!$fileOut || $out) {
 	// 	return new bootstrap.Tooltip(tooltipTriggerEl)
 	// });
 
+		$(document).ready(function () {
+			$('[data-bs-toggle="tooltip"]').each(function (index, element) {
+				new bootstrap.Tooltip(this);
+			});
+		});
+
 	$.validator.setDefaults({
 		focusCleanup: true,
 		errorClass: "text-danger",

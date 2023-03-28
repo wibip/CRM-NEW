@@ -1276,8 +1276,8 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																	$userGroupName = strtoupper(str_replace("_"," ",$key));
 																	$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $key == $edit_user_data['group']) ? "checked" : "";
 																?>
-																<input type="radio" class="btn-check" name="user_group" id="<?=$key?>" value="<?=$key?>" autocomplete="off" <?=$selected?>>
-																<label class="btn btn-outline-primary" for="<?=$key?>"><?=$userGroupName?></label>
+																<input type="radio" class="btn-check hide_rad" name="user_group" id="<?=$key?>" value="<?=$key?>" autocomplete="off" <?=$selected?>>
+																<label class="btn btn-outline-primary normalize" data-bs-toggle="tooltip" data-bs-html="true" title="<em>Tooltip</em> <u>with</u> <b>HTML</b>" for="<?=$key?>"><?=$userGroupName?></label>
 																<?php
 																}
 																?>
