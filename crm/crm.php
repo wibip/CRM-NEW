@@ -20,7 +20,7 @@
     $apiUsername = '';
     $apiPassword = '';
 
-    if($user_type == 'ADMIN' || $user_type == 'SADMIN') {
+    if($user_group == 'admin' || $user_group == 'super_admin') {
         $operators = $usersData->getAllOperatorUsers();
         if(isset($_POST['load_operator'])) {
             $operatorsSystemPackage = null;
@@ -191,11 +191,11 @@
         if ($response['status'] == 'success') {
             $ex = $db->execDB("UPDATE crm_exp_mno_locations SET `is_enable` = 1 WHERE id = '$idContAutoInc'");
             $success_msg = "New Location ".$property_name." addition is successful";
-            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM Location',$idContAutoInc,'3001',$success_msg);
+            $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Create CRM Location',$idContAutoInc,'3001',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
         } else {
             $success_msg = "New Location ".$property_name." addition is failed";
-            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create CRM Location',0,'2009',$success_msg);
+            $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Create CRM Location',0,'2009',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
         }
         
@@ -248,11 +248,11 @@
 
         if ($response['status'] == 'success') {
             $success_msg = "Location has been updated successfully";
-            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Update CRM Location',$location_id,'3001',$success_msg);
+            $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Update CRM Location',$location_id,'3001',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
         } else {
             $success_msg = "Location updated has been failed";
-            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Update CRM Location',$location_id,'2009',$success_msg);
+            $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Update CRM Location',$location_id,'2009',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
         }
     }
@@ -494,18 +494,18 @@
                     $ex1 = $db->execDB("UPDATE exp_crm SET `business_id`='".$businesId."',`status` = 'Completed' WHERE id = '$idContAutoInc'");
                     $ex2 = $db->execDB("UPDATE crm_exp_mno_locations SET `business_id`='".$businesId."', `is_enable` = 1 WHERE id = '$idLocationAutoInc'");
                     $success_msg = $message_functions->showNameMessage('venue_add_success', $business_name);
-                    $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create CRM property',$idContAutoInc,'3001',$success_msg);
+                    $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Create CRM property',$idContAutoInc,'3001',$success_msg);
                     $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
                 } else {
                     $ex = $db->execDB("UPDATE exp_crm SET `status` = 'Failed' WHERE id = '$idContAutoInc'");
                     $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
-                    $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create CRM property',$idContAutoInc,'2009',$success_msg);
+                    $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Create CRM property',$idContAutoInc,'2009',$success_msg);
                     $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
                 }
             } else {
                 syslog(LOG_NOTICE,'account create failed - insert to exp_crm failed');
                 $success_msg = $message_functions->showNameMessage('venue_add_failed', $business_name, '2009');
-                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create CRM property',0,'2009',$success_msg);
+                $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Create CRM property',0,'2009',$success_msg);
                 $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
             }
         }
@@ -526,16 +526,16 @@
             
             if ($delete === true) {
                 $success_msg = "Location has been successfully removed";
-                $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
+                $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
                 $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
             } else {                    
                 $success_msg = "CRM Location deleting is failed.";
-                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+                $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
                 $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
             }
         } else {
             $success_msg = "CRM Location deleting is failed.";
-            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+            $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
         }
         header('Location: crm?t=crm_view&token='.$token.'&edit&id='.$id);
@@ -558,24 +558,27 @@
                 $delete = $db->execDB("DELETE FROM exp_crm WHERE id='$remove_id'");
                 if ($delete === true) {
                     $success_msg = "CRM Property is deleted successfully.";
-                    $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Property',$remove_id,'3001',$success_msg);
+                    $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Delete CRM Property',$remove_id,'3001',$success_msg);
                     //delete form user
                     $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
                 } else {                    
                     $success_msg = "CRM Property deleting is failed.";
-                    $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
+                    $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
                     $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
                 }
             } else {
                 $success_msg = "CRM Property deleting is failed. ".$response["data"]["message"];
-                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
+                $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
                 $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
             }
         }
     }
 
-    foreach ($modules[$user_type][$script] as $value) {
+    // var_dump($modules[$user_group][$script]);
+
+    foreach ($modules[$user_group][$script] as $value) {
         $submit_form = 'modules/' . $value['submit'] . '.php';
+        // var_dump($submit_form);
         if (file_exists($submit_form)) {
             //require_once 'modules/' . $modules['tab_menu']['submit'] . '.php';
             require_once $submit_form;
@@ -722,7 +725,7 @@
                                             unset($_SESSION['msg5']);
                                         }
 
-                                    if($user_type == 'ADMIN' || $user_type == 'SADMIN') {
+                                    if($user_group == 'admin' || $user_group == 'super_admin') {
                                     ?>
                                     <div class="border card my-4">
                                         <div class="border-bottom card-header p-4">
@@ -751,8 +754,7 @@
                                     </div>
                                     <?php
                                     }
-                                        //if($user_type == 'MNO' || $user_type == 'MVNA' || $user_type == 'MVNE' || $user_type == 'SUPPORT' || $user_type == 'SALES'){
-                                        foreach ($modules[$user_type][$script] as $value) {
+                                        foreach ($modules[$user_group][$script] as $value) {
                                             //echo 'modules/'.$value['module'].'.php';
                                             include_once 'modules/' . $value['module'] . '.php';
                                         }

@@ -87,13 +87,13 @@ if($type == 'system'){
 	
 	if($ex212===true && $ex4===true && $ex6===true && $ex7===true ){
 		$message_response = $message_functions->showMessage('config_general_update_success');
-		$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Modify General configurations',0,'3001',$message_response);
+		$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Modify General configurations',0,'3001',$message_response);
 		// $msg=$message_functions->showMessage('config_general_update_success');
 		// $create_log->save('3001',$msg,'');
 		$_SESSION['msgy'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";
 	}else{
 		$message_response = $message_functions->showMessage('config_general_update_failed', '2001');
-		$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify General configurations',0,'2001',$message_response);
+		$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Modify General configurations',0,'2001',$message_response);
 		// $msg=$message_functions->showMessage('config_general_update_failed','2001');
 		// $create_log->save('2001',$msg,'');
 		$_SESSION['msgy']= "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$message_response."</strong></div>";

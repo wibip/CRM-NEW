@@ -10,7 +10,7 @@ class admin_users extends baseEntity
 	private $user_name;
 	private $password;
 	private $access_role;
-	private $user_type;
+	private $user_group;
 	private $user_distributor;
 	private $full_name;
 	private $email;
@@ -31,7 +31,7 @@ class admin_users extends baseEntity
      * @param $user_name
      * @param $password
      * @param $access_role
-     * @param $user_type
+     * @param $user_group
      * @param $user_distributor
      * @param $full_name
      * @param $email
@@ -45,13 +45,13 @@ class admin_users extends baseEntity
      * @param $last_update
      * @param $activation_date
      */
-    public function __construct($id, $user_name, $password, $access_role, $user_type, $user_distributor, $full_name, $email, $language, $timezone, $mobile, $verification_number, $is_enable, $global_user_id, $create_date, $create_user, $last_update, $activation_date)
+    public function __construct($id, $user_name, $password, $access_role, $user_group, $user_distributor, $full_name, $email, $language, $timezone, $mobile, $verification_number, $is_enable, $global_user_id, $create_date, $create_user, $last_update, $activation_date)
     {
         $this->id = $id;
         $this->user_name = $user_name;
         $this->password = $password;
         $this->access_role = $access_role;
-        $this->user_type = $user_type;
+        $this->user_group = $user_group;
         $this->user_distributor = $user_distributor;
         $this->full_name = $full_name;
         $this->email = $email;
@@ -136,15 +136,15 @@ class admin_users extends baseEntity
      */
     public function getUserType()
     {
-        return $this->user_type;
+        return $this->user_group;
     }
 
     /**
-     * @param mixed $user_type
+     * @param mixed $user_group
      */
-    public function setUserType($user_type)
+    public function setUserType($user_group)
     {
-        $this->user_type = $user_type;
+        $this->user_group = $user_group;
     }
 
     /**

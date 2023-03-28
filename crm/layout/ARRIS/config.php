@@ -113,7 +113,7 @@ $modules = [
     //         ]
     //     ]
     // ],
-    "MNO"=>[
+    "operation"=>[
         "location"=>[
             [
                 "id"=>"active_properties",
@@ -207,7 +207,7 @@ $modules = [
     //         ]
     //     ]
     // ],
-	"ADMIN"=>[
+	"admin"=>[
         "location"=>[
             [
                 "id"=>"active_mno",
@@ -238,7 +238,7 @@ $modules = [
             ]
         ]
     ],
-    "SADMIN"=>[
+    "super_admin"=>[
         "crm" => [
             // [
             //     "id"=>"crm_manage",
@@ -252,7 +252,7 @@ $modules = [
             ]
         ]
     ],
-    "PROVISIONING" => [
+    "ordering_agent" => [
         "provision" => [
             [
                 "id"=>"provision_manage",

@@ -272,20 +272,15 @@ if ($_GET['log_other'] == '1') {
 		$_SESSION['full_name'] = $data_arr['fname']; //$_GET['fname'];
 
 		$user_name = $_SESSION['user_name'];
-		$user_details = $db_class1->select1DB("SELECT  user_distributor ,user_type  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
+		$user_details = $db_class1->select1DB("SELECT  user_distributor ,`group`  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
 		$user_distributor = $user_details['user_distributor'];
 
 		//Sync SSID,AP
 		$exec_cmd = 'php -f' . __DIR__ . '/ajax/syncAP.php ' . $user_distributor . ' > /dev/null &';
 		exec($exec_cmd);
 
-		if ($user_details['user_type'] == 'MVNO_ADMIN') {
-
-			$realm_query = "SELECT `system_package`,parent_id AS verification_number  FROM mno_distributor_parent WHERE `parent_id`='$user_distributor'";
-		} else {
-			$realm_query = "SELECT `system_package`,verification_number,wired  FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'";
-		}
-
+		$realm_query = "SELECT `system_package`,verification_number,wired  FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'";
+		
 		$realm_query_results = $db_class1->select1DB($realm_query);
 		//while($row=mysql_fetch_array($realm_query_results)){
 		$system_package = $realm_query_results['system_package'];
@@ -349,7 +344,7 @@ if ($_GET['log_other'] == '2') {
 		$_SESSION['full_name'] = $s_fname;
 		$user_name = $_SESSION['user_name'];
 
-		$user_type = $db_class1->getValueAsf("SELECT  user_type AS f  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
+		$user_group = $db_class1->getValueAsf("SELECT  `group` AS f  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
 
 		$user_distributor = $db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$user_name' LIMIT 1");
 
@@ -357,20 +352,11 @@ if ($_GET['log_other'] == '2') {
 		$exec_cmd = 'php -f' . __DIR__ . '/ajax/syncAP.php ' . $user_distributor . ' > /dev/null &';
 		exec($exec_cmd);
 
-		if ($user_type == "SADMIN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN") {
+		if ($user_group == "super_admin" || $user_group == "operation" || $user_group == "admin" ) {
 			$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
-		} else if ($user_type == "MVNO_ADMIN") {
-			$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
-		} else if ($user_type == "MVNO" || $user_type == "MVNE" || $user_type == "MVNA") {
-			$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-			$property_wired = $db_class1->getValueAsf("SELECT `wired` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-		}
+		} 
 		// echo $system_package; 
 		$new_design = $package_functions->getOptions('NEW_DESIGN', $system_package);
-
-		if ($user_type == "TECH") {
-			$new_design = 'yes';
-		}
 
 		$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT', $system_package);
 		$theme_text = $package_functions->getMessageOptions('THEME_TEXT', $system_package);
@@ -452,23 +438,14 @@ require_once 'classes/logClass.php';
 $create_log = new logs($script, $user_name);
 
 // Get access role related information
-if ($user_type == 'MVNO_ADMIN') {
-	// Parent User
-	$key_query = "SELECT  `access_role`, user_type, user_distributor,is_enable,full_name
-	FROM  admin_users WHERE user_name = '$user_name' LIMIT 1";
-	//$key_query = "SELECT  'admin', 'MVNO_ADMIN', $s_distri,1,$s_fname";
-	//exit();
-} else {
-	$key_query = "SELECT  `access_role`, user_type, user_distributor,is_enable,full_name
-	FROM  admin_users WHERE user_name = '$user_name' LIMIT 1";
-	// general User
-}
 
+$key_query = "SELECT  `access_role`, `group`, user_distributor,is_enable,full_name
+				FROM  admin_users WHERE user_name = '$user_name' LIMIT 1";
 
 $query_results = $db_class1->select1DB($key_query);
 //while($row=mysql_fetch_array($query_results)){
 $access_role = $query_results['access_role'];
-$user_type = $query_results['user_type'];
+$user_group  = $query_results['group'];
 $user_distributor = $query_results['user_distributor'];
 if (strlen($full_name) == 0) {
 	$full_name = $query_results['full_name'];
@@ -492,10 +469,10 @@ if ($_SESSION['remote'] == 'yes') {
 // echo '-----------------<<<<<<<'.$_REQUEST['show'];
 // echo '-----------------<<<<<<<'.$_REQUEST['ud'];
 /* change user_distributor if conditions applied */
-if ($_SESSION['SADMIN'] && isset($_REQUEST['show']) && $_REQUEST['show'] == 'clients') {
+if ($_SESSION['super_admin'] && isset($_REQUEST['show']) && $_REQUEST['show'] == 'clients') {
 	$user_distributor = $_REQUEST['ud'];
 	$_SESSION['ud'] = $_REQUEST['ud'];
-	$user_type = $_REQUEST['ut'];
+	$user_group  = $_REQUEST['ug'];
 	$_SESSION['ut'] = $_REQUEST['ut'];
 }
 
@@ -516,25 +493,12 @@ if ($_SESSION['login'] == 'yes') {
 		}
 	}
 }
-// echo '----------------->>>>'.$user_type;
-// echo '----------------->>>>'.$user_distributor;
-// die;
-//////// System Packages and features
-if ($user_type == "SADMIN" || $user_type == "SMAN" || $user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES" || $user_type == "RESELLER_ADMIN" || $user_type == "PROVISIONING") {
-	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
-	if ($user_type == "MNO" || $user_type == "RESELLER_ADMIN" || $user_type == "SUPPORT") {
-		$fearuresjson = $db_class1->getValueAsf("SELECT features as f FROM `exp_mno` WHERE mno_id='$user_distributor'");
-		$mno_feature = json_decode($fearuresjson);
-	}
-}
-// else if ($user_type == "MVNO_ADMIN") {
-// 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
-// } else if ($user_type == "MVNO" || $user_type == "MVNE" || $user_type == "MVNA") {
-// 	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 
-// 	$advanced_features = $db_class1->getValueAsf("SELECT `advanced_features` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-// }
-// var_dump($system_package);
+/// System Packages and features
+if ($user_group == "super_admin" || $user_group == "sales_manager" || $user_group == "operation" || $user_group == "admin" || $user_group == "ordering_agent") {
+	$system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
+}
+
 if ($system_package == "N/A" || $system_package == "") {
 	$package_features = "all";
 	$system_package = "N/A";
@@ -573,15 +537,11 @@ $SUBMENU_VERTICALE = $package_functions->getSectionType("SUBMENU_VERTICALE", $sy
 
 if (isset($_SESSION['s_token']) || isset($_SESSION['p_token'])) {
 	$ori_user_uname = $_SESSION['ori_user_uname'];
-	$ori_user_type = $db_class1->getValueAsf("SELECT  user_type AS f  FROM  admin_users WHERE user_name = '$ori_user_uname' LIMIT 1");
+	$ori_user_group = $db_class1->getValueAsf("SELECT  user_group AS f  FROM  admin_users WHERE user_name = '$ori_user_uname' LIMIT 1");
 	$ori_user_distributor = $db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$ori_user_uname' LIMIT 1");
-	if ($ori_user_type == "MNO" || $ori_user_type == "ADMIN" || $ori_user_type == "SUPPORT" || $ori_user_type == "TECH") {
+	if ($ori_user_group == "operation" || $ori_user_group == "admin" ) {
 		$ori_system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$ori_user_distributor'");
-	} else if ($ori_user_type == "MVNO_ADMIN") {
-		$ori_system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$ori_user_distributor'");
-	} else if ($ori_user_type == "MVNO" || $ori_user_type == "MVNE" || $ori_user_type == "MVNA") {
-		$ori_system_package = $db_class1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$ori_user_distributor'");
-	}
+	} 
 
 	$session_logout_btn_display = $package_functions->getOptions('SESSION_LOGOUT_BUTTON_DISPLAY', $ori_system_package);
 	$logout_time = $package_functions->getOptions('SESSION_LOGOUT_TIME', $ori_system_package);
@@ -609,7 +569,7 @@ try {
 $top_menu = $package_functions->getOptions('TOP_MENU', $system_package);
 $base_url = trim($db_class1->setVal('portal_base_url', 'ADMIN'), "/");
 $base_folder = trim($db_class1->setVal('portal_base_folder', 'ADMIN'), "/");
-$getSectionType = $package_functions->getSectionType("HADER_OPTIONS", $system_package, $user_type);
+$getSectionType = $package_functions->getSectionType("HADER_OPTIONS", $system_package, $user_group);
 
 $main_menu_clickble = $package_functions->getSectionType('MAIN_MANU_CLICKBLE', $system_package);
 
@@ -638,14 +598,11 @@ function isModuleAccess($access_role, $module, $db_function)
 }
 
 // Menu Design
-$originalUserType = $user_type;
+$originalUserType = $user_group;
 $originalAccessRole = $access_role;
 $originalSystemPackage = $system_package;
 
-// $user_type = ($user_type == 'SADMIN') ? 'ADMIN' : $user_type;
-// $access_role = ($user_type == 'SADMIN') ? 'ADMIN' : $access_role;
-// $system_package = ($user_type == 'SADMIN') ? 'GENERIC_ADMIN_001' : $system_package;
-$dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE user_type = '$user_type'";
+$dropdown_query1 = "SELECT module_name,menu_item FROM `admin_access_modules` WHERE `user_group` = '$user_group'";
 // echo $dropdown_query1;
 $query_results_drop1 = $db_class1->selectDB($dropdown_query1);
 // var_dump($query_results_drop1);
@@ -683,7 +640,7 @@ foreach ($x as $keyX => $valueX) {
 // echo '------------<br/>';
 // var_dump($x);
 
-if ($_SESSION['SADMIN'] == true) {
+if ($_SESSION['super_admin'] == true) {
 	array_push($x, "operation_list");
 	array_push($x, "change_portal");
 }
@@ -707,27 +664,8 @@ $allowed_pages = $x;
 
 $module_ids = join('", "', $x);
 $suspended = false;
-// if ($user_type == 'MVNO') {
-// 	//Pages allowed to wired properties
-// 	$wired_pages = ['add_tenant', 'manage_tenant', 'communicate', 'home', 'user_guide', 'venue_support'];
-// 	$dist_details = $db_class1->select1DB("SELECT d.wired,d.gateway_type,d.private_gateway_type,d.bussiness_type,d.network_type,d.other_settings,d.is_enable,m.system_package as mno_sys FROM exp_mno_distributor d JOIN exp_mno m ON d.mno_id=m.mno_id WHERE distributor_code='" . $user_distributor . "'");
-// 	$property_getaway_type = $dist_details['gateway_type'];
-// 	$property_business_type = $dist_details['bussiness_type'];
-// 	$property_wired = $dist_details['wired'];
-// 	/* start suspend location logout */
-// 	$is_enable = $dist_details['is_enable'];
-// 	$ale4_prod = ['LP_MNO_002', 'LP_MNO_003_LP', 'LP_MNO_004_SL'];
-// 	if (in_array($dist_details['mno_sys'], $ale4_prod)) {
-// 		$GLOBALS['qos_ale_version'] = 'ale4';
-// 	}
-// 	if ($is_enable == 3 && !isset($_SESSION['s_token'])) {
-// 		$suspended = true;
-// 	}
-// 	/* end suspend location logout */
-// 	$network_type = $dist_details['network_type'];
-// 	$other_multi_area = json_decode($dist_details['other_settings'])->other_multi_area;
-// 	$private_gateway = $dist_details['private_gateway_type'];
-// }
+
+
 $wysywyg_editor = false;
 $edit_location_old = false;
 if ($_GET['location_parent_id']) {
@@ -740,16 +678,8 @@ if ($_GET['location_parent_id']) {
 // var_dump($camp_layout);
 require_once 'layout/' . $camp_layout . '/config.php';
 
-$query_modules = "SELECT * FROM `admin_access_modules`
-WHERE `module_name` IN (\"$module_ids\")
-AND `user_type` = '$user_type'";
-// echo $query_modules;
-// var_dump($module_ids);
-// var_dump($user_type);
+$query_modules = "SELECT * FROM `admin_access_modules` WHERE `module_name` IN (\"$module_ids\") AND `user_group` = '$user_group'";
 $query_results_mod = $db_class1->selectDB($query_modules);
-// var_dump($query_results_mod);
-// die;
-//$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
 
 $restricted_pages = $package_functions->getOptions("RESTRICTED_PAGES", $system_package);
 
@@ -832,58 +762,6 @@ foreach ($query_results_mod['data'] as $row1) {
 	}
 
 
-	//===================================
-	//Distributor Network type - Private or guest
-	//==================================
-	if ($user_type == "MVNO" || $user_type == "MVNE" || $user_type == "MVNA") {
-
-		//echo "SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'";
-		//echo $system_package;
-
-		//print_r($restricted_pages);
-
-		if (strlen($restricted_pages) == 0 || $restricted_pages == "") {
-
-			$restricted_pages = '{"PRIVATE":["network","campaign","theme","add_tenant","manage_tenant","communicate","network_tenant","theme_s","customer","reports"],"GUEST":["service_area","network_pr","add_tenant","manage_tenant","communicate","network_tenant"],"BOTH":["add_tenant","manage_tenant","communicate","network_tenant"],"VT-PRIVATE":["theme","campaign","network","theme_s","customer","reports"],"VT-GUEST":["service_area","network_pr"],"VT":["service_area","network_pr","theme","campaign","network","theme_s","customer","reports"]}';
-		}
-
-		$restricted_page = json_decode($restricted_pages, true);
-
-
-
-		//print_r($restricted_page);
-		$page_access_array = $restricted_page[$network_type];
-		if (in_array($module_name, $page_access_array)) {
-
-			continue;
-		}
-		// for ($i=0; $i < strlen($page_access); $i++) { 
-		// 	echo $module_name=$page_access[$i];
-		// }
-
-
-		//}
-
-		/*$network_type=$db_class1->getValueAsf("SELECT `network_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-
-		if(($network_type=='PRIVATE' && $module_name=='network') || ($network_type=='PRIVATE' && $module_name=='campaign') || ($network_type=='PRIVATE' && $module_name=='theme') || ($network_type=='PRIVATE' && $module_name=='add_tenant') || ($network_type=='PRIVATE' && $module_name=='manage_tenant') || ($network_type=='PRIVATE' && $module_name=='communicate') ){
-			continue;
-		}elseif (($network_type=='GUEST' && $module_name=='network_pr') || ($network_type=='GUEST' && $module_name=='add_tenant') || ($network_type=='GUEST' && $module_name=='manage_tenant') || ($network_type=='GUEST' && $module_name=='communicate') ){
-			continue;
-		}elseif(($network_type=='VT-PRIVATE' && $module_name=='network') || ($network_type=='VT-PRIVATE' && $module_name=='campaign') || ($network_type=='VT-PRIVATE' && $module_name=='theme') ){
-				continue;
-		}elseif ($network_type=='VT-GUEST' && $module_name=='network_pr'){
-				continue;
-		}elseif(($network_type=='VT' && $module_name=='home') || ($network_type=='VT' && $module_name=='network_pr') || ($network_type=='VT' && $module_name=='network') || ($network_type=='VT' && $module_name=='campaign') || ($network_type=='VT' && $module_name=='theme') || ($network_type=='VT' && $module_name=='intro') ){
-				continue;
-		}elseif(($network_type=='BOTH' && $module_name=='add_tenant') || ($network_type=='BOTH' && $module_name=='manage_tenant') || ($network_type=='BOTH' && $module_name=='communicate')  ){
-				continue;
-		}*/
-	}
-	/* elseif(($network_type=='BOTH' && $module_name=='add_tenant') || ($network_type=='BOTH' && $module_name=='manage_tenant') || ($network_type=='BOTH' && $module_name=='communicate')  ){
-				continue;
-			} */
-
 	/*
 
 	menu item = 1 => Menu
@@ -895,12 +773,7 @@ foreach ($query_results_mod['data'] as $row1) {
 	menu item = 6 => User Guide
 
 	*/
-	// echo 'Before: ';
-	// var_dump($main_mod_array);
-	// echo '<br/>menuItem';
-	// var_dump($menu_item_row);
-	// echo '<br/>';
-	// echo '<br/>';
+
 	if ($is_enable == 1) {
 		if ($menu_item_row == '1') {
 			$access_modules_list[] = $module_name;
@@ -1014,9 +887,9 @@ foreach ($query_results_mod['data'] as $row1) {
 			$access_modules_list[] = $module_name;
 		} else if ($menu_item_row == '7') {
 			//	echo "<br>".$main_module." "."1";
-			//echo $user_type;
+			//echo $user_group;
 			$newfeature = array();
-			if ($user_type == 'MNO' || $user_type == 'PROVISIONING') {
+			if ($user_group == 'operation' || $user_group == 'ordering_agent') {
 				$dist_namenew = $user_distributor;
 				$featuressql = "SELECT `features` AS f FROM exp_mno  WHERE `mno_id`='$dist_namenew'";
 				$featuresjson = $db_class1->getValueAsf($featuressql);
@@ -1141,30 +1014,12 @@ if ($suspended) {
 	}
 } else {
 	if (in_array($script, $access_modules_list) || $script == 'verification') {
-		// Access LOG
-
-		//if(isset($_SESSION['p_token'])){
-		//	$ori_user_uname = $_SESSION['ori_user_uname'];
-		//	 $log_query = "INSERT INTO admin_user_logs (`user_name`,`module`,`create_date`, `unixtimestamp`)
-		//	(SELECT '$ori_user_uname',`module`,now(),UNIX_TIMESTAMP() FROM `admin_main_modules` WHERE `module_name` = '$script')";
-		//}
-		//else{
-		//echo $script;
 		$db_class1->userLog($user_name, $script, 'Browse', 'N/A');
-
 		$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
-		// $db->addLogs($user_name, 'ERROR',$user_type, 'login', 'Browse',0,'2001','');
-		// $log_query = "INSERT INTO admin_user_logs (`user_name`,`module`,`create_date`,`unixtimestamp`)
-		//(SELECT '$user_name',`module`,now(),UNIX_TIMESTAMP() FROM `admin_main_modules` WHERE `module_name` = '$script')";
-		//}
-		//$query_ex_log=mysql_query($log_query);
-
 	} else {
-		// var_dump($system_package); die;
-		$redirect_url = $global_base_url; //index".$extension;$message_response = $message_functions->showMessage('ap_controller_create_failed', '2001');
-		// $db->addLogs($user_name, 'ERROR',$user_type,'login', 'Browse',0,'2000',$redirect_url);
+		$redirect_url = $global_base_url; 
 		$db_class1->userErrorLog('2000', $user_name, 'script - ' . $script);
-		// var_dump($redirect_url); die;
+
 		header('Location: ' . $redirect_url);
 	?>
 		<meta http-equiv="refresh" content="0;URL='<?php echo $redirect_url; ?>'">
@@ -1177,16 +1032,14 @@ if ($suspended) {
 //////////////////////////////////////////////////////////
 
 
-
-
 ////////////////////
 ////// Coloring/////
 
 $camp_theme_color = '#00ba8b'; // Default Color
 
-if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
+if ($user_group == 'admin' || $user_group == 'super_admin') {
 	// $dist_name = 'ADMIN';
-	$dist_name = $user_type;
+	$dist_name = $user_group;
 	$camp_theme_color = '#00ba8b';
 
 	$abc_q = "SELECT * FROM `exp_mno` WHERE `mno_id` = '" . $dist_name . "'";
@@ -1201,7 +1054,7 @@ if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
 	$style_type = $row['theme_style_type']; //light/dark
 	$light_color = $row['theme_light_color'];
 	//}
-} else if ($user_type == 'MNO' || $user_type == 'SUPPORT' || $user_type == 'PROVISIONING') {
+} else if ($user_group == 'operation' || $user_group == 'ordering_agent') {
 	$dist_name = $user_distributor;
 	//$camp_theme_color = $db_class1->setVal("mno_color",$dist_name);
 	$mni_favicon_id = $dist_name;
@@ -1253,46 +1106,8 @@ if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
 		//}
 	}
 
-	// Parent Based Coloring
-
-	if ($getSectionType == "PARENT") {
-
-
-		if ($user_type == 'MVNO_ADMIN') {
-
-			$kmno_query = "SELECT * FROM mno_distributor_parent where parent_id = '$user_distributor'";
-
-			$row = $db_class1->select1DB($kmno_query);
-			//print_r(mysql_fetch_array($query_results));
-			//while ($row = mysql_fetch_array($query_results)) {
-			$mno_id = $row['mno_id'];
-			$mni_favicon_id = $mno_id;
-
-			//}
-
-		} else {
-			$kmno_query = "SELECT * FROM exp_mno_distributor where distributor_code = '$user_distributor'";
-
-			$row = $db_class1->select1DB($kmno_query);
-			//print_r(mysql_fetch_array($query_results));
-			//while ($row = mysql_fetch_array($query_results)) {
-			$mno_id = $row['mno_id'];
-			$network_type = $row['network_type'];
-			$distributor_name_get = str_replace('\\', '', $row['distributor_name']);
-			$site_title = str_replace('\\', '', $row['site_title']);
-			$mni_favicon_id = $mno_id;
-
-			//}
-
-		}
-		/////////////////////////////////////////////////////////////////////////////
-
-
-	}
-
 	$abc_q = "SELECT * FROM `exp_mno` WHERE `mno_id` = '$mno_id'";
 	$row = $db_class1->select1DB($abc_q);
-	//while($row = mysql_fetch_array($def_r)){
 
 	$camp_theme_color = $row['theme_color'];
 	$camp_theme_logo = $row['theme_logo'];
@@ -1315,17 +1130,15 @@ if ($user_type == 'ADMIN' || $user_type == 'SADMIN') {
 
 $user_timezone = $db_class1->getValueAsf("SELECT `timezone` AS f FROM `admin_users` WHERE `user_name`='$user_name'");
 if (strlen($user_timezone) < 1) {
-	if ($user_type == 'ADMIN') {
+	if ($user_group == 'admin') {
 		$user_timezone = $db_class1->getValueAsf("SELECT `timezones` AS f FROM `exp_mno` WHERE `mno_id`='ADMIN'");
 	} else {
-		if ($user_type == 'MNO' || $user_type == 'SUPPORT' || $user_type == 'PROVISIONING') {
+		if ($user_group == 'operation' ||  $user_group == 'ordering_agent') {
 			$mno_id = $user_distributor;
 		}
 		$user_timezone = $db_class1->getValueAsf("SELECT `timezones` AS f FROM `exp_mno` WHERE `mno_id`='$mno_id'");
 	}
 }
-//echo $user_type;
-//echo $user_timezone;
 
 // Favicon
 
@@ -1892,28 +1705,17 @@ else{
 		}
 	</script>
 
-
-
-
-
-
 	<?php
 
-	if ($user_type == 'MNO') {
-
+	if ($user_group == 'operation') {
 		$key_query = "SELECT theme_logo FROM exp_mno WHERE mno_id = '$user_distributor'";
-
 		$row = $db_class1->select1DB($key_query);
-		//while($row=mysql_fetch_array($query_results)){
 		$logo_top = $row["theme_logo"];
-		//}
-
 		$logo_top = 'top_logo.png';
 		if (file_exists("layout/" . $camp_layout . "/img/" . $logo_top)) {
 			$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="layout/' . $camp_layout . '/img/' . $logo_top . '?v=3" border="0" />&nbsp;';
 		}
 
-		//echo $db_class1->setVal("site_title",$dist_name);
 		$logo_title = "<a class='brand' href='javascript:void(0);' style='text-decoration:none !important'>";
 		if ($style_type == 'light') {
 			$logo_title .= '<font color="' . $camp_theme_color . '">' . $site_title . '</font>';
@@ -1921,7 +1723,7 @@ else{
 			$logo_title .= $site_title;
 		}
 		$logo_title .= "</a>";
-	} elseif ($user_type == 'SUPPORT' || $user_type == 'PROVISIONING') {
+	} elseif ($user_group == 'ordering_agent') {
 
 		$key_query = "SELECT theme_logo FROM exp_mno WHERE mno_id = '$user_distributor'";
 
@@ -1940,7 +1742,6 @@ else{
 				$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="layout/' . $camp_layout . '/img/' . $logo_top . '?v=3" border="0" />&nbsp;';
 			}
 		}
-
 		//echo $db_class1->setVal("site_title",$dist_name);
 		$logo_title = "<a class='brand' href='javascript:void(0);' style='text-decoration:none !important'>";
 		if ($style_type == 'light') {
@@ -1949,36 +1750,8 @@ else{
 			$logo_title .= $site_title;
 		}
 		$logo_title .= "</a>";
-	} elseif ($user_type == 'SALES') {
-
-		$key_query = "SELECT theme_logo FROM exp_mno WHERE mno_id = '$user_distributor'";
-
-		$row = $db_class1->select1DB($key_query);
-		//while($row=mysql_fetch_array($query_results)){
-		$logo_top = $row["theme_logo"];
-		//}
-
-		if (strlen($logo_top)) {
-			if (file_exists("image_upload/logo/" . $logo_top)) {
-				$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="image_upload/logo/' . $logo_top . '?v=3" border="0" />&nbsp;';
-			}
-		} else {
-			$logo_top = 'top_logo.png';
-			if (file_exists("layout/" . $camp_layout . "/img/" . $logo_top)) {
-				$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="layout/' . $camp_layout . '/img/' . $logo_top . '?v=3" border="0" />&nbsp;';
-			}
-		}
-
-		//echo $db_class1->setVal("site_title",$dist_name);
-		$logo_title = "<a class='brand' href='javascript:void(0);' style='text-decoration:none !important'>";
-		if ($style_type == 'light') {
-			$logo_title .= '<font color="' . $camp_theme_color . '">' . $site_title . '</font>';
-		} else {
-			$logo_title .= $site_title;
-		}
-		$logo_title .= "</a>";
-	} else if ($user_type == 'ADMIN') {
-		$camp_theme_logo = $db_class1->setVal("site_logo", "ADMIN");
+	} else if ($user_group == 'admmin') {
+		$camp_theme_logo = $db_class1->setVal("site_logo", "admin");
 		if (strlen($camp_theme_logo)) {
 
 			if (file_exists("image_upload/logo/" . $camp_theme_logo)) {
@@ -1986,7 +1759,7 @@ else{
 				$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="image_upload/logo/' . $camp_theme_logo . '" border="0" />&nbsp;';
 			}
 		}
-		//echo $db_class1->setVal("site_title","ADMIN");
+		//echo $db_class1->setVal("site_title","admin");
 		$logo_title = "<a class='brand' href='javascript:void(0);' style='text-decoration:none !important'>";
 		if ($style_type == 'light') {
 			$logo_title .= '<font color="' . $camp_theme_color . '">' . $site_title . '</font>';
@@ -1996,20 +1769,11 @@ else{
 		$logo_title .= "</a>";
 	} else {
 		if (strlen($camp_theme_logo)) {
-
 			if (file_exists("image_upload/logo/" . $camp_theme_logo)) {
-
 				$log_img = '<img class="logo_img" style="max-height: 32px;float: left;" src="image_upload/logo/' . $camp_theme_logo . '" border="0" />&nbsp;';
 			}
 		} else {
-
 			$vert = $property_business_type;
-
-			if ($user_type == "MVNO_ADMIN") {
-				$dis_Q = "SELECT d.wired,d.gateway_type,d.private_gateway_type,d.bussiness_type,d.network_type,d.other_settings,d.is_enable,m.system_package as mno_sys FROM exp_mno_distributor d JOIN exp_mno m ON d.mno_id=m.mno_id WHERE d.parent_id='" . $user_distributor . "'";
-				$dist_details = $db_class1->selectDB($dis_Q);
-				$vert = $dist_details['data'][0]['bussiness_type'];
-			}
 			$logo_top = 'top_logo.png';
 			$business_logo = "logo_" . strtolower($vert) . ".png";
 			if (file_exists("layout/" . $camp_layout . "/img/" . $business_logo)) {
@@ -2056,29 +1820,23 @@ else{
 		$page_names_arr['WiFi Network Information'] = "Network Information";
 	}
 
-	if ($user_type == "TECH") {
-		$new_design = 'yes';
-		$top_menu = 'bottom';
-		$page_intro = 'YES';
-	}
-
-
+	
 	$loggedMessage = 'You are logged in as ';
 
-	switch ($user_type) {
-		case 'ADMIN':
+	switch ($user_group) {
+		case 'admin':
 			$loggedMessage .= 'Admin';
 			break;
-		case 'MNO':
+		case 'operation':
 			$loggedMessage .= 'Operation Admin';
 			break;
-		case 'PROVISIONING':
-			$loggedMessage .= 'Client';
+		case 'ordering_agent':
+			$loggedMessage .= 'Ordering Agent';
 			break;
-		case 'SMAN':
+		case 'sales_manager':
 			$loggedMessage .= 'Sales Manager';
 			break;
-		case 'SADMIN':
+		case 'super_admin':
 			$loggedMessage .= 'Super Admin';
 			break;
 	}

@@ -17,7 +17,7 @@ $db = new db_functions();
 $users = [];
 $_SESSION['section'] = $_GET['section'];
 if (isset($_GET['section']) && $_GET['section'] != 'ADMIN') {
-	$userSql = "SELECT id,full_name FROM admin_users WHERE user_type='MNO' AND is_enable=1";
+	$userSql = "SELECT id,full_name FROM admin_users WHERE user_group='operation' AND is_enable=1";
 	$userResults = $db->selectDB($userSql);
 	$users = $userResults['data'];
 }
@@ -114,7 +114,7 @@ if (isset($_POST['select_profile']) || $_GET['section'] == 'ADMIN') {
 															?>
 														</select>
 													</div>
-													<?php if ($_GET['section'] == 'PROVISIONING') { ?>
+													<?php if ($_GET['section'] == 'ordering_agent') { ?>
 														<div class="control-group">
 															<label class="control-label">Client Account</label>
 															<select class="span3" id="user_id" name="user_id">

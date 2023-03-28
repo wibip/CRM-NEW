@@ -394,7 +394,7 @@ class clientUserModel
 			$password  = CommonFunctions::randomPassword();
 
 			$access_role = 'client';
-			$user_type = 'PROVISIONING';
+			$user_type = 'ordering_agent';
 			// $user_distributor = $post['loation'];
 			$user_distributor = "";
 			$email = htmlspecialchars($post['email_1']);

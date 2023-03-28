@@ -45,7 +45,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 	$global_url = $db->setVal('global_url', 'ADMIN');
 
 	////////////Tab open////
-	if ($user_type == 'MNO') {
+	if ($user_group == 'operation') {
 		$fearuresjson = $db->getValueAsf("SELECT features as f FROM `exp_mno` WHERE mno_id='$user_distributor'");
 		$mno_feature = json_decode($fearuresjson);
 	}
@@ -56,7 +56,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 	} else {
 		$tab1 = "set";
 		//initially page loading///
-		if ($user_type == 'ADMIN') {
+		if ($user_group == 'admin') {
 			$tab1 = "set";
 		} 
 	}
@@ -319,7 +319,7 @@ if ($wag_ap_name != 'NO_PROFILE') {
 					if (type == 'manual') {
 						window.location = "?t=22";
 					} else {
-						window.location = "?t=<?php echo $user_type == 'MNO' || $user_type == 'SALES' || $user_type == 'MVNO_ADMIN' ? '0' : '1' ?>";
+						window.location = "?t=<?php echo $user_group == 'operation' ? '0' : '1' ?>";
 					}
 					document.getElementById(loader).style.visibility = 'hidden';
 				}

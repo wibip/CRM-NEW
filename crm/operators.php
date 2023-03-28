@@ -39,7 +39,7 @@ $mno_form_type = $query_result2['settings_value'];
 
 $mno_operator_check="SELECT p.product_code,p.`product_name`,c.options
                         FROM `admin_product` p LEFT JOIN admin_product_controls c ON p.product_code=c.product_code AND c.feature_code='VTENANT_MODULE'
-                        WHERE `is_enable` = '1' AND p.`user_type` = 'MNO'";
+                        WHERE `is_enable` = '1' AND p.`user_group` = 'operation'";
 $mno_op = $db->selectDB($mno_operator_check);
 
 $key_query="SELECT c.controller_name,c.description,c.brand,c.api_profile,c.id FROM `exp_locations_ap_controller` c ";
@@ -67,10 +67,10 @@ if (isset($_POST['submit_mno_form'])) { //6
 
         if ($_SESSION['FORM_SECRET'] == $_POST['form_secret6']) { //refresh validate
             $mno_account_name = $db->escapeDB(trim($_POST['mno_account_name']));
-            $mno_user_type = trim($_POST['mno_user_type']);
-            $mno_sys_package = trim($_POST['mno_sys_package']);
-            $mnoAccType=$mno_user_type;
-            $mno_user_type = 'MNO';
+            // $mno_user_type = trim($_POST['mno_user_type']);
+            // $mno_sys_package = trim($_POST['mno_sys_package']);
+            // $mnoAccType=$mno_user_type;
+            // $mno_user_type = 'MNO';
         
             $mno_system_package = $mno_sys_package;
 
@@ -146,26 +146,17 @@ if (isset($_POST['submit_mno_form'])) { //6
                         $query0 = "UPDATE `exp_mno`
                                     SET
                                     `mno_description`='$mno_account_name',
-                                    `mno_type`='$mnoAccType',
-                                    `bussiness_address1`='$mno_address_1',
-                                    `bussiness_address2`='$mno_address_2',
-                                    `bussiness_address3`='$mno_address_3',
-                                    `features`='$api_profile ',
-                                    `country`='$mno_country',
-                                    `state_region`='$mno_state',
-                                    `zip`='$mno_zip_code',
-                                    `phone1`='$mno_mobile_1',
-                                    `timezones`='$mno_time_zone'
+                                    `mno_type`='$mnoAccType'
                                     WHERE `mno_id`='$edit_mno_id'";
 
-                        $query1 = "UPDATE
-                                    `admin_users`
-                                    SET
-                                    `full_name` = '$mno_full_name',
-                                    `email` = '$mno_email',
-                                    `mobile` = '$mno_mobile_1',
-                                    `timezone` = '$mno_time_zone'
-                                    WHERE `user_distributor` = '$edit_mno_id' AND user_type='MNO' AND access_role='admin' ORDER BY id LIMIT 1"; //AND `verification_number` IS NOT NULL
+                        // $query1 = "UPDATE
+                        //             `admin_users`
+                        //             SET
+                        //             `full_name` = '$mno_full_name',
+                        //             `email` = '$mno_email',
+                        //             `mobile` = '$mno_mobile_1',
+                        //             `timezone` = '$mno_time_zone'
+                        //             WHERE `user_distributor` = '$edit_mno_id' AND user_type='MNO' AND access_role='admin' ORDER BY id LIMIT 1"; //AND `verification_number` IS NOT NULL
 
                         if ($mno_sys_package == 'DYNAMIC_MNO_001' && $isDynamic == 'yes') {
                             $dynamicSettings = "SELECT `settings` FROM `admin_product_controls_custom` WHERE `product_id`='$get_dynamic_product_id'";
@@ -531,11 +522,11 @@ if (isset($_POST['submit_mno_form'])) { //6
 
 
                         $message_response = $message_functions->showMessage('operator_update_success') ;
-                        $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Modify Operation',$edit_mno_id,'3001',$message_response);
+                        $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Modify Operation',$edit_mno_id,'3001',$message_response);
                         $_SESSION['msg7'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
                     } else {
                         $message_response = $message_functions->showMessage('operator_update_failed', '2001');
-                        $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify Operation',$edit_mno_id,'2001',$message_response);
+                        $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Modify Operation',$edit_mno_id,'2001',$message_response);
                         // $db->userErrorLog('2001', $user_name, 'script - ' . $script);
                         $_SESSION['msg7'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response. "</strong></div>";
                     }
@@ -574,10 +565,11 @@ if (isset($_POST['submit_mno_form'])) { //6
                     $idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
                     
                     if ($ex0 === true) {
-                        $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
-                                    VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'operation', '$mno_user_type', '$mno_id', '$mno_full_name', '$mno_email', '$mno_mobile_1', '$mno_time_zone', '1','$login_user_name', NOW(), '$user_type')";
+                        // $query0 = "INSERT INTO `admin_users` (`user_name`,`password`, `access_role`, `user_type`, `user_distributor`, `full_name`, `email`, `mobile`, `timezone`, `is_enable`,create_user, `create_date`,`admin`)
+                        //             VALUES ('$new_user_name',CONCAT('*', UPPER(SHA1(UNHEX(SHA1('$password'))))), 'operation', '$mno_user_type', '$mno_id', '$mno_full_name', '$mno_email', '$mno_mobile_1', '$mno_time_zone', '1','$login_user_name', NOW(), '$user_type')";
     
-                        $ex0 = $db->execDB($query0);
+                        // $ex0 = $db->execDB($query0);
+
                         if (isset($mno_sys_package)) {
                             $access_role_id = $mno_id . "_support";
                             $access_role_name = $mno_id . " Support";
@@ -709,12 +701,12 @@ if (isset($_POST['submit_mno_form'])) { //6
 
                         ///////////////////////////////////////////////
                         $message_response = $message_functions->showMessage('operator_create_success') ;
-                        $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create Operatorn',$idContAutoInc,'3001',$message_response);
+                        $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Create Operatorn',$idContAutoInc,'3001',$message_response);
                         // $db->userLog($user_name, $script, 'Create Operator', '');
                         $_SESSION['msg6'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
                     } else {
                         $message_response = $message_functions->showMessage('operator_create_failed', '2001');
-                        $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Operatorn',$idContAutoInc,'2001',$message_response);
+                        $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Create Operatorn',$idContAutoInc,'2001',$message_response);
                         // $db->userErrorLog('2001', $user_name, 'script - ' . $script);
                         $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
                     }
@@ -723,14 +715,14 @@ if (isset($_POST['submit_mno_form'])) { //6
 
             else { //1
                 $message_response = $message_functions->showMessage('operator_create_failed', '2009');
-                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Operatorn',0,'2009',$message_response);
+                $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Create Operatorn',0,'2009',$message_response);
                 // $db->userErrorLog('2009', $user_name, 'script - ' . $script);
                 $_SESSION['msg6'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
             } //1
         } //key validation
         else {
             $message_response = $message_functions->showMessage('transection_fail', '2004');
-            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Operatorn',$idContAutoInc,'2004',$message_response);
+            $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Create Operatorn',$idContAutoInc,'2004',$message_response);
             // $db->userErrorLog('2004', $user_name, 'script - ' . $script);
             $_SESSION['msg6'] = "<div class='alert alert-warning'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
             header('Location: operations.php');
@@ -818,15 +810,15 @@ if (isset($_POST['submit_mno_form'])) { //6
         $get_favicon_name = end($get_favicon_name);
     }
 
-        $get_edit_mno_details_q = "SELECT `full_name`,`email`,`user_type`,`mobile` FROM `admin_users` WHERE `user_distributor`='$edit_mno_id' AND `access_role`='admin' LIMIT 1";
-        $mno_data = $db->select1DB($get_edit_mno_details_q);
-        $get_edit_mno_fulname = $mno_data['full_name'];
-        $get_edit_mno_user_type = $mno_data['user_type'];
-        $get_ful_name_array = explode(' ', $get_edit_mno_fulname, 2);
-        $get_edit_mno_first_name = $get_ful_name_array[0];
-        $get_edit_mno_last_name = $get_ful_name_array[1];
-        $get_edit_mno_email = $mno_data['email'];
-        $get_edit_mno_mobile = $mno_data['mobile'];
+        // $get_edit_mno_details_q = "SELECT `full_name`,`email`,`user_type`,`mobile` FROM `admin_users` WHERE `user_distributor`='$edit_mno_id' AND `access_role`='admin' LIMIT 1";
+        // $mno_data = $db->select1DB($get_edit_mno_details_q);
+        // $get_edit_mno_fulname = $mno_data['full_name'];
+        // $get_edit_mno_user_type = $mno_data['user_type'];
+        // $get_ful_name_array = explode(' ', $get_edit_mno_fulname, 2);
+        // $get_edit_mno_first_name = $get_ful_name_array[0];
+        // $get_edit_mno_last_name = $get_ful_name_array[1];
+        // $get_edit_mno_email = $mno_data['email'];
+        // $get_edit_mno_mobile = $mno_data['mobile'];
         $get_ap_controllers_q = "SELECT c.ap_controller,ap.type FROM `exp_mno_ap_controller` c LEFT JOIN exp_locations_ap_controller ap ON c.ap_controller = ap.controller_name WHERE c.mno_id='$edit_mno_id'";
         $get_ap_controllers = $db->selectDB($get_ap_controllers_q);
         $ap_controler_array = array();
@@ -938,7 +930,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                     <select name="mno_sys_package" id="mno_sys_package"  class="span4 form-control form-control" <?php if($mno_edit==1) echo "readonly";?> required>
                                                         <option value="">Select Type of Operator</option>
                                                         <?php
-                                                            if($mno_op['rowCount']>1 && ($user_type == 'ADMIN' || $user_type == 'SADMIN')){
+                                                            if($mno_op['rowCount']>1 && ($user_group == 'admin' || $user_group == 'super_admin')){
                                                                 foreach($mno_op['data'] AS $mno_op_row){
                                                                     if($get_edit_mno_sys_pack==$mno_op_row['product_code']){
                                                                         $select="selected";
@@ -953,7 +945,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                 </div>                                              
                                                 <div class="col-md-6">
                                                     <label class="control-label" for="operator_code">Operator Code</label>
-                                                    <input class="span4 form-control" id="operator_code" name="operator_code" maxlength="12" placeholder="Operator Code" name="product_code" type="text" value="<?php echo$get_edit_mno_first_name;?>" autocomplete="off" required>
+                                                    <input class="span4 form-control" id="operator_code" name="operator_code" maxlength="12" placeholder="Operator Code" name="product_code" type="text" value="<?php echo $operator_code;?>" autocomplete="off" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="control-label" for="operator_name">Operator Name</label>
@@ -961,7 +953,7 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                 </div>                                               
                                                 <div class="col-md-6">
                                                     <label class="control-label" for="sub_operator_code">Sub Operator Code</label>
-                                                    <input class="span4 form-control" id="sub_operator_code" name="sub_operator_code" maxlength="12" placeholder="Operator Code" name="product_code" type="text" value="<?php echo$get_edit_mno_first_name;?>" autocomplete="off" required>
+                                                    <input class="span4 form-control" id="sub_operator_code" name="sub_operator_code" maxlength="12" placeholder="Operator Code" name="product_code" type="text" value="<?php echo $sub_operator_code;?>" autocomplete="off" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="control-label" for="sub_operator_name">Sub Operator Name</label>

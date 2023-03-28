@@ -609,7 +609,7 @@ $data_secret = $db->setVal('data_secret', 'ADMIN');
 
           ////Dash Board Sections//////////
           $get_section_code_q = "SELECT u.`section_code` AS a,s.`section_name` AS b FROM `dashboard_sections` s,`dashboard_sections_user_type` u  WHERE u.`section_code`=s.`section_code`
-AND `dashboard_code`='DASH01' AND u.user_type='$user_type' AND u.is_enable=1 ORDER BY order_number ASC";
+AND `dashboard_code`='DASH01' AND u.user_group='$user_group' AND u.is_enable=1 ORDER BY order_number ASC";
           $get_section_code = $db->selectDB($get_section_code_q);
 
           $section_array = array();

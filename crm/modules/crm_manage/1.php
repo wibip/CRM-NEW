@@ -384,8 +384,7 @@ if(isset($_SESSION['user_name'])){
 
                         <?php
 
-                        if ($user_type == 'MNO' || $user_type == 'SALES') {
-
+                        if ($user_group == 'operation') {
                             $check_column = "d.mno_id";
                         } else {
                             $check_column = "d.distributor_code";

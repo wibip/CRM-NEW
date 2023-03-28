@@ -12,6 +12,7 @@ class admin_access_modules extends baseEntity
 	private $module_name;
 	private $name_group;
 	private $user_type;
+	private $user_group;
 	private $is_enable;
 	private $menu_item;
 	private $order;

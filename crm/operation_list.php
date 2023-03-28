@@ -81,9 +81,9 @@ $account_name = isset($_POST['account_name']) ? $_POST['account_name'] : null;
 $operation_name = isset($_POST['operation_name']) ? $_POST['operation_name'] : null;
 $status = isset($_POST['status']) ? $_POST['status'] : null;
 
-$key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email, u.mobile , u.user_distributor, u.user_type
+$key_query = "SELECT m.mno_description,m.mno_id, m.features,u.full_name, u.email, u.mobile , u.user_distributor, u.group
                 FROM exp_mno m, admin_users u
-                WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.is_enable ";
+                WHERE u.group = 'operation' AND u.user_distributor = m.mno_id AND u.is_enable ";
 
 /* get values for filters before filtering */
 $filter_results = $db->selectDB($key_query);
@@ -218,7 +218,7 @@ $query_results = $db->selectDB($key_query);
                                                                             $email = $row['email'];
                                                                             $mobile = $row['mobile'];
                                                                             $user_distributor = $row['user_distributor'];
-                                                                            $user_type = $row['user_type'];
+                                                                            $user_group = $row['user_group'];
                                                                             // $s= $row[s];
                                                                             // $is_enable= $row[is_enable];
                                                                             // $icomm_num=$row[verification_number];
@@ -247,7 +247,7 @@ $query_results = $db->selectDB($key_query);
                                                                                         }});
 
                                                                                     $(\'#VIEWCLIENTS_'.$mno_id.'\').click(function() {
-                                                                                        window.location = "clients?show=clients&t=1&ud='.$user_distributor.'&ut='.$user_type.'"
+                                                                                        window.location = "clients?show=clients&t=1&ud='.$user_distributor.'&ug='.$user_group.'"
                                                                                     });
                                                                                 });
 

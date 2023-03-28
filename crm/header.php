@@ -512,7 +512,7 @@ if (strlen($user_timezone) < 1) {
 	if ($user_type == 'ADMIN') {
 		$user_timezone = $db_class1->getValueAsf("SELECT `timezones` AS f FROM `exp_mno` WHERE `mno_id`='ADMIN'");
 	} else {
-		if ($user_type == 'MNO' || $user_type == 'SUPPORT' || $user_type == 'PROVISIONING') {
+		if ($user_type == 'MNO' || $user_type == 'SUPPORT' || $user_type == 'ordering_agent') {
 			$mno_id = $user_distributor;
 		}
 		$user_timezone = $db_class1->getValueAsf("SELECT `timezones` AS f FROM `exp_mno` WHERE `mno_id`='$mno_id'");
@@ -1078,7 +1078,7 @@ else{
 			$logo_title .= $site_title;
 		}
 		$logo_title .= "</a>";
-	} elseif ($user_type == 'SUPPORT' || $user_type == 'PROVISIONING') {
+	} elseif ($user_type == 'SUPPORT' || $user_type == 'ordering_agent') {
 
 		$key_query = "SELECT theme_logo FROM exp_mno WHERE mno_id = '$user_distributor'";
 
@@ -1230,7 +1230,7 @@ switch($user_type){
 	case 'MNO':
 		$loggedMessage .= 'Operation Admin';
 	break;
-	case 'PROVISIONING':
+	case 'ordering_agent':
 		$loggedMessage .= 'Client';
 	break;
 	case 'SMAN':
@@ -1278,7 +1278,7 @@ switch($user_type){
 						<ul class="topnav">
 							<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
 							<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./operation_list">Operations</a></li>
-							<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Provisioning</a></li>
+							<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "ordering_agent") ? "active" : "")?>><a href="./change_portal?section=ordering_agent">ordering_agent</a></li>
 						</ul>
 					</div> -->
 					<?php //} ?>

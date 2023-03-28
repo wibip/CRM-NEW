@@ -81,128 +81,7 @@ $messageOb->setProduct($admin_system_package);
 if(isset($_POST['reset'])){
 
     $form_step = "step1";
-    //CHECK User is exsist
-    if($reset_method=="icomms") {
-        $icomms = trim($_POST['icomms']);
-        $username_sel = trim($_POST['sel_username']);
-
-        if(strlen($username_sel) > 0){
-            $icomms = $username_sel;
-        }
-
-        $string_type = check_string($icomms);
-
-        switch ($string_type){
-            case 'ac_number':
-            {
-                $qcheck_string = "SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,m.mno_id,d.bussiness_type AS 'dis_bussiness_type',d.system_package AS 'user_system_package' FROM `admin_users` u LEFT JOIN exp_mno_distributor d ON u.user_distributor = d.distributor_code LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                            WHERE u.`verification_number`='%s' AND u.user_type IN ('MVNO','MVNE')
-                
-                UNION
-                SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,m.mno_id,d.parent_id AS 'dis_bussiness_type',d.system_package AS 'user_system_package' 
-                FROM `admin_users` u LEFT JOIN `mno_distributor_parent` d ON u.user_distributor = d.parent_id LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                WHERE u.`user_distributor`='%s' AND u.email='%s' AND u.user_type IN ('MVNO_ADMIN')
-                                limit 1
-                                ";
-
-
-                $qcheck = sprintf($qcheck_string,$icomms,$icomms,$_POST['icomms']);
-                $rcheck1 = $db->selectDB($qcheck);
-
-                    if ($rcheck1['rowCount'] < 1) {
-
-                        $qcheck_string = "SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,d.bussiness_type  AS 'dis_bussiness_type',m.system_package,m.mno_id,d.system_package AS 'user_system_package' FROM `admin_users` u LEFT JOIN exp_mno_distributor d ON u.user_distributor = d.distributor_code LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                            WHERE d.`property_id`='%s' AND u.user_type IN ('MVNO','MVNE') limit 1
-                                        ";
-
-
-                        $qcheck = sprintf($qcheck_string,$icomms);
-
-                        $rcheck2 = $db->selectDB($qcheck);
-
-                    if ($rcheck2['rowCount'] < 1) {
-
-                        $qcheck_string = "SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,m.mno_id ,d.bussiness_type AS 'dis_bussiness_type',d.system_package AS 'user_system_package' FROM `admin_users` u LEFT JOIN exp_mno_distributor d ON u.user_distributor = d.distributor_code LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                            WHERE u.`user_name`='%s' AND u.user_type IN ('MVNO','MVNE')
-                     UNION                                               
-                    SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,m.mno_id ,d.parent_id AS 'dis_bussiness_type',d.system_package AS 'user_system_package' 
-                    FROM `admin_users` u LEFT JOIN `mno_distributor_parent` d ON u.user_distributor = d.parent_id LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                                WHERE u.`user_name`='%s' AND u.user_type IN ('MVNO_ADMIN') limit 1";
-
-                    $qcheck = sprintf($qcheck_string,$icomms,$icomms);
-
-                      }  
-                    }
-                break;
-            }
-
-            case 'email':
-            {
-
-                $qcheck_string = "SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,m.mno_id,d.bussiness_type AS 'dis_bussiness_type',d.system_package AS 'user_system_package' FROM `admin_users` u LEFT JOIN exp_mno_distributor d ON u.user_distributor = d.distributor_code LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                            WHERE u.`email`='%s' AND u.user_type IN ('MVNO','MVNE') AND u.`verification_number` = '%s'
-                
-                                            UNION
-                SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,m.mno_id,d.parent_id AS 'dis_bussiness_type',d.system_package AS 'user_system_package' 
-                FROM `admin_users` u LEFT JOIN `mno_distributor_parent` d ON u.user_distributor = d.parent_id LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                                            WHERE u.`email`='%s' AND u.user_type IN ('MVNO_ADMIN') AND u.`user_distributor` = '%s'
-                        limit 1                      
-                ";
-
-
-                $qcheck = sprintf($qcheck_string,$icomms,$username_sel,$icomms,$username_sel);
-                break;
-            }
-
-            case 'username':
-            {
-
-                $qcheck_string = "SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,d.bussiness_type AS 'dis_bussiness_type',m.mno_id ,d.system_package AS 'user_system_package' FROM `admin_users` u LEFT JOIN exp_mno_distributor d ON u.user_distributor = d.distributor_code LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                            WHERE u.`user_name`='%s' AND u.user_type IN ('MVNO','MVNE')
-                 UNION                                               
-                SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package ,d.parent_id AS 'dis_bussiness_type',m.mno_id,d.system_package AS 'user_system_package' 
-                FROM `admin_users` u LEFT JOIN `mno_distributor_parent` d ON u.user_distributor = d.parent_id LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                            WHERE u.`user_name`='%s' AND u.user_type IN ('MVNO_ADMIN') limit 1";
-
-                $qcheck = sprintf($qcheck_string,$icomms,$icomms);
-
-                $rcheck1 = $db->selectDB($qcheck);
-
-                if($rcheck1['rowCount'] < 1){
-
-                    $qcheck_string = "SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,m.mno_id ,d.bussiness_type AS 'dis_bussiness_type',d.system_package AS 'user_system_package' FROM `admin_users` u LEFT JOIN exp_mno_distributor d ON u.user_distributor = d.distributor_code LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                            WHERE d.`property_id`='%s' AND u.user_type IN ('MVNO','MVNE')";
-
-                    $qcheck = sprintf($qcheck_string,$icomms);
-
-                    $rcheck2 = $db->selectDB($qcheck);
-
-                    if ($rcheck2['rowCount'] < 1) {
-                        $qcheck_string = "SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,m.mno_id,d.bussiness_type AS 'dis_bussiness_type',d.system_package AS 'user_system_package' FROM `admin_users` u LEFT JOIN exp_mno_distributor d ON u.user_distributor = d.distributor_code LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                            WHERE u.`verification_number`='%s' AND u.user_type IN ('MVNO','MVNE')
-                
-                        UNION
-                        SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,m.mno_id,d.parent_id AS 'dis_bussiness_type',d.system_package AS 'user_system_package' 
-                        FROM `admin_users` u LEFT JOIN `mno_distributor_parent` d ON u.user_distributor = d.parent_id LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
-                        WHERE u.`verification_number`='%s' AND u.user_type IN ('MVNO_ADMIN')
-                                        limit 1
-                                        ";
-
-
-                        $qcheck = sprintf($qcheck_string,$icomms,$icomms);
-                        
-                    }
-
-
-                }
-
-                break;
-            }
-        }
-    }
-    
-    
-    else{
+  
         $username = trim($_POST['username']);
 
         $qcheck_string = "SELECT u.email,u.user_name,u.full_name,u.user_distributor,u.is_enable,m.system_package,m.mno_id,d.bussiness_type AS 'dis_bussiness_type',d.system_package AS 'user_system_package' FROM `admin_users` u LEFT JOIN exp_mno_distributor d ON u.user_distributor = d.distributor_code LEFT JOIN exp_mno m ON d.mno_id=m.mno_id
@@ -214,9 +93,6 @@ WHERE u.`user_name`='%s' limit 1";
 
         $qcheck = sprintf($qcheck_string,$username,$username);
 
-        //$system_package=$db->getValueAsf("SELECT m.`system_package` AS f FROM `exp_mno` m WHERE m.`mno_id`='ADMIN'");
-        //$admin_id='ADMIN';
-    }
     $rcheck = $db->selectDB($qcheck);
 
     if($rcheck['rowCount'] > 0){

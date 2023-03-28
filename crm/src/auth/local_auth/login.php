@@ -83,7 +83,7 @@ if (isset($username)) {
 
 	///////////////////////////////////////////////////////
 	
-	$key_query0 = sprintf("SELECT  id,`access_role`, user_type, user_distributor,`group`,`level` 
+	$key_query0 = sprintf("SELECT  id,`access_role`,`group`, user_type, user_distributor,`group`,`level` 
 	FROM  admin_users WHERE user_name = %s LIMIT 1",$dbT->GetSQLValueString($user_name, "text"));
 
 	$query_results=$dbT->selectDB($key_query0);
@@ -91,6 +91,7 @@ if (isset($username)) {
 		$_SESSION['user_id']  = $row['id'];
 		$access_role = $row['access_role'];
 		$user_type = $row['user_type'];
+		$user_group = $row['group'];
 		$user_distributor = $row['user_distributor'];
 		$_SESSION['user_distributor']  = $row['user_distributor'];
 		$access_role=strtolower($access_role);
@@ -98,7 +99,7 @@ if (isset($username)) {
 		$user_level = $row['level'];
 	}
 	
-	if(($user_type=="SADMIN") && !isset($_GET['auto_login'])){
+	if(($user_group=="super_admin") && !isset($_GET['auto_login'])){
 		$_SESSION["SADMIN"] = true;
 		// header('Location: '.$_SERVER['PHP_SELF']);
 		header("Location: ".$_SERVER['PHP_SELF']."?auto_login&user_id=1");
@@ -107,22 +108,9 @@ if (isset($username)) {
 	}
 
 	$suspended = false;
-	if($user_type=="MNO"){
+	if($user_group=="operation"){
 		$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
-	}elseif($user_type=="MVNO" || $user_type=="MVNE" || $user_type=="MVNA"){
-		$q=$dbT->select1DB("SELECT `system_package`,`is_enable`,`wired` FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-		$system_package = $q['system_package'];
-		$dis_is_enable = $q['is_enable'];
-		$property_wired = $q['wired'];
-
-		if($dis_is_enable == 3){
-			$suspended = true;
-		}
-
-	}elseif($user_type=='MVNO_ADMIN'){
-		$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
-	}
-	else{
+	}else{
 		$system_package=$dbT->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	}
 

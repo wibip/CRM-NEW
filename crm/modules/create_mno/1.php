@@ -139,23 +139,18 @@ $campaign_feature = $db->select1DB($qfn);
                     <select name="mno_user_type" id="mno_user_type" class="span4 form-control form-control" <?php if ($mno_edit == 1) echo "readonly"; ?>>
                         <option value="">Select Type of Account</option>
                         <?php
-                        if ($user_type == 'ADMIN' || $user_type == 'RESELLER_ADMIN') {
-
-                            if ($user_type == 'ADMIN') {
-                                $mno_flow_q = "SELECT `flow_type`,`flow_name`,`description` FROM `exp_mno_flow` WHERE `leve1`in (1,4) AND `is_enable`=1";
-                            }
-                            if ($user_type == 'RESELLER_ADMIN') {
-                                $mno_flow_q = "SELECT `flow_type`,`flow_name`,`description` FROM `exp_mno_flow` WHERE `leve1`= 1 AND `is_enable`=1";
-                            }
+                        if ($user_group == 'admin' ) {
+                            $mno_flow_q = "SELECT `flow_type`,`flow_name`,`description` FROM `exp_mno_flow` WHERE `leve1`in (1,4) AND `is_enable`=1";
+                            
                             $mno_flow = $db->selectDB($mno_flow_q);
 
                             foreach ($mno_flow['data'] as $mno_flow_row) {
-                                if ($get_edit_mno_user_type == $mno_flow_row[flow_type]) {
+                                if ($get_edit_mno_user_type == $mno_flow_row['flow_type']) {
                                     $select = "selected";
                                 } else {
                                     $select = "";
                                 }
-                                echo '<option ' . $select . ' value=' . $mno_flow_row[flow_type] . '>' . $mno_flow_row[flow_name] . '-' . $mno_flow_row[description] . '</option>';
+                                echo '<option ' . $select . ' value=' . $mno_flow_row['flow_type'] . '>' . $mno_flow_row['flow_name'] . '-' . $mno_flow_row['description'] . '</option>';
                             }
                         }
 

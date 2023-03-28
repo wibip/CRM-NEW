@@ -280,23 +280,20 @@ if (isset($username) || (isset($verification_number))) {
 	
 	////////////////////////////////
 	
-	$key_query0 = sprintf("SELECT  `access_role`, user_type, user_distributor 
+	$key_query0 = sprintf("SELECT  `access_role`,`group`, user_type, user_distributor 
 	FROM  admin_users WHERE user_name = %s LIMIT 1",GetSQLValueString($user_name, "text"));
 	
 	$query_results=mysql_query($key_query0);
 	while($row=mysql_fetch_array($query_results)){
-		$access_role = $row[access_role];
-		$user_type = $row[user_type];
-		$user_distributor = $row[user_distributor];
+		$access_role = $row['access_role'];
+		$user_type = $row['user_type'];
+		$user_group = $row['group'];
+		$user_distributor = $row['user_distributor'];
 		$access_role=strtolower($access_role);
 	}
 
-	if($user_type=="MNO"){
+	if($user_group=="operation"){
 		$system_package=$db1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
-	}elseif($user_type=="MVNO" || $user_type=="MVNE" || $user_type=="MVNA"){
-		$system_package=$db1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'");
-	}elseif($user_type=="MVNO_ADMIN"){
-		$system_package=$db1->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'");
 	}else{
 		$system_package=$db1->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'");
 	}
@@ -359,10 +356,6 @@ if (isset($username) || (isset($verification_number))) {
 			$_SESSION['user_name'] = $user_name;
 			$_SESSION['access_role'] = $access_role;
 			$_SESSION['full_name'] = $full_name;
-			if($user_type=="MVNO" || $user_type=="MVNE" || $user_type=="MVNA"){
-                $exec_cmd = 'php -f'.__DIR__.'/../../../ajax/syncAP.php '.$user_distributor.' > /dev/null &';
-                exec($exec_cmd);
-			}
 			
 	
 			$log_query = sprintf("INSERT INTO admin_user_logs (user_name,module,create_date)

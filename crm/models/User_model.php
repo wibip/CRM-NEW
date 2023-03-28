@@ -87,20 +87,14 @@ class User_model
             if(isset($_SESSION['s_token']) || isset($_SESSION['p_token'])){
                 $ori_user_uname = $_SESSION['ori_user_uname'];
 
-                $q = "SELECT user_distributor,user_type FROM admin_users WHERE user_name = '$ori_user_uname' LIMIT 1";
+                $q = "SELECT user_distributor,user_group FROM admin_users WHERE user_name = '$ori_user_uname' LIMIT 1";
                 $data = $this->db->select1DB($q);
-                $ori_user_type=$data['user_type'];
+                $ori_user_group=$data['user_group'];
 
                 $ori_user_distributor=$data['user_distributor'];
 
-                if($ori_user_type=="MNO" || $ori_user_type=="ADMIN"||$ori_user_type=="SUPPORT" ||$ori_user_type=="TECH"){
+                if($ori_user_group=="operation" || $ori_user_group=="admin"){
                     $ori_system_package=$this->db->getValueAsf("SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$ori_user_distributor'");
-                }
-                else if($ori_user_type=="MVNO_ADMIN"){
-                    $ori_system_package=$this->db->getValueAsf("SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$ori_user_distributor'");
-                }
-                else if($ori_user_type=="MVNO" || $ori_user_type=="MVNE" || $ori_user_type=="MVNA"){
-                    $ori_system_package=$this->db->getValueAsf("SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$ori_user_distributor'");
                 }
 
                 $session_logout_btn_display = $this->package_function->getOptions('SESSION_LOGOUT_BUTTON_DISPLAY',$ori_system_package);
@@ -108,7 +102,7 @@ class User_model
                 $logout_time = $this->package_function->getOptions('SESSION_LOGOUT_TIME',$ori_system_package);
 
                 $user = new User();
-                $user->user_type = $ori_user_type;
+                $user->user_group = $ori_user_group;
                 $user->user_name = $ori_user_uname;
                 $user->user_distributor = $ori_user_distributor;
                 $user->system_package = $ori_system_package;

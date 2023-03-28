@@ -71,33 +71,24 @@
 
                     <?php
 
-if ($user_type == 'RESELLER_ADMIN') {
 
-    $key_query = "SELECT m.mno_description,m.mno_id,u.full_name, u.email , u.verification_number
-    FROM exp_mno m, admin_users u
-    WHERE u.user_type = 'MNO' AND u.user_distributor = m.mno_id AND u.`is_enable`=1 AND u.`access_role`='admin' and u.`admin`='RESELLER_ADMIN' 
-    GROUP BY m.mno_id
-    ORDER BY mno_description ";
+                        $key_query = "SELECT m.mno_description,m.mno_id,u.full_name, u.email , u.verification_number
+                                        FROM exp_mno m, admin_users u
+                                        WHERE u.user_group IN ('operation') AND u.user_distributor = m.mno_id AND u.`is_enable`=1 AND u.`access_role`='admin' 
+                                        GROUP BY m.mno_id
+                                        ORDER BY mno_description ";
 
-}else{
-                    $key_query = "SELECT m.mno_description,m.mno_id,u.full_name, u.email , u.verification_number
-FROM exp_mno m, admin_users u
-WHERE u.user_type IN ('MNO','RESELLER_ADMIN') AND u.user_distributor = m.mno_id AND u.`is_enable`=1 AND u.`access_role`='admin' 
-GROUP BY m.mno_id
-ORDER BY mno_description ";
-}
-
-                    $query_results = $db->selectDB($key_query);
+                        $query_results = $db->selectDB($key_query);
 
                     foreach ($query_results['data'] AS $row) {
 
-                        $mno_description = $row[mno_description];
-                        $mno_id = $row[mno_id];
-                        $full_name = $row[full_name];
-                        $email = $row[email];
-                        $s = $row[s];
-                        $is_enable = $row[is_enable];
-                        $icomm_num = $row[verification_number];
+                        $mno_description = $row['mno_description'];
+                        $mno_id = $row['mno_id'];
+                        $full_name = $row['full_name'];
+                        $email = $row['email'];
+                        $s = $row['s'];
+                        $is_enable = $row['is_enable]';
+                        $icomm_num = $row['verification_number'];
 
 
                         $key_query01 = "SELECT ap_controller

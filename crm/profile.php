@@ -20,31 +20,14 @@ header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
 header("Pragma: no-cache"); // HTTP 1.0.
 header("Expires: 0"); // Proxies.include_once 'classes/dbClass.php';
 
-
-
 /*classes & libraries*/
 require_once 'classes/dbClass.php';
 $db = new db_functions();
 
- require_once 'classes/systemPackageClass.php';
- $package_function=new package_functions();
-
-
-
- $login_user_name = $_SESSION['user_name'];
-$user_type=$db->getValueAsf("SELECT `user_type` AS f FROM admin_users WHERE user_name = '$login_user_name'");
- if($user_type=="MVNO" or $user_type=="MVNO_ADMIN"){
-	 // $package_function->getDistributorMONPackage($login_user_name);
-	 $activation_method=$package_function->getSectionType("VERIFI_METHORD",$package_function->getDistributorMONPackage($login_user_name));
- }
-/*  elseif($user_type=="MNO"){
-	 $activation_method=$package_function->getSectionType("VERIFI_METHORD",$package_function->getPackage($login_user_name));
- } */
-
+require_once 'classes/systemPackageClass.php';
+$package_function=new package_functions();
+$login_user_name = $_SESSION['user_name'];
 ?>
-
-
-
 <head>
 <meta charset="utf-8">
 <title>My Profile</title>
@@ -161,32 +144,15 @@ if(isset($_POST['full_name'])){
                     "template" => ""
                 );
 
-                switch ($user_type){
-                    case 'ADMIN' :{
+                switch ($user_group){
+                    case 'admin' :{
                         $rcheck_q="SELECT u.user_name,u.email,u.mobile,u.full_name,u.user_distributor,m.system_package,m.system_package AS user_system_package,m.mno_id 
                                   FROM admin_users u LEFT JOIN exp_mno m ON u.user_distributor=m.mno_id WHERE u.user_name='$username'";
                         break;
                     }
-                    case 'MNO' :{
+                    case 'operation' :{
                         $rcheck_q="SELECT u.user_name,u.email,u.mobile,u.full_name,u.user_distributor,m.system_package AS user_system_package,(SELECT system_package FROM exp_mno WHERE mno_id='ADMIN') AS system_package,'ADMIN' AS mno_id
                                   FROM admin_users u LEFT JOIN exp_mno m ON u.user_distributor=m.mno_id WHERE u.user_name='$username'";
-                        break;
-                    }
-                    case 'SUPPORT' :{
-                        $rcheck_q="SELECT u.user_name,u.email,u.mobile,u.full_name,u.user_distributor,m.system_package AS user_system_package,(SELECT system_package FROM exp_mno WHERE mno_id='ADMIN') AS system_package,'ADMIN' AS mno_id
-                                  FROM admin_users u LEFT JOIN exp_mno m ON u.user_distributor=m.mno_id WHERE u.user_name='$username'";
-                        break;
-                    }
-                    case 'MVNO_ADMIN':{
-                        $rcheck_q="SELECT u.user_name,u.email,u.mobile,u.full_name,u.user_distributor,m.system_package,p.system_package AS user_system_package,p.mno_id
-                                  FROM admin_users u LEFT JOIN mno_distributor_parent p ON u.verification_number=p.parent_id
-                                  LEFT JOIN exp_mno m ON p.mno_id = m.mno_id WHERE u.user_name='$username'";
-                        break;
-                    }
-                    case 'MVNO':{
-                        $rcheck_q="SELECT u.user_name,u.email,u.mobile,u.full_name,u.user_distributor,m.system_package,d.system_package AS user_system_package,d.mno_id
-                                  FROM admin_users u LEFT JOIN exp_mno_distributor d ON u.user_distributor=d.distributor_code
-                                  LEFT JOIN exp_mno m ON d.mno_id = m.mno_id WHERE u.user_name='$username'";
                         break;
                     }
                     default: {
@@ -215,13 +181,7 @@ if ($queryResult['rowCount']>0) {
                         $full_name = $row['full_name'];
                         $distributor = $row['user_distributor'];
                         $admin_system_package = $row['system_package'];
-                        if ($user_type == 'MVNO') {
-                            $dis_verticle=$db->getValueAsf("SELECT `bussiness_type` AS f FROM `exp_mno_distributor` WHERE `distributor_code` ='$distributor'");
-                        }
-                        if ($user_type == 'MVNO_ADMIN') {
-                            $dis_verticle=$db->getValueAsf("SELECT `bussiness_type` AS f FROM `exp_mno_distributor` WHERE `parent_id` ='$distributor'");
-                        }
-
+						
                         $admin_id = $row['mno_id'];
 
                         $t = date("ymdhis", time());
@@ -271,10 +231,10 @@ if ($queryResult['rowCount']>0) {
                             if (strlen($mail_text) == 0) {
                                 $mail_text = $db->textVal('PASSWORD_RESET_MAIL', 'ADMIN');
                             }*/
-                            if($user_type == 'ADMIN'){
+                            if($user_group == 'admin'){
 								$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL',$user_system_package,'ADMIN');
 								
-							} else if($user_type == 'MNO' || $user_type == 'SUPPORT') {
+							} else if($user_group == 'operation') {
                                 $email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL',$user_system_package,'MNO',$user_distributor);
                                 $MNO=$user_distributor;
 
@@ -417,7 +377,7 @@ if(isset($_POST['new_password'])){
 				
 				
 				
-                if($user_type=='ADMIN' || $user_type=='MNO'){
+                if($user_group=='admin' || $user_group=='operation'){
 					$reset_admin_main_url = $db->getSystemURL('reset_admin',$login_design);
                     $message=$message_functions->showNameMessage('incorrect_password',$reset_admin_main_url,'2006');
                 }else {
@@ -544,24 +504,6 @@ if(isset($_POST['new_password'])){
 											  	<?php echo '<input type="hidden" name="form_secret1" id="form_secret1" value="'.$_SESSION['FORM_SECRET'].'" />'; ?>
 
 												<div id="fb_response"></div>
-												<?php if($activation_method=="number"){?>
-												<div class="control-group">
-													<label class="control-label" for="radiobtns">Customer Account Number</label>
-
-													<div class="controls form-group">
-														
-
-														<?php
-														$query_a = "SELECT `verification_number` AS f FROM admin_users WHERE user_distributor = '$user_distributor' AND `verification_number` IS NOT NULL";
-
-														?>
-
-														<input class="span4 form-controls" id="verification_number" name="verification_number" type="text" value="<?php echo $db->getValueAsf($query_a); ?>" readonly >
-
-														
-													</div>
-												</div>
-												<?php } ?>
 												<div class="control-group">
 													<label class="control-label" for="radiobtns">Username</label>
 

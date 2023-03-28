@@ -196,6 +196,7 @@ class userMainModel
                 $row['password'],
                 $row['access_role'],
                 $row['user_type'],
+                $row['group'],
                 $row['user_distributor'],
                 $row['full_name'],
                 $row['email'],
@@ -254,6 +255,7 @@ class userMainModel
             $row_data->user_name = $row['user_name'];
             $row_data->access_role = $row['access_role'];
             $row_data->user_type = $row['user_type'];
+            $row_data->user_group = $row['group'];
             $row_data->user_distributor = $row['user_distributor'];
             $row_data->full_name = $row['full_name'];
             $row_data->email = $row['email'];
@@ -268,15 +270,9 @@ class userMainModel
             $row_data->activation_date = $row['activation_date'];
         }
 
-        if ($user_type == "MNO" || $user_type == "ADMIN" || $user_type == "SUPPORT" || $user_type == "TECH" || $user_type == "SALES") {
+        if ($user_group == "operation" || $user_group == "admin") {
             $q1 = "SELECT `system_package` AS f FROM `exp_mno` WHERE `mno_id`='$user_distributor'";
-        } else if ($user_type == "MVNO_ADMIN") {
-            $q1 = "SELECT `system_package` AS f FROM `mno_distributor_parent` WHERE `parent_id`='$user_distributor'";
-        } else if ($user_type == "MVNO" || $user_type == "MVNE" || $user_type == "MVNA") {
-            $q1 = "SELECT `system_package` AS f FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'";
-        }
-
-
+        } 
 
         $query_results1 = $this->connection->select1DB($q1);
 

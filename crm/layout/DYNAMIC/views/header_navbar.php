@@ -901,24 +901,7 @@ if($top_menu=='bottom'){
               <li>
 				  <a href="properties<?php echo $extension; ?>?back_master=true">Back to Properties Page</a></li>
               
-			  <?php } 
-			  
-			  if($user_type=="MVNO"){
-
-				$query="SELECT `property_id`,`parent_id`  FROM `exp_mno_distributor` WHERE `distributor_code`='$user_distributor'";
-
-				$query=$db_class1->selectDB($query);
-				foreach ($query['data'] as $row) {
-					$parent_id = $row['parent_id'];
-					$property_id = $row['property_id'];
-				}
-
-				echo '<hr class="divid"></hr><li class="subLi">Property ID  <div>'.$property_id.'</div></li>';
-				echo '<li class="subLi" style="padding-top: 0px;">Business ID <div>'.$parent_id.'</div></li>';
-			  }elseif($user_type=="MVNO_ADMIN"){
-
-				echo '<hr class="divid"></hr><li class="subLi">Business ID  <div>'.$user_distributor.'</div></li>';
-			  } ?>
+			  <?php } ?>
             </ul>
 
 

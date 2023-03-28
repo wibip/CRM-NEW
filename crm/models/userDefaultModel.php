@@ -401,7 +401,7 @@ class userMainModel
 
             $q = "SELECT au.id,au.user_name,au.full_name, au.access_role, au.user_type, au.user_distributor, au.email,au.is_enable,au.create_user
             ,IF(!ISNULL(aar.description),aar.description,IF(au.access_role='admin','Admin','')) AS description
-            FROM admin_users au LEFT JOIN admin_access_roles aar ON au.access_role = aar.access_role where user_type IN ('$user_type','SUPPORT','TECH','PROVISIONING') AND user_distributor = '$user_distributor' AND user_name<>'$user_name'";
+            FROM admin_users au LEFT JOIN admin_access_roles aar ON au.access_role = aar.access_role where user_type IN ('$user_type','SUPPORT','TECH','ordering_agent') AND user_distributor = '$user_distributor' AND user_name<>'$user_name'";
         }
 
 

@@ -77,7 +77,7 @@ if($_SESSION['login'] == 'yes' && !isset($_GET['auto_login'])){
 //////////////////////////////////////////////////////////////////////////
 
 
-	$key_query0 = sprintf("SELECT  `access_role`, user_type, user_distributor 
+	$key_query0 = sprintf("SELECT  `access_role`, `group`, user_distributor 
 	FROM  admin_users WHERE user_name ='%s'", $user_name);
 
   $query_results=$dbT->selectDB($key_query0);
@@ -86,7 +86,7 @@ if($_SESSION['login'] == 'yes' && !isset($_GET['auto_login'])){
 
 	foreach( $query_results['data'] as $row ){
 		$access_role = $row['access_role'];
-		$user_type = $row['user_type'];
+		$user_group = $row['group'];
 		$user_distributor = $row['user_distributor'];
 
 		$access_role=strtolower($access_role);

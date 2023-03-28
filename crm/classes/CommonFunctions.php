@@ -465,7 +465,7 @@ class CommonFunctions{
     }
 
     public function getAllOperators(){
-        $sqlOperators = "SELECT full_name,user_distributor FROM crm_portal.admin_users WHERE user_type='MNO' AND is_enable=1";
+        $sqlOperators = "SELECT full_name,user_distributor FROM crm_portal.admin_users WHERE user_group='operation' AND is_enable=1";
         $result =  $this->db->selectDB($sqlOperators);
         return $result;
     }
@@ -476,7 +476,7 @@ class CommonFunctions{
         return $resultSysPackage;
     }
 
-    public function getProperties($user_type,$user_name,$user_distributor,$city,$state,$zip,$start_date,$end_date,$limit=10,$client_name = null,$business_name=null,$status=null) {
+    public function getProperties($user_group,$user_name,$user_distributor,$city,$state,$zip,$start_date,$end_date,$limit=10,$client_name = null,$business_name=null,$status=null) {
 		$subQuery = "";        
         $clientArray = [];
         $businessArray = [];
@@ -486,20 +486,20 @@ class CommonFunctions{
         $clientApiArray = [];
         
         $propertyQuery = "SELECT id,property_id,business_name,status,city,state,zip,create_user,create_date FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
-        switch($user_type ){
-            case 'SADMIN' :
+        switch($user_group ){
+            case 'super_admin' :
                 $propertyQuery .= "";
             break;
-            case 'ADMIN' :
+            case 'admin' :
                 $propertyQuery .= "";
             break;
-            case 'MNO' :
+            case 'operation' :
                 $propertyQuery .= " AND mno_id='$user_distributor'";
             break;
-            case 'SMAN' :
+            case 'sales_manager' :
                 $propertyQuery .= " AND mno_id='$user_distributor'";
             break;
-            case 'PROVISIONING' :
+            case 'ordering_agent' :
                 $propertyQuery .= " AND create_user='$user_name'";
             break;
         }

@@ -361,7 +361,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 			<ul class="dropdown-menu">
 					<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "ADMIN") ? "active" : "")?>><a href="./change_portal?section=ADMIN">Admin</a></li>
 					<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "MNO") ? "active" : "")?>><a href="./operation_list">Operations</a></li>
-					<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "PROVISIONING") ? "active" : "")?>><a href="./change_portal?section=PROVISIONING">Client</a></li>
+					<li class=< ?=((isset($_SESSION['section']) && $_SESSION['section']== "ordering_agent") ? "active" : "")?>><a href="./change_portal?section=ordering_agent">Client</a></li>
 			</ul>
 		</li> -->
 	<?php } ?>

@@ -773,7 +773,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	if (isset($_POST['submit_1'])) {
 			if($_POST['is_edit'] == true) {
 					$id = $_POST['id'];
-					//$user_type = $_POST['user_type'];
 					$api_profile = $_POST['api_profile'];
 					$full_name = $_POST['full_name_1'];
 					$email = htmlspecialchars($_POST['email_1']);
@@ -833,19 +832,19 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 						if ($edit_result) {
 							$message_response = str_replace("user","client",$message_functions->showNameMessage('role_edit_success', $edit_user_name));
-							$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Modify Client',$id,'3001',$message_response);
+							$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Modify Client',$id,'3001',$message_response);
 							// $create_log->save('3001', $message_response, '');
 							$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 						} else {
 							// $db->userErrorLog('2002', $user_name, 'script - ' . $script);
 							$message_response = str_replace("user","client",$message_functions->showMessage('role_edit_failed', '2002'));
-							$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify Client',$id,'2002',$message_response);
+							$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Modify Client',$id,'2002',$message_response);
 							$create_log->save('2002', $message_response, '');
 							$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 						}
 					} else {
 						$message_response = str_replace("user","client",$message_functions->showMessage('role_edit_failed', '2002'));
-						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Modify Client',$id,'2002',$message_response);
+						$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Modify Client',$id,'2002',$message_response);
 						// $db->userErrorLog('2002', $user_name, 'script - ' . $script);
 						$create_log->save('2002', $message_response, '');
 						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
@@ -867,7 +866,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				$password  = CommonFunctions::randomPassword();
 
 				$access_role = 'client';
-				$user_type = 'PROVISIONING';
+				$user_group = 'ordering_agent';
 				$api_profile = $_POST['api_profile'];
 				$email = htmlspecialchars($_POST['email_1']);
 				$language = $_POST['language_1'];
@@ -888,7 +887,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 				$query = "INSERT INTO admin_users
 						(user_name, `password`, access_role, user_type, user_distributor, full_name, email, `language`, `timezone`,mobile, is_enable, create_date,create_user)
-						VALUES ('$new_user_name','$updated_pw','$access_role','$user_type','$user_distributor','$full_name','$email', '$language' ,'$timezone', '$mobile','1',now(),'$user_name')";
+						VALUES ('$new_user_name','$updated_pw','$access_role','$user_group','$user_distributor','$full_name','$email', '$language' ,'$timezone', '$mobile','1',now(),'$user_name')";
 				$ex =$db->execDB($query);
 
 				if ($ex===true) {
@@ -900,7 +899,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 									"'.$new_user_name.'",
 									"'.$updated_pw.'",
 									"'.$access_role.'",
-									"'.$user_type.'",
+									"'.$user_group.'",
 									"'.$user_distributor.'",
 									"'.$full_name.'",
 									"'.$email.'", 
@@ -920,10 +919,10 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 					$message_response = str_replace("user","client",$message_functions->showNameMessage('user_create_success', $new_user_name));
 					$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $message_response . '</strong></div>';
 					//Activity log
-					$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Create Client',$idContAutoInc,'',$message_response);
+					$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Create Client',$idContAutoInc,'',$message_response);
 				} else {
 					$message_response = str_replace("user","client",$message_functions->showMessage('user_create_fail', '2001'));
-					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Create Client',0,'2001',$message_response." ".$ex);
+					$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Create Client',0,'2001',$message_response." ".$ex);
 					$_SESSION['msg2'] = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $message_response . '</strong></div>';
 				} 
 			}	
@@ -937,7 +936,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			$tab2 = "set";
 		} else {
 			// var_dump('test');
-			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Edit Client load',$_GET['edit_id'],'2002','Oops, It seems you have refreshed the page. Please try again');
+			$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Edit Client load',$_GET['edit_id'],'2002','Oops, It seems you have refreshed the page. Please try again');
 			// $db->userErrorLog('2004', $user_name, 'script - ' . $script);
 			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Oops, It seems you have refreshed the page. Please try again</strong></div>";
 			//header('Location: location.php?t=3');
@@ -975,26 +974,26 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 						if ($edit_result===true) {
 							$message_response = str_replace("user","client",$message_functions->showNameMessage('role_password_edit_success', $user_full_name));
-							$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Client Password Reset',$id,'3001',$message_response);
+							$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Client Password Reset',$id,'3001',$message_response);
 							$create_log->save('3001', $message_response, '');
 							$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 						} else {
 							$message_response = str_replace("user","client",$message_functions->showMessage('role_password_edit_failed', '2002'));
-							$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Client Password Reset',$id,'2002',$message_response);
+							$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Client Password Reset',$id,'2002',$message_response);
 							// $db->userErrorLog('2002', $user_name, 'script - ' . $script);
 							$create_log->save('2002', $message_response, '');
 							$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 						}
 					} else {
 						$message_response = str_replace("user","client",$message_functions->showMessage('role_password_edit_failed', '2002'));
-						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Client Password Reset',$id,'2002',$message_response);
+						$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Client Password Reset',$id,'2002',$message_response);
 						// $db->userErrorLog('2002', $user_name, 'script - ' . $script);
 						$create_log->save('2002', $message_response , '');
 						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response  . "</strong></div>";
 					}
 				} else {
 					$message_response = str_replace("user","client",$message_functions->showMessage('role_password_edit_failed', '2006'));
-					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Client Password Reset',$id,'2006',$message_response);
+					$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Client Password Reset',$id,'2006',$message_response);
 					// $db->userErrorLog('2006', $user_name, 'script - ' . $script);
 					$create_log->save('2006', $message_response, '');
 					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
@@ -1002,7 +1001,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 				}
 		} else {
 			$message_response =  str_replace("user","client",$message_functions->showMessage('transection_fail', '2004'));
-			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Client Password Reset',$id,'2004',$message_response);
+			$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Client Password Reset',$id,'2004',$message_response);
 			// $db->userErrorLog('2004', $user_name, 'script - ' . $script);
 			$create_log->save('2004', $message_response, '');
 			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
@@ -1045,24 +1044,24 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 							$en_dis_msg = 'Disable';
 						}
 
-						$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Client Status Change',$status_change_id,'3001',$message_response);
+						$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Client Status Change',$status_change_id,'3001',$message_response);
 						$create_log->save('3001', $message_response, '');
 						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . " </strong></div>";
 					} else {
 						$message_response = str_replace("User","Client",$message_functions->showMessage('role_user_name_enable_failed', '2001'));						
-						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Status Change',$status_change_id,'2001',$message_response);
+						$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Status Change',$status_change_id,'2001',$message_response);
 						// $db->userErrorLog('2002', $user_name, 'script - ' . $script);
 						$create_log->save('2001', $message_response, '');
 						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 					}
 				} else {						
-					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Client Status Change',$status_change_id,'2002','[2002] Something went wrong,please try again');
+					$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Client Status Change',$status_change_id,'2002','[2002] Something went wrong,please try again');
 					// $db->userErrorLog('2002', $user_name, 'script - ' . $script);
 					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong> [2002] Something went wrong,please try again</strong></div>";
 				}
 		} else {
 			$message_response = str_replace("User","Client",$message_functions->showMessage('transection_fail', '2004'));						
-			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Client Status Change',$status_change_id,'2004',$message_response);
+			$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Client Status Change',$status_change_id,'2004',$message_response);
 			// $db->userErrorLog('2004', $user_name, 'script - ' . $script);
 			$create_log->save('2004', $message_response, '');
 			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>�</button><strong>" . $message_response . "</strong></div>";
@@ -1117,26 +1116,26 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
 					if ($edit_result===true) {
 						$message_response = str_replace("User","Client",$message_functions->showNameMessage('user_remove_success', $user_full_name));
-						$db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Remove Client',$user_rm_id,'3001',$message_response);
+						$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Remove Client',$user_rm_id,'3001',$message_response);
 						$create_log->save('3001', $message_response, '');
 						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 					} else {
 						$message_response = str_replace("User","Client",$message_functions->showMessage('user_remove_success', '2002'));
-						$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Remove Client',$user_rm_id,'2002',$message_response);
+						$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Remove Client',$user_rm_id,'2002',$message_response);
 						// $db->userErrorLog('2002', $user_name, 'script - ' . $script);
 						$create_log->save('2002', $message_response, '');
 						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 					}
 				} else {
 					$message_response = str_replace("User","Client",$message_functions->showMessage('user_remove_success', '2002'));
-					$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Remove Client',$user_rm_id,'2002',$message_response);
+					$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Remove Client',$user_rm_id,'2002',$message_response);
 					// $db->userErrorLog('2002', $user_name, 'script - ' . $script);
 					$create_log->save('2002', $message_response, '');
 					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
 				}
 		} else {
 			$message_response = str_replace("User","Client",$message_functions->showMessage('transection_fail', '2004'));
-			$db->addLogs($user_name, 'ERROR',$user_type, $page, 'Remove Client',$user_rm_id,'2004',$message_response);
+			$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Remove Client',$user_rm_id,'2004',$message_response);
 			// $db->userErrorLog('2004', $user_name, 'script - ' . $script);
 			$create_log->save('2004', $message_response, '');
 			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>x</button><strong>" . $message_response . "</strong></div>";
@@ -1269,11 +1268,11 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 
         if ($response['status'] == 'success') {
             $success_msg = "Location has been updated successfully";
-            $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Update CRM Location',$location_id,'3001',$success_msg);
+            $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Update CRM Location',$location_id,'3001',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg."</strong></div>";
         } else {
             $success_msg = "Location updated has been failed";
-            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Update CRM Location',$location_id,'2009',$success_msg);
+            $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Update CRM Location',$location_id,'2009',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
         }
     }
@@ -1293,16 +1292,16 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
             
             if ($delete === true) {
                 $success_msg = "Location has been successfully removed";
-                $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
+                $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Delete CRM Location',$locationId,'3001',$success_msg);
                 $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>CRM Property creation is successful</strong></div>";
             } else {                    
                 $success_msg = "CRM Location deleting is failed.";
-                $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+                $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
                 $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
             }
         } else {
             $success_msg = "CRM Location deleting is failed.";
-            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
+            $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Delete CRM Location',$locationId,'2009',$success_msg);
             $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
         }
         header('Location: crm?t=crm_view&token='.$token.'&edit&id='.$id);
@@ -1392,7 +1391,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 												<!-- action="controller/User_Controller.php" -->
 													<form autocomplete="off" id="edit_profile" action="<?=$actionUrl?>" method="post" class="row g-3 p-4">
 															<input type="hidden" name="id" id="id" value="<?=$edit_id?>">
-															<input type="hidden" name="user_type" id="user_type1" value="<?=$user_type?>">
+															<input type="hidden" name="user_group" id="user_group" value="<?=$user_group?>">
 															<input type="hidden" name="loation" id="loation1" value="<?=$user_distributor?>">
 															<input type="hidden" name="is_edit" id="is_edit" value="<?=$is_edit?>">
 															
@@ -1578,7 +1577,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 													<fieldset>
 														<legend>Reset Password</legend>
 														<?php
-														echo '<input type="hidden" name="user_type" id="user_type3" value="' . $user_type . '">';
+														echo '<input type="hidden" name="user_group" id="user_group" value="' . $user_group . '">';
 														echo '<input type="hidden" name="loation" id="loation3" value="' . $user_distributor . '">';
 														echo '<input type="hidden" name="id" id="id1" value="' . $id . '">';
 														?>
@@ -1710,7 +1709,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 													<h3>View</h3>
 												</div>
 												<?php
-													foreach ($modules["PROVISIONING"]["crm"] as $value) {
+													foreach ($modules["ordering_agent"]["crm"] as $value) {
 														//echo 'modules/'.$value['module'].'.php';
 														$crmForm = './modules/' . $value['module'] . '.php';
 														if($value['id'] == "crm_create") {
@@ -2138,7 +2137,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	<script src="js/jquery.chained.js"></script>
 	<script type="text/javascript" charset="utf-8">
 		$(document).ready(function() {
-			$("#loation").chained("#user_type");
+			$("#loation").chained("#user_group");
 		});
 	</script>
 

@@ -64,7 +64,7 @@ if(isset($_POST['reset'])){
             $user_name = $row['user_name'];
             $full_name = $row['full_name'];
             $distributor = $row['user_distributor'];
-            $user_type = $row['user_type'];
+            $user_group = $row['group'];
             $user_system_package = $row['system_package'];
 			$is_enable_account = $row['is_enable'];
 			$messageOb->setProduct($system_package);
@@ -92,21 +92,18 @@ if(isset($_POST['reset'])){
                 if($r1 === true) {
                     // ***************** send mail *****************//
                     $to = $email;
-                    if($user_type == 'ADMIN'){
+                    if($user_group == 'admin'){
                         $from=strip_tags($db->setVal("email",'ADMIN'));
+                        $email_template = $db->getEmailTemplate('PASSWORD_RESET_MAIL',$user_system_package,'ADMIN');
                     } else{
                         $from=strip_tags($db->setVal("email",$distributor));
+                        $email_template = $db->getEmailTemplate('PASSWORD_RESET_MAIL',$user_system_package,'MNO',$distributor);
                         if(strlen($from)==0){
                             $from=strip_tags($db->setVal("email",'ADMIN'));
                         }
                     }
                     
-                    if($user_type == 'ADMIN'){
-                        $email_template = $db->getEmailTemplate('PASSWORD_RESET_MAIL',$user_system_package,'ADMIN');
-                    }
-                    else{
-                        $email_template = $db->getEmailTemplate('PASSWORD_RESET_MAIL',$user_system_package,'MNO',$distributor);
-                    }
+
                 //   var_dump($email_template);die;  
                     $subject = $email_template[0]['title'];
                     $mail_text  = $email_template[0]['text_details'];   
@@ -149,7 +146,7 @@ if(isset($_POST['reset'])){
                     $MMFailed = 2;
                     $MMFailedMassage = $messageOb->showNameMessage('password_reset_notification', $email); //'An e-mail has been sent to <b>'.$email.'</b> with further instructions.<br>';
     
-				    $db->addLogs($user_name, 'SUCCESS',$user_type, $page, 'Reset login password',$id,'0',$details);
+				    $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Reset login password',$id,'0',$details);
                 }
 
         }else{
@@ -157,12 +154,12 @@ if(isset($_POST['reset'])){
             //$sup_mobile = $db->getValueAsf("SELECT sup_mobile AS f FROM exp_support_profile WHERE distributor='ADMIN'");
             $sup_mobile = $package_functions->getMessageOptions('SUPPORT_NUMBER',$user_system_package);
             $MMFailedMassage = $messageOb->showNameMessage('reset_pass_before_active',$sup_mobile).'</br>';
-            $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Reset login password',$id,'0',$MMFailedMassage);
+            $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Reset login password',$id,'0',$MMFailedMassage);
         }
     }else{
         $MMFailed = 1;
         $MMFailedMassage = 'Incorrect email address<br>';
-        $db->addLogs($user_name, 'ERROR',$user_type, $page, 'Reset login password',0,'0',$MMFailedMassage);
+        $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Reset login password',0,'0',$MMFailedMassage);
     }
 }
 
