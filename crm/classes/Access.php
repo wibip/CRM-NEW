@@ -87,10 +87,7 @@ define('ACCESS',[
                     'actions'=>['edit','delete']
                 ],
             ],
-            'user'=>[],
-            'api_profile'=>[],
-            'config'=>[],
-            'logs'=>[],
+            'properties'=>[],
         ],
         'home' => 'operations'
     ],

@@ -646,8 +646,7 @@ $email = "";
 $language = "";
 $timezone = "";
 $mobile = "";
-function userUpdateLog($user_id, $action_type, $action_by,$db)
-{
+	function userUpdateLog($user_id, $action_type, $action_by,$db){
 		$update_query = "INSERT INTO `admin_users_update` (
 															`user_name`,
 															`password`,
@@ -690,7 +689,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 	if (isset($_POST['submit_user'])) {
 		$userId = $_POST['id'];
 		$full_name = $_POST['full_name'];
-		$group = $_POST['user_group']; 
+		$group = $_POST['radio_user_group']; 
 		$operator = $_POST['operator']; 
 		$category = $_POST['category']; 
 		$parent = $_POST['parent']; 
@@ -1284,9 +1283,13 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 																foreach(ACCESS as $key => $value){
 																	$userGroupName = strtoupper(str_replace("_"," ",$key));
 																	$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $key == $edit_user_data['group']) ? "checked" : "";
+																	$accessPage = "";
+																	foreach($value['modules'] as $pageName => $pageActions){
+																		$accessPage .= "<li>".ucwords(str_replace("_"," ",$pageName))."</li>";
+																	}
 																?>
-																<input type="radio" class="btn-check hide_rad" name="user_group" id="<?=$key?>" value="<?=$key?>" autocomplete="off" <?=$selected?>>
-																<label class="btn btn-outline-primary normalize" data-bs-toggle="tooltip" data-bs-html="true" title="<em>Tooltip</em> <u>with</u> <b>HTML</b>" for="<?=$key?>"><?=$userGroupName?></label>
+																<input type="radio" class="btn-check hide_rad radio_user_group" name="radio_user_group" id="<?=$key?>" value="<?=$key?>" autocomplete="off" <?=$selected?>>
+																<label class="btn btn-outline-primary normalize" data-bs-toggle="tooltip" data-bs-html="true" title=" <b>Permitted Pages</b><ul><?=$accessPage?></ul>" for="<?=$key?>"><?=$userGroupName?></label>
 																<?php
 																}
 																?>
@@ -1602,8 +1605,14 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			$('#parent_div').hide();
 			$("#category").prop("disabled", true);
 			$("#parent").prop("disabled", true);
-			$("#loation").chained("#user_group");
-			$("input[name='user_group']").change(function(){
+			$("#loation").chained("#radio_user_group");
+
+			$('input[name="radio_user_group"]').on('hover', function(e) {
+				var manageradiorel = e.target.value;
+				alert(manageradiorel);
+			});
+
+			$("input[name='radio_user_group']").change(function(){
 				var groupName = $(this).val();
 				$('#operator option:selected').prop('selected', false);
 				if(groupName != 'super_admin' && groupName != 'admin' && groupName != 'operation') {
@@ -1813,81 +1822,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			});
 		});
 	</script>
-
-	<script type="text/javascript">
-		function GetXmlHttpObject() {
-			var xmlHttp = null;
-			try {
-				// Firefox, Opera 8.0+, Safari
-				xmlHttp = new XMLHttpRequest();
-			} catch (e) {
-				//Internet Explorer
-				try {
-					xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
-				} catch (e) {
-					xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-				}
-			}
-			return xmlHttp;
-		}
-	</script>
-
-	<script src="js/jquery.multi-select.js" type="text/javascript"></script>
-	<script>
-		$(document).ready(function() {
-			
-			//sadmin_operations sadmin-omodules
-			<?php if ( ($role_edit_id != 0 && $roleType == 'sadmin')) { ?>
-				$('#admin_operations').show();	
-				$('#sadmin_operations').show();
-				$('#sadmin-omodules').show();
-			<?php //} elseif($role_edit_id != 0 && $roleType == 'salesmanager') { ?>
-				// $('#admin_operations').hide();
-				// $('#sadmin_operations').show();
-				// $('#sadmin-omodules').hide();
-			<?php
-				} elseif($role_edit_id == 0) {
-			?>
-				$('#admin_operations').show();
-				$('#sadmin_operations').hide();
-				$('#sadmin-omodules').hide();
-			<?php
-				} else {
-			?>
-				$('#admin_operations').show();
-				$('#sadmin_operations').hide();
-				$('#sadmin-omodules').hide();
-			<?php
-				}
-			?>
-			 
-			$('#my_select').multiSelect(); 
-			$('#my_select_roles').multiSelect();
-			$('#other_modules').multiSelect(); 
-			$('#operations').multiSelect();
-
-			$('input[type=radio][name=role_type]').change(function() {
-				switch ($(this).val()) {
-					case "sadmin":
-						$('#admin_operations').show();
-						$('#sadmin_operations').show();
-						$('#sadmin-omodules').show();
-					break;
-					// case "salesmanager":
-					// 	$('#admin_operations').hide();
-					// 	$('#sadmin_operations').show();
-					// 	$('#sadmin-omodules').hide();
-					// break;
-					case "nadmin":
-						$('#admin_operations').show();
-						$('#sadmin_operations').hide();
-						$('#sadmin-omodules').hide();
-					break;
-				}
-			});
-		});
-	</script>
-
 	<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
 	</body>
 
