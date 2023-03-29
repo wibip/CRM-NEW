@@ -7,6 +7,8 @@ require_once 'classes/CommonFunctions.php';
 $common_functions = new CommonFunctions();
 require_once 'classes/userClass.php';
 $usersData = new Users();
+require_once 'classes/hierarchyClass.php';
+$hierarchy = new Hierarchy();
 $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 $page = 'User';
 
@@ -689,6 +691,9 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 		$userId = $_POST['id'];
 		$full_name = $_POST['full_name'];
 		$group = $_POST['user_group']; 
+		$operator = $_POST['operator']; 
+		$category = $_POST['category']; 
+		$parent = $_POST['parent']; 
 		$email = $_POST['email'];
 		$language = $_POST['language'];
 		$timezone = $_POST['timezone'];
@@ -699,8 +704,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 		$mobile = $_POST['mobile'];
 		$user_type = $group;
 		$user_distributor = $usersData->userDistributors($group);
-		// var_dump($group);
-		// var_dump($user_distributor);
 
 		if($_POST['id'] != 0) {
 			$id = $_POST['id'];
@@ -847,8 +850,18 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			// echo $query;
 			// die;
 			$ex =$db->execDB($query);
+
 			if ($ex ==true) {
 				$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+
+				if($group == 'sales_manager' || $group == 'ordering_agent'){
+					$return = $hierarchy->userHierarchySave($operator,$category,$idContAutoInc,$parent,$user_name);
+					if ($return ==true) {
+						$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Create User Hierarchy',$idContAutoInc,'','User hierarchy creatioin success');
+					} else {
+						$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Create User Hierarchy',0,'2001','User hierarchy creatioin failed');
+					}
+				}
 				$message_response = $message_functions->showNameMessage('user_create_success', $new_user_name);
 				$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Create User',$idContAutoInc,'',$message_response);
 				$_SESSION['msg2'] =  '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><strong>' . $message_response . '</strong></div>';
@@ -1202,7 +1215,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 		}
 	} 
 
-
 	//Form Refreshing avoid secret key/////
 	$secret = md5(uniqid(rand(), true));
 	$_SESSION['FORM_SECRET'] = $secret;
@@ -1224,9 +1236,6 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 											<li class="nav-item" role="presentation">
 												<button class="nav-link active" id="users" data-bs-toggle="tab" data-bs-target="#users-tab-pane" type="button" role="tab" aria-controls="users" aria-selected="true">Users</button>
 											</li>
-											<!-- <li class="nav-item" role="">
-												<button class="nav-link" id="roles" data-bs-toggle="tab" data-bs-target="#roles-tab-pane" type="button" role="tab" aria-controls="roles" aria-selected="false">Manage Roles</button>
-											</li> -->
 										</ul>
 										<div class="tab-content">
 											<div div class="tab-pane fade show active" id="users-tab-pane" role="tabpanel" aria-labelledby="users" tabindex="0">
@@ -1596,10 +1605,16 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			$("#loation").chained("#user_group");
 			$("input[name='user_group']").change(function(){
 				var groupName = $(this).val();
+				$('#operator option:selected').prop('selected', false);
 				if(groupName != 'super_admin' && groupName != 'admin' && groupName != 'operation') {
 					$('#operator_div').show();//parent_div
 					$('#parent_cat_div').show();
-					// $('#parent_div').show();
+					$("#category").empty();
+					$('#category').append($('<option>', { 
+						value: 0,
+						text : "Select Category" 
+					}));
+					$("#category").prop("disabled", true);
 				} else {
 					$('#operator_div').hide();
 					$('#parent_cat_div').hide();
@@ -1610,6 +1625,7 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 			$('#category').on('change', function() {
 				var operatorValue = $('#operator').val();
 				var categoryValue = $(this).val();
+				var groupValue = $("input[name='user_group']:checked").val();
 
 				if(operatorValue != "" && categoryValue != ""){
 					$("#overlay").css("display","block");
@@ -1619,12 +1635,16 @@ function userUpdateLog($user_id, $action_type, $action_by,$db)
 						data: {
 							operator_id: operatorValue,
 							category_id: categoryValue,
+							group_value: groupValue,
 						},
 						success: function(responseData) {
 							responseData = JSON.parse(responseData);
-							// console.log(responseData);
+							$("#parent").empty();
+							$('#parent').append($('<option>', { 
+								value: 0,
+								text : "No Parent" 
+							}));
 							if(responseData['rowCount'] > 0){
-								$("#category").empty();
 								$.each(responseData['data'], function (i, item) {
 									// console.log(item.category);
 									$('#parent').append($('<option>', { 
