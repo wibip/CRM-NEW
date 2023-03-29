@@ -33,8 +33,12 @@ $activeOperators = $usersData->getAllOperators();
 		margin-right: 3em;
 	}
 	.custom-tooltip {
-  --bs-tooltip-bg: var(--bs-primary);
-}
+		--bs-tooltip-bg: var(--bs-primary);
+	}
+
+	.tooltip.show li {
+		text-align:left;
+	}
 </style>
 <?php
 	// TAB Organization
@@ -1285,11 +1289,11 @@ $mobile = "";
 																	$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $key == $edit_user_data['group']) ? "checked" : "";
 																	$accessPage = "";
 																	foreach($value['modules'] as $pageName => $pageActions){
-																		$accessPage .= "<li>".ucwords(str_replace("_"," ",$pageName))."</li>";
+																		$accessPage .= "<li align='left'>".ucwords(str_replace("_"," ",$pageName))."</li>";
 																	}
 																?>
 																<input type="radio" class="btn-check hide_rad radio_user_group" name="radio_user_group" id="<?=$key?>" value="<?=$key?>" autocomplete="off" <?=$selected?>>
-																<label class="btn btn-outline-primary normalize" data-bs-toggle="tooltip" data-bs-html="true" title=" <b>Permitted Pages</b><ul><?=$accessPage?></ul>" for="<?=$key?>"><?=$userGroupName?></label>
+																<label class="btn btn-outline-primary normalize" data-bs-toggle="tooltip" data-bs-html="true" title="<b>Permitted Pages</b><ul align='left'><?=$accessPage?></ul>" for="<?=$key?>"><?=$userGroupName?></label>
 																<?php
 																}
 																?>
