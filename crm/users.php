@@ -1476,8 +1476,6 @@ $mobile = "";
 													</form>
 												</div>
 												<?php } ?>
-												<script type="text/javascript">
-												</script>
 												<br/>
 												<h5 class="head">Users</h5>
                                         		<table class="table table-striped" style="width:100%" id="manage_users-table">
@@ -1591,25 +1589,22 @@ $mobile = "";
 		<!-- /main -->
 	<?php } ?>
 	<script type="text/javascript" src="js/formValidation.js"></script>
-	<script type="text/javascript" src="js/bootstrap_form.js"></script>
-	<script type="text/javascript" src="js/bootstrapValidator_new.js?v=14"></script>
 	<?php
 	include 'footer.php';
 	?>
-	<script src="js/base.js"></script>
-	<script src="js/jquery.chained.js"></script>
 
 	<!-- Alert messages js-->
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#manage_users-table').dataTable();
 			$('#operator_div').hide();
 			$('#parent_cat_div').hide();
 			$('#parent_div').hide();
 			$("#category").prop("disabled", true);
 			$("#parent").prop("disabled", true);
-			$("#loation").chained("#radio_user_group");
+			// $("#loation").chained("#radio_user_group");
 
 			$('input[name="radio_user_group"]').on('hover', function(e) {
 				var manageradiorel = e.target.value;

@@ -399,21 +399,21 @@ class CommonFunctions{
         }
     }
 
-    public static function getServiceTypes($url,$token){
-        // $url = "http://bi-development.arrisi.com/api/v1_0/service-types";
-        $ch = curl_init();
-        curl_setopt($ch,CURLOPT_URL,$url);
-        $authorization = "Authorization: Bearer ".$token; // Prepare the authorisation token
-        // var_dump($url);
-        // echo '<br/>';
-        // var_dump($token);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization )); // Inject the token into the header
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-        $output=curl_exec($ch);
-        // var_dump($output);
-        return $output;
-        curl_close($ch);
-    }
+    // public static function getServiceTypes($url,$token){
+    //     // $url = "http://bi-development.arrisi.com/api/v1_0/service-types";
+    //     $ch = curl_init();
+    //     curl_setopt($ch,CURLOPT_URL,$url);
+    //     $authorization = "Authorization: Bearer ".$token; // Prepare the authorisation token
+    //     // var_dump($url);
+    //     // echo '<br/>';
+    //     // var_dump($token);
+    //     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization )); // Inject the token into the header
+    //     curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+    //     $output=curl_exec($ch);
+    //     // var_dump($output);
+    //     return $output;
+    //     curl_close($ch);
+    // }
 
     public function getSelectedApis($mno_id){
         $sql = "SELECT features FROM exp_mno WHERE mno_id ='".$mno_id."'";

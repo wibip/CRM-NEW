@@ -191,7 +191,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 										</form>
 									</div>
 									<br/>
-									<table class="table table-striped" style="width:100%" id="user_activity_logs-table">
+									<table class="table table-striped" style="width:100%" id="user-logs-table">
 										<thead>
 											<tr>
 												<th>Username</th>
@@ -315,7 +315,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 										</form>
 									</div>
 									<br/>
-									<table class="table table-striped" style="width:100%" id="user_activity_logs-table">
+									<table class="table table-striped" style="width:100%" id="api-logs-table">
 										<thead>
 											<tr>
 												<th>Name</th>
@@ -366,15 +366,13 @@ $_SESSION['FORM_SECRET'] = $secret;
 
 
 	<script type="text/javascript" src="js/formValidation.js"></script>
-	<script type="text/javascript" src="js/bootstrap_form.js"></script>
 	<!-- Alert messages js-->
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-
-			$('#user_activity_logs-table').dataTable();
+			// $('#user-logs-table').dataTable();
+			$('#api-logs-table').dataTable();
 
 			var today = new Date();
 			var dd = today.getDate();
