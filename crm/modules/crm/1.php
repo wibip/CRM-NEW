@@ -37,7 +37,6 @@
     .radio-controls label{
         margin-bottom: 0;
     }
-
     .hide{display:none}
 </style>
 
@@ -45,14 +44,12 @@
 $serviceTypes = null;
 $baseUrl = $apiUrl.'/api/'.$apiVersion;
 //generating api call to get Token
-
 $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
-$tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
-// var_dump($tokenReturn);
+$tokenReturn = json_decode( $CommonFunctions->httpPost('Generate Token','get api token','API Token generation',$baseUrl.'/token',$data,true),true);
 //generating api call to get Service Types
 if($tokenReturn['status'] == 'success') {
     $token = $tokenReturn['data']['token'];
-    $serviceTypesReturn = json_decode($CommonFunctions->getServiceTypes($baseUrl.'/service-types',$token),true);
+    $serviceTypesReturn = json_decode($CommonFunctions->httpPost('Get Service Types','get service types','Get Service Types',$baseUrl.'/service-types',$token),true);
     if($serviceTypesReturn['status'] == 'success') {
         $serviceTypes = $serviceTypesReturn['data'];
     }
@@ -173,12 +170,12 @@ if (!empty($arrayo)) {
                     <select name="service_type" id="service_type" class="span4 form-control">
                         <?php if($serviceTypes != null){ ?>
                         <option value="0">Please select service type</option>
-                        <?php   foreach($serviceTypes as $serviceType){ ?>
+                        <?php foreach($serviceTypes as $serviceType){ ?>
                             <option value="<?=$serviceType['id']?>"><?=$serviceType['service_type']?></option>
                         <?php
                             }
                         } else { ?>
-                        <option value="0">Service type not found</option>
+                            <option value="0">Service type not found</option>
                         <?php
                         }
                         ?>

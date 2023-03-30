@@ -43,9 +43,11 @@ if(isset($_POST['create_ap_controller'])){
 		$controller_description['api_key'] = $api_key_se;
 		$controller_description_json= json_encode($controller_description);
 
-		$api_test_url = $api_url.'/api/'.$api_version.'/token';
+		$baseUrl = $api_url.'/api/'.$api_version;
+		//generating api call to get Token
+
 		$data = json_encode(['username'=>$api_uname, 'password'=>$api_pass]);
-		$apiReturn = json_decode($CommonFunctions->httpPost($api_test_url,$data,true) , true);
+		$apiReturn = json_decode( $CommonFunctions->httpPost('Generate Token','get api token','API Token generation',$baseUrl.'/token',$data,true),true);
 		// var_dump($apiReturn);die;
 		if($apiReturn['status'] == 'success'){
 			$query0 = "INSERT INTO  `exp_locations_ap_controller` (`time_zone`,`api_profile`,`api_url`,`api_url_se`,`api_username`,`api_password`,`controller_name`, `brand`, `model`, `description`, `ip_address`, `create_date`, `create_user`, `type`,`controller_description`)
@@ -163,9 +165,12 @@ if(isset($_POST['api_update'])){
 			$update_wag_uname=$_POST['edit_api_uname'];
 			$update_wag_pass=$_POST['edit_api_pass'];
 
-			$api_url = $update_wag_url.'/api/'.$update_wag_version.'/token';
+			$baseUrl = $update_wag_url.'/api/'.$update_wag_version;
+			//generating api call to get Token
+
 			$data = json_encode(['username'=>$update_wag_uname, 'password'=>$update_wag_pass]);
-			$apiReturn = json_decode($CommonFunctions->httpPost($api_url,$data,true) , true);
+			$apiReturn = json_decode( $CommonFunctions->httpPost('Generate Token','get api token','API Token generation',$baseUrl.'/token',$data,true),true);
+
 			if($apiReturn['status'] == 'success'){
 
 				$archive_q="INSERT INTO `exp_locations_ap_controller_archive`

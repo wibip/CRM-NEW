@@ -89,26 +89,26 @@ $stateArray = $propertyResult['stateArray'];
 $zipArray = $propertyResult['zipArray'];
 $clientApiArray = $propertyResult['client_api'];
 
-$api = $api_details['data'][0];
+// $api = $api_details['data'][0];
 // var_dump($api);
 $serviceTypes = null;
-$baseUrl = $api['api_url'] . '/api/v1_0';//'http://bi-development.arrisi.com/api/v1_0';
-//generating api call to get Token
-$apiUsername = $api['api_username'];//'dev_hosted_api_user';
-$apiPassword = $api['api_password'];//'development@123!';
-$baseUrl = $apiUrl.'/api/'.$apiVersion;
-//generating api call to get Token
+// $baseUrl = $api['api_url'] . '/api/v1_0';//'http://bi-development.arrisi.com/api/v1_0';
+// //generating api call to get Token
+// $apiUsername = $api['api_username'];//'dev_hosted_api_user';
+// $apiPassword = $api['api_password'];//'development@123!';
+// $baseUrl = $apiUrl.'/api/'.$apiVersion;
+// //generating api call to get Token
 
-$data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
-$tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
-//generating api call to get Service Types
-if($tokenReturn['status'] == 'success') {
-    $token = $tokenReturn['data']['token'];
-    $serviceTypesReturn = json_decode($CommonFunctions->getServiceTypes($baseUrl.'/service-types',$token),true);
-    if($serviceTypesReturn['status'] == 'success') {
-        $serviceTypes = $serviceTypesReturn['data'];
-    }
-}
+// $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
+// $tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
+// //generating api call to get Service Types
+// if($tokenReturn['status'] == 'success') {
+//     $token = $tokenReturn['data']['token'];
+//     $serviceTypesReturn = json_decode($CommonFunctions->httpPost($baseUrl.'/service-types',$token),true);
+//     if($serviceTypesReturn['status'] == 'success') {
+//         $serviceTypes = $serviceTypesReturn['data'];
+//     }
+// }
 
 ?>
 <style>

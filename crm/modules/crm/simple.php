@@ -4,11 +4,11 @@ $baseUrl = $apiUrl.'/api/'.$apiVersion;
 //generating api call to get Token
 
 $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
-$tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
+$tokenReturn = json_decode( $CommonFunctions->httpPost('Generate Token','get api token','API Token generation',$baseUrl.'/token',$data,true),true);
 //generating api call to get Service Types
 if($tokenReturn['status'] == 'success') {
     $token = $tokenReturn['data']['token'];
-    $serviceTypesReturn = json_decode($CommonFunctions->getServiceTypes($baseUrl.'/service-types',$token),true);
+    $serviceTypesReturn = json_decode($CommonFunctions->httpPost('Get Service Types','get service types','Get Service Types',$baseUrl.'/service-types',$token),true);
     if($serviceTypesReturn['status'] == 'success') {
         $serviceTypes = $serviceTypesReturn['data'];
     }

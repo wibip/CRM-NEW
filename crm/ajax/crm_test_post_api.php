@@ -8,10 +8,7 @@ $password = $_POST['password'];
 
 if($url != '' && $username != '' && $password != ''){
     if (preg_match('%^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@|\d{1,3}(?:\.\d{1,3}){3}|(?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?(?:[^\s]*)?$%iu', $url)) {
- 
-        $data = json_encode(['username'=>$username, 'password'=>$password]);
-        
-        $apiReturn = json_decode($CommonFunctions->httpPost($url,$data,true) , true);
+        $apiReturn = json_decode($CommonFunctions->httpPost('Generate Token','get api token','API Token generation',$url,$data,true) , true);
        
         if($apiReturn['status'] == 'success'){
             echo 'true';
@@ -19,7 +16,7 @@ if($url != '' && $username != '' && $password != ''){
             echo $apiReturn['data']['message'];
         }      
     } else {
-        echo "Please use valid valid URL";  
+        echo "Please use valid URL";  
     }
     
 } else {

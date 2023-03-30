@@ -69,30 +69,57 @@ class CommonFunctions{
 
     }
 
-    public static function httpPost($url,$data,$json=false)
-    {
-        $ch = curl_init();
+    public function httpPost($subject,$description,$section,$url,$access_token,$jsonData=null) {
+        try{
+            $ch = curl_init($url);
+            $header_parameters = "Content-Type: application/json;charset=UTF-8";
+            $header_parameters = array(
+                'Authorization: Bearer '.$access_token.'',
+                'Accept: application/json',
+                'Content-Type: application/json');
+            //Attach our encoded JSON string to the POST fields.
+            if($jsonData != null){
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            }
+            
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_VERBOSE, 1);
+            
+            //Set the content type to application/json
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header_parameters);
 
-        curl_setopt($ch, CURLOPT_URL,$url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        if($json==true) {
-            curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-        }
+            curl_setopt ($ch, CURLOPT_SSLVERSION, 6);
+            curl_setopt ($ch, CURLOPT_SSLVERSION, 'CURL_SSLVERSION_TLSv1_2');
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+            //Execute the request
+            $result = curl_exec($ch);
+                
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            curl_close($ch);
+            $header = substr($result, 0, $header_size);
+            $body = substr($result, $header_size);
+            $decoded = json_decode($body, true);
+            
+            $req = $url.'->'.$this->db->escapeDB($jsonData);
         
+            if ($decoded['status'] == 'success') {
+                $this->db->addApiLogs($subject, $description, 'SUCCESS', $section, $url, $req, $result, $httpcode, $_SESSION['user_id']);
+            }else{
+                $this->db->addApiLogs($subject, $description, 'ERROR', $section, $url, $req, $result, $httpcode, $_SESSION['user_id']);
+            }
 
-        // Receive server response ...
-        //$header_parameters = "Content-Type: application/json;charset=UTF-8";
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        //curl_setopt($ch, CURLOPT_HTTPHEADER, array($header_parameters));
-
-        $server_output = curl_exec($ch);
-        //echo $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        //$header = substr($server_output, 0, $header_size);
-        //$message = substr($server_output, $header_size);
-// var_dump($server_output);echo 'in func';die;
-        return $server_output;
-        curl_close ($ch);
+            return $decoded; 
+        } catch(Exception $e) {
+            $this->db->addApiLogs($subject, $description, 'ERROR', $section, $url, $jsonData, $e->getMessage(), 0, $_SESSION['user_id']);
+            return 'Error';
+        }
 
     }
     public static function randomPasswordlength($length)
