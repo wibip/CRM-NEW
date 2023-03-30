@@ -1590,7 +1590,7 @@ $mobile = "";
 	<?php } ?>
 	<script type="text/javascript" src="js/formValidation.js"></script>
 	<?php
-	include 'footer.php';
+	// include 'footer.php';
 	?>
 
 	<!-- Alert messages js-->

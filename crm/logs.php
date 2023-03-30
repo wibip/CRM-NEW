@@ -210,16 +210,16 @@ $_SESSION['FORM_SECRET'] = $secret;
 												$page = $row['page'];
 												$log_details = $row['log_details'];
 												$create_date = date("m/d/Y h:i:s A", strtotime($row['create_date']));
-
-												echo '<tr>
-														<td> ' . $user_name . ' </td>
-														<td> ' . $log_type . ' </td>
-														<td> ' . $page . ' </td>
-														<td> ' . $log_details . ' </td>
-														<td> ' . $create_date . ' </td>
-													<tr>';
+											?>
+											<tr>
+												<td><?=$user_name?></td>
+												<td><?=$log_type?></td>
+												<td><?=$page?></td>
+												<td><?=$log_details?></td>
+												<td><?=$create_date?></td>
+											</tr>
+											<?php
 											}
-
 											?>
 										</tbody>
 									</table>
@@ -334,16 +334,16 @@ $_SESSION['FORM_SECRET'] = $secret;
 												$section = $row['section'];
 												$description = $row['description'];
 												$create_date = date("m/d/Y h:i:s A", strtotime($row['create_date']));
-
-												echo '<tr>
-														<td> ' . $name . ' </td>
-														<td> ' . $log_type . ' </td>
-														<td> ' . $section . ' </td>
-														<td> ' . $description . ' </td>
-														<td> ' . $create_date . ' </td>
-													<tr>';
+											?>
+											<tr>
+												<td><?=$name?></td>
+												<td><?=$log_type?></td>
+												<td><?=$section?></td>
+												<td><?=$description?></td>
+												<td><?=$create_date?></td>
+											</tr>
+											<?php
 											}
-
 											?>
 										</tbody>
 									</table>
@@ -371,7 +371,7 @@ $_SESSION['FORM_SECRET'] = $secret;
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			// $('#user-logs-table').dataTable();
+			$('#user-logs-table').dataTable();
 			$('#api-logs-table').dataTable();
 
 			var today = new Date();
