@@ -282,7 +282,7 @@ $serviceTypes = null;
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Order Raise At</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Order Raise By</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Show Details</th>
-                                                    <!-- <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">Remove</th> -->
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">Remove</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
