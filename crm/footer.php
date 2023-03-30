@@ -4,7 +4,7 @@
     	$(document).ready(function() {
 			$.extend( $.fn.dataTable.defaults, {
           "ordering":true,
-		  "dom": '<"wrapper"flt<"data-table-bottom"<"data-table-controls"><"data-table-bottom-right"ip>>>',
+		  "dom": '<"wrapper"<"dt-div"fl>t<"data-table-bottom"<"data-table-controls"><"data-table-bottom-right"ip>>>',
            columnDefs: [{
             orderable: false,
 			searchable: false,
@@ -80,16 +80,6 @@
                 
                 $('input[name="'+tb_id+'_delete_raws"]').val(arr);
               });
-            }
-            try {
-	            $("#"+tb_id+" th").each(function(){
-	                if ($(this).hasClass('sorting') || $(this).hasClass('sorting_desc') || $(this).hasClass('sorting_asc')) {
-	                    $(this).attr('title','Click to sort');
-	                    $(this).tooltip();
-	                }
-	            });
-            } catch (error) {
-	
             }
 
           }
