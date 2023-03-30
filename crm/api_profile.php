@@ -490,7 +490,7 @@ include 'footer.php';
 	<script src="js/jquery.chained.js"></script>
 	<script type="text/javascript" charset="utf-8">
  $(document).ready(function() { 
-	$('#manage_users-table').dataTable();//role-table
+	$('#api_profile_table').dataTable();//role-table
 	$('#role-table').dataTable();
 
     $("#product_code").chained("#category");
