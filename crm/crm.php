@@ -19,11 +19,12 @@
     $apiUrl = '';
     $apiUsername = '';
     $apiPassword = '';
+    $operatorsSystemPackage = $system_package;
 
     if($user_group == 'admin' || $user_group == 'super_admin') {
         $operators = $usersData->getAllOperatorUsers();
         if(isset($_POST['load_operator'])) {
-            $operatorsSystemPackage = null;
+            
             $selected_operator = $_POST['selected_operator'];
             $operatorsPackage = $CommonFunctions->getSystemPackage($selected_operator);
             // var_dump($operatorsPackage);
@@ -49,7 +50,7 @@
     $data_secret = $db->setVal('data_secret', 'ADMIN');    
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;
-    $opt_q = $package_functions->getSectionType("OPT_CODE", $system_package);
+    $opt_q = $package_functions->getSectionType("OPT_CODE", $operatorsSystemPackage);
     $get_opt_code = (isset($opt_q)) ? $opt_q : 'SDL'; //$db->getValueAsf("SELECT api_prefix as f FROM exp_mno WHERE mno_id = '$user_distributor'");
 
     $priority_zone_array = array(
@@ -260,7 +261,7 @@
     if (isset($_POST['create_crm_submit'])) {
         if ($_SESSION['FORM_SECRET'] == $_POST['form_secret5']) {
             $api_id = $_POST['api_id'];
-            $crm = new crm($api_id, $system_package);
+            $crm = new crm($api_id, $operatorsSystemPackage);
 
             $business_name = $_POST['business_name'];
             $contact_name = $_POST['contact'];
