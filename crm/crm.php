@@ -47,7 +47,8 @@
         }
     }
    
-    $data_secret = $db->setVal('data_secret', 'ADMIN');    
+    // $data_secret = $db->setVal('data_secret', 'ADMIN');    
+    // var_dump($camp_layout);
     require_once 'layout/' . $camp_layout . '/config.php';
     $edit = false;
     $opt_q = $package_functions->getSectionType("OPT_CODE", $operatorsSystemPackage);
@@ -755,8 +756,11 @@
                                     </div>
                                     <?php
                                     }
+                                    // var_dump($script);
+                                    // var_dump($user_group);
+                                    // var_dump($modules);
                                         foreach ($modules[$user_group][$script] as $value) {
-                                            //echo 'modules/'.$value['module'].'.php';
+                                            // echo 'modules/'.$value['module'].'.php';
                                             include_once 'modules/' . $value['module'] . '.php';
                                         }
                                     ?>

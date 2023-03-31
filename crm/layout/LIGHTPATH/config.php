@@ -280,26 +280,3 @@ $modules = [
         ]
     ]
 ];
-
-if($package_functions->getPageFeature("campaign", $system_package)=='0'){
-
-    $modules['MVNO']['reports'] = [
-        [
-            "id" => "customer_report",
-            "name" => "Customers",
-            "module" => "customer_report/1"
-        ]
-    ];
-}
-
-if($voucher_enable!='true'){
-    $modules['MVNO']['add_tenant'] =
-    [
-            [
-                "id"=>"add_tenant",
-                "name"=>"Add Resident",
-                "module"=>"add_tenant/1"
-            ] 
-        ];
-
-}

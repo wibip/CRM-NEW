@@ -359,27 +359,27 @@ if(isset($_SESSION['user_name'])){
                                 }
 
                                 $('#activeLocationsTable_paginate').html(paginate);
-                                new Tablesaw.Table("#activeLocationsTable").destroy();
-                                Tablesaw.init();
+                                // new Tablesaw.Table("#activeLocationsTable").destroy();
+                                // Tablesaw.init();
                                 $("input:checkbox:not(#manual_passcode,#auto_passcode,.hide_checkbox)").after("<label style='display: inline-block; margin-top: 10px;'></label>");
                             }
 
-                            function editAccount(id){
-                                var request = {
-                                    id: id
-                                }
-                                $('#activeLocationsTable_img').show();
-                                var init_auth_data = CryptoJS.AES.encrypt(JSON.stringify(request), '<?php echo $data_secret; ?>', {format: CryptoJSAesJson}).toString();
+                            // function editAccount(id){
+                            //     var request = {
+                            //         id: id
+                            //     }
+                            //     $('#activeLocationsTable_img').show();
+                            //     var init_auth_data = CryptoJS.AES.encrypt(JSON.stringify(request), '<?php echo $data_secret; ?>', {format: CryptoJSAesJson}).toString();
 
-                                $.post("ajax/provision/manage.php?view=true", {key: init_auth_data},
-                                    function (data, textStatus, jqXHR) {
+                            //     $.post("ajax/provision/manage.php?view=true", {key: init_auth_data},
+                            //         function (data, textStatus, jqXHR) {
                                         
-                                        var data_ar = JSON.parse(JSON.parse(CryptoJS.AES.decrypt(data, '<?php echo $data_secret; ?>', {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8)));
-                                        console.log(data_ar);
-                                        $('#activeLocationsTable_img').hide();
-                                    }
-                                );
-                            }
+                            //             var data_ar = JSON.parse(JSON.parse(CryptoJS.AES.decrypt(data, '<?php echo $data_secret; ?>', {format: CryptoJSAesJson}).toString(CryptoJS.enc.Utf8)));
+                            //             console.log(data_ar);
+                            //             $('#activeLocationsTable_img').hide();
+                            //         }
+                            //     );
+                            // }
                         </script>
 
                         <?php

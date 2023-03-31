@@ -1432,7 +1432,7 @@ $mobile = "";
 														
 														<div class="col-md-6">
 															<label class="control-label" for="mobile">Phone Number<sup><font color="#FF0000"></font></sup></label>
-															<input class="form-control span4" id="mobile" name="mobile" type="text" placeholder="xxx-xxx-xxxx" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null ) ? $edit_user_data['mobile'] : ''?>" maxlength="12">
+															<input class="form-control span4" id="mobile" name="mobile" type="text" placeholder="xxx-xxx-xxxx" pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null ) ? $edit_user_data['mobile'] : ''?>" maxlength="12">
 														</div>
 														
 														<div class="col-md-12">

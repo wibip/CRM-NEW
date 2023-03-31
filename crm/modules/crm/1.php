@@ -607,7 +607,6 @@ if (!empty($arrayo)) {
         } else {
             $('.actions.clearfix').find('button[data-type="next"]').css('display', 'inline-block');
             $('.actions.clearfix').find('.finishParent').hide();
-
         }
         //return stepListFull;
         if(action=='ready'){
