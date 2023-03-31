@@ -1176,6 +1176,17 @@ else{
 		-ms-flex-align: center;
 		align-items: center;
 	}
+	.dt-div {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+	}
 
 	.btn-div button {
 		margin-right: 15px;
