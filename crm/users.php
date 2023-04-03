@@ -1286,7 +1286,7 @@ $mobile = "";
 															<div class="btn-group" id="btn-group" role="group">
 																<?php 
 																foreach($access_permissions as $key => $value){
-																	if($user_superior_level <= $value['superior_level']) {
+																	if($user_superior_level < $value['superior_level']) {
 																		$userGroupName = strtoupper(str_replace("_"," ",$key));
 																		$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $key == $edit_user_data['group']) ? "checked" : "";
 																		$accessPage = "";
