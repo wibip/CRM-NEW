@@ -99,7 +99,6 @@ class AccessController {
 
     public function loginSuccess(){
         $redirect_url = trim($this->getGlobalUrl(),'/').'/'.$this->getAccessedUser()['home'];
-        var_dump($redirect_url);die;
         header( "Location: $redirect_url");	
         exit();
     }
