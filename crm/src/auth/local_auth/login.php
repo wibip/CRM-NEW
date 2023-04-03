@@ -155,7 +155,7 @@ if (isset($username)) {
         // Get user package
 
         $user_pkg_name = $package_functions->getPackage($user_name);
-       var_dump($user_pkg_name);die;
+    //    var_dump($user_pkg_name);die;
        if(strlen($login_design)=='0'){
        		$allowed_pkg_list = $package_functions->getOptions('LOGIN_RESTRICTION','generic');
        }else{
@@ -185,24 +185,21 @@ if (isset($username)) {
 		$acc_cont = new AccessController($dbT,$access_user);
 
 		if(!$suspended){
-
-			
-			
 			$dbT->userLog($user_name,'login','Login','N/A'); 
 
 			if($access_role == 'admin'){
-				$user_query = "SELECT module_name FROM admin_access_modules WHERE user_type = '$user_type' AND `order` IS NOT NULL AND module_name <> 'venue_support' AND module_name <> 'support' ORDER BY `order`";
+				$user_query = "SELECT module_name FROM admin_access_modules WHERE user_group = '$user_group' AND `order` IS NOT NULL AND module_name <> 'venue_support' AND module_name <> 'support' ORDER BY `order`";
 			}
 			else{
 				$user_query = "SELECT module_name FROM admin_access_roles_modules WHERE access_role = '$access_role'";
 			}
-				// echo $user_query;
+				echo $user_query;
 			$query_results=$dbT->selectDB($user_query);
 			$wifi_text = $package_functions->getMessageOptions('WIFI_TEXT',$system_package);
 			$theme_text = $package_functions->getMessageOptions('THEME_TEXT',$system_package);
 
 			if(empty($wifi_text) || $wifi_text ==''){
-			$wifi_text='WiFi';
+				$wifi_text='WiFi';
 			}
 			if ($property_wired == '1') {
 				$wifi_text = 'Network';
@@ -219,11 +216,8 @@ if (isset($username)) {
 				
 		}else{
 			$redirect_url .= '/suspend'.$extension;
-		
-				
-				
-				header( "Location: $redirect_url");		
-				exit();
+			header( "Location: $redirect_url");		
+			exit();
 		}   
 		setcookie("system_package", $system_package, time() + (86400 * 30), "/");
 		setcookie("load_login_design", $login_design, time() + (86400 * 30), "/"); 	
