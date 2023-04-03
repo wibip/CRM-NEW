@@ -591,10 +591,10 @@ if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 
 // New Access Functions
 
-echo $access_role.'---';
-echo '------------<br/>';
-echo $system_package.'---';
-echo '------------<br/>';
+// echo $access_role.'---';
+// echo '------------<br/>';
+// echo $system_package.'---';
+// echo '------------<br/>';
 function isModuleAccess($access_role, $module, $db_function)
 {
 	$sql1 = "SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role` = '$access_role' AND `module_name` = '$module' LIMIT 1";
@@ -625,10 +625,10 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row['module_name']; // Retuns base access
 	}
 }
-echo '------------<br/>';
-var_dump($x);
-echo $system_package.'---';
-echo '------------<br/>';
+// echo '------------<br/>';
+// var_dump($x);
+// echo $system_package.'---';
+// echo '------------<br/>';
 // die;
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
@@ -649,8 +649,8 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-echo '------------<br/>';
-var_dump($x);
+// echo '------------<br/>';
+// var_dump($x);
 
 if ($_SESSION['super_admin'] == true) {
 	array_push($x, "operation_list");
@@ -668,10 +668,10 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-echo '------------<br/>';
-var_dump($x);
-echo "<<<<<<  Step 06 >>>>>";
-die;
+// echo '------------<br/>';
+// var_dump($x);
+// echo "<<<<<<  Step 06 >>>>>";
+// die;
 $allowed_pages = $x;
 
 $module_ids = join('", "', $x);
