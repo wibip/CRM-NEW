@@ -144,6 +144,7 @@ if ($_GET['s_token']) {
 	}
 }
 $user_distributor = $db_class1->getValueAsf("SELECT  user_distributor AS f  FROM  admin_users WHERE user_name = '$s_uname' LIMIT 1");
+var_dump($user_distributor);die;
 
 if ($_GET['back_sup'] == 'true') {
 	parse_str($_SESSION['s_detail']);
