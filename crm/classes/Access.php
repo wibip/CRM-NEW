@@ -108,7 +108,8 @@ define('ACCESS',[
                 ],
             ],
         ],
-        'home' => 'users'
+        'home' => 'users',
+        'superior_level' => 1
     ],
     'admin' => [
         'modules'=>[
@@ -169,7 +170,8 @@ define('ACCESS',[
                 ],
             ],
         ],
-        'home' => 'users'
+        'home' => 'users',
+        'superior_level' => 2
     ],
     'operation' => [
         'modules'=>[
@@ -198,7 +200,8 @@ define('ACCESS',[
                 ],
             ]
         ],
-        'home' => 'properties'
+        'home' => 'properties',
+        'superior_level' => 3
     ],    
     'sales_manager' => [
         'modules'=>[
@@ -227,7 +230,8 @@ define('ACCESS',[
                 ],
             ]
         ],
-        'home' => 'properties'
+        'home' => 'properties',
+        'superior_level' => 4
     ],
     'ordering_agent' => [
         'modules'=>[
@@ -248,6 +252,7 @@ define('ACCESS',[
                 ],
             ]
         ],
-        'home' => 'properties'
+        'home' => 'properties',
+        'superior_level' => 5
     ],
 ]);

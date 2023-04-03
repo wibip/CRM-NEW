@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="css/multi-select.css">
 <?php
-
 include 'header_new.php';
 
 require_once 'classes/CommonFunctions.php';
@@ -13,6 +12,10 @@ $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 $page = 'User';
 $userEdit = 0;
 $editUserGroup = '';
+
+$access_permissions = ACCESS;
+$user_superior_level = $access_permissions[$user_group]['superior_level'];
+
 // Get languages
 $key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
 $language_results=$db->selectDB($key_query);
@@ -1282,17 +1285,19 @@ $mobile = "";
 															<label class="control-label" for="access_role_1">User Group<sup><font color="#FF0000"></font></sup></label><br/>
 															<div class="btn-group" id="btn-group" role="group">
 																<?php 
-																foreach(ACCESS as $key => $value){
-																	$userGroupName = strtoupper(str_replace("_"," ",$key));
-																	$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $key == $edit_user_data['group']) ? "checked" : "";
-																	$accessPage = "";
-																	foreach($value['modules'] as $pageName => $pageActions){
-																		$accessPage .= "<li align='left'>".ucwords(str_replace("_"," ",$pageName))."</li>";
-																	}
+																foreach($access_permissions as $key => $value){
+																	if($user_superior_level <= $value['superior_level']) {
+																		$userGroupName = strtoupper(str_replace("_"," ",$key));
+																		$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $key == $edit_user_data['group']) ? "checked" : "";
+																		$accessPage = "";
+																		foreach($value['modules'] as $pageName => $pageActions){
+																			$accessPage .= "<li align='left'>".ucwords(str_replace("_"," ",$pageName))."</li>";
+																		}
 																?>
-																<input type="radio" class="btn-check hide_rad radio_user_group" name="radio_user_group" id="<?=$key?>" value="<?=$key?>" autocomplete="off" <?=$selected?>>
-																<label class="btn btn-outline-primary normalize" data-bs-toggle="tooltip" data-bs-html="true" title="<b>Permitted Pages</b><ul align='left'><?=$accessPage?></ul>" for="<?=$key?>"><?=$userGroupName?></label>
+																		<input type="radio" class="btn-check hide_rad radio_user_group" name="radio_user_group" id="<?=$key?>" value="<?=$key?>" autocomplete="off" <?=$selected?>>
+																		<label class="btn btn-outline-primary normalize" data-bs-toggle="tooltip" data-bs-html="true" title="<b>Permitted Pages</b><ul align='left'><?=$accessPage?></ul>" for="<?=$key?>"><?=$userGroupName?></label>
 																<?php
+																	}
 																}
 																?>
 															</div>
