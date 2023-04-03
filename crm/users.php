@@ -1492,7 +1492,7 @@ $mobile = "";
 													</thead>
 													<tbody>
 														<?php
-														$active_users = $usersData->get_activeUseres($data);
+														$active_users = $usersData->get_activeUseres($user_name,$user_superior_level);
 														foreach ($active_users['data'] as $row) {
 															$id = $row['id'];
 															$user_name = $row['user_name'];

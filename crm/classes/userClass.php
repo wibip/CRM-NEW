@@ -13,11 +13,14 @@ class Users{
         return $data;
     }
 
-    public function get_activeUseres() {
+    public function get_activeUseres($user_name,$user_superior_level) {
         $q = "SELECT au.id,au.user_name,au.full_name, au.group, au.email,au.is_enable,au.create_user
                         ,IF(!ISNULL(aar.description),aar.description,IF(au.access_role='admin','Admin','')) AS description
                         FROM admin_users au LEFT JOIN admin_access_roles aar ON au.access_role = aar.access_role";
-
+        if($user_superior_level > 2){
+            $q .= " WHERE au.create_user='$user_name'";
+        }
+// echo $q;
         $data = $this->db->selectDB($q);
         return $data;
     }

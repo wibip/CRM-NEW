@@ -691,9 +691,12 @@ if ($_GET['location_parent_id']) {
 require_once 'layout/' . $camp_layout . '/config.php';
 
 $query_modules = "SELECT * FROM `admin_access_modules` WHERE `module_name` IN (\"$module_ids\") AND `user_group` = '$user_group'";
+// echo $query_modules;
 $query_results_mod = $db_class1->selectDB($query_modules);
 
 $restricted_pages = $package_functions->getOptions("RESTRICTED_PAGES", $system_package);
+
+// var_dump($query_results_mod['data'] );
 
 $tmp_0 = '';
 $main_mod_array = array();
@@ -714,7 +717,7 @@ foreach ($query_results_mod['data'] as $row1) {
 
 			$main_cf_key = array_search('CONTENT_FILTER_MAIN', $result1);
 			$main_cf_key2 = array_search('CONTENT_FILTER_MAIN', $features_array);
-			//print_r($features_array);
+			// print_r($features_array);
 			if ($main_cf_key) {
 				unset($result1[$main_cf_key]);
 			}
@@ -756,7 +759,6 @@ foreach ($query_results_mod['data'] as $row1) {
 	}
 	//=======================
 
-
 	//wired property filter
 	if ($property_wired == '1') {
 		if (!in_array($module_name, $wired_pages))
@@ -785,7 +787,7 @@ foreach ($query_results_mod['data'] as $row1) {
 	menu item = 6 => User Guide
 
 	*/
-
+	
 	if ($is_enable == 1) {
 		if ($menu_item_row == '1') {
 			$access_modules_list[] = $module_name;
@@ -796,6 +798,8 @@ foreach ($query_results_mod['data'] as $row1) {
 			$main_mod_array[$main_module_order]['module'][$order]['link'] = $module_name;
 			$main_mod_array[$main_module_order]['module'][$order]['name'] = $name_group;
 			$main_mod_array[$main_module_order]['module'][$order]['menu_item'] = $menu_item_row;
+
+			// var_dump($main_mod_array);
 		} else if ($menu_item_row == '2') {
 
 			//echo "<br>".$main_module." "."2";
