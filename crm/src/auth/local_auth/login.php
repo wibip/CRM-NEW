@@ -25,7 +25,7 @@ if(isset($_POST['sign_in'])){
 	include '../../../src/auth/ROBOT_VERIFY/'.$robot_verify_method.'/index.php';
 	$robot_verify_functions = new robot_verify();
 
-	$redirect_url .= "/crm";
+	$redirect_url .= "/properties";
 
 	foreach ($_SESSION['attributes'] as $key=>$value){
 		if($key == 'email'){
@@ -155,7 +155,7 @@ if (isset($username)) {
         // Get user package
 
         $user_pkg_name = $package_functions->getPackage($user_name);
-       
+       var_dump($user_pkg_name);die;
        if(strlen($login_design)=='0'){
        		$allowed_pkg_list = $package_functions->getOptions('LOGIN_RESTRICTION','generic');
        }else{
