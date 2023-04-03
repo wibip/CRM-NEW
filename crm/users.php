@@ -11,7 +11,8 @@ require_once 'classes/hierarchyClass.php';
 $hierarchy = new Hierarchy();
 $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 $page = 'User';
-
+$userEdit = 0;
+$editUserGroup = '';
 // Get languages
 $key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
 $language_results=$db->selectDB($key_query);
@@ -878,11 +879,13 @@ $mobile = "";
 	}
 	//  to the form edit user
 	elseif (isset($_GET['edit_id'])) {
+		$userEdit = 1;
 		if ($_SESSION['FORM_SECRET'] == $_GET['token']) {
 			$edit_id = $_GET['edit_id'];
 			$userData = $usersData->getUser($edit_id);
 			if($userData['rowCount'] > 0){
 				$edit_user_data = $userData['data'][0];
+				$editUserGroup = $edit_user_data['group'];
 			}
 		} else {
 			$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Load User',$_GET['edit_id'],'2004','Oops, It seems you have refreshed the page. Please try again');
@@ -1048,29 +1051,24 @@ $mobile = "";
 						if ($edit_result===true) {
 							$message_response = $message_functions->showNameMessage('role_password_edit_success', $user_full_name);
 							$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'User Password Reset',$id,'3001',$message_response);
-							// $create_log->save('3001', $message_functions->showNameMessage('role_password_edit_success', $user_full_name), '');
 							$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 						} else {
 							$message_response = $message_functions->showMessage('role_password_edit_failed', '2002');
 							$db->addLogs($user_name, 'ERROR',$user_group, $page, 'User Password Reset',$id,'2002',$message_response);
 							$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-							// $create_log->save('2002', $message_functions->showMessage('role_password_edit_failed', '2002'), '');
 							$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 						}
 					} else {
 						$message_response = $message_functions->showMessage('role_password_edit_failed', '2002');
 						$db->addLogs($user_name, 'ERROR',$user_group, $page, 'User Password Reset',$id,'2002',$message_response);
 						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						// $create_log->save('2002', $message_functions->showMessage('role_password_edit_failed', '2002'), '');
 						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
 					}
 				} else {
 					$message_response = $message_functions->showMessage('role_password_edit_failed', '2006');
 					$db->addLogs($user_name, 'ERROR',$user_group, $page, 'User Password Reset',$id,'2006',$message_response);
 					$db->userErrorLog('2006', $user_name, 'script - ' . $script);
-					// $create_log->save('2006', $message_functions->showMessage('role_password_edit_failed', '2006'), '');
 					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
-					//Password confirmation failed
 				}
 		} else {
 			$message_response = $message_functions->showMessage('transection_fail', '2004');
@@ -1448,31 +1446,27 @@ $mobile = "";
 															<span class="fs-5">Reset Password</span>
 														</div>
 													</div>
-													<form onkeyup="footer_submitfn1();" onchange="footer_submitfn1();" autocomplete="off" id="edit-user-password" action="?t=1" method="post" class="row g-3 p-4">
-														<?php
-														echo '<input type="hidden" name="form_secret" id="form_secret2" value="' . $_SESSION['FORM_SECRET'] . '" />';
-														?>
-															<?php
-															echo '<input type="hidden" name="user_group" id="user_group" value="' . $user_group . '">';
-															echo '<input type="hidden" name="loation" id="loation3" value="' . $user_distributor . '">';
-															echo '<input type="hidden" name="id" id="id1" value="' . $id . '">';
-															?>
-															<div class="col-md-6">
-																<label class="control-label" for="full_name_2" _1>Password<sup><font color="#FF0000"></font></sup></label>
-																<input class="form-control span4" id="passwd" name="passwd" type="password" required>
-															</div>
-															<!-- /control-group -->
-															<div class="col-md-6">
-																<label class="control-label" for="email_2">Confirm Password<sup><font color="#FF0000"></font></sup></label>
-																<input class="form-control span4" id="passwd_2" name="passwd_2" type="password" required="required">
-															</div>
-															<!-- /control-group -->
-															<div  class="col-md-12">
-																<button type="submit" name="edit-submita-pass" id="edit-submita-pass" class="btn btn-primary" disabled="disabled">Save</button>&nbsp; <strong>
-																	<font color="#FF0000"></font><small></small>
-																</strong>
-																<button type="button" onclick="goto('/')" class="btn btn-danger">Cancel</button>&nbsp;
-															</div>
+													<form autocomplete="off" id="edit-user-password" action="users.php" method="post" class="row g-3 p-4">
+														<input type="hidden" name="form_secret" id="form_secret2" value="<?=$_SESSION['FORM_SECRET']?>" />
+														<input type="hidden" name="user_group" id="user_group" value="<?=$user_group?>">
+														<input type="hidden" name="loation" id="loation3" value="<?=$user_distributor?>">
+														<input type="hidden" name="id" id="id1" value="<?=(isset($_GET['edit_id']) && $edit_user_data != null) ? $edit_user_data['id'] : 0?>">
+														<div class="col-md-6">
+															<label class="control-label" for="passwd" >Password<sup><font color="#FF0000"></font></sup></label>
+															<input class="form-control span4" id="passwd" name="passwd" type="password" required>
+														</div>
+														<!-- /control-group -->
+														<div class="col-md-6">
+															<label class="control-label" for="passwd_2">Confirm Password<sup><font color="#FF0000"></font></sup></label>
+															<input class="form-control span4" id="passwd_2" name="passwd_2" type="password" required>
+														</div>
+														<!-- /control-group -->
+														<div  class="col-md-12">
+															<button type="submit" name="edit-submita-pass" id="edit-submita-pass" class="btn btn-primary">Save</button>&nbsp; <strong>
+																<font color="#FF0000"></font><small></small>
+															</strong>
+															<button type="button" onclick="goto('/')" class="btn btn-danger">Cancel</button>&nbsp;
+														</div>
 													</form>
 												</div>
 												<?php } ?>
@@ -1599,8 +1593,15 @@ $mobile = "";
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#manage_users-table').dataTable();
-			$('#operator_div').hide();
-			$('#parent_cat_div').hide();
+			var userEdit = <?=$userEdit?>;
+			if(userEdit == 1) {
+				var userGroup = '<?=$editUserGroup?>';
+			}
+			
+			if(userEdit == 0 && userGroup != "sales_manager" && userGroup != "ordering_agent") {
+				$('#operator_div').hide();
+				$('#parent_cat_div').hide();
+			}
 			$('#parent_div').hide();
 			$("#category").prop("disabled", true);
 			$("#parent").prop("disabled", true);
@@ -1633,8 +1634,8 @@ $mobile = "";
 			$('#category').on('change', function() {
 				var operatorValue = $('#operator').val();
 				var categoryValue = $(this).val();
-				var groupValue = $("input[name='user_group']:checked").val();
-
+				var groupValue = $("input[type='radio'][name='radio_user_group']:checked").val();
+// alert(groupValue);
 				if(operatorValue != "" && categoryValue != ""){
 					$("#overlay").css("display","block");
 					$.ajax({	
@@ -1707,13 +1708,32 @@ $mobile = "";
 				}
 			});
 
+			$("#edit-submita-pass").click(function(){
+				alert('test');
+				$("form[name='edit-user-password']").validate({
+					rules: {
+						passwd: { required: true },
+						passwd_2: { required: true }
+					},
+					messages: {
+						passwd: { 
+							required: "Please enter Password"
+						},
+						passwd_2: { 
+							required: "Please enter Confirm Password"
+						},
+					},
+					submitHandler: function(form) {
+						form.submit();
+					},
+				});
+			});
+
 			$("#submit_user").click(function(){
 				let dataName = $(this).attr("data-name");
 				$("form[name='user_profile']").validate({
 					rules: {
-						user_group: { 
-							required: true
-						},
+						user_group: { required: true },
 						operator: { required: true },
 						category: { required: true },
 						full_name: { required: true },
@@ -1801,24 +1821,16 @@ $mobile = "";
 				});
 			});
 
-			$("#edit-submita-pass").easyconfirm({
-				locale: {
-					title: 'Password Reset',
-					text: 'Are you sure you want to update this password?',
-					button: ['Cancel', ' Confirm'],
-					closeText: 'close'
-				}
-			});
-			$("#edit-submita-pass").click(function() {});
+			// $("#edit-submita-pass").easyconfirm({
+			// 	locale: {
+			// 		title: 'Password Reset',
+			// 		text: 'Are you sure you want to update this password?',
+			// 		button: ['Cancel', ' Confirm'],
+			// 		closeText: 'close'
+			// 	}
+			// });
+			// $("#edit-submita-pass").click(function() {});
 
-			$("#assign_roles_submita").easyconfirm({
-				locale: {
-					title: 'Role Creation',
-					text: 'Are you sure you want to save this Role?',
-					button: ['Cancel', ' Confirm'],
-					closeText: 'close'
-				}
-			});
 		});
 	</script>
 	<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
