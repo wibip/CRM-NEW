@@ -210,14 +210,14 @@ define('ACCESS',[
                     'actions'=>['edit','delete']
                 ],
             ],
-            'crm'=>[
-                'create' =>[
-                    'actions'=>['create']
-                ],
-                'manage'=>[
-                    'actions'=>['edit','delete']
-                ],
-            ],
+            // 'crm'=>[
+            //     'create' =>[
+            //         'actions'=>['create']
+            //     ],
+            //     'manage'=>[
+            //         'actions'=>['edit','delete']
+            //     ],
+            // ],
             'properties'=>[
                 'create' =>[
                     'actions'=>['create']
