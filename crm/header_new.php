@@ -560,6 +560,8 @@ if (strlen($camp_layout) == "0") {
 	$camp_layout = "DEFAULT_LAYOUT";
 }
 
+
+
 require_once 'layout/' . $camp_layout . '/index.php';
 include_once 'layout/' . $camp_layout . '/define.php';
 $layout_text_pages = 'layout/' . $camp_layout . '/views/' . $script . '_view.php';
@@ -569,7 +571,6 @@ try {
 } catch (Exception $e) {
 	include_once 'layout/DEFAULT_LAYOUT/views/' . $script . '_view.php';
 }
-
 //////// Get Main Valiables //////////
 
 $top_menu = $package_functions->getOptions('TOP_MENU', $system_package);
@@ -589,6 +590,11 @@ if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 
 
 // New Access Functions
+
+echo $access_role.'---';
+echo '------------<br/>';
+echo $system_package.'---';
+echo '------------<br/>';
 function isModuleAccess($access_role, $module, $db_function)
 {
 	$sql1 = "SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role` = '$access_role' AND `module_name` = '$module' LIMIT 1";
@@ -619,11 +625,11 @@ foreach ($query_results_drop1['data'] as $row) {
 		$x[] = $row['module_name']; // Retuns base access
 	}
 }
-// echo '------------<br/>';
-// var_dump($x);
-// echo $access_role.'---';
-// echo '------------<br/>';
-
+echo '------------<br/>';
+var_dump($x);
+echo $system_package.'---';
+echo '------------<br/>';
+// die;
 foreach ($x as $keyX => $valueX) {
 	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
 
@@ -643,8 +649,8 @@ foreach ($x as $keyX => $valueX) {
 	}
 }
 
-// echo '------------<br/>';
-// var_dump($x);
+echo '------------<br/>';
+var_dump($x);
 
 if ($_SESSION['super_admin'] == true) {
 	array_push($x, "operation_list");
@@ -662,10 +668,10 @@ foreach ($x_non_admin as $keyXn => $valueXn) {
 		}
 	}
 }
-// echo '------------<br/>';
-// var_dump($x);
-// echo "<<<<<<  Step 06 >>>>>";
-// die;
+echo '------------<br/>';
+var_dump($x);
+echo "<<<<<<  Step 06 >>>>>";
+die;
 $allowed_pages = $x;
 
 $module_ids = join('", "', $x);
