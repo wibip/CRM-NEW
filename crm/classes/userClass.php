@@ -20,7 +20,9 @@ class Users{
         if($user_superior_level > 2){
             $q .= " WHERE au.create_user='$user_name'";
         }
-// echo $q;
+
+        $q .= " ORDER BY au.id DESC";
+
         $data = $this->db->selectDB($q);
         return $data;
     }

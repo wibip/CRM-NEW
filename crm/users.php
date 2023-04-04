@@ -20,8 +20,6 @@ $user_superior_level = $access_permissions[$user_group]['superior_level'];
 $key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
 $language_results=$db->selectDB($key_query);
 
-
-// var_dump($user_distributor);
 // Get active operators
 $activeOperators = $usersData->getAllOperators($user_distributor,$user_superior_level);
 // var_dump($activeOperators);
@@ -714,6 +712,33 @@ $mobile = "";
 		$user_type = $group;
 		$user_distributor = $usersData->userDistributors($group);
 
+		if($user_group == 'sales_manager'){
+			$parent = $_SESSION['user_id'];
+			$parentDetails = $hierarchy->getParentDetails($parent);
+			if($parentDetails != null) {
+				$operator = $parentDetails['operator_id'];
+				$category = $parentDetails['category_id'];
+			}
+		}
+
+		switch($group) {
+            case 'super_admin':
+                $user_distributor = 'SADMIN';
+            break;
+            case 'admin':
+                $user_distributor = 'ADMIN';
+            break;
+            case 'operation':
+                $user_distributor = $operator;
+            break;
+            case 'sales_manager':
+                $user_distributor = $operator;
+            break;
+            case 'ordering_agent':
+                $user_distributor = $operator;
+            break;
+        }
+
 		if($_POST['id'] != 0) {
 			$id = $_POST['id'];
 			$access_role = $_POST['access_role_2'];
@@ -864,6 +889,7 @@ $mobile = "";
 				$idContAutoInc = $db->getValueAsf("SELECT LAST_INSERT_ID() as f");
 
 				if($group == 'sales_manager' || $group == 'ordering_agent'){
+					
 					$return = $hierarchy->userHierarchySave($operator,$category,$idContAutoInc,$parent,$user_name);
 					if ($return ==true) {
 						$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Create User Hierarchy',$idContAutoInc,'','User hierarchy creatioin success');
@@ -1599,7 +1625,7 @@ $mobile = "";
 	<script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#manage_users-table').dataTable();
+			$('#manage_users-table').dataTable({"order": [],});
 			var userEdit = <?=$userEdit?>;
 			if(userEdit == 1) {
 				var userGroup = '<?=$editUserGroup?>';
@@ -1621,16 +1647,21 @@ $mobile = "";
 
 			$("input[name='radio_user_group']").change(function(){
 				var groupName = $(this).val();
+				var loggedUserGroup = '<?=$user_group?>';
 				$('#operator option:selected').prop('selected', false);
-				if(groupName != 'super_admin' && groupName != 'admin' && groupName != 'operation') {
+				if(groupName != 'super_admin' && groupName != 'admin' && loggedUserGroup != 'sales_manager') {
 					$('#operator_div').show();//parent_div
-					$('#parent_cat_div').show();
-					$("#category").empty();
-					$('#category').append($('<option>', { 
-						value: 0,
-						text : "Select Category" 
-					}));
-					$("#category").prop("disabled", true);
+					if(groupName != 'operation') {
+						$('#parent_cat_div').show();
+						$("#category").empty();
+						$('#category').append($('<option>', { 
+							value: 0,
+							text : "Select Category" 
+						}));
+						$("#category").prop("disabled", true);
+					} else {
+						$('#parent_cat_div').hide();
+					}
 				} else {
 					$('#operator_div').hide();
 					$('#parent_cat_div').hide();

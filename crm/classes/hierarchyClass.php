@@ -33,4 +33,14 @@ class Hierarchy{
         $results = $this->db->execDB($sql);
         return $results;
     }
+
+    public function getParentDetails($parentId) {
+        $parent = null;
+        $sql = "SELECT * FROM `crm_user_hierarchy` WHERE `user_id`='$parentId'";
+        $results = $this->db->selectDB($sql);
+        if($results['rowCount'] > 0) {
+            $parent = $results['data'][0];
+        }
+        return $parent;
+    }
 }
