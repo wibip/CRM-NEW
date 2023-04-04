@@ -20,8 +20,10 @@ $user_superior_level = $access_permissions[$user_group]['superior_level'];
 $key_query = "SELECT language_code, `language` FROM system_languages WHERE  admin_status = 1 ORDER BY `language`";
 $language_results=$db->selectDB($key_query);
 
+
+// var_dump($user_distributor);
 // Get active operators
-$activeOperators = $usersData->getAllOperators();
+$activeOperators = $usersData->getAllOperators($user_distributor,$user_superior_level);
 // var_dump($activeOperators);
 ?>
 
@@ -1286,7 +1288,7 @@ $mobile = "";
 															<div class="btn-group" id="btn-group" role="group">
 																<?php 
 																foreach($access_permissions as $key => $value){
-																	if($user_superior_level < $value['superior_level']) {
+																	if(($value['superior_level'] == 1 && $user_superior_level <= $value['superior_level']) || $user_superior_level < $value['superior_level']) {
 																		$userGroupName = strtoupper(str_replace("_"," ",$key));
 																		$selected = (isset($_GET['edit_id']) && $edit_user_data != null && $key == $edit_user_data['group']) ? "checked" : "";
 																		$accessPage = "";

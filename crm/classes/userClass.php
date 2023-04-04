@@ -34,8 +34,11 @@ class Users{
         return $result;
     }
 
-    public function getAllOperators() {
+    public function getAllOperators($user_distributor,$user_superior_level) {
         $sqlOperators = "SELECT mno_id,mno_description FROM exp_mno WHERE mno_id NOT IN ('SADMIN', 'ADMIN', 'SMAN' )";
+        if($user_superior_level > 2){
+            $sqlOperators .= " AND mno_id='$user_distributor'";
+        }
         $result =  $this->db->selectDB($sqlOperators);
         return $result;
     }
