@@ -376,11 +376,11 @@ if (isset($_POST['submit_mno_form'])) { //6
                                                 </div>                                               
                                                 <div class="col-md-6">
                                                     <label class="control-label" for="sub_operator_code">Sub Operator Code</label>
-                                                    <input class="span4 form-control" id="sub_operator_code" name="sub_operator_code" maxlength="12" placeholder="Operator Code" type="text" value="<?php echo $sub_operator_code;?>" autocomplete="off" required>
+                                                    <input class="span4 form-control" id="sub_operator_code" name="sub_operator_code" maxlength="12" placeholder="Operator Code" type="text" value="<?php echo $sub_operator_code;?>" autocomplete="off" >
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="control-label" for="sub_operator_name">Sub Operator Name</label>
-                                                    <input class="span4 form-control form-control" id="sub_operator_name" name="sub_operator_name" placeholder="Frontier" type="text" value="<?php echo $sub_operator_name;?>" required>
+                                                    <input class="span4 form-control form-control" id="sub_operator_name" name="sub_operator_name" placeholder="Frontier" type="text" value="<?php echo $sub_operator_name;?>" >
                                                 </div> 
                                                 
                                                     <div  class="col-md-12">
@@ -410,6 +410,42 @@ if (isset($_POST['submit_mno_form'])) { //6
 <script>
     $(document).ready(function () {
         $('#operator-table').dataTable();
+
+        $("#submit_mno_form").click(function(){
+            $("form[name='mno_form']").validate({
+                rules: {
+                    api_profile: { required: true },
+                    mno_sys_package: { required: true },
+                    operator_code: { required: true },
+                    mno_account_name: { required: true }
+                },
+                messages: {
+                    api_profile: { 
+                        required: "Please select API Profile"
+                    },
+                    mno_sys_package: { 
+                        required: "Please select Operations Type"
+                    },
+                    operator_code: { 
+                        required: "Please enter Operator Code"
+                    },
+                    mno_account_name: { 
+                        required: "Please enter Operator Name"
+                    }
+                },
+                submitHandler: function(form) {
+                    form.submit();
+                    // alert(dataName);
+                    if(dataName == 'save'){
+                        var title = 'New User Account';
+                        var text = 'Are you sure you want to create user?';
+                    } else {
+                        var title = 'Edit User';
+                        var text = 'Are you sure you want to update this user?';
+                    }
+                },
+            });
+        });
 
         $("#mno_zip_code").keydown(function (e) {
             var mac = $('#mno_zip_code').val();
