@@ -41,19 +41,6 @@
 </style>
 
 <?php
-$serviceTypes = null;
-$baseUrl = $apiUrl.'/api/'.$apiVersion;
-//generating api call to get Token
-$data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
-$tokenReturn = json_decode( $CommonFunctions->httpPost('Generate Token','get api token','API Token generation',$baseUrl.'/token',$data,true),true);
-//generating api call to get Service Types
-if($tokenReturn['status'] == 'success') {
-    $token = $tokenReturn['data']['token'];
-    $serviceTypesReturn = json_decode($CommonFunctions->httpPost('Get Service Types','get service types','Get Service Types',$baseUrl.'/service-types',$token),true);
-    if($serviceTypesReturn['status'] == 'success') {
-        $serviceTypes = $serviceTypesReturn['data'];
-    }
-}
 
 $q1 = "SELECT product_id,product_code,product_name,QOS,time_gap,network_type
         FROM exp_products
@@ -168,17 +155,10 @@ if (!empty($arrayo)) {
                 <div class="col-md-6">
                     <label for="radiobtns">Service Type</label>
                     <select name="service_type" id="service_type" class="span4 form-control">
-                        <?php if($serviceTypes != null){ ?>
                         <option value="0">Please select service type</option>
-                        <?php foreach($serviceTypes as $serviceType){ ?>
-                            <option value="<?=$serviceType['id']?>"><?=$serviceType['service_type']?></option>
-                        <?php
-                            }
-                        } else { ?>
-                            <option value="0">Service type not found</option>
-                        <?php
-                        }
-                        ?>
+                        <option value="FRT-VYOS">FRT-VYOS</option>
+                        <option value="FRT AC Service TYPE">FRT AC Service TYPE</option>
+                        <option value="frt-vyos-vpt-acc-on">frt-vyos-vpt-acc-on</option>
                     </select>
                 </div>
                 <div class="col-md-6">
