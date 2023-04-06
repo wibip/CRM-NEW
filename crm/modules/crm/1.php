@@ -182,6 +182,46 @@ if (!empty($arrayo)) {
                     <label for="radiobtns">Zip</label>
                     <input type="text" name="zip" id="zip" class="span4 form-control" value="<?php echo $edit===true?$get_zip:''?>">
                 </div>
+                <div class="col-md-6">
+                <label for="radiobtns">Timezone</label>
+                <select class="span4 form-control" id="time_zone" name="time_zone" autocomplete="off">
+                    <option value="">Select Time Zone</option>
+                    <?php
+                    $utc = new DateTimeZone('UTC');
+                    $dt = new DateTime('now', $utc);
+                    foreach ($priority_zone_array as $tz){
+                        $current_tz = new DateTimeZone($tz);
+                        $offset =  $current_tz->getOffset($dt);
+                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                        $abbr = $transition[0]['abbr'];
+                        if($get_timezone==$tz){
+                            $select="selected";
+                        }else{
+                            $select="";
+                        }
+                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                    }
+
+                    foreach(DateTimeZone::listIdentifiers() as $tz) {
+                        //Skip
+                        if(in_array($tz,$priority_zone_array))
+                            continue;
+
+                        $current_tz = new DateTimeZone($tz);
+                        $offset =  $current_tz->getOffset($dt);
+                        $transition =  $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
+                        $abbr = $transition[0]['abbr'];
+                        
+                        if($get_timezone==$tz){
+                            $select="selected";
+                        }else{
+                            $select="";
+                        }
+                        echo '<option '.$select.' value="' .$tz. '">' .$tz. ' [' .$abbr. ' '. CommonFunctions::formatOffset($offset). ']</option>';
+                    }
+                    ?>
+                </select>
+            </div>
             </fieldset>
 
             <fieldset id="wifi_info" data-name="Wi-Fi Site Information"  class="row hide">
