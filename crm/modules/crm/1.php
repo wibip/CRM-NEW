@@ -457,7 +457,7 @@ if (!empty($arrayo)) {
                 </div>
             </fieldset>
 
-            <div class="col-md-12">
+            <div class="col-md-12 actions clearfix">
                 <ul style="list-style: none;float: right;margin: 0;" role="menu" aria-label="Pagination">
                     <?php if($activatePopup == true && $get_status == "Completed") {  ?>
                         <!-- <li class="locationPopup" style="display: inline-block;margin-left: 5px;" aria-hidden="true"><a  class="btn btn-primary" role="menuitem">Add Location</a></li> -->
