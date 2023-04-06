@@ -439,7 +439,7 @@
                         ],
                         'locations' => [
                             [
-                                'id' => $result['property_id'],
+                                'id' => $wifi_unique,
                                 'name' => $result['contact_name'],
                                 'address' => [
                                     'street' => $result['street'],
@@ -461,7 +461,7 @@
                         ],
                         'locations' => [
                             [
-                                'id' => $result['property_id'],
+                                'id' => $wifi_unique,
                                 'name' => $result['contact_name'],
                                 'address' => [
                                     'street' => $result['street'],
@@ -472,10 +472,10 @@
                                 'timeZone'=> $timezone
                             ]
                         ],
-                        "operator-code" => "FRT",
-                        "sub-operator" => "",
-                        "service-type" => $result['service_type'],
-                        "env" => "hosted"
+                        // "operator-code" => "FRT",
+                        // "sub-operator" => "",
+                        // "service-type" => $result['service_type'],
+                        // "env" => "hosted"
                     ];
                 }
 
