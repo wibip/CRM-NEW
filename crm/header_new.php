@@ -595,9 +595,9 @@ if (strlen($main_menu_clickble) == "0" || $main_menu_clickble == '') {
 // echo '------------<br/>';
 // echo $system_package.'---';
 // echo '------------<br/>';
-function isModuleAccess($access_role, $module, $db_function)
+function isModuleAccess($user_group, $module, $db_function)
 {
-	$sql1 = "SELECT `module_name` FROM `admin_access_roles_modules` WHERE `access_role` = '$access_role' AND `module_name` = '$module' LIMIT 1";
+	$sql1 = "SELECT `module_name` FROM `admin_access_roles_modules` WHERE `user_group` = '$user_group' AND `module_name` = '$module' LIMIT 1";
 	// var_dump($sql1);
 	$result = $db_function->selectDB($sql1);
 	// print_r($result);
@@ -631,9 +631,9 @@ foreach ($query_results_drop1['data'] as $row) {
 // echo '------------<br/>';
 // die;
 foreach ($x as $keyX => $valueX) {
-	if (strtoupper($access_role) != 'ADMIN' && strlen($access_role) > '0') {
+	if (strtoupper($user_group) != 'ADMIN' && strlen($user_group) > '0') {
 
-		if (!(isModuleAccess($access_role, $valueX, $db_class1))) {
+		if (!(isModuleAccess($user_group, $valueX, $db_class1))) {
 			try {
 				unset($x[$keyX]);
 			} catch (Exception $e) {

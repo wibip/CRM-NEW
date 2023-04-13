@@ -8,7 +8,7 @@ $icon_arr = [
 	'CRM'=> 'icon-group',
 	'OPSaaS'=> 'icon-group',
 	'Clients'=> 'icon-group',
-	'Properties'=> 'icon-building',
+	'Property Info'=> 'icon-building',
 	'Admin Config'=> 'icon-edit',
 	'Orders'=> 'icon-group'
 ];

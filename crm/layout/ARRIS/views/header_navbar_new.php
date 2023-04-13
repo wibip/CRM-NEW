@@ -9,7 +9,7 @@ $icon_arr = [
 	'CRM'=> 'fa-solid fa-people-group',
 	'OPSaaS'=> 'fa-solid fa-people-group',
 	'Clients'=> 'fa-solid fa-users-viewfinder',
-	'Properties'=> 'fa-solid fa-building-user',
+	'Property Info'=> 'fa-solid fa-building-user',
 	'Admin Config'=> 'fa-solid fa-pen-to-square',
 	'Orders'=> 'fa-solid fa-users-viewfinder'
 ];
@@ -25,12 +25,14 @@ if ($script != 'verification') {
 
 $numItems = count($main_mod_array);
 	
+
 $i = 0;
 // $active_title = "Switch Accounts";
 if($script == 'operation_list'){
 	$active_title = "";
 }
 foreach ($main_mod_array as $keym => $valuem) {
+	// var_dump($valuem);
 	if (strlen($valuem['active'])) {
 		$scrpt_active_status = ' class="active"';
 	} else {
@@ -68,9 +70,7 @@ foreach ($main_mod_array as $keym => $valuem) {
 
 			echo '<li class="'.$active.'"><div><i class="'.$icon_arr[$main_menu_name].' show"></i><span><a href="' . $link_main_m . '">'.$main_menu_name.'&nbsp;&nbsp;</a></span></div></li>';
 
-		}
-
-		/// Multy Item
+		}/// Multy Item
 		else {
 			$main_menu_name2 = $valuem['name'];
 			$modarray = $valuem['module'];
