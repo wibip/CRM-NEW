@@ -532,7 +532,7 @@
         }
     }
 
-    // var_dump($modules[$user_group][$script]);
+    // var_dump($modules);
 
     foreach ($modules[$user_group][$script] as $value) {
         $submit_form = 'modules/' . $value['submit'] . '.php';

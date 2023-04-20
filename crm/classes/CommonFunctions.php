@@ -580,6 +580,10 @@ class CommonFunctions{
         if($status != null && $status != 'all') {
             $propertyQuery .= " AND status='".$status."'";
         }
+
+        if($info_type==2){
+            $propertyQuery .= " AND mno_id='MNO267'";
+        }
         // echo $propertyQuery;
         $query_results = $this->db->selectDB($propertyQuery);
 
