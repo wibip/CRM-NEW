@@ -503,7 +503,7 @@ class CommonFunctions{
         return $resultSysPackage;
     }
 
-    public function getProperties($user_group,$user_name,$user_distributor,$city,$state,$zip,$start_date,$end_date,$limit=10,$client_name = null,$business_name=null,$status=null) {
+    public function getProperties($info_type,$user_group,$user_name,$user_distributor,$city,$state,$zip,$start_date,$end_date,$limit=10,$client_name = null,$business_name=null,$status=null) {
 		$subQuery = "";        
         $clientArray = [];
         $businessArray = [];
@@ -511,8 +511,10 @@ class CommonFunctions{
         $stateArray = [];
         $zipArray = [];
         $clientApiArray = [];
+
+        $columns = ($info_type==1 ? "property_id,status" : "`wifi_information`,`product_information`,`qualifying_questions`");
         
-        $propertyQuery = "SELECT id,property_id,business_name,status,city,state,zip,create_user,create_date FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
+        $propertyQuery = "SELECT id,".$columns.",business_name,city,state,zip,create_user,create_date FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
         switch($user_group ){
             case 'super_admin' :
                 $propertyQuery .= "";

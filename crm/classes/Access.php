@@ -67,7 +67,23 @@ define('ACCESS',[
                     'actions'=>['edit','delete']
                 ],
             ],
+            'order_templates'=>[
+                'create' =>[
+                    'actions'=>['create']
+                ],
+                'manage'=>[
+                    'actions'=>['edit','delete']
+                ],
+            ],
             'properties'=>[
+                'create' =>[
+                    'actions'=>['create']
+                ],
+                'manage'=>[
+                    'actions'=>['edit','delete']
+                ],
+            ],
+            'property_additional'=>[
                 'create' =>[
                     'actions'=>['create']
                 ],
@@ -137,6 +153,14 @@ define('ACCESS',[
                     'actions'=>['edit','delete']
                 ],
             ],
+            'property_additional'=>[
+                'create' =>[
+                    'actions'=>['create']
+                ],
+                'manage'=>[
+                    'actions'=>['edit','delete']
+                ],
+            ],
             'api_profile'=>[
                 'create' =>[
                     'actions'=>['create']
@@ -198,7 +222,15 @@ define('ACCESS',[
                 'manage'=>[
                     'actions'=>['edit','delete']
                 ],
-            ]
+            ],
+            'property_additional'=>[
+                'create' =>[
+                    'actions'=>['create']
+                ],
+                'manage'=>[
+                    'actions'=>['edit','delete']
+                ],
+            ],
         ],
         'home' => 'properties',
         'superior_level' => 3
@@ -228,7 +260,15 @@ define('ACCESS',[
                 'manage'=>[
                     'actions'=>['edit','delete']
                 ],
-            ]
+            ],
+            'property_additional'=>[
+                'create' =>[
+                    'actions'=>['create']
+                ],
+                'manage'=>[
+                    'actions'=>['edit','delete']
+                ],
+            ],
         ],
         'home' => 'properties',
         'superior_level' => 4

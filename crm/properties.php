@@ -79,7 +79,7 @@ if (isset($_GET['remove_id']) && isset($_GET['remove_property'])) {
     }
 }
 
-$propertyResult = $CommonFunctions->getProperties($user_group,$user_name,$user_distributor,$property_city,$property_state,$property_zip,$start_date,$end_date,$limit,$client_name,$business_name,$status);
+$propertyResult = $CommonFunctions->getProperties(1,$user_group,$user_name,$user_distributor,$property_city,$property_state,$property_zip,$start_date,$end_date,$limit,$client_name,$business_name,$status);
 
 $query_results = $propertyResult['query_results'];
 $clientArray = $propertyResult['clientArray'];

@@ -264,20 +264,21 @@ $modules = [
             ]
         ]
     ],
-    "ordering_agent" => [
-        "provision" => [
+    "sales_manager" => [
+        "crm" => [
+            // [
+            //     "id"=>"crm_manage",
+            //     "name"=>"Manage",
+            //     "module"=>"crm_manage/1"
+            // ],
             [
-                "id"=>"provision_manage",
-                "name"=>"Manage",
-                "module"=>"provision_manage/1"
-            ],
-            [
-                "id" => "provision_create",
+                "id" => "crm_create",
                 "name" => "Create",
-                "module" => "provision/1",
-                "submit"=>"create_property/submit-property-prov"
-            ],
-        ],
+                "module" => "crm/1"
+            ]
+        ]
+    ],
+    "ordering_agent" => [
         "crm" => [
             // [
             //     "id"=>"crm_manage",

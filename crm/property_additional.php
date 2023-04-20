@@ -45,41 +45,9 @@ if (isset($_POST['filter'])) {
     }
 } 
 
-if (isset($_GET['remove_id']) && isset($_GET['remove_property'])) {
-    var_dump($_GET['token']);
-    if ($_GET['token'] == $_SESSION['FORM_SECRET']) { 
-        $remove_id = $_GET['remove_id'];
-        $api_id = $_GET['api_id'];
-        $businessId = 0;
-        $property_details = $CommonFunctions->getPropertyDetails($remove_id,'business_id');
-        if(!empty($property_details['data'])) {
-            $businessId = $property_details['data'][0]['business_id'];
-        }
 
-        $crm = new crm($api_id, $system_package);
-        $response = $crm->deleteParent($businessId);
-// var_dump($response);
-        if($response == 200) {   
-            $delete = $db->execDB("DELETE FROM exp_crm WHERE id='$remove_id'");
-            if ($delete === true) {
-                $success_msg = "CRM Property is deleted successfully.";
-                $db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Delete CRM Property',$remove_id,'3001',$success_msg);
-                //delete form user
-                $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
-            } else {                    
-                $success_msg = "CRM Property deleting is failed.";
-                $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
-                $_SESSION['msg20'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>".$success_msg ."</strong></div>";
-            }
-        } else {
-            $success_msg = "CRM Property deleting is failed. ".$response["data"]["message"];
-            $db->addLogs($user_name, 'ERROR',$user_group, $page, 'Delete CRM Property',$remove_id,'2009',$success_msg);
-            $_SESSION['msg20'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $success_msg . "</strong></div>";
-        }
-    }
-}
 
-$propertyResult = $CommonFunctions->getProperties($user_group,$user_name,$user_distributor,$property_city,$property_state,$property_zip,$start_date,$end_date,$limit,$client_name,$business_name,$status);
+$propertyResult = $CommonFunctions->getProperties(2,$user_group,$user_name,$user_distributor,$property_city,$property_state,$property_zip,$start_date,$end_date,$limit,$client_name,$business_name,$status);
 
 $query_results = $propertyResult['query_results'];
 $clientArray = $propertyResult['clientArray'];
@@ -88,27 +56,6 @@ $cityArray = $propertyResult['cityArray'];
 $stateArray = $propertyResult['stateArray'];
 $zipArray = $propertyResult['zipArray'];
 $clientApiArray = $propertyResult['client_api'];
-
-// $api = $api_details['data'][0];
-// var_dump($api);
-$serviceTypes = null;
-// $baseUrl = $api['api_url'] . '/api/v1_0';//'http://bi-development.arrisi.com/api/v1_0';
-// //generating api call to get Token
-// $apiUsername = $api['api_username'];//'dev_hosted_api_user';
-// $apiPassword = $api['api_password'];//'development@123!';
-// $baseUrl = $apiUrl.'/api/'.$apiVersion;
-// //generating api call to get Token
-
-// $data = json_encode(['username'=>$apiUsername, 'password'=>$apiPassword]);
-// $tokenReturn = json_decode( $CommonFunctions->httpPost($baseUrl.'/token',$data,true),true);
-// //generating api call to get Service Types
-// if($tokenReturn['status'] == 'success') {
-//     $token = $tokenReturn['data']['token'];
-//     $serviceTypesReturn = json_decode($CommonFunctions->httpPost($baseUrl.'/service-types',$token),true);
-//     if($serviceTypesReturn['status'] == 'success') {
-//         $serviceTypes = $serviceTypesReturn['data'];
-//     }
-// }
 
 ?>
 <style>
@@ -204,22 +151,6 @@ $serviceTypes = null;
                                                         ?>
                                                     </select> 
                                                 </div>
-                                                <!-- <div class="col-md-4">
-                                                    <label for="radiobtns">Service Type</label>
-                                                    <select name="service_type" id="service_type" class="span4 form-control">
-                                                        < ?php if($serviceTypes != null){ ?>
-                                                        <option value="0">Please select service type</option>
-                                                        < ?php   foreach($serviceTypes as $serviceType){ ?>
-                                                            <option value="< ?=$serviceType['id']?>">< ?=$serviceType['service_type']?></option>
-                                                        < ?php
-                                                            }
-                                                        } else { ?>
-                                                        <option value="0">Service type not found</option>
-                                                        < ?php
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div> -->
                                                 <div class="col-md-3">
                                                     <label>Status</label>
                                                     <select id="status" name="status">
@@ -273,12 +204,13 @@ $serviceTypes = null;
                                         <table class="table table-striped" style="width:100%" id="property-table">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Unique Property ID</th>
-                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Property Name</th>
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Property Name</th>
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Wifi Info</th>
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Product Info</th>
+                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Qualifying Questions</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Property City</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Property State</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Property Zip</th>
-                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Status</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Order Raise At</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Order Raise By</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Show Details</th>
@@ -295,12 +227,13 @@ $serviceTypes = null;
                                                             }
                                                             
                                                             echo '<tr>
-                                                            <td> '.$row['property_id'].' </td>
                                                             <td> '.$row['business_name'].' </td>
+                                                            <td> <button type="button" class="btn btn-primary" data-backdrop="static" data-bs-toggle="modal" id="open_info" data-name="Wifi Information" data-info="'.$row['wifi_information'].'">View</button></td>
+                                                            <td> <button type="button" class="btn btn-primary" data-backdrop="static" data-bs-toggle="modal" id="open_info" data-name="Product Information" data-info="'.$row['product_information'].'">View</button> </td>
+                                                            <td> <button type="button" class="btn btn-primary" data-backdrop="static" data-bs-toggle="modal" id="open_info" data-name="Qualifying Questions" data-info="'.$row['qualifying_questions'].'">View</button></td>
                                                             <td> '.$row['city'].' </td>
                                                             <td> '.$row['state'].' </td>
                                                             <td> '.$row['zip'].' </td>
-                                                            <td> '.$row['status'].' </td>
                                                             <td> '.date('d-m-Y',strtotime($row['create_date'])).' </td>
                                                             <td> '.$clientName.' </td>';
                                                             echo '<td><a href="javascript:void();" id="VIEWACC_'.$row['id'].'"  class="btn btn-small btn-info">
@@ -368,6 +301,24 @@ $serviceTypes = null;
     <!-- /main-inner -->
 </div>
 <!-- /main -->
+
+<!-- Modal -->
+<div id="infoModal" class="modal fade" role="dialog" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
+<!-- <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"> -->
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Alert messages js-->
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
@@ -396,6 +347,16 @@ $serviceTypes = null;
         $(function() {
             $('#datepicker').datepicker();
         });
+
+        $("#open_info").click(function(){
+            // var title = $(this).data('name');
+            // var info = $(this).data('info');
+            // $( ".modal-title" ).text(title);
+            // $("#infoModal").modal({backdrop: true});
+            $("#infoModal").modal('show');
+        });
+
+        
     });
 </script>
 
