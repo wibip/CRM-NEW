@@ -308,7 +308,7 @@ $clientApiArray = $propertyResult['client_api'];
 <!-- Modal -->
 <div id="infoModal" class="modal fade" role="dialog" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
 <!-- <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"> -->
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -355,6 +355,7 @@ $clientApiArray = $propertyResult['client_api'];
             var title = $(this).data('name');
             var orderId = $(this).data('id');
             var infoType = $(this).data('infotype');
+            $('.modal-body').empty();
             $("#overlay").css("display","block");
             $.ajax({	
                 type: "POST",
