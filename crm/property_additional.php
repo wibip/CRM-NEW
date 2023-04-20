@@ -219,18 +219,20 @@ $clientApiArray = $propertyResult['client_api'];
                                             </thead>
                                             <tbody>
                                                 <?php
+                                                // var_dump($query_results['data']);
                                                     if($query_results['rowCount'] > 0) {
+                                                        $repeatCounter = 1;
                                                         foreach($query_results['data'] AS $row){
                                                             $clientDetails = $CommonFunctions->getAdminUserDetails('user_name',$row['create_user'],'full_name');
                                                             if(!empty($clientDetails['data'])) {
                                                                 $clientName = $clientDetails['data'][0]['full_name'];
                                                             }
-                                                            
+                                                            // var_dump($row['wifi_information']);
                                                             echo '<tr>
                                                             <td> '.$row['business_name'].' </td>
-                                                            <td> <button type="button" class="btn btn-primary" data-backdrop="static" data-bs-toggle="modal" id="open_info" data-name="Wifi Information" data-info="'.$row['wifi_information'].'">View</button></td>
-                                                            <td> <button type="button" class="btn btn-primary" data-backdrop="static" data-bs-toggle="modal" id="open_info" data-name="Product Information" data-info="'.$row['product_information'].'">View</button> </td>
-                                                            <td> <button type="button" class="btn btn-primary" data-backdrop="static" data-bs-toggle="modal" id="open_info" data-name="Qualifying Questions" data-info="'.$row['qualifying_questions'].'">View</button></td>
+                                                            <td> <button type="button" class="btn btn-primary open_info" data-backdrop="static" data-bs-toggle="modal" id="open_wifi_info'.$repeatCounter.'" data-name="Wifi Information" data-infotype="wifi_information" data-id="'.$row['id'].'">View</button></td>
+                                                            <td> <button type="button" class="btn btn-primary open_info" data-backdrop="static" data-bs-toggle="modal" id="open_product_info'.$repeatCounter.'" data-name="Product Information" data-infotype="product_information" data-id="'.$row['id'].'">View</button> </td>
+                                                            <td> <button type="button" class="btn btn-primary open_info" data-backdrop="static" data-bs-toggle="modal" id="open_questions'.$repeatCounter.'" data-name="Qualifying Questions" data-infotype="qualifying_questions" data-id="'.$row['id'].'">View</button></td>
                                                             <td> '.$row['city'].' </td>
                                                             <td> '.$row['state'].' </td>
                                                             <td> '.$row['zip'].' </td>
@@ -273,6 +275,7 @@ $clientApiArray = $propertyResult['client_api'];
                                                                 	</script></td>';
                                                                 }
                                                             echo '</tr>';
+                                                            $repeatCounter++;
                                                         }
                                                     } else {
                                                     ?>
@@ -348,11 +351,34 @@ $clientApiArray = $propertyResult['client_api'];
             $('#datepicker').datepicker();
         });
 
-        $("#open_info").click(function(){
-            // var title = $(this).data('name');
-            // var info = $(this).data('info');
-            // $( ".modal-title" ).text(title);
-            // $("#infoModal").modal({backdrop: true});
+        $(".open_info").click(function(){
+            var title = $(this).data('name');
+            var orderId = $(this).data('id');
+            var infoType = $(this).data('infotype');
+            $("#overlay").css("display","block");
+            $.ajax({	
+                type: "POST",
+                url: "ajax/load_additional_informaions.php",
+                data: {
+                    order_id: orderId,
+                    info_type: infoType
+                },
+                success: function(responseData) {
+                    responseData = JSON.parse(responseData);
+                    if(responseData['rowCount'] > 0){
+                        var infoDetails = jQuery.parseJSON(responseData['data'][0][infoType]);
+                        $.each(infoDetails, function(key,value) {
+                            $('.modal-body').append( "<strong>"+key+"</strong> : "+value+"<br/>" );
+                        }); 
+                    } else {}
+                    $("#overlay").css("display","none");
+                },
+                error: function() {
+                    $("#overlay").css("display","none");
+                }
+            });
+
+            $( ".modal-title" ).text(title);
             $("#infoModal").modal('show');
         });
 

@@ -512,9 +512,9 @@ class CommonFunctions{
         $zipArray = [];
         $clientApiArray = [];
 
-        $columns = ($info_type==1 ? "property_id,status" : "`wifi_information`,`product_information`,`qualifying_questions`");
+        // $columns = ($info_type==1 ? "property_id,status" : "");
         
-        $propertyQuery = "SELECT id,".$columns.",business_name,city,state,zip,create_user,create_date FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
+        $propertyQuery = "SELECT id,property_id,status,business_name,city,state,zip,create_user,create_date FROM exp_crm WHERE create_user IN ( SELECT user_name FROM admin_users ".$subQuery.")";
         switch($user_group ){
             case 'super_admin' :
                 $propertyQuery .= "";
@@ -592,4 +592,10 @@ class CommonFunctions{
         $results = $this->db->selectDB($sql);
         return $results;
     } 
+
+    public function getPropertyAdditionals($order_id,$info_type){
+        $sql = "SELECT ".$info_type." FROM `exp_crm` WHERE `id`='$order_id'";
+        $results = $this->db->selectDB($sql);
+        return $results;
+    }
 }

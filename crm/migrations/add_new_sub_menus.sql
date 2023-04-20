@@ -33,7 +33,6 @@ INSERT INTO `admin_access_roles_modules` (`access_role`,`user_group`,`module_nam
 
 
 /*Add Order Menu*/
-
 UPDATE admin_access_modules SET main_module_order=3 WHERE module_name='crm';
 
 INSERT INTO `admin_access_modules` (`module_name`,`name_group`,`user_type`,`user_group`,`is_enable`,`menu_item`,`order`,`main_module`,`main_module_order`,`create_date`,`create_user`) 
