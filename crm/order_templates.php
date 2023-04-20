@@ -20,30 +20,7 @@ $page = "Order Templates";
                                 <div class="tab-content">
                                     <div div class="tab-pane fade show active" id="order-templates-tab-pane" role="tabpanel" aria-labelledby="operators" tabindex="0">
                                         <h1 class="head">Order Templates</h1>
-                                        <div class="border card my-4">
-                                            <!-- Components -->
-                                            <div class="col-md-6">
-                                                <h5>Drag & Drop components</h5>
-                                                <hr>
-                                                <div class="tabbable">
-                                                    <ul class="nav nav-tabs" id="formtabs"></ul>
-                                                    <form class="form-horizontal" id="components" role="form">
-                                                        <fieldset>
-                                                            <div class="tab-content"></div>
-                                                        </fieldset>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            <!-- / Components -->
-                                            <!-- Building Form. -->
-                                            <div class="col-md-6">
-                                                <h5>Your Form</h5>
-                                                <hr>
-                                                <div id="build">
-                                                    <form id="target" class="form-horizontal"></form>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div id="fb-editor"></div>                            
                                     </div>
                                 </div>
                             </div>
@@ -61,9 +38,11 @@ $page = "Order Templates";
     <!-- /main-inner -->
 </div>
 <!-- /main -->
-<script data-main="assets/js/main-built.js" src="assets/js/lib/require.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
 <script>
-    $(document).ready(function () {
-        // $('#operator-table').dataTable();
-    });
+jQuery(function($) {
+    $(document.getElementById('fb-editor')).formBuilder();
+});
 </script>
