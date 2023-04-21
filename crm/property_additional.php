@@ -1,6 +1,9 @@
 <?php
 include 'header_new.php';
 
+require_once 'classes/AdditionalInfo.php';
+$AdditionalInfo = AdditionalInfo;
+
 $CommonFunctions = new CommonFunctions();
 $page = 'Properties Additional';
 $issub = 0;
@@ -44,8 +47,6 @@ if (isset($_POST['filter'])) {
         $end_date = $en_date . ' 23:59:59';
     }
 } 
-
-
 
 $propertyResult = $CommonFunctions->getProperties(2,$user_group,$user_name,$user_distributor,$property_city,$property_state,$property_zip,$start_date,$end_date,$limit,$client_name,$business_name,$status);
 
@@ -96,7 +97,7 @@ $clientApiArray = $propertyResult['client_api'];
                                                     <select id="business_name" name="business_name">
                                                         <option value='all' <?=(($business_name == null) ? "selected" : "")?>>All</option>
                                                         <?php 
-                                                            if(!empty($businessArray)){
+                                                            if(!empty($businessArray)) {
                                                                 foreach($businessArray AS $key=>$value) {
                                                         ?>
                                                                 <option value='<?=$key?>' <?=(($business_name != null && $business_name == $key) ? "selected" : "")?>><?=$value?></option>
@@ -308,7 +309,7 @@ $clientApiArray = $propertyResult['client_api'];
 <!-- Modal -->
 <div id="infoModal" class="modal fade" role="dialog" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
 <!-- <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"> -->
-    <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -355,6 +356,8 @@ $clientApiArray = $propertyResult['client_api'];
             var title = $(this).data('name');
             var orderId = $(this).data('id');
             var infoType = $(this).data('infotype');
+            var AdditionalInfo = <?php echo json_encode($AdditionalInfo); ?>;
+            console.log(AdditionalInfo);
             $('.modal-body').empty();
             $("#overlay").css("display","block");
             $.ajax({	
@@ -368,9 +371,13 @@ $clientApiArray = $propertyResult['client_api'];
                     responseData = JSON.parse(responseData);
                     if(responseData['rowCount'] > 0){
                         var infoDetails = jQuery.parseJSON(responseData['data'][0][infoType]);
+                        html = "";
+                        html += '<table class="table">';
                         $.each(infoDetails, function(key,value) {
-                            $('.modal-body').append( "<strong>"+key+"</strong> : "+value+"<br/>" );
+                            html += "<tr><td><strong>"+AdditionalInfo[key]+"</strong></td><td><strong>:</strong></td><td>" + value +"</td></tr>";
                         }); 
+                        html += '</table>';
+                        $('.modal-body').empty('').append(html);
                     } else {}
                     $("#overlay").css("display","none");
                 },

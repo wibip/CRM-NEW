@@ -14,6 +14,7 @@ $userEdit = 0;
 $editUserGroup = '';
 
 $access_permissions = ACCESS;
+var_dump($access_permissions);
 $user_superior_level = $access_permissions[$user_group]['superior_level'];
 
 // Get languages
