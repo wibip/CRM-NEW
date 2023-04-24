@@ -228,7 +228,7 @@ if (!empty($arrayo)) {
                 <div class="col-md-6">
                     <label for="radiobtns">Will this customer have more than one site on the WiFi Now service? </label>
                     <input type="radio" name="more_than_one_sites" id="more_than_one_sites-yes" class="span4 form-control">&nbsp;Yes 
-                    <input type="radio" name="more_than_one_sites" id="more_than_one_sites-no" class="span4 form-control">&nbsp;No
+                    <input type="radio" name="more_than_one_sites" id="more_than_one_sites-no" class="span4 form-control" style="display: inline-block;">&nbsp;No
                 </div>
 
                 <div class="col-md-6">
