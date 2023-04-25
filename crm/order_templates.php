@@ -20,7 +20,7 @@ $page = "Order Templates";
                                 <div class="tab-content">
                                     <div div class="tab-pane fade show active" id="order-templates-tab-pane" role="tabpanel" aria-labelledby="operators" tabindex="0">
                                         <h1 class="head">Order Templates</h1>
-                                        <div id="fb-editor"></div>                            
+                                        <div id="ot-editor"></div>                            
                                     </div>
                                 </div>
                             </div>
@@ -38,11 +38,58 @@ $page = "Order Templates";
     <!-- /main-inner -->
 </div>
 <!-- /main -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-<script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
+<script src="https://formbuilder.online/assets/js/form-builder.min.js"></script> -->
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/form-builder.min.js"></script>
 <script>
 jQuery(function($) {
-    $(document.getElementById('fb-editor')).formBuilder();
+    var options = {
+        defaultFields: [{
+                className: "form-control",
+                label: "First Name",
+                placeholder: "Enter your first name",
+                name: "first-name",
+                required: true,
+                type: "text"
+            }, {
+                className: "form-control",
+                label: "Select",
+                name: "select-1454862249997",
+                type: "select",
+                multiple: "true",
+                values: [{
+                label: 'Custom Option 1',
+                value: 'test-value'
+                }, {
+                label: 'Custom Option 2',
+                value: 'test-value-2'
+                }]
+            }, {
+                label: "Radio",
+                name: "select-1454862249997",
+                type: "radio-group"
+            }
+        ],
+        disableFields: ['autocomplete',
+                        'button',
+                        'date',
+                        'file',
+                        'header',
+                        'hidden',
+                        'starRating'
+        ],
+        controlOrder: [
+            'text',
+            'textarea',
+            'select',
+            'checkbox-group',
+            'radio-group',
+            'paragraph',
+            'number'
+        ]
+    };
+    $(document.getElementById('ot-editor')).formBuilder(options);
 });
 </script>

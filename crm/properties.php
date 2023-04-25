@@ -138,11 +138,11 @@ $serviceTypes = null;
                                     <div div class="tab-pane fade show active" id="properties-tab-pane" role="tabpanel" aria-labelledby="properties" tabindex="0">
                                         <h1 class="head">Properties</h1>
                                         <div class="border card my-4">
-                                            <div class="border-bottom card-header p-4">
+                                            <!-- <div class="border-bottom card-header p-4">
                                                 <div class="g-3 row">
                                                     <span class="fs-5">Property Filters</span>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <form method="post" class="row g-3 p-4">
                                                 <div class="col-md-3">
                                                     <label>Property Name</label>
@@ -160,7 +160,7 @@ $serviceTypes = null;
                                                     </select> 
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label>Property City</label>
+                                                    <label>Property City</label><br/>
                                                     <select id="property_city" name="property_city">
                                                         <option value='all' <?=(($property_city == null) ? "selected" : "")?>>All</option>
                                                         <?php 
@@ -174,7 +174,7 @@ $serviceTypes = null;
                                                         ?>
                                                     </select> 
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-2">
                                                     <label>Property State</label>
                                                     <select id="property_state" name="property_state">
                                                         <option value='all' <?=(($property_state == null) ? "selected" : "")?>>All</option>
@@ -189,7 +189,7 @@ $serviceTypes = null;
                                                         ?>
                                                     </select> 
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-2">
                                                     <label>Property Zip</label>
                                                     <select id="property_zip" name="property_zip">
                                                         <option value='all' <?=(($property_zip == null) ? "selected" : "")?>>All</option>
@@ -220,7 +220,7 @@ $serviceTypes = null;
                                                         ?>
                                                     </select>
                                                 </div> -->
-                                                <div class="col-md-3">
+                                                <div class="col-md-2">
                                                     <label>Status</label>
                                                     <select id="status" name="status">
                                                         <option value='all' <?=(($status == null) ? "selected" : "")?>>All</option>
@@ -246,21 +246,20 @@ $serviceTypes = null;
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
+                                                    <label>Order Raise from</label>
                                                     <div>
-                                                        <div class="col-md-5">
-                                                            <label class="control-label" for="radiobtns">Order Raise from</label>
+                                                        <div class="col-md-5" style="display: inline-block;">
                                                             <input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($user_mg_start)) {
                                                                                                                                                                                         echo $user_mg_start;
                                                                                                                                                                                 } ?>" placeholder="<?=(isset($show_start) ? $show_start : 'mm/dd/yyyy')?>">
                                                         </div> 
-                                                        <div class="col-md-2"> to </div> 
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-1" style="display: inline-block;text-align: right;"> to </div> 
+                                                        <div class="col-md-5" style="display: inline-block;">
                                                             <input class="inline_error inline_error_1 span2 form-control" id="end_date" name="end_date" type="text" value="<?php if (isset($user_mg_end)) {
                                                                                                                                                                                     echo $user_mg_end;
                                                                                                                                                                             } ?>" placeholder="<?=(isset($show_end) ? $show_end : 'mm/dd/yyyy')?>">
 
                                                         </div> 
-                                                        <input type="hidden" name="date3" />
                                                     </div>
                                                     <!-- /controls -->
                                                 </div>
