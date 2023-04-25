@@ -64,6 +64,7 @@ $clientApiArray = $propertyResult['client_api'];
     float: left !important;
 }
 </style>
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" />
 
 <div class="main">
     <div class="main-inner">
@@ -178,21 +179,21 @@ $clientApiArray = $propertyResult['client_api'];
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label>Order Raise from</label>
+                                                    <label>Order Raise </label>
                                                     <div>
-                                                        <div class="col-md-5"  style="display: inline-block;">
+                                                        <div class="col-md-1" style="display: inline-block;text-align: right;"> from </div> 
+                                                        <div class="col-md-4"  style="display: inline-block;">
                                                             <input class="inline_error inline_error_1 span2 form-control" id="start_date" name="start_date" type="text" value="<?php if (isset($user_mg_start)) {
                                                                                                                                                                                         echo $user_mg_start;
                                                                                                                                                                                 } ?>" placeholder="<?=(isset($show_start) ? $show_start : 'mm/dd/yyyy')?>">
                                                         </div> 
-                                                        <div class="col-md-1"  style="display: inline-block;"> to </div> 
-                                                        <div class="col-md-5"  style="display: inline-block;">
+                                                        <div class="col-md-1"  style="display: inline-block;text-align: right;""> to </div> 
+                                                        <div class="col-md-4"  style="display: inline-block;">
                                                             <input class="inline_error inline_error_1 span2 form-control" id="end_date" name="end_date" type="text" value="<?php if (isset($user_mg_end)) {
                                                                                                                                                                                     echo $user_mg_end;
                                                                                                                                                                             } ?>" placeholder="<?=(isset($show_end) ? $show_end : 'mm/dd/yyyy')?>">
 
                                                         </div> 
-                                                        <input type="hidden" name="date3" />
                                                     </div>
                                                     <!-- /controls -->
                                                 </div>
@@ -202,7 +203,7 @@ $clientApiArray = $propertyResult['client_api'];
                                             </form>
                                         </div>
                                         <br/>
-                                        <table class="table table-striped" style="width:100%" id="property-table">
+                                        <table class="table table-striped" style="width:100%" id="property-additional-table">
                                             <thead>
                                                 <tr>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Property Name</th>
@@ -214,8 +215,8 @@ $clientApiArray = $propertyResult['client_api'];
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Property Zip</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Order Raise At</th>
                                                     <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Order Raise By</th>
-                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Show Details</th>
-                                                    <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">Remove</th>
+                                                    <!-- <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Show Details</th> -->
+                                                    <!-- <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="5">Remove</th> -->
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -239,42 +240,42 @@ $clientApiArray = $propertyResult['client_api'];
                                                             <td> '.$row['zip'].' </td>
                                                             <td> '.date('d-m-Y',strtotime($row['create_date'])).' </td>
                                                             <td> '.$clientName.' </td>';
-                                                            echo '<td><a href="javascript:void();" id="VIEWACC_'.$row['id'].'"  class="btn btn-small btn-info">
-                                                                    <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
-                                                                    $(document).ready(function() {
-                                                                        $(\'#VIEWACC_' .$row['id'].'\').easyconfirm({
-                                                                            locale: {
-                                                                                title: \'Property View\',
-                                                                                text: \'Are you sure you want to view this property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                                button: [\'Cancel\', \' Confirm\'],
-                                                                                closeText: \'close\'
-                                                                            }
-                                                                        });
-                                                                        $(\'#VIEWACC_'.$row['id'].'\').click(function () {
-                                                                            window.location = "?t=3&token='. $secret.'&property_edit&property_id='.$row['id'].'&client_id='.$_GET['edit_id'].'";
-                                                                        });
-                                                                    });
-                                                                    </script>
-                                                                </td>';
+                                                            // echo '<td><a href="javascript:void();" id="VIEWACC_'.$row['id'].'"  class="btn btn-small btn-info">
+                                                            //         <i class="btn-icon-only icon-pencil"></i>&nbsp;Edit</a><script type="text/javascript">
+                                                            //         $(document).ready(function() {
+                                                            //             $(\'#VIEWACC_' .$row['id'].'\').easyconfirm({
+                                                            //                 locale: {
+                                                            //                     title: \'Property View\',
+                                                            //                     text: \'Are you sure you want to view this property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                            //                     button: [\'Cancel\', \' Confirm\'],
+                                                            //                     closeText: \'close\'
+                                                            //                 }
+                                                            //             });
+                                                            //             $(\'#VIEWACC_'.$row['id'].'\').click(function () {
+                                                            //                 window.location = "?t=3&token='. $secret.'&property_edit&property_id='.$row['id'].'&client_id='.$_GET['edit_id'].'";
+                                                            //             });
+                                                            //         });
+                                                            //         </script>
+                                                            //     </td>';
                                                             
-                                                                if($_SESSION['SADMIN'] == true) {
-                                                                	echo '<td><a href="javascript:void();" id="remove_api_'.$row['id'].'"  class="btn btn-small btn-danger">
-                                                                	<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
-                                                                	<script type="text/javascript">
-                                                                		$(document).ready(function() {
-                                                                			$(\'#remove_api_'.$row['id'].'\').easyconfirm({locale: {
-                                                                					title: \'Remove Property'.$clientApiArray[$row['id']].'\',
-                                                                					text: \'Are you sure you want to remove this Property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
-                                                                					button: [\'Cancel\',\' Confirm\'],
-                                                                					closeText: \'close\'
-                                                                			}});
-                                                                			$(\'#remove_api_'.$row['id'].'\').click(function() {                                                                                        
-                                                                				$("#overlay").css("display","block");
-                                                                				window.location = "?token='.$secret.'&remove_id='.$row['id'].'&api_id='.$clientApiArray[$row['id']].'&remove_property"
-                                                                			});
-                                                                		});
-                                                                	</script></td>';
-                                                                }
+                                                                // if($_SESSION['SADMIN'] == true) {
+                                                                // 	echo '<td><a href="javascript:void();" id="remove_api_'.$row['id'].'"  class="btn btn-small btn-danger">
+                                                                // 	<i class="btn-icon-only icon-remove-circle"></i>&nbsp;Remove</a>
+                                                                // 	<script type="text/javascript">
+                                                                // 		$(document).ready(function() {
+                                                                // 			$(\'#remove_api_'.$row['id'].'\').easyconfirm({locale: {
+                                                                // 					title: \'Remove Property'.$clientApiArray[$row['id']].'\',
+                                                                // 					text: \'Are you sure you want to remove this Property?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\',
+                                                                // 					button: [\'Cancel\',\' Confirm\'],
+                                                                // 					closeText: \'close\'
+                                                                // 			}});
+                                                                // 			$(\'#remove_api_'.$row['id'].'\').click(function() {                                                                                        
+                                                                // 				$("#overlay").css("display","block");
+                                                                // 				window.location = "?token='.$secret.'&remove_id='.$row['id'].'&api_id='.$clientApiArray[$row['id']].'&remove_property"
+                                                                // 			});
+                                                                // 		});
+                                                                // 	</script></td>';
+                                                                // }
                                                             echo '</tr>';
                                                             $repeatCounter++;
                                                         }
@@ -324,11 +325,58 @@ $clientApiArray = $propertyResult['client_api'];
     </div>
 </div>
 <!-- Alert messages js-->
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css"> -->
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.easy-confirm-dialog.min.js"></script>
+
 <script>
     $(document).ready(function () {
-        $('#property-table').dataTable();
+        var randomNumber = Math.floor(Math.random() * 10000);
+        $('#property-additional-table').dataTable({
+            searching: false,
+        //     dom: 'Bfrtip',
+        //     buttons: [
+        //         {
+        //         extend: 'spacer',
+        //         style: '',
+        //         text: 'Download Data'
+        //     },
+        //     {
+        //         extend: 'spacer',
+        //         style: 'bar',
+        //         text: ''
+        //     },
+        //     {
+        //         extend: 'csv',
+        //         title: 'property_additional_'+randomNumber,
+        //         footer: true
+        //     },
+        //     {
+        //         extend: 'excel',
+        //         title: 'property_additional_'+randomNumber,
+        //         footer: true
+        //     },
+        //     {
+        //         extend: 'pdf',
+        //         title: 'property_additional_'+randomNumber,
+        //         footer: true
+        //     },
+        //     {
+        //         extend: 'print',
+        //         title: 'property_additional_'+randomNumber,
+        //         footer: true
+        //     }
+        // ]
+        });
 
         $(function() {
 			$("#start_date").datepicker({
@@ -374,7 +422,7 @@ $clientApiArray = $propertyResult['client_api'];
                         html = "";
                         html += '<table class="table">';
                         $.each(infoDetails, function(key,value) {
-                            html += "<tr><td><strong>"+AdditionalInfo[key]+"</strong></td><td><strong>:</strong></td><td>" + value +"</td></tr>";
+                            html += "<tr><td><strong>"+AdditionalInfo[key]+"</strong></td><td><strong>:</strong></td><td>" + (value == null ? 'N/A' : value) +"</td></tr>";
                         }); 
                         html += '</table>';
                         $('.modal-body').empty('').append(html);
