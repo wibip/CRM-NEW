@@ -7,7 +7,8 @@ require_once './classes/OperatorClass.php';
 $OperatorClass = new OperatorClass();
 
 $operators = $OperatorClass->getOperators();
-$regions = $adminConfig->getRegions();
+$scopes = $adminConfig->getScopes(); 
+
 ?>
 <div class="main">
     <div class="main-inner">
@@ -40,22 +41,21 @@ $regions = $adminConfig->getRegions();
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>ALT</td>
-                                                    <td>SDL</td>
-                                                    <td>West</td>
-                                                    <td>10.1.0.1</td>
-                                                    <td>10.1.0.120</td>
-                                                    <td>28</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>ALT</td>
-                                                    <td>SDL</td>
-                                                    <td>East</td>
-                                                    <td>10.1.1.200</td>
-                                                    <td>10.1.1.400</td>
-                                                    <td>25</td>
-                                                </tr>
+                                                <?php 
+                                                    foreach($scopes['MIPS'] as $scopeMIPS) {
+                                                ?>
+                                                    <tr role="row" class="odd">
+                                                        <td><?=$scopeMIPS['operator_code']?></td>
+                                                        <td><?=$scopeMIPS['sub_operator_code']?></td>
+                                                        <td><?=$scopeMIPS['region']?></td>
+                                                        <td><?=$scopeMIPS['range_from']?></td>
+                                                        <td><?=$scopeMIPS['range_to']?></td>
+                                                        <td><?=$scopeMIPS['netmask']?></td>
+                                                    </tr>
+                                                <?php
+
+                                                    }
+                                                ?>
                                             </tbody>
                                         </table>
                                         <br>
@@ -72,22 +72,21 @@ $regions = $adminConfig->getRegions();
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>ALT</td>
-                                                    <td>SDL</td>
-                                                    <td>Full Gospel</td>
-                                                    <td>FULLGSPLHLYTMPL</td>
-                                                    <td>10.95.255.208</td>
-                                                    <td>27</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>FRT</td>
-                                                    <td>SDL</td>
-                                                    <td>Carlinville National Bank</td>
-                                                    <td>CARLINVILLEBANK</td>
-                                                    <td>10.130.0.32</td>
-                                                    <td>28</td>
-                                                </tr>
+                                                <?php 
+                                                    foreach($scopes['PIPS'] as $scopePIPS) {
+                                                ?>
+                                                    <tr role="row" class="odd">
+                                                        <td><?=$scopePIPS['operator_code']?></td>
+                                                        <td><?=$scopePIPS['sub_operator_code']?></td>
+                                                        <td><?=$scopePIPS['property_name']?></td>
+                                                        <td><?=$scopePIPS['peer_id']?></td>
+                                                        <td><?=$scopePIPS['ip_network']?></td>
+                                                        <td><?=$scopePIPS['netmask']?></td>
+                                                    </tr>
+                                                <?php
+
+                                                    }
+                                                ?>
                                             </tbody>
                                         </table>
                                         <br>
@@ -106,26 +105,23 @@ $regions = $adminConfig->getRegions();
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>ATT</td>
-                                                    <td>SDL</td>
-                                                    <td>Full Gospel</td>
-                                                    <td>FULLGSPLHLYTMPL</td>
-                                                    <td>12.13.57.88/29</td>
-                                                    <td>12.13.57.90</td>
-                                                    <td>10.95.255.193</td>
-                                                    <td>&nbsp;</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>ATT</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>Creekside</td>
-                                                    <td>CREEKSIDE</td>
-                                                    <td>12.13.57.88/29</td>
-                                                    <td>12.13.57.90</td>
-                                                    <td>10.95.255.193</td>
-                                                    <td>&nbsp;</td>
-                                                </tr>
+                                                <?php 
+                                                    foreach($scopes['PUBPIPS'] as $scopePUBPIPS) {
+                                                ?>
+                                                    <tr role="row" class="odd">
+                                                        <td><?=$scopePUBPIPS['operator_code']?></td>
+                                                        <td><?=$scopePUBPIPS['sub_operator_code']?></td>
+                                                        <td><?=$scopePUBPIPS['property_name']?></td>
+                                                        <td><?=$scopePUBPIPS['peer_id']?></td>
+                                                        <td><?=$scopePUBPIPS['firewall_public_net']?></td>
+                                                        <td><?=$scopePUBPIPS['firewall_public_ip']?></td>
+                                                        <td><?=$scopePUBPIPS['firewall_vlan50_ip']?></td>
+                                                        <td><?=$scopePUBPIPS['firewall_serial_no']?></td>
+                                                    </tr>
+                                                <?php
+
+                                                    }
+                                                ?>
                                             </tbody>
                                         </table>
                                         <br>
@@ -143,24 +139,22 @@ $regions = $adminConfig->getRegions();
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>ATT</td>
-                                                    <td>SDL</td>
-                                                    <td>Full Gospel</td>
-                                                    <td>FULLGSPLHLYTMPL</td>
-                                                    <td>10.95.1.66-75</td>
-                                                    <td>32.143.114.154/30</td>
-                                                    <td>10.95.1.76-90</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>ATT</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>Creekside</td>
-                                                    <td>CREEKSIDE</td>
-                                                    <td>10.95.255.194 - 197</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>10.95.255.198 - 206</td>
-                                                </tr>
+                                                <?php 
+                                                    foreach($scopes['PVTPIPS'] as $scopePVTPIPS) {
+                                                ?>
+                                                    <tr role="row" class="odd">
+                                                        <td><?=$scopePVTPIPS['operator_code']?></td>
+                                                        <td><?=$scopePVTPIPS['sub_operator_code']?></td>
+                                                        <td><?=$scopePVTPIPS['property_name']?></td>
+                                                        <td><?=$scopePVTPIPS['peer_id']?></td>
+                                                        <td><?=$scopePVTPIPS['vlan_static_ip']?></td>
+                                                        <td><?=$scopePVTPIPS['underlay_net']?></td>
+                                                        <td><?=$scopePVTPIPS['vlan_dhcp_ap_ip']?></td>
+                                                    </tr>
+                                                <?php
+
+                                                    }
+                                                ?>
                                             </tbody>
                                         </table>
                                     </div>

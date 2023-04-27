@@ -178,4 +178,17 @@ class adminConfig{
             return $result;
         }
     }
+
+    public function getScopes(){
+        $sql = "SELECT * FROM crm_opr_ip_scope ORDER BY id DESC";
+        $result = $this->db->selectDB($sql);
+        if ($result['rowCount'] > 0) {
+            $scopeArray = null;
+            foreach($result['data'] as $scope){
+                $scopeArray[$scope['type']][] = $scope;
+            }
+        } 
+        return $scopeArray;
+    }
+
 }
