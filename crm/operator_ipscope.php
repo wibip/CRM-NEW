@@ -479,7 +479,7 @@ $scopes = $adminConfig->getScopes();
       </div>
       <div class="modal-body"></div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" id="alert_close" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -526,6 +526,11 @@ $scopes = $adminConfig->getScopes();
             saveScope('operator_pvtpip_scope');
             return false;
         });
+
+        $("#alert_close").click(function() {
+            location.reload(true);
+        });
+
     });
 
     function saveScope(formId) {
