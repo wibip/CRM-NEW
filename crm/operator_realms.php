@@ -1,6 +1,27 @@
 <?php
 include 'header_new.php';
 $page = "Operator Realms";
+require_once 'classes/adminConfigClass.php';
+$adminConfig = new adminConfig();
+require_once './classes/OperatorClass.php';
+$OperatorClass = new OperatorClass();
+// var_dump($_POST);
+if(isset($_POST['realms_save'])){
+    // var_dump($_POST);
+    $result = $adminConfig->saveRealm($_POST,$user_name,$user_group,$page);
+    if ($result===true) {
+        $_SESSION['message_realms'] = "<div class='alert alert-success' role='alert'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Realm has been successfully added</strong></div>";
+    } else {
+        $_SESSION['message_realms'] = "<div class='alert alert-danger' role='alert'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Error on Realm save</strong></div>";
+    }
+
+    /*To prevent resumbits*/
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+// unset($_POST);
+$operators = $OperatorClass->getOperators();
+$realms = $adminConfig->getRealms();
 ?>
 <div class="main">
     <div class="main-inner">
@@ -17,8 +38,13 @@ $page = "Operator Realms";
                                 </ul>
 
                                 <div class="tab-content">
-
                                     <div div class="tab-pane fade show active" id="operators-tab-pane" role="tabpanel" aria-labelledby="operators" tabindex="0">
+                                        <?php
+                                            if (isset($_SESSION['message_realms'])) {
+                                                echo $_SESSION['message_realms'];
+                                                unset($_SESSION['message_realms']);
+                                            }
+                                        ?>
                                         <h1 class="head">Operator Realms</h1>
                                         <table class="table table-striped" style="width:100%" id="operator-table">
                                             <thead>
@@ -32,54 +58,23 @@ $page = "Operator Realms";
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <tr role="row" class="odd">
-													<td class="sorting_1">ALT</td>
-													<td>SDL</td>
-													<td>West</td>
-													<td>421</td>
-													<td>421800000</td>
-													<td>421803000</td>
-												</tr>
-                                                <tr role="row" class="odd">
-													<td class="sorting_1">ATT</td>
-													<td><span class="responsiveExpander"></span></td>
-													<td>East</td>
-													<td>358</td>
-													<td>358180000</td>
-													<td>358180400</td>
-												</tr>
-                                                <tr role="row" class="odd">
-													<td class="sorting_1">COX</td>
-													<td>OPT</td>
-													<td>Nort East</td>
-													<td>628</td>
-													<td>628700000</td>
-													<td>628709000</td>
-												</tr>
-                                                <tr role="row" class="even">
-													<td class="sorting_1">FRT</td>
-													<td><span class="responsiveExpander"></span></td>
-													<td>West</td>
-													<td>953</td>
-													<td>953700000</td>
-													<td>953709000</td>
-												</tr>
-                                                <tr role="row" class="odd">
-													<td class="sorting_1">MCOM</td>
-													<td><span class="responsiveExpander"></span></td>
-													<td>Nort East</td>
-													<td>865</td>
-													<td>865100000</td>
-													<td>865109000</td>
-												</tr>
-                                                <tr role="row" class="even">
-													<td class="sorting_1">VER</td>
-													<td><span class="responsiveExpander"></span></td>
-													<td>Nort East</td>
-													<td>297</td>
-													<td>297700000</td>
-													<td>297709000</td>
-												</tr>
+                                                <?php 
+                                                    if($realms['rowCount'] > 0) {
+                                                        foreach($realms['data'] as $realm) {
+                                                ?>
+                                                        <tr role="row" class="odd">
+                                                            <td><?=$realm['operator_code']?></td>
+                                                            <td><?=$realm['sub_operator_code']?></td>
+                                                            <td><?=$realm['region']?></td>
+                                                            <td><?=$realm['prefix']?></td>
+                                                            <td><?=$realm['range_from']?></td>
+                                                            <td><?=$realm['range_to']?></td>
+                                                        </tr>
+                                                <?php
+
+                                                        }
+                                                    }
+                                                ?>
                                             </tbody>
                                         </table>
                                         <br>
@@ -89,33 +84,43 @@ $page = "Operator Realms";
                                                     <h4>Create Realm Scope</h4>
                                                 </div>
                                             </div>
-                                            <form class="row g-3 p-4">
+                                            <form class="row g-3 p-4" id="operator_realm" name="operator_realm" method="post">
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">Operator Code</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option value="1">ATL</option>
-                                                        <option value="2">FRT</option>
+                                                    <select id="operator_code" name="operator_code" class="form-select">
+                                                        <option value="">Select Operator Code</option>
+                                                        <?php 
+                                                            if($operators['rowCount'] > 0) {
+                                                                foreach($operators['data'] as $operator) {
+                                                        ?>
+                                                                <option value="<?=$operator['operator_code']?>"><?=$operator['operator_code']?></option>
+                                                        <?php
+
+                                                                }
+                                                            }
+                                                        ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">Sub Operator Code</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option value="1">NONE</option>
-                                                        <option value="2">SDL</option>
-                                                        <option value="3">OPT</option>
+                                                    <select id="sub_operator_code" name="sub_operator_code" class="form-select">
+                                                        <option value="NONE">NONE</option>
+                                                        <option value="SDL">SDL</option>
+                                                        <option value="OPT">OPT</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputPassword4" class="form-label">Realm Range From</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" id="range_from" name="range_from" class="form-control">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputPassword4" class="form-label">Realm Range To</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" id="range_to" name="range_to" class="form-control">
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="inputEmail4" class="form-label">Service Type</label>
-                                                    <select id="inputState" class="form-select">
+                                                    <select id="service_type" name="service_type" class="form-select">
+                                                         <option value="">Select Servicce Type</option>
                                                         <option value="ENT-SMB-NON-AP-VYOS">ENT-SMB-NON-AP-VYOS</option>
                                                         <option value="ENT-SMB-NON-AP-FORTIGATE">ENT-SMB-NON-AP-FORTIGATE</option>
                                                         <option value="ENT-SMB-NON-AP-MERAK">ENT-SMB-NON-AP-MERAK</option>
@@ -124,7 +129,8 @@ $page = "Operator Realms";
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="inputEmail4" class="form-label">Region</label>
-                                                    <select id="inputState" class="form-select">
+                                                    <select id="region" name="region" class="form-select">
+                                                        <option value="None">None</option>
                                                         <option value="East">East</option>
                                                         <option value="West">West</option>
                                                         <option value="North">North</option>
@@ -136,14 +142,14 @@ $page = "Operator Realms";
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="inputPassword4" class="form-label">Realm Prefix</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" id="prefix" name="prefix" class="form-control">
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="inputEmail4" class="form-label">Notes</label>
-                                                    <textarea class="form-control" placeholder="" id="floatingTextarea"></textarea>
+                                                    <textarea class="form-control" id="notes" name="notes" placeholder="" id="floatingTextarea"></textarea>
                                                 </div>
                                                 <div class="col-12">
-                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                    <button type="submit"  id="realms_save" name="realms_save"  class="btn btn-primary">Submit</button>
                                                 </div>
                                             </form>
                                         </div>

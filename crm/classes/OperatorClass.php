@@ -10,7 +10,7 @@ class OperatorClass{
     public function getOperators(){
         $query_results = null;
         try {
-            $key_query = "SELECT m.mno_description,m.mno_id, m.features,m.is_enable,u.full_name, u.email, u.mobile , u.verification_number
+            $key_query = "SELECT m.operator_code,m.mno_description,m.mno_id, m.features,m.is_enable,u.full_name, u.email, u.mobile , u.verification_number
                             FROM exp_mno m, admin_users u
                             WHERE u.group = 'operation' AND u.user_distributor = m.mno_id 
                             GROUP BY m.mno_id

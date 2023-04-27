@@ -1,6 +1,27 @@
 <?php
 include 'header_new.php';
 $page = "Operator Regions";
+require_once 'classes/adminConfigClass.php';
+$adminConfig = new adminConfig();
+require_once './classes/OperatorClass.php';
+$OperatorClass = new OperatorClass();
+
+if(isset($_POST['regions_save'])){
+    // var_dump($_POST);
+    $result = $adminConfig->saveRegions($_POST,$user_name,$user_group,$page);
+    if ($result===true) {
+        $_SESSION['message_regions'] = "<div class='alert alert-success' role='alert'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Region has been successfully added</strong></div>";
+    } else {
+        $_SESSION['message_regions'] = "<div class='alert alert-danger' role='alert'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Error on Region save</strong></div>";
+    }
+
+    /*To prevent resumbits*/
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+// unset($_POST);
+$operators = $OperatorClass->getOperators();
+$regions = $adminConfig->getRegions();
 ?>
 <div class="main">
     <div class="main-inner">
@@ -17,8 +38,13 @@ $page = "Operator Regions";
                                 </ul>
 
                                 <div class="tab-content">
-
                                     <div div class="tab-pane fade show active" id="operators-tab-pane" role="tabpanel" aria-labelledby="operators" tabindex="0">
+                                        <?php
+                                            if (isset($_SESSION['message_regions'])) {
+                                                echo $_SESSION['message_regions'];
+                                                unset($_SESSION['message_regions']);
+                                            }
+                                        ?>
                                         <h1 class="head">Operator Regions</h1>
                                         <table class="table table-striped" style="width:100%" id="operator-table">
                                             <thead>
@@ -32,46 +58,23 @@ $page = "Operator Regions";
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr role="row" class="odd">
-									                <td class="">ALT</td>
-													<td class="sorting_1"><span class="responsiveExpander"></span>Simple (SMB)</td>
-									                <td>AK</td>
-									                <td>West</td>
-									                <td>&nbsp;</td>
-									                <td>&nbsp;</td>
-									            </tr>
-                                                <tr role="row" class="even">									                
-									                <td class="">All</td>
-													<td class="sorting_1"><span class="responsiveExpander"></span>Hosted</td>
-									                <td>WI</td>
-									                <td>Midwest</td>
-									                <td>&nbsp;</td>
-									                <td>&nbsp;</td>
-									            </tr>
-                                                <tr role="row" class="odd">
-									                <td class="">ALT</td>
-													<td class="sorting_1"><span class="responsiveExpander"></span>Complex</td>
-									                <td>CA</td>
-									                <td>West</td>
-									                <td>&nbsp;</td>
-									                <td>&nbsp;</td>
-									            </tr>
-                                                <tr role="row" class="odd">
-									                <td class="">COX</td>
-													<td class="sorting_1"><span class="responsiveExpander"></span></td>
-									                <td>AT</td>
-									                <td>East</td>
-									                <td>Atlanta</td>
-									                <td>&nbsp;</td>
-									            </tr>
-                                                <tr role="row" class="even">
-									                <td class="">COX</td>
-													<td class="sorting_1"><span class="responsiveExpander"></span></td>
-									                <td>AR</td>
-									                <td>Central</td>
-									                <td>&nbsp;</td>
-									                <td>&nbsp;</td>
-									            </tr>
+                                                <?php 
+                                                    if($regions['rowCount'] > 0) {
+                                                        foreach($regions['data'] as $region) {
+                                                ?>
+                                                        <tr role="row" class="odd">
+                                                            <td><?=$region['operator_code']?></td>
+                                                            <td><?=$region['development_type']?></td>
+                                                            <td><?=$region['region_state']?></td>
+                                                            <td><?=$region['region']?></td>
+                                                            <td><?=$region['state_name']?></td>
+                                                            <td><?=$region['city']?></td>
+                                                        </tr>
+                                                <?php
+
+                                                        }
+                                                    }
+                                                ?>
                                             </tbody>
                                         </table>
                                         <br>
@@ -81,57 +84,66 @@ $page = "Operator Regions";
                                                     <h4>Create Operator Region</h4>
                                                 </div>
                                             </div>
-                                            <form class="row g-3 p-4">
+                                            <form class="row g-3 p-4" id="operator_region" name="operator_region" method="post">
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">Operator Code</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option value="1">ATL</option>
-                                                        <option value="2">FRT</option>
-                                                        <option value="2">MCOM</option>
+                                                    <select id="operator_code" name="operator_code" class="form-select">
+                                                        <option value="">Select Operator Code</option>
+                                                        <?php 
+                                                            if($operators['rowCount'] > 0) {
+                                                                foreach($operators['data'] as $operator) {
+                                                        ?>
+                                                                <option value="<?=$operator['operator_code']?>"><?=$operator['operator_code']?></option>
+                                                        <?php
+
+                                                                }
+                                                            }
+                                                        ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputPassword4" class="form-label">Environment</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option value="1">None</option>
-                                                        <option value="2">Hosted</option>
-                                                        <option value="3">Simple (SMB)</option>
-                                                        <option value="4">Complex</option>
+                                                    <select id="development_type" name="development_type" class="form-select">
+                                                        <option value="None">None</option>
+                                                        <option value="Hosted">Hosted</option>
+                                                        <option value="Simple (SMB)">Simple (SMB)</option>
+                                                        <option value="Complex">Complex</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">State</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option value="1">None</option>
-                                                        <option value="2">WI</option>
-                                                        <option value="3">AK</option>
-                                                        <option value="2">CA</option>
-                                                        <option value="3">AR</option>
+                                                    <select id="region_state" name="region_state" class="form-select">
+                                                        <option value="None">None</option>
+                                                        <option value="WI">WI</option>
+                                                        <option value="AK">AK</option>
+                                                        <option value="CA">CA</option>
+                                                        <option value="AR">AR</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputPassword4" class="form-label">Region</label>
-                                                    <select id="inputState" class="form-select">
-                                                        <option value="1">Central</option>
-                                                        <option value="2">East</option>
-                                                        <option value="3">Midwest</option>
-                                                        <option value="3">West</option>
+                                                    <select id="region" name="region" class="form-select">
+                                                        <option value="None">None</option>
+                                                        <option value="Central">Central</option>
+                                                        <option value="East">East</option>
+                                                        <option value="Midwest">Midwest</option>
+                                                        <option value="West">West</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">State Name</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" id="state_name" name="state_name" class="form-control">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">City</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" id="city" name="city" class="form-control">
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="inputEmail4" class="form-label">Notes</label>
-                                                    <textarea class="form-control" placeholder="" id="floatingTextarea"></textarea>
+                                                    <textarea class="form-control" id="notes" name="notes" placeholder="" id="floatingTextarea"></textarea>
                                                 </div>
                                                 <div class="col-12">
-                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                    <button type="submit" id="regions_save" name="regions_save" class="btn btn-primary">Submit</button>
                                                 </div>
                                             </form>
                                         </div>
