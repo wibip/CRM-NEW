@@ -104,7 +104,7 @@ $realms = $adminConfig->getRealms();
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">Sub Operator Code</label>
                                                     <select id="sub_operator_code" name="sub_operator_code" class="form-select">
-                                                        <option value="NONE">NONE</option>
+                                                        <option value="">NONE</option>
                                                         <option value="SDL">SDL</option>
                                                         <option value="OPT">OPT</option>
                                                     </select>
@@ -130,7 +130,7 @@ $realms = $adminConfig->getRealms();
                                                 <div class="col-md-4">
                                                     <label for="inputEmail4" class="form-label">Region</label>
                                                     <select id="region" name="region" class="form-select">
-                                                        <option value="None">None</option>
+                                                        <option value="">None</option>
                                                         <option value="East">East</option>
                                                         <option value="West">West</option>
                                                         <option value="North">North</option>

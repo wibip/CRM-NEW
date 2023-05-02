@@ -212,8 +212,8 @@ $scopes = $adminConfig->getScopes();
                         <div class="col-md-6">
                             <label for="sub_operator_code" class="form-label">Sub Operator Code</label>
                             <select id="sub_operator_code" name="sub_operator_code" class="form-select">
-                                <option value="1">None</option>
-                                <option value="2">SDL</option>
+                                <option value="">None</option>
+                                <option value="SDL">SDL</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -227,10 +227,11 @@ $scopes = $adminConfig->getScopes();
                         <div class="col-md-6">
                             <label for="region" class="form-label">Region</label>
                             <select id="region" name="region" class="form-select">
-                                <option value="1">Central</option>
-                                <option value="2">East</option>
-                                <option value="3">Midwest</option>
-                                <option value="3">West</option>
+                                <option value="">Select Region</option>
+                                <option value="Central">Central</option>
+                                <option value="East">East</option>
+                                <option value="Midwest">Midwest</option>
+                                <option value="West">West</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -285,18 +286,18 @@ $scopes = $adminConfig->getScopes();
                         <div class="col-md-6">
                             <label for="sub_operator_code" class="form-label">Sub Operator Code</label>
                             <select id="sub_operator_code" ame="sub_operator_code" class="form-select">
-                                <option value="1">None</option>
-                                <option value="2">SDL</option>
+                                <option value="">None</option>
+                                <option value="SDL">SDL</option>
                             </select>
                         </div>                        
                         <div class="col-md-6">
                             <label for="property_name" class="form-label">Property</label>
                             <select id="property_name" name="property_name" class="form-select">
-                                <option value="1">None</option>
-                                <option value="2">Full Gospel</option>
-                                <option value="2">Creekside</option>
-                                <option value="2">MPM Bio Impact</option>
-                                <option value="2">Rio Del Sol Needles</option>
+                                <option value="">None</option>
+                                <option value="Full Gospel">Full Gospel</option>
+                                <option value="Creekside">Creekside</option>
+                                <option value="MPM Bio Impact">MPM Bio Impact</option>
+                                <option value="Rio Del Sol Needles">Rio Del Sol Needles</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -359,8 +360,8 @@ $scopes = $adminConfig->getScopes();
                         <div class="col-md-6">
                             <label for="sub_operator_code" class="form-label">Sub Operator Code</label>
                             <select id="sub_operator_code" name="sub_operator_code" class="form-select">
-                                <option value="1">None</option>
-                                <option value="2">SDL</option>
+                                <option value="">None</option>
+                                <option value="SDL">SDL</option>
                             </select>
                         </div>      
                         <div class="col-md-6">
@@ -435,8 +436,8 @@ $scopes = $adminConfig->getScopes();
                         <div class="col-md-6">
                             <label for="sub_operator_code" class="form-label">Sub Operator Code</label>
                             <select id="sub_operator_code" name="sub_operator_code" class="form-select">
-                                <option value="1">None</option>
-                                <option value="2">SDL</option>
+                                <option value="">None</option>
+                                <option value="SDL">SDL</option>
                             </select>
                         </div>      
                         <div class="col-md-6">
@@ -471,18 +472,18 @@ $scopes = $adminConfig->getScopes();
 </div>
 
 <div class="modal" id="scope_alert">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="alert_close" data-bs-dismiss="modal">Close</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="alert_close" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>

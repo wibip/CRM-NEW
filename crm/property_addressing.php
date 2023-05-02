@@ -1,6 +1,16 @@
 <?php
 include 'header_new.php';
 $page = "Property Addressing";
+
+require_once 'classes/adminConfigClass.php';
+$adminConfig = new adminConfig();
+require_once './classes/OperatorClass.php';
+$OperatorClass = new OperatorClass();
+
+$operators = $OperatorClass->getOperators();
+$properties = $adminConfig->getProperty(); 
+
+// var_dump($properties);
 ?>
 <div class="main">
     <div class="main-inner">
@@ -35,26 +45,23 @@ $page = "Property Addressing";
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>ALT</td>
-                                                    <td>SDL</td>
-                                                    <td>ENT</td>
-                                                    <td>Upfield Foods</td>
-                                                    <td>421666600002</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>ALT</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>HOS</td>
-                                                    <td>Radisson</td>
-                                                    <td>421666600043</td>
-                                                    <td>AC</td>
-                                                    <td>CHCGIL</td>
-                                                    <td>448NLASALLE</td>
-                                                </tr>
+                                                <?php 
+                                                    foreach($properties['PROP'] as $property) {
+                                                ?>
+                                                    <tr role="row" class="odd">
+                                                        <td><?=$property['operator_code']?></td>
+                                                        <td><?=$property['sub_operator_code']?></td>
+                                                        <td><?=$property['vertical']?></td>
+                                                        <td><?=$property['property_name']?></td>
+                                                        <td><?=$property['realm']?></td>
+                                                        <td><?=$property['property_type']?></td>
+                                                        <td><?=$property['clli']?></td>                                                        
+                                                        <td><?=$property['short_name']?></td>
+                                                    </tr>
+                                                <?php
+
+                                                    }
+                                                ?>
                                             </tbody>
                                         </table>
                                         <br>
@@ -74,26 +81,23 @@ $page = "Property Addressing";
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>448 N LaSalle</td>
-                                                    <td>MXU</td>
-                                                    <td>Firewall - VPN</td>
-                                                    <td>Fortinet 60F</td>
-                                                    <td>448NLaSalle-FGT-01</td>
-                                                    <td>10.92.1.129</td>
-                                                    <td>VLAN50 - MGMT - 10.92.1.128/26 - Netmask 255.255.255.192 - GW 10.92.1.129</td>
-                                                    <td>&nbsp;</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>448 N LaSalle</td>
-                                                    <td>MXU</td>
-                                                    <td>AC-IPMI</td>
-                                                    <td>SMC SYS-5019S-L</td>
-                                                    <td>448NLaSalle-IPMI-01</td>
-                                                    <td>10.92.1.131</td>
-                                                    <td>VLAN50 - MGMT - 10.92.1.128/26 - Netmask 255.255.255.192 - GW 10.92.1.129</td>
-                                                    <td>&nbsp;</td>
-                                                </tr>
+                                                <?php 
+                                                    foreach($properties['PIPA'] as $property) {
+                                                ?>
+                                                    <tr role="row" class="odd">
+                                                        <td><?=$property['property_name']?></td>
+                                                        <td><?=$property['vertical']?></td>
+                                                        <td><?=$property['node_type']?></td>
+                                                        <td><?=$property['model_number']?></td>
+                                                        <td><?=$property['host_name']?></td>
+                                                        <td><?=$property['ip']?></td>
+                                                        <td><?=$property['vlan_netmask_gateway']?></td>
+                                                        <td><?=$property['notes']?></td>
+                                                    </tr>
+                                                <?php
+
+                                                    }
+                                                ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -126,52 +130,66 @@ $page = "Property Addressing";
                             <h4>Create Property</h4>
                         </div>
                     </div>
-                    <form class="row g-3 p-4">
+                    <form class="row g-3 p-4" id="property" name="property"  method="post">
+                        <input type="hidden" id="modal_name_property" name="modal_name_property" value="property" />
+                        <input type="hidden" id="type" name="type" value="PROP" />
+                        <input type="hidden" id="user_name" name="user_name" value="<?=$user_name?>" />
+                        <input type="hidden" id="user_group" name="user_group" value="<?=$user_group?>" />
+                        <input type="hidden" id="page" name="page" value="<?=$page?>" />
+
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Operator Code</label>
-                            <select id="inputState" class="form-select">
-                                <option value="1">ATL</option>
-                                <option value="2">FRT</option>
-                                <option value="2">MCOM</option>
+                            <select id="operator_code" name="operator_code" class="form-select" required>
+                                <option value="">Select Operator Code</option>
+                                <?php 
+                                    if($operators['rowCount'] > 0) {
+                                        foreach($operators['data'] as $operator) {
+                                ?>
+                                        <option value="<?=$operator['operator_code']?>"><?=$operator['operator_code']?></option>
+                                <?php
+
+                                        }
+                                    }
+                                ?>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Sub Operator Code</label>
-                            <select id="inputState" class="form-select">
-                                <option value="1">None</option>
-                                <option value="2">SDL</option>
+                            <select id="sub_operator_code" name="sub_operator_code" class="form-select">
+                                <option value="">None</option>
+                                <option value="SDL">SDL</option>
                             </select>
                         </div>    
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Vertical</label>
-                            <select id="inputState" class="form-select">
-                                <option value="1">None</option>
-                                <option value="2">ENT</option>
-                                <option value="2">HOS</option>
+                            <select id="vertical" name="vertical" class="form-select">
+                                <option value="">None</option>
+                                <option value="ENT">ENT</option>
+                                <option value="HOS">HOS</option>
                             </select>
                         </div>   
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Property Name</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="property_name" name="property_name" class="form-control">
                         </div>
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Realm</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="realm" name="realm" class="form-control">
                         </div>
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Type</label>
-                            <select id="inputState" class="form-select">
-                                <option value="1">None</option>
-                                <option value="2">AC</option>
+                            <select id="property_type" name="property_type" class="form-select">
+                                <option value="None">None</option>
+                                <option value="AC">AC</option>
                             </select>
                         </div>  
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">CLLI</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="clli" name="clli" class="form-control">
                         </div>
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Property Short Name</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="short_name" name="short_name" class="form-control">
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -196,46 +214,47 @@ $page = "Property Addressing";
                             <h4>Create Property IP Addressing</h4>
                         </div>
                     </div>
-                    <form class="row g-3 p-4">
+                    <form class="row g-3 p-4" id="property_ip" name="property_ip"  method="post">
+                        <input type="hidden" id="modal_name_property_ip" name="modal_name_property_ip" value="property_ip_addressing" />
+                        <input type="hidden" id="type" name="type" value="PIPA" />
+                        <input type="hidden" id="user_name" name="user_name" value="<?=$user_name?>" />
+                        <input type="hidden" id="user_group" name="user_group" value="<?=$user_group?>" />
+                        <input type="hidden" id="page" name="page" value="<?=$page?>" />
                         <div class="col-md-6">
-                            <label for="inputEmail4" class="form-label">Operator Code</label>
-                            <select id="inputState" class="form-select">
-                                <option value="1">ATL</option>
-                                <option value="2">FRT</option>
-                                <option value="2">MCOM</option>
-                            </select>
-                        </div>    
+                            <label for="inputEmail4" class="form-label">Property Name</label>
+                            <input type="text" id="property_name" name="property_name" class="form-control">
+                        </div>   
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Vertical</label>
-                            <select id="inputState" class="form-select">
-                                <option value="1">None</option>
-                                <option value="2">ENT</option>
-                                <option value="2">HOS</option>
+                            <select id="vertical" name="vertical" class="form-select">
+                                <option value="">None</option>
+                                <option value="ENT">ENT</option>
+                                <option value="HOS">HOS</option>
                             </select>
                         </div>   
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Node Type</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="node_type" name="node_type" class="form-control">
                         </div>
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Model Number</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="model_number" name="model_number" class="form-control">
                         </div>
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">Host Name</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="host_name" name="host_name" class="form-control">
                         </div> 
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">IP</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="ip" name="ip" class="form-control">
                         </div>
                         <div class="col-md-6">
                             <label for="inputEmail4" class="form-label">VLAN-Type-Network-Netmask-Gateway</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="vlan_netmask_gateway" name="vlan_netmask_gateway" class="form-control">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label for="inputEmail4" class="form-label">Notes</label>
-                            <textarea class="form-control" placeholder="" id="floatingTextarea"></textarea>
+                            <textarea class="form-control" placeholder="" id="notes" name="notes" ></textarea>
                         </div>
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -248,9 +267,74 @@ $page = "Property Addressing";
     </div>
 </div>
 
+<div class="modal" id="scope_alert">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="alert_close" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function () {
         $('#property-addressing-table').dataTable();
         $('#pip-addressing-table').dataTable();
+
+        $("#property").submit(function(event){
+            var modal_name = $('input[name=modal_name_property]').val();
+            $('#'+modal_name).modal('hide');
+            $("#overlay").css("display","block");
+            saveScope('property');
+            return false;
+        });
+        $("#property_ip").submit(function(event){
+            var modal_name = $('input[name=modal_name_property_ip]').val();
+            $('#'+modal_name).modal('hide');
+            $("#overlay").css("display","block");
+            saveScope('property_ip');
+            return false;
+        });
+
+        $("#alert_close").click(function() {
+            location.reload(true);
+        });
     });
+
+    function saveScope(formId) {
+        $.ajax({	
+            type: "POST",
+            url: "ajax/save_property.php",
+            data:  $('form#'+formId+'').serialize(),
+            success: function(responseData) {
+                responseData = JSON.parse(responseData);
+                // console.log(responseData);
+                var title = '';
+                var html = '';
+                if(responseData == true) {
+                    $('#scope_name').text('Data Has been saved');
+                    title = '<b>Success</b>';
+                    html = "<p>Scope data has been saved</p>";
+                } else {
+                    $('#scope_name').text('Error on data save');
+                    title = '<b>Error !</b>';
+                    html = "<p>Error on Scope data save</p>";
+                }
+
+                $("#scope_alert .modal-title" ).html(title);
+                $('#scope_alert .modal-body').empty('').html(html);
+                $('#scope_alert').modal('show');
+                $("#overlay").css("display","none");
+            },
+            error: function() {
+                $("#overlay").css("display","none");
+            }
+        });
+    }
 </script>

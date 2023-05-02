@@ -24,6 +24,6 @@ CREATE TABLE `crm_opr_ip_scope` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-ALTER TABLE `crm_opr_realm`  
-ADD CONSTRAINT `crm_opr_realm_ibfk_1` 
+ALTER TABLE `crm_opr_ip_scope`  
+ADD CONSTRAINT `crm_opr_ip_scope_ibfk_1` 
 FOREIGN KEY (`operator_code`) REFERENCES `crm_operators` (`operator_code`) ON DELETE CASCADE; 

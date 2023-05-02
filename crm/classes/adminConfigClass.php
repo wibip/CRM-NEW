@@ -191,4 +191,178 @@ class adminConfig{
         return $scopeArray;
     }
 
+    public function savePropertyConfig($post){
+        $result = false;
+        
+        if($post != null) {
+            $operator_code = isset($post["operator_code"]) ? $post["operator_code"] : "";
+            $sub_operator_code = isset($post["sub_operator_code"]) ? $post["sub_operator_code"] : "";
+            $service_type = isset($post["service_type"]) ? $post["service_type"] : "";
+            $qos_profile = isset($post["qos_profile"]) ? $post["qos_profile"] : "";
+            $qos_profile_id = isset($post["qos_profile_id"]) ? $post["qos_profile_id"] : "";
+            $vsz_mapping = isset($post["vsz_mapping"]) ? $post["vsz_mapping"] : "";
+            $wag_magic = isset($post["wag_magic"]) ? $post["wag_magic"] : "";
+            $product_name = isset($post["product_name"]) ? $post["product_name"] : "";
+            $group = isset($post["group"]) ? $post["group"] : "";
+            $account_template = isset($post["account_template"]) ? $post["account_template"] : "";
+            $service_profile = isset($post["service_profile"]) ? $post["service_profile"] : "";
+            $business_type = isset($post["business_type"]) ? $post["business_type"] : "";
+            $business_prefix = isset($post["business_prefix"]) ? $post["business_prefix"] : "";
+            $business_id_from = isset($post["business_id_from"]) ? $post["business_id_from"] : "";
+            $business_id_to = isset($post["business_id_to"]) ? $post["business_id_to"] : "";
+            $property_type = isset($post["property_type"]) ? $post["property_type"] : "";
+            $user_name = isset($post["user_name"]) ? $post["user_name"] : "";
+            $user_group = isset($post["user_group"]) ? $post["user_group"] : "";
+            $page = isset($post["page"]) ? $post["page"] : "";
+
+            $sql = "INSERT INTO crm_opr_configurations(`operator_code`,
+                                                `sub_operator_code`,
+                                                `service_type`,
+                                                `qos_profile`,
+                                                `qos_profile_id`,
+                                                `vsz_mapping`,
+                                                `wag_magic`,
+                                                `product_name`,
+                                                `group`,
+                                                `account_template`,  
+                                                `service_profile`,  
+                                                `business_type`,  
+                                                `business_prefix`,  
+                                                `business_id_from`, 
+                                                `business_id_to`,  
+                                                `status`,
+                                                `type`,
+                                                `create_user`,
+                                                `create_date`)
+                                        VALUES('".$operator_code."',
+                                               '".$sub_operator_code."',
+                                               '".$service_type."',
+                                               '".$qos_profile."',
+                                               '".$qos_profile_id."',
+                                               '".$vsz_mapping."',
+                                               '".$wag_magic."',
+                                               '".$product_name."',
+                                               '".$group."',
+                                               '".$account_template."',
+                                               '".$service_profile."',
+                                               '".$business_type."',
+                                               '".$business_prefix."',
+                                               '".$business_id_from."',
+                                               '".$business_id_to."',
+                                               1,
+                                               '".$property_type."',
+                                               '".$user_name."',
+                                               NOW()) ";
+            // echo $sql;
+            $result = $this->db->execDB($sql);
+            // var_dump($result);
+            if ($result === true) {
+                $idContAutoInc = $this->db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+                $this->db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Add property Configuration',$idContAutoInc,'3001',"Property Configuration has been successfully created");              
+            } else {
+                $this->db->addLogs($user_name, 'ERROR',$user_group, $page, 'Add property Configuration',0,'2002',"Error on creating Property Configuration. ".$result);               
+            }
+
+            return $result;
+        }
+    }
+
+    public function getPropertyConfigs(){
+        $sql = "SELECT * FROM crm_opr_configurations ORDER BY id DESC";
+        $result = $this->db->selectDB($sql);
+        if ($result['rowCount'] > 0) {
+            $scopeArray = null;
+            foreach($result['data'] as $scope){
+                $scopeArray[$scope['type']][] = $scope;
+            }
+        } 
+        return $scopeArray;
+    }
+
+    public function saveProperty($post){
+        $result = false;
+        
+        if($post != null) {
+            $operator_code = isset($post["operator_code"]) ? $post["operator_code"] : "";
+            $sub_operator_code = isset($post["sub_operator_code"]) ? $post["sub_operator_code"] : "";
+            $vertical = isset($post["vertical"]) ? $post["vertical"] : "";
+            $property_name = isset($post["property_name"]) ? $post["property_name"] : "";
+            $short_name = isset($post["short_name"]) ? $post["short_name"] : "";
+            $realm = isset($post["realm"]) ? $post["realm"] : "";
+            $property_type = isset($post["property_type"]) ? $post["property_type"] : "";
+            $clli = isset($post["clli"]) ? $post["clli"] : "";
+            $node_type = isset($post["node_type"]) ? $post["node_type"] : "";
+            $model_number = isset($post["model_number"]) ? $post["model_number"] : "";
+            $host_name = isset($post["host_name"]) ? $post["host_name"] : "";
+            $ip = isset($post["ip"]) ? $post["ip"] : "";
+            $vlan_netmask_gateway = isset($post["vlan_netmask_gateway"]) ? $post["vlan_netmask_gateway"] : "";
+            $notes = isset($post["notes"]) ? $post["notes"] : "";
+            $property_type = isset($post["property_type"]) ? $post["property_type"] : "";
+            $user_name = isset($post["user_name"]) ? $post["user_name"] : "";
+            $user_group = isset($post["user_group"]) ? $post["user_group"] : "";
+            $page = isset($post["page"]) ? $post["page"] : "";
+            $type = isset($post["type"]) ? $post["type"] : "";
+
+            $sql = "INSERT INTO crm_opr_property(`operator_code`,
+                                                `sub_operator_code`,
+                                                `vertical`,
+                                                `property_name`,
+                                                `short_name`,
+                                                `realm`,
+                                                `property_type`,
+                                                `clli`,
+                                                `node_type`,
+                                                `model_number`,  
+                                                `host_name`,  
+                                                `ip`,  
+                                                `vlan_netmask_gateway`,  
+                                                `notes`,  
+                                                `status`,
+                                                `type`,
+                                                `create_user`,
+                                                `create_date`)
+                                        VALUES('".$operator_code."',
+                                               '".$sub_operator_code."',
+                                               '".$vertical."',
+                                               '".$property_name."',
+                                               '".$short_name."',
+                                               '".$realm."',
+                                               '".$property_type."',
+                                               '".$clli."',
+                                               '".$node_type."',
+                                               '".$model_number."',
+                                               '".$host_name."',
+                                               '".$ip."',
+                                               '".$vlan_netmask_gateway."',
+                                               '".$notes."',
+                                               1,
+                                               '".$type."',
+                                               '".$user_name."',
+                                               NOW()) ";
+            // echo $sql;
+            $result = $this->db->execDB($sql);
+            // var_dump($result);
+            if ($result === true) {
+                $idContAutoInc = $this->db->getValueAsf("SELECT LAST_INSERT_ID() as f");
+                $this->db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Add property',$idContAutoInc,'3001',"Property has been successfully created");              
+            } else {
+                $this->db->addLogs($user_name, 'ERROR',$user_group, $page, 'Add property ',0,'2002',"Error on creating Property . ".$result);               
+            }
+
+            return $result;
+        }
+    }
+
+    public function getProperty(){
+        $sql = "SELECT * FROM crm_opr_property ORDER BY id DESC";
+        $result = $this->db->selectDB($sql);
+        if ($result['rowCount'] > 0) {
+            $scopeArray = null;
+            foreach($result['data'] as $scope){
+                $scopeArray[$scope['type']][] = $scope;
+            }
+        } 
+        return $scopeArray;
+    }
+
 }

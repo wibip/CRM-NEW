@@ -104,7 +104,7 @@ $regions = $adminConfig->getRegions();
                                                 <div class="col-md-6">
                                                     <label for="inputPassword4" class="form-label">Environment</label>
                                                     <select id="development_type" name="development_type" class="form-select">
-                                                        <option value="None">None</option>
+                                                        <option value="">None</option>
                                                         <option value="Hosted">Hosted</option>
                                                         <option value="Simple (SMB)">Simple (SMB)</option>
                                                         <option value="Complex">Complex</option>
@@ -113,7 +113,7 @@ $regions = $adminConfig->getRegions();
                                                 <div class="col-md-6">
                                                     <label for="inputEmail4" class="form-label">State</label>
                                                     <select id="region_state" name="region_state" class="form-select">
-                                                        <option value="None">None</option>
+                                                        <option value="">None</option>
                                                         <option value="WI">WI</option>
                                                         <option value="AK">AK</option>
                                                         <option value="CA">CA</option>
@@ -123,7 +123,7 @@ $regions = $adminConfig->getRegions();
                                                 <div class="col-md-6">
                                                     <label for="inputPassword4" class="form-label">Region</label>
                                                     <select id="region" name="region" class="form-select">
-                                                        <option value="None">None</option>
+                                                        <option value="">None</option>
                                                         <option value="Central">Central</option>
                                                         <option value="East">East</option>
                                                         <option value="Midwest">Midwest</option>
