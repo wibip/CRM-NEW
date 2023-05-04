@@ -2,7 +2,47 @@
 include 'header_new.php';
 $page = "Order Templates";
 ?>
-<link href="assets/css/custom.css" rel="stylesheet">
+<!-- <link rel="stylesheet" href="css/bootstrap5.2.min.css" type="text/css" /> -->
+<style>
+    .del-button {
+        padding: 0px !important;
+    }
+    .toggle-form {
+        padding: 0px !important;
+    }
+    .copy-button {
+        padding: 0px !important;
+    }
+    .remove {
+        padding: 0px !important;
+    }
+    .fld-access{
+        height: 23px !important;
+        width: 23px !important;
+        border: 1.6px solid #E57200 !important;
+        border-radius: 5.6px !important;
+        cursor: pointer !important;
+        margin-top: 0px !important;
+        margin-bottom: 0 !important;
+        vertical-align: middle !important;
+        position: unset !important;
+        overflow: hidden !important;
+        margin: -3px 0 0 !important;
+        padding: 0 !important;
+        outline: 0 !important;
+        opacity: 0 !important;
+    }
+    input[type=checkbox]+label{
+        height: 23px;
+        width: auto;
+        border: 1.6px solid #E57200;
+        border-radius: 5.6px;
+        cursor: pointer;
+        margin-top: 0px !important;
+        margin-bottom: 0;
+        vertical-align: middle;
+    }
+</style>
 <div class="main">
     <div class="main-inner">
         <div class="container">
@@ -47,30 +87,82 @@ $page = "Order Templates";
 jQuery(function($) {
     var options = {
         defaultFields: [{
-                className: "form-control",
-                label: "First Name",
-                placeholder: "Enter your first name",
+                className: "span4 form-control",
+                label: "Property Name",
+                placeholder: "",
                 name: "first-name",
                 required: true,
                 type: "text"
             }, {
-                className: "form-control",
-                label: "Select",
+                className: "span4 form-control",
+                label: "Service Type",
                 name: "select-1454862249997",
                 type: "select",
                 multiple: "true",
                 values: [{
-                label: 'Custom Option 1',
-                value: 'test-value'
-                }, {
-                label: 'Custom Option 2',
-                value: 'test-value-2'
-                }]
-            }, {
-                label: "Radio",
-                name: "select-1454862249997",
-                type: "radio-group"
-            }
+                    label: 'Please select service type',
+                    value: '0'
+                    }, {
+                    label: 'FRT-VYOS',
+                    value: 'FRT-VYOS'
+                    }, {
+                    label: 'FRT AC Service TYPE',
+                    value: 'FRT AC Service TYPE'
+                    }, {
+                    label: 'frt-vyos-vpt-acc-on',
+                    value: 'frt-vyos-vpt-acc-on'
+                    }
+            ]
+            },{
+                className: "span4 form-control",
+                label: "Contact Name",
+                placeholder: "",
+                name: "first-name",
+                required: true,
+                type: "text"
+            },{
+                className: "span4 form-control",
+                label: "Contact Email",
+                placeholder: "",
+                name: "first-name",
+                required: true,
+                type: "text"
+            },{
+                className: "span4 form-control",
+                label: "City",
+                placeholder: "",
+                name: "first-name",
+                required: true,
+                type: "text"
+            },{
+                className: "span4 form-control",
+                label: "Unique Property ID",
+                placeholder: "",
+                name: "first-name",
+                required: true,
+                type: "text"
+            },{
+                className: "span4 form-control",
+                label: "Contact Number",
+                placeholder: "",
+                name: "first-name",
+                required: true,
+                type: "text"
+            },{
+                className: "span4 form-control",
+                label: "Address",
+                placeholder: "",
+                name: "first-name",
+                required: true,
+                type: "text"
+            },{
+                className: "span4 form-control",
+                label: "Zip",
+                placeholder: "",
+                name: "first-name",
+                required: true,
+                type: "text"
+            },
         ],
         disableFields: ['autocomplete',
                         'button',
