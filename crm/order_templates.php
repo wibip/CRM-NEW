@@ -16,32 +16,21 @@ $page = "Order Templates";
     .remove {
         padding: 0px !important;
     }
-    .fld-access{
-        height: 23px !important;
-        width: 23px !important;
-        border: 1.6px solid #E57200 !important;
-        border-radius: 5.6px !important;
-        cursor: pointer !important;
-        margin-top: 0px !important;
-        margin-bottom: 0 !important;
-        vertical-align: middle !important;
-        position: unset !important;
-        overflow: hidden !important;
-        margin: -3px 0 0 !important;
-        padding: 0 !important;
-        outline: 0 !important;
-        opacity: 0 !important;
-    }
+
     input[type=checkbox]+label{
-        height: 23px;
-        width: auto;
-        border: 1.6px solid #E57200;
-        border-radius: 5.6px;
-        cursor: pointer;
-        margin-top: 0px !important;
-        margin-bottom: 0;
-        vertical-align: middle;
+        text-indent: 25px;
+        overflow: visible;
+        white-space: nowrap;
+        position: relative;
     }
+
+    input[type=checkbox]+label::after{
+        position: absolute;
+        top: 0;
+    }
+
+
+
 </style>
 <div class="main">
     <div class="main-inner">
