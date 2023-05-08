@@ -12,6 +12,11 @@ $url_mod_override = $db->setVal('url_mod_override', 'ADMIN');
 $page = 'User';
 $userEdit = 0;
 $editUserGroup = '';
+$selectedOperator = null; 
+$selectedCategory = 0; 
+$selectedParent = 0; 
+$categoryOptions = null;
+$parentOptions = null;
 
 $access_permissions = ACCESS;
 $user_superior_level = $access_permissions[$user_group]['superior_level'];
@@ -741,12 +746,6 @@ $mobile = "";
 
 		if($_POST['id'] != 0) {
 			$id = $_POST['id'];
-			$access_role = $_POST['access_role_2'];
-			$full_name = $_POST['full_name_2'];
-			$email = $_POST['email_2'];
-			$language = $_POST['language_2'];
-			$timezone = $_POST['timezone_2'];
-			$mobile = $_POST['mobile_2'];
 			
 			$access_role = ($access_role=='Master Support Admin'|| $access_role=='Master Admin Peer')?'admin':$access_role;			
 			//update log//
@@ -768,76 +767,82 @@ $mobile = "";
 								`email` = '$email',
 								`language` = '$language',
 								`timezone` = '$timezone',
-								`mobile` =  '$mobile'
+								`mobile` =  '$mobile',
+								`address` =  '$address',
+								`country` =  '$country',
+								`state_region` =  '$state',
+								`zip` =  '$zip'
 								WHERE `id` = '$id'";
 				$edit_result = $db->execDB($edit_query);
 
-				if ($email != $old_email && $edit_result===true) {
-					$t = date("ymdhis", time());
-					$string = $edit_user_name . '|' . $t . '|' . $email;
-					$encript_resetkey = $app->encrypt_decrypt('encrypt', $string);
-					$unique_key = $db->getValueAsf("SELECT REPLACE(UUID(),'-','') as f");
-					$qq = "UPDATE admin_reset_password SET status = 'cancel' WHERE user_name='$edit_user_name' AND status='pending'";
-					$rr = $db->execDB($qq);
+				$return = $hierarchy->userHierarchySave($operator,$category,$id,$parent,$user_name);
 
-					if ($rr===true) {
-						$ip = $_SERVER['REMOTE_ADDR'];
-						$q1 = "INSERT INTO admin_reset_password (user_name, status, security_key,unique_key, ip, create_date) VALUES('$edit_user_name', 'pending', '$encript_resetkey','$unique_key', '$ip', NOW())";
-						//$r1 = mysql_query($q1);
-						$r1 = $db->execDB($q1);
-					}
-					$support_number = $package_functions->getMessageOptions('SUPPORT_NUMBER',$system_package,$property_business_type);
+				// if ($email != $old_email && $edit_result===true) {
+				// 	$t = date("ymdhis", time());
+				// 	$string = $edit_user_name . '|' . $t . '|' . $email;
+				// 	$encript_resetkey = $app->encrypt_decrypt('encrypt', $string);
+				// 	$unique_key = $db->getValueAsf("SELECT REPLACE(UUID(),'-','') as f");
+				// 	$qq = "UPDATE admin_reset_password SET status = 'cancel' WHERE user_name='$edit_user_name' AND status='pending'";
+				// 	$rr = $db->execDB($qq);
 
-					if ($r1===true) {
-						if ($package_functions->getSectionType('EMAIL_USER_TEMPLATE', $system_package) == "own") {
-							$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL', $system_package, 'MNO', $user_distributor);
-							$a = $email_content[0]['text_details'];
-							$subject = $email_content[0]['title'];
+				// 	if ($rr===true) {
+				// 		$ip = $_SERVER['REMOTE_ADDR'];
+				// 		$q1 = "INSERT INTO admin_reset_password (user_name, status, security_key,unique_key, ip, create_date) VALUES('$edit_user_name', 'pending', '$encript_resetkey','$unique_key', '$ip', NOW())";
+				// 		//$r1 = mysql_query($q1);
+				// 		$r1 = $db->execDB($q1);
+				// 	}
+				// 	$support_number = $package_functions->getMessageOptions('SUPPORT_NUMBER',$system_package,$property_business_type);
 
-							if (strlen($subject) == '0') {
-								$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL', $package_functions->getAdminPackage(), 'ADMIN');
-								$a = $email_content[0]['text_details'];
-								$subject = $email_content[0]['title'];
-							}
-						} else {
-							$a = $db->textVal('PASSWORD_RESET_MAIL', 'ADMIN');
-							$subject = $db->textTitle('PASSWORD_RESET_MAIL', 'ADMIN');
-						}
+				// 	if ($r1===true) {
+				// 		if ($package_functions->getSectionType('EMAIL_USER_TEMPLATE', $system_package) == "own") {
+				// 			$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL', $system_package, 'MNO', $user_distributor);
+				// 			$a = $email_content[0]['text_details'];
+				// 			$subject = $email_content[0]['title'];
 
-						$login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
-						$link = $db->getSystemURL('reset_pwd', $login_design, $unique_key);
-						$vars = array(
-							'{$user_full_name}' => $full_name,
-							'{$short_name}' => $db->setVal("short_title", $user_distributor),
-							'{$account_type}' => $user_type,
-							'{$link}' => $link,
-							'{$support_number}' => $support_number,
-							'{$user_ID}' => $edit_user_name
-						);
+				// 			if (strlen($subject) == '0') {
+				// 				$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL', $package_functions->getAdminPackage(), 'ADMIN');
+				// 				$a = $email_content[0]['text_details'];
+				// 				$subject = $email_content[0]['title'];
+				// 			}
+				// 		} else {
+				// 			$a = $db->textVal('PASSWORD_RESET_MAIL', 'ADMIN');
+				// 			$subject = $db->textTitle('PASSWORD_RESET_MAIL', 'ADMIN');
+				// 		}
 
-						$message_full = strtr($a, $vars);
-						$message = $message_full;
+				// 		$login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
+				// 		$link = $db->getSystemURL('reset_pwd', $login_design, $unique_key);
+				// 		$vars = array(
+				// 			'{$user_full_name}' => $full_name,
+				// 			'{$short_name}' => $db->setVal("short_title", $user_distributor),
+				// 			'{$account_type}' => $user_type,
+				// 			'{$link}' => $link,
+				// 			'{$support_number}' => $support_number,
+				// 			'{$user_ID}' => $edit_user_name
+				// 		);
 
-						$from = strip_tags($db->setVal("email", $user_distributor));
-						if (empty($from)) {
-							$from = strip_tags($db->setVal("email", "ADMIN"));
-						}
+				// 		$message_full = strtr($a, $vars);
+				// 		$message = $message_full;
 
-						$title = $db->setVal("short_title", $user_distributor);
+				// 		$from = strip_tags($db->setVal("email", $user_distributor));
+				// 		if (empty($from)) {
+				// 			$from = strip_tags($db->setVal("email", "ADMIN"));
+				// 		}
 
-						$email_send_method = $package_functions->getSectionType("EMAIL_SYSTEM", $system_package);
-						include_once 'src/email/' . $email_send_method . '/index.php';
-						$cunst_var = array();
-						//$cunst_var['template'] = $package_functions->getOptions('EMAIL_TEMPLATE', $system_package);
-						$cunst_var['system_package'] = $system_package;
-						$cunst_var['mno_package'] = $system_package;
-						$cunst_var['mno_id'] = $mno_id;
-						$cunst_var['verticle'] = $property_business_type;
-						$mail_obj = new email($cunst_var);
-						$mail_obj->mno_system_package = $system_package;
-						$mail_sent = $mail_obj->sendEmail($from, $email, $subject, $message_full, '', $title);
-					}
-				}
+				// 		$title = $db->setVal("short_title", $user_distributor);
+
+				// 		$email_send_method = $package_functions->getSectionType("EMAIL_SYSTEM", $system_package);
+				// 		include_once 'src/email/' . $email_send_method . '/index.php';
+				// 		$cunst_var = array();
+				// 		//$cunst_var['template'] = $package_functions->getOptions('EMAIL_TEMPLATE', $system_package);
+				// 		$cunst_var['system_package'] = $system_package;
+				// 		$cunst_var['mno_package'] = $system_package;
+				// 		$cunst_var['mno_id'] = $mno_id;
+				// 		$cunst_var['verticle'] = $property_business_type;
+				// 		$mail_obj = new email($cunst_var);
+				// 		$mail_obj->mno_system_package = $system_package;
+				// 		$mail_sent = $mail_obj->sendEmail($from, $email, $subject, $message_full, '', $title);
+				// 	}
+				// }
 
 				if ($edit_result) {
 					$message_response = $message_functions->showNameMessage('role_edit_success', $edit_user_name);
@@ -917,6 +922,15 @@ $mobile = "";
 			if($userData['rowCount'] > 0){
 				$edit_user_data = $userData['data'][0];
 				$editUserGroup = $edit_user_data['group'];
+				$hierarchyDetails = $hierarchy->hierarchyDetails($edit_id);
+				// var_dump($hierarchyDetails);
+				if($hierarchyDetails['rowCount'] > 0) {
+					$selectedOperator = $hierarchyDetails['data'][0]['operator_id']; 
+					$selectedCategory = $hierarchyDetails['data'][0]['category_id']; 
+					$selectedParent = $hierarchyDetails['data'][0]['parent_id']; 
+				} 
+				$categoryOptions = $hierarchy->getCategories($selectedOperator);
+				$parentOptions = $hierarchy->getParents($selectedOperator,$selectedCategory,$user_group);
 			}
 		} else {
 			$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Load User',$_GET['edit_id'],'2004','Oops, It seems you have refreshed the page. Please try again');
@@ -924,138 +938,6 @@ $mobile = "";
 			$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Oops, It seems you have refreshed the page. Please try again</strong></div>";
 		}
 	}
-	//edit user
-	elseif (isset($_POST['edit-submita'])) {
-		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { //refresh validate
-				$id = $_POST['id'];
-				$access_role = $_POST['access_role_2'];
-				//$user_type = $_POST['user_type'];
-				//$loation = $_POST['loation'];
-				$full_name = $_POST['full_name_2'];
-				$email = $_POST['email_2'];
-				$language = $_POST['language_2'];
-				$timezone = $_POST['timezone_2'];
-				$mobile = $_POST['mobile_2'];
-				// $sub_user_type = ($access_role=='Master Support Admin')?'SUPPORT':'MNO';
-				$access_role = ($access_role=='Master Support Admin'|| $access_role=='Master Admin Peer')?'admin':$access_role;			
-				//update log//
-				$ex_log = userUpdateLog($id, 'EDIT_PROFILE', $user_name,$db);
-
-				if ($ex_log===true) {
-					$get_user_detail_q = "SELECT u.user_name, u.email, u.user_name FROM admin_users u WHERE u.id='$id' LIMIT 1";
-					$user_details = $db->select1DB($get_user_detail_q);
-					$edit_user_name = $user_details['user_name'];
-					$old_email = $user_details['email'];
-					$archive_q = "INSERT INTO `admin_users_archive` (user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,archive_by,archive_date,last_update,`status`)
-								SELECT user_name,`password`,access_role,user_type,user_distributor,full_name,email,`language`,mobile,verification_number,is_enable,create_date,create_user,'$edit_user_name',NOW(),last_update,'update'
-								FROM `admin_users` WHERE id='$id'";
-					$archive_result = $db->execDB($archive_q);
-
-					$edit_query = "UPDATE `admin_users`
-									SET `access_role` = '$access_role',
-									`full_name` ='$full_name',
-									`email` = '$email',
-									`language` = '$language',
-									`timezone` = '$timezone',
-									`mobile` =  '$mobile'
-									WHERE `id` = '$id'";
-					$edit_result = $db->execDB($edit_query);
-
-					if ($email != $old_email && $edit_result===true) {
-						$t = date("ymdhis", time());
-						$string = $edit_user_name . '|' . $t . '|' . $email;
-						$encript_resetkey = $app->encrypt_decrypt('encrypt', $string);
-						$unique_key = $db->getValueAsf("SELECT REPLACE(UUID(),'-','') as f");
-						$qq = "UPDATE admin_reset_password SET status = 'cancel' WHERE user_name='$edit_user_name' AND status='pending'";
-						$rr = $db->execDB($qq);
-
-						if ($rr===true) {
-							$ip = $_SERVER['REMOTE_ADDR'];
-							$q1 = "INSERT INTO admin_reset_password (user_name, status, security_key,unique_key, ip, create_date) VALUES('$edit_user_name', 'pending', '$encript_resetkey','$unique_key', '$ip', NOW())";
-							//$r1 = mysql_query($q1);
-							$r1 = $db->execDB($q1);
-						}
-						$support_number = $package_functions->getMessageOptions('SUPPORT_NUMBER',$system_package,$property_business_type);
-
-						if ($r1===true) {
-							if ($package_functions->getSectionType('EMAIL_USER_TEMPLATE', $system_package) == "own") {
-								$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL', $system_package, 'MNO', $user_distributor);
-								$a = $email_content[0]['text_details'];
-								$subject = $email_content[0]['title'];
-
-								if (strlen($subject) == '0') {
-									$email_content = $db->getEmailTemplate('PASSWORD_RESET_MAIL', $package_functions->getAdminPackage(), 'ADMIN');
-									$a = $email_content[0]['text_details'];
-									$subject = $email_content[0]['title'];
-								}
-							} else {
-								$a = $db->textVal('PASSWORD_RESET_MAIL', 'ADMIN');
-								$subject = $db->textTitle('PASSWORD_RESET_MAIL', 'ADMIN');
-							}
-
-							$login_design = $package_functions->getSectionType("LOGIN_SIGN", $system_package);
-							$link = $db->getSystemURL('reset_pwd', $login_design, $unique_key);
-							$vars = array(
-								'{$user_full_name}' => $full_name,
-								'{$short_name}' => $db->setVal("short_title", $user_distributor),
-								'{$account_type}' => $user_type,
-								'{$link}' => $link,
-								'{$support_number}' => $support_number,
-								'{$user_ID}' => $edit_user_name
-
-							);
-
-							$message_full = strtr($a, $vars);
-							$message = $message_full;
-
-							$from = strip_tags($db->setVal("email", $user_distributor));
-							if (empty($from)) {
-								$from = strip_tags($db->setVal("email", "ADMIN"));
-							}
-
-							$title = $db->setVal("short_title", $user_distributor);
-
-							$email_send_method = $package_functions->getSectionType("EMAIL_SYSTEM", $system_package);
-							include_once 'src/email/' . $email_send_method . '/index.php';
-							$cunst_var = array();
-							//$cunst_var['template'] = $package_functions->getOptions('EMAIL_TEMPLATE', $system_package);
-							$cunst_var['system_package'] = $system_package;
-			                $cunst_var['mno_package'] = $system_package;
-			                $cunst_var['mno_id'] = $mno_id;
-			                $cunst_var['verticle'] = $property_business_type;
-							$mail_obj = new email($cunst_var);
-							$mail_obj->mno_system_package = $system_package;
-							$mail_sent = $mail_obj->sendEmail($from, $email, $subject, $message_full, '', $title);
-						}
-					}
-
-					if ($edit_result) {
-						$message_response = $message_functions->showNameMessage('role_edit_success', $edit_user_name);
-						$db->addLogs($user_name, 'SUCCESS',$user_group, $page, 'Modify User',$id,'3001',$message_response);
-						// $create_log->save('3001', $message_functions->showNameMessage('role_edit_success', $edit_user_name), '');
-						$_SESSION['msg5'] = "<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
-					} else {
-						$message_response = $message_functions->showMessage('role_edit_failed', '2002');
-						$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Modify User',$id,'2002',$message_response);
-						$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-						// $create_log->save('2002', $message_functions->showMessage('role_edit_failed', '2002'), '');
-						$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
-					}
-				} else {
-					$message_response = $message_functions->showMessage('role_edit_failed', '2002');
-					$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Modify User',$id,'2002',$message_response);
-					$db->userErrorLog('2002', $user_name, 'script - ' . $script);
-					// $create_log->save('2002', $message_functions->showMessage('role_edit_failed', '2002'), '');
-					$_SESSION['msg5'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
-				}
-		} else {
-			$message_response = $message_functions->showMessage('transection_fail', '2004');
-			$db->addLogs($user_name, 'ERROR',$user_group, $page, 'Modify User',$id,'2004',$message_response);
-			$db->userErrorLog('2004', $user_name, 'script - ' . $script);
-			// $create_log->save('2004', $message_functions->showMessage('transection_fail', '2004'), '');
-			$_SESSION['msg2'] = "<div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert'>×</button><strong>" . $message_response . "</strong></div>";
-		}
-	} 
 	elseif (isset($_POST['edit-submita-pass'])) {
 		if ($_SESSION['FORM_SECRET'] == $_POST['form_secret']) { 
 				$id = $_POST['id'];
@@ -1338,6 +1220,9 @@ $mobile = "";
 																	if($activeOperators['rowCount'] > 0){
 																		foreach($activeOperators['data'] AS $operator){ 
 																			$selected = '';
+																			if(isset($_GET['edit_id']) && $selectedOperator == $operator['mno_id']) {
+																				$selected = 'selected';
+																			}
 																?>
 																			<option value='<?=$operator['mno_id']?>' <?=$selected?>><?=$operator['mno_description']?></option>
 																<?php 	}
@@ -1349,12 +1234,30 @@ $mobile = "";
 															<label class="control-label" for="category">Parent Category<sup><font color="#FF0000"></font></sup></label>
 															<select class="form-control span4" name="category" id="category" >
 																<option value="">Select Category</option>
+																<?php 																
+																	if($categoryOptions != null && $categoryOptions['rowCount'] > 0) {
+																		foreach($categoryOptions['data'] as $categoryOption){
+																?>
+																			<option value="<?=$categoryOption['id']?>" <?=($categoryOption['id'] == $selectedCategory ? 'selected' : '')?>><?=$categoryOption['category']?></option>
+																<?php
+																		}
+																	}
+																?>
 															</select>
 														</div>		
 														<div class="col-md-6" id="parent_div">
 															<label class="control-label" for="parent">Parent<sup><font color="#FF0000"></font></sup></label>
 															<select class="form-control span4" name="parent" id="parent" >
 																<option value="">Select Parent</option>
+																<?php 																
+																	if($parentOptions != null && $parentOptions['rowCount'] > 0) {
+																		foreach($parentOptions['data'] as $parentOption){
+																?>
+																			<option value="<?=$parentOption['id']?>" <?=($parentOption['id'] == $selectedParent ? 'selected' : '')?>><?=$parentOption['full_name']?></option>
+																<?php
+																		}
+																	}
+																?>
 															</select>
 														</div>												
 														<div class="col-md-6">
@@ -1630,19 +1533,24 @@ $mobile = "";
 			if(userEdit == 1) {
 				var userGroup = '<?=$editUserGroup?>';
 			}
-			
+
 			if(userEdit == 0 && userGroup != "sales_manager" && userGroup != "ordering_agent") {
 				$('#operator_div').hide();
 				$('#parent_cat_div').hide();
 			}
-			$('#parent_div').hide();
-			$("#category").prop("disabled", true);
-			$("#parent").prop("disabled", true);
-			// $("#loation").chained("#radio_user_group");
+
+			var selectedOperator = '<?=$selectedOperator?>';
+			var selectedCategory = <?=$selectedCategory?>;
+			var selectedParent = <?=$selectedParent?>;
+
+			if(selectedCategory == null) {				
+				$("#category").prop("disabled", true);
+				$('#parent_div').hide();
+				$("#parent").prop("disabled", true);
+			}
 
 			$('input[name="radio_user_group"]').on('hover', function(e) {
 				var manageradiorel = e.target.value;
-				alert(manageradiorel);
 			});
 
 			$("input[name='radio_user_group']").change(function(){
@@ -1650,6 +1558,7 @@ $mobile = "";
 				var loggedUserGroup = '<?=$user_group?>';
 				$('#operator option:selected').prop('selected', false);
 				if(groupName != 'super_admin' && groupName != 'admin' && loggedUserGroup != 'sales_manager') {
+					// alert('dsdfsdfsdf');
 					$('#operator_div').show();//parent_div
 					if(groupName != 'operation') {
 						$('#parent_cat_div').show();
@@ -1673,7 +1582,6 @@ $mobile = "";
 				var operatorValue = $('#operator').val();
 				var categoryValue = $(this).val();
 				var groupValue = $("input[type='radio'][name='radio_user_group']:checked").val();
-// alert(groupValue);
 				if(operatorValue != "" && categoryValue != ""){
 					$("#overlay").css("display","block");
 					$.ajax({	
@@ -1727,12 +1635,12 @@ $mobile = "";
 							if(responseData['rowCount'] > 0){
 								$("#category").empty();
 								$.each(responseData['data'], function (i, item) {
-									// console.log(item.category);
 									$('#category').append($('<option>', { 
 										value: item.id,
 										text : item.category 
 									}));
 								});
+								// $("#category").val(selectedCategory);
 								$("#category").prop("disabled", false);
 							} else {
 

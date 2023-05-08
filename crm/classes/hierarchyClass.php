@@ -28,11 +28,23 @@ class Hierarchy{
     }
 
     public function userHierarchySave($operator_id,$category_id,$user_id,$parent_id,$create_user) {
-        $sql = "INSERT INTO crm_user_hierarchy(`operator_id`,`category_id`, `user_id`,`parent_id`,`is_enable`,`create_date`,`create_user`) 
-                VALUES ('$operator_id',$category_id,$user_id,$parent_id,1,now(),'$create_user')";
+        $resultsCheck = $this->hierarchyDetails($user_id);
+
+        if($resultsCheck['rowCount'] > 0) {
+            $sql = "UPDATE `crm_user_hierarchy`
+                    SET `operator_id` = '$operator_id',
+                        `category_id` ='$category_id',
+                        `parent_id` = '$parent_id'
+                        WHERE `user_id` = '$user_id'";
+        } else {
+            $sql = "INSERT INTO crm_user_hierarchy(`operator_id`,`category_id`, `user_id`,`parent_id`,`is_enable`,`create_date`,`create_user`) 
+                    VALUES ('$operator_id',$category_id,$user_id,$parent_id,1,now(),'$create_user')";
+        }
+
         $results = $this->db->execDB($sql);
         return $results;
     }
+
 
     public function getParentDetails($parentId) {
         $parent = null;
@@ -42,5 +54,11 @@ class Hierarchy{
             $parent = $results['data'][0];
         }
         return $parent;
+    }
+
+    public function hierarchyDetails($user_id) {
+        $sql = "SELECT `operator_id`,`category_id`,`parent_id` FROM crm_user_hierarchy WHERE user_id=$user_id";
+        $results = $this->db->selectDB($sql);
+        return $results;
     }
 }

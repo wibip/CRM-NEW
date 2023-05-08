@@ -29,7 +29,9 @@ $page = "Order Templates";
         top: 0;
     }
 
-
+    input[type="checkbox"] {
+    outline: 3px solid black;
+}
 
 </style>
 <div class="main">
